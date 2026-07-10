@@ -1,0 +1,476 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="Credit Card Payoff Calculator" 
+  description="Estimate how many months it will take to pay off your credit card balance. Compare fixed monthly contributions against minimum payment formulas."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="payoff-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Card Details</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="balance" label="Credit Card Balance" type="number" prefix="$" value="5000" />
+            <Input id="rate" label="Annual Interest Rate (APR)" type="number" suffix="%" value="18.9" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Select id="payment-type" label="Payment Strategy" options={[
+              { value: 'fixed', label: 'Fixed Monthly Payment' },
+              { value: 'percent', label: 'Minimum Payment Percentage' }
+            ]} value="fixed" />
+            
+            <div id="payment-val-container">
+              <Input id="payment-val" label="Monthly Payment Amount" type="number" prefix="$" value="150" />
+            </div>
+          </div>
+          
+          <!-- Advanced Minimum Limit -->
+          <div id="min-limit-container" class="hidden pt-2 border-t border-hairline/60">
+            <Input id="min-limit" label="Absolute Minimum Payment" type="number" prefix="$" value="25" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Payoff
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div id="result-wrapper">
+        <div class="flex flex-col gap-3">
+          <div id="res-time">
+            <ResultCard title="Time to Payoff" value="47 months" highlight={true} description="Total duration required to pay down the balance." />
+          </div>
+          <div id="res-interest">
+            <ResultCard title="Total Interest" value="$2,176.43" />
+          </div>
+          <div id="res-total">
+            <ResultCard title="Total Payments" value="$7,176.43" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawdown Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Drawdown Timeline</h4>
+        <div class="h-64 relative">
+          <canvas id="payoff-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Schedule Table -->
+  <div class="mt-12 border-t border-hairline pt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Monthly Payment Schedule</h3>
+        <p class="text-sm text-body mt-1">Month-by-month repayment progression listing interest fees and principal declines.</p>
+      </div>
+      <button 
+        id="toggle-schedule" 
+        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+      >
+        Show Monthly Schedule
+      </button>
+    </div>
+
+    <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
+      <div class="overflow-x-auto max-h-[450px]">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+            <tr>
+              <th class="px-5 py-3">Month</th>
+              <th class="px-5 py-3 text-right">Starting Bal</th>
+              <th class="px-5 py-3 text-right">Payment</th>
+              <th class="px-5 py-3 text-right text-error-deep">Interest Charged</th>
+              <th class="px-5 py-3 text-right text-link">Principal Paid</th>
+              <th class="px-5 py-3 text-right font-medium">Ending Bal</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body" class="divide-y divide-hairline">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO & Educational Text Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Understanding the True Cost of Credit Card Debt.</h2>
+      <p>
+        Credit cards offer convenience, but their interest rates (APRs) are typically far higher than other loans. If you only pay the monthly <strong>minimum payment</strong>, compounding interest can cause your debt to stretch out for decades, costing you thousands of dollars in interest fees.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Minimum Payment Trap</h3>
+        <p class="text-sm">
+          Lenders calculate minimum payments as a tiny percentage of the remaining balance (e.g. 2% or 3%) or a flat rate ($25), whichever is larger.
+        </p>
+        <p class="text-xs text-mute mt-2">
+          Because the payment declines as your balance decreases, you pay off less principal each month. On a $5,000 balance at 18.9% interest, making only the minimum payments will take over **16 years to pay off** and cost over **$5,700 in interest alone**—more than the initial balance!
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Danger of Negative Amortization</h3>
+        <p class="text-sm">
+          If your monthly payment is less than the interest accrued during the month, the unpaid interest is added to your principal balance. This is known as **negative amortization**, and your balance will grow indefinitely. 
+        </p>
+        <p class="text-xs text-mute mt-2">
+          The calculator will immediately alert you and show a warning if your selected payment is too small to cover the monthly interest fee.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I pay off credit card debt?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              To pay off credit card debt, create a budget to identify extra funds. Use repayment strategies like the **Debt Avalanche** (paying off highest interest cards first) or the **Debt Snowball** (paying off smallest balances first). You can also consolidate debt using a balance transfer card or a personal loan.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How can I pay off credit card debt quickly?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Pay off card debt quickly by making payments larger than the minimum, submitting multiple payments per month (e.g. paying every two weeks), cutting discretionary expenses, and selling items or taking on side work to throw extra lump sums at the balance.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate how long it will take to pay off my credit card?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              You can calculate the exact month count by keying your balance, APR, and planned payment into this calculator. The math runs an iterative loop, deducting monthly principal and adding interest monthly until the balance hits zero.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does a credit card payoff calculator work?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              It simulates your monthly credit card statements. Each month, it adds interest (Balance * APR / 12), subtracts your planned payment, and sets the result as the starting balance for the next month. It adds up the total payments and total interest charged along the way.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>Can credit card companies negotiate a debt payoff?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Yes. If you are experiencing severe financial hardship, card issuers may negotiate a settlement (allowing you to pay a lump sum that is less than the total balance) or enroll you in a hardship program with temporarily reduced interest rates and waived fees.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>Should I increase my monthly payment to pay off credit card debt faster?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Absolutely. Increasing your monthly payment is the single most effective way to save money. By paying even a small amount extra each month, you drastically shorten the payoff period and reduce the total interest fees, as shown by the comparison charts in this tool.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { simulateCreditCardPayoff } from '../../lib/math/misc';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('payoff-form') as HTMLFormElement;
+  
+  const balanceInput = document.getElementById('balance') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const paymentTypeSelect = document.getElementById('payment-type') as HTMLSelectElement;
+  const paymentValInput = document.getElementById('payment-val') as HTMLInputElement;
+  const minLimitInput = document.getElementById('min-limit') as HTMLInputElement;
+
+  const paymentValContainer = document.getElementById('payment-val-container');
+  const minLimitContainer = document.getElementById('min-limit-container');
+
+  const resultWrapper = document.getElementById('result-wrapper');
+  const resTimeCard = document.getElementById('res-time');
+  const resInterestCard = document.getElementById('res-interest');
+  const resTotalCard = document.getElementById('res-total');
+
+  const toggleScheduleBtn = document.getElementById('toggle-schedule');
+  const scheduleWrapper = document.getElementById('schedule-wrapper');
+  const scheduleBody = document.getElementById('schedule-body');
+
+  let chartInstance: Chart | null = null;
+
+  // Toggle input layouts based on Strategy selection
+  paymentTypeSelect.addEventListener('change', () => {
+    const strategy = paymentTypeSelect.value;
+    const valLabel = paymentValContainer?.querySelector('label');
+    const valSpan = paymentValContainer?.querySelector('.absolute');
+
+    if (strategy === 'percent') {
+      if (valLabel) valLabel.textContent = 'Minimum Payment Rate';
+      if (valSpan) {
+        valSpan.textContent = '%';
+        valSpan.classList.add('right-3');
+        valSpan.classList.remove('left-3');
+        paymentValInput.classList.add('pr-8');
+        paymentValInput.classList.remove('pl-7');
+      }
+      paymentValInput.value = '3.0';
+      minLimitContainer?.classList.remove('hidden');
+    } else {
+      if (valLabel) valLabel.textContent = 'Monthly Payment Amount';
+      if (valSpan) {
+        valSpan.textContent = '$';
+        valSpan.classList.add('left-3');
+        valSpan.classList.remove('right-3');
+        paymentValInput.classList.add('pl-7');
+        paymentValInput.classList.remove('pr-8');
+      }
+      paymentValInput.value = '150';
+      minLimitContainer?.classList.add('hidden');
+    }
+    performCalculation();
+  });
+
+  // Calculate Payoff
+  function performCalculation() {
+    const balance = Math.abs(parseFloat(balanceInput.value)) || 0;
+    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
+    const paymentType = paymentTypeSelect.value as 'fixed' | 'percent';
+    let paymentValue = Math.abs(parseFloat(paymentValInput.value)) || 0;
+    const minimumPaymentLimit = Math.abs(parseFloat(minLimitInput.value)) || 25;
+
+    // Convert percentage rate to decimal
+    if (paymentType === 'percent') {
+      paymentValue = paymentValue / 100;
+    }
+
+    const res = simulateCreditCardPayoff({
+      balance,
+      rate,
+      paymentType,
+      paymentValue,
+      minimumPaymentLimit
+    });
+
+    if (res.isStuck) {
+      // Negative Amortization Alert
+      if (resultWrapper) {
+        resultWrapper.innerHTML = `
+          <div class="p-6 rounded-md flex flex-col items-center text-center justify-center min-h-[140px] bg-error-soft border border-error text-error-deep">
+            <h4 class="text-sm font-medium mb-2">Insufficient Payment</h4>
+            <div class="text-lg font-semibold leading-tight px-4">Balance Grows Indefinitely</div>
+            <p class="text-xs mt-3 max-w-[80%] mx-auto">Your monthly payment is too small to cover the monthly interest accrued ($${(balance * rate / 12).toFixed(2)}). Please increase your payment amount.</p>
+          </div>
+        `;
+      }
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      return;
+    }
+
+    // Standard Render Results
+    if (resultWrapper && resTimeCard && resInterestCard && resTotalCard) {
+      // Restore initial structure if it was overwritten by error
+      resultWrapper.innerHTML = `
+        <div class="flex flex-col gap-3">
+          <div id="res-time">
+            <ResultCard title="Time to Payoff" value="${res.monthsToPayoff} months" highlight={true} description="Total duration required to pay down the balance." />
+          </div>
+          <div id="res-interest">
+            <ResultCard title="Total Interest" value="${formatCurrency(res.totalInterest)}" />
+          </div>
+          <div id="res-total">
+            <ResultCard title="Total Payments" value="${formatCurrency(balance + res.totalInterest)}" />
+          </div>
+        </div>
+      `;
+    }
+
+    // Update Chart and Table
+    updateChart(res.schedule);
+    updateScheduleTable(res.schedule);
+  }
+
+  function updateChart(schedule: any[]) {
+    const canvas = document.getElementById('payoff-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Filter points for performance
+    const step = Math.max(1, Math.floor(schedule.length / 80));
+    const filtered = schedule.filter((_, idx) => idx % step === 0);
+
+    const labels = filtered.map(e => `Mo ${e.month}`);
+    const balances = filtered.map(e => e.endingBalance);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = balances;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Remaining Balance',
+              data: balances,
+              borderColor: '#171717',
+              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              fill: true,
+              tension: 0.15,
+              borderWidth: 2,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 10, font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function updateScheduleTable(schedule: any[]) {
+    if (!scheduleBody) return;
+    
+    // limit rendering
+    const truncated = schedule.slice(0, 240);
+    
+    let html = '';
+    truncated.forEach(e => {
+      html += `
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
+          <td class="px-5 py-3 font-semibold text-body">Month ${e.month}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.payment)}</td>
+          <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
+          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.principal)}</td>
+          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+        </tr>
+      `;
+    });
+
+    if (schedule.length > 240) {
+      html += `
+        <tr class="bg-canvas-soft-2 font-mono text-xs text-mute">
+          <td colspan="6" class="px-5 py-3 text-center">
+            Showing first 240 months of ${schedule.length} months.
+          </td>
+        </tr>
+      `;
+    }
+
+    scheduleBody.innerHTML = html;
+  }
+
+  // Listeners
+  [balanceInput, rateInput, paymentValInput, minLimitInput].forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Table toggle
+  if (toggleScheduleBtn && scheduleWrapper) {
+    toggleScheduleBtn.addEventListener('click', () => {
+      const isHidden = scheduleWrapper.classList.contains('hidden');
+      if (isHidden) {
+        scheduleWrapper.classList.remove('hidden');
+        toggleScheduleBtn.textContent = 'Hide Monthly Schedule';
+      } else {
+        scheduleWrapper.classList.add('hidden');
+        toggleScheduleBtn.textContent = 'Show Monthly Schedule';
+      }
+    });
+  }
+
+  // Initial calculation
+  performCalculation();
+</script>

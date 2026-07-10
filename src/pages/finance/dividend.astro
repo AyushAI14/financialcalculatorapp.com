@@ -1,0 +1,481 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+---
+
+<CalculatorLayout 
+  title="Dividend Calculator" 
+  description="Project your investment growth and income using Dividend Reinvestment Plans (DRIP). Track dividend compounding, appreciation, and taxation."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="dividend-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Investment & Savings</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="initial" label="Initial Investment" type="number" prefix="$" value="20000" />
+            <Input id="contribution" label="Annual Contribution" type="number" prefix="$" value="3000" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <Input id="yield" label="Starting Dividend Yield" type="number" suffix="%" value="3.5" />
+            <Input id="years" label="Years to Project" type="number" value="20" />
+          </div>
+        </div>
+
+        <!-- Growth & Taxes -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Growth & Taxes</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="div-growth" label="Annual Dividend Growth" type="number" suffix="%" value="5.0" placeholder="rate dividend yield increases" />
+            <Input id="price-growth" label="Annual Share Price Growth" type="number" suffix="%" value="6.0" placeholder="capital gains rate" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <Input id="tax-rate" label="Dividend Tax Rate" type="number" suffix="%" value="15" />
+            
+            <ToggleSwitch 
+              id="drip" 
+              label="Reinvest Dividends (DRIP)" 
+              checked={true} 
+              description="Automatically buy more shares"
+            />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Growth
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <!-- 3-up Result Cards Grid -->
+      <div class="flex flex-col gap-3">
+        <div id="res-ending">
+          <ResultCard title="Projected Value" value="$257,808.20" highlight={true} description="Estimated stock portfolio value at end of term." />
+        </div>
+        <div id="res-total-div">
+          <ResultCard title="Total Dividends" value="$58,000.00" description="Cumulative gross dividends earned over time." />
+        </div>
+        <div id="res-annual-income">
+          <ResultCard title="Annual Income" value="$7,808.20" description="Estimated annual dividend payouts in the final year." />
+        </div>
+      </div>
+
+      <!-- Growth Chart Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">DRIP Growth Composition</h4>
+        <div class="h-80 relative">
+          <canvas id="growth-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Year-by-Year Schedule -->
+  <div class="mt-12 border-t border-hairline pt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Dividend Growth Schedule</h3>
+        <p class="text-sm text-body mt-1">Yearly breakdown of contributions, gross dividends earned, taxes paid, and capital appreciation.</p>
+      </div>
+      <button 
+        id="toggle-schedule" 
+        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+      >
+        Show Yearly Table
+      </button>
+    </div>
+
+    <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
+      <div class="overflow-x-auto max-h-[450px]">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+            <tr>
+              <th class="px-5 py-3">Year</th>
+              <th class="px-5 py-3 text-right">Starting Bal</th>
+              <th class="px-5 py-3 text-right">Deposits</th>
+              <th class="px-5 py-3 text-right text-link">Gross Dividends</th>
+              <th class="px-5 py-3 text-right text-error-deep">Taxes Paid</th>
+              <th class="px-5 py-3 text-right text-mute">Appreciation</th>
+              <th class="px-5 py-3 text-right font-medium">Ending Bal</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body" class="divide-y divide-hairline">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">The Compounding Power of Dividend Reinvestment Plans (DRIP).</h2>
+      <p>
+        A <strong>Dividend Reinvestment Plan (DRIP)</strong> is a program that allows investors to automatically reinvest their cash dividends into additional shares or fractional shares of the underlying stock on the dividend payment date. Reinvesting dividends is one of the most effective strategies for long-term wealth accumulation.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Double Compounding Effect</h3>
+        <p class="text-sm">
+          With DRIP active, your investment compounding undergoes a multi-layer growth process:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1 text-xs text-mute">
+          <li><strong>Capital Appreciation</strong>: Your shares appreciate in value over time (e.g. 6% share price growth).</li>
+          <li><strong>More Shares</strong>: Reinvested dividends buy more shares, meaning your share count rises.</li>
+          <li><strong>Growing Dividend Yield</strong>: Corporations often increase their dividend payout rates annually (e.g. 5% dividend growth). With more shares and a higher yield, your next dividend check grows exponentially!</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Dividend Taxation</h3>
+        <p class="text-sm">
+          Even when dividends are automatically reinvested, they are still considered taxable income in the year they are paid (unless held in a tax-advantaged account like an IRA or 401k). The calculator factors in this tax drag, subtracting taxes from the dividends before they are reinvested.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much dividend income will I receive?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The amount of dividend income you receive depends on the dividend yield of your shares and the size of your portfolio. Enter your details into this calculator to project your annual dividend payouts, monthly average income, and accumulated growth over time.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate dividends per share?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Dividends per share (DPS) is calculated by dividing the total dividend payments made by a corporation over a period (usually one year) by the total number of outstanding common shares. <code>DPS = Total Dividends / Outstanding Shares</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate dividend yield?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Dividend yield measures the cash return you get relative to the stock price. It is calculated by dividing the annual dividends per share by the current share price. <code>Dividend Yield = Annual Dividends per Share / Stock Price</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate the dividend payout ratio?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The dividend payout ratio measures the percentage of net income paid to shareholders as dividends. It is calculated by dividing the total dividends paid by the net income of the company. <code>Payout Ratio = Dividends Paid / Net Income</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much tax will I pay on dividend income?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Taxation depends on whether dividends are "qualified" or "non-qualified". Qualified dividends are taxed at lower capital gains tax rates (0%, 15%, or 20% in the US), whereas non-qualified dividends are taxed at your standard marginal income tax bracket.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I use a dividend calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Enter your initial investment, annual savings contributions, starting dividend yield, expected dividend growth rate, and stock price appreciation rate. Enable the DRIP toggle to simulate automatic reinvestment and see your compound growth.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { simulateDividends } from '../../lib/math/retirement';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('dividend-form') as HTMLFormElement;
+  
+  const initialInput = document.getElementById('initial') as HTMLInputElement;
+  const contributionInput = document.getElementById('contribution') as HTMLInputElement;
+  const yieldInput = document.getElementById('yield') as HTMLInputElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  
+  const divGrowthInput = document.getElementById('div-growth') as HTMLInputElement;
+  const priceGrowthInput = document.getElementById('price-growth') as HTMLInputElement;
+  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement;
+  const dripCheckbox = document.getElementById('drip') as HTMLInputElement;
+
+  const resEndingCard = document.getElementById('res-ending');
+  const resTotalDivCard = document.getElementById('res-total-div');
+  const resAnnualIncomeCard = document.getElementById('res-annual-income');
+
+  const toggleScheduleBtn = document.getElementById('toggle-schedule');
+  const scheduleWrapper = document.getElementById('schedule-wrapper');
+  const scheduleBody = document.getElementById('schedule-body');
+
+  let chartInstance: Chart | null = null;
+
+  // Run simulation
+  function performCalculation() {
+    const initialInvestment = parseFloat(initialInput.value) || 0;
+    const annualContribution = parseFloat(contributionInput.value) || 0;
+    const dividendYield = (parseFloat(yieldInput.value) || 0) / 100;
+    const years = parseInt(yearsInput.value) || 10;
+    
+    const dividendGrowthRate = (parseFloat(divGrowthInput.value) || 0) / 100;
+    const sharePriceGrowthRate = (parseFloat(priceGrowthInput.value) || 0) / 100;
+    const taxRate = (parseFloat(taxRateInput.value) || 0) / 100;
+    const reinvestDividends = dripCheckbox.checked;
+
+    const schedule = simulateDividends({
+      initialInvestment,
+      annualContribution,
+      dividendYield,
+      dividendGrowthRate,
+      sharePriceGrowthRate,
+      reinvestDividends,
+      taxRate,
+      years
+    });
+
+    const finalYear = schedule[schedule.length - 1];
+
+    // Total gross dividends
+    let totalDividends = 0;
+    schedule.forEach(e => {
+      totalDividends += e.dividendsEarned;
+    });
+
+    // Final year annual income: ending balance * dividend yield in the final year
+    // For simplicity, we can report finalYear.dividendsEarned as the annual income at that stage
+    const annualIncome = finalYear.dividendsEarned;
+
+    // Update Result Cards
+    if (resEndingCard) resEndingCard.querySelector('.font-mono')!.textContent = formatCurrency(finalYear.endingBalance);
+    if (resTotalDivCard) resTotalDivCard.querySelector('.font-mono')!.textContent = formatCurrency(totalDividends);
+    if (resAnnualIncomeCard) resAnnualIncomeCard.querySelector('.font-mono')!.textContent = formatCurrency(annualIncome);
+
+    // Update Chart
+    updateChart(schedule, initialInvestment, reinvestDividends);
+    // Update Table
+    updateScheduleTable(schedule);
+  }
+
+  function updateChart(schedule: any[], initial: number, drip: boolean) {
+    const canvas = document.getElementById('growth-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = schedule.map(e => `Yr ${e.year}`);
+    
+    // Accumulate total deposits, reinvested dividends, and capital gains
+    let cumDeposits = initial;
+    let cumReinvested = 0;
+    
+    const depositsData = schedule.map(e => {
+      cumDeposits += e.deposits;
+      return cumDeposits;
+    });
+    
+    const dividendsReinvestedData = schedule.map(e => {
+      if (drip) {
+        cumReinvested += (e.dividendsEarned - e.taxesPaid);
+      }
+      return cumReinvested;
+    });
+
+    const appreciationData = schedule.map(e => {
+      const totalInflow = e.deposits + (drip ? (e.dividendsEarned - e.taxesPaid) : 0);
+      // Growth for this year = Ending Balance - Starting Balance - totalInflow
+      return Math.max(0, e.endingBalance - (e.startingBalance + totalInflow));
+    });
+
+    // Accumulate appreciation
+    let cumAppreciation = 0;
+    const appreciationCumData = appreciationData.map(val => {
+      cumAppreciation += val;
+      return cumAppreciation;
+    });
+
+    const datasets = [
+      {
+        label: 'Out-Of-Pocket Deposits',
+        data: depositsData,
+        backgroundColor: '#171717',
+        borderColor: '#171717',
+        borderWidth: 1,
+        stack: 'stack0'
+      }
+    ];
+
+    if (drip) {
+      datasets.push({
+        label: 'Reinvested Dividends (DRIP)',
+        data: dividendsReinvestedData,
+        backgroundColor: '#7928ca',
+        borderColor: '#7928ca',
+        borderWidth: 1,
+        stack: 'stack0'
+      });
+    }
+
+    datasets.push({
+      label: 'Capital Gains Appreciation',
+      data: appreciationCumData,
+      backgroundColor: '#0070f3',
+      borderColor: '#0070f3',
+      borderWidth: 1,
+      stack: 'stack0'
+    });
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets = datasets;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                boxWidth: 8,
+                padding: 12,
+                font: { family: 'Geist, sans-serif', size: 10 }
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              stacked: true,
+              ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              stacked: true,
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function updateScheduleTable(schedule: any[]) {
+    if (!scheduleBody) return;
+    
+    let html = '';
+    schedule.forEach(e => {
+      html += `
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
+          <td class="px-5 py-3 font-semibold text-body">Year ${e.year}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.deposits)}</td>
+          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.dividendsEarned)}</td>
+          <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.taxesPaid)}</td>
+          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.appreciation)}</td>
+          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+        </tr>
+      `;
+    });
+
+    scheduleBody.innerHTML = html;
+  }
+
+  // Listeners
+  const inputs = [
+    initialInput, contributionInput, yieldInput, yearsInput,
+    divGrowthInput, priceGrowthInput, taxRateInput, dripCheckbox
+  ];
+
+  inputs.forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Table toggle
+  if (toggleScheduleBtn && scheduleWrapper) {
+    toggleScheduleBtn.addEventListener('click', () => {
+      const isHidden = scheduleWrapper.classList.contains('hidden');
+      if (isHidden) {
+        scheduleWrapper.classList.remove('hidden');
+        toggleScheduleBtn.textContent = 'Hide Yearly Table';
+      } else {
+        scheduleWrapper.classList.add('hidden');
+        toggleScheduleBtn.textContent = 'Show Yearly Table';
+      }
+    });
+  }
+
+  // Initial calculation
+  performCalculation();
+</script>

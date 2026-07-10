@@ -1,0 +1,670 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+---
+
+<CalculatorLayout 
+  title="TVM Calculator" 
+  description="Calculate the Time Value of Money. Solve for Present Value (PV), Future Value (FV), Payment (PMT), Interest Rate, or Number of Periods (NPER)."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Form Inputs (Left Column) -->
+    <div class="lg:col-span-7 space-y-6">
+      <form id="tvm-form" class="space-y-6">
+        <!-- Scenario and Target Selectors -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+          <Select 
+            id="scenario" 
+            label="Scenario Type" 
+            options={[
+              { value: 'savings', label: 'Savings & Investments' },
+              { value: 'loan', label: 'Loans & Mortgages' }
+            ]} 
+            value="savings"
+          />
+          <Select 
+            id="solve-for" 
+            label="Solve For" 
+            options={[
+              { value: 'fv', label: 'Future Value (FV)' },
+              { value: 'pv', label: 'Present Value (PV)' },
+              { value: 'pmt', label: 'Periodic Payment (PMT)' },
+              { value: 'rate', label: 'Annual Interest Rate' },
+              { value: 'periods', label: 'Number of Periods (NPER)' }
+            ]} 
+            value="fv"
+          />
+        </div>
+
+        <!-- TVM Inputs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div id="pv-wrapper">
+            <Input id="pv" label="Present Value (PV)" type="number" prefix="$" value="10000" placeholder="0.00" />
+          </div>
+          <div id="fv-wrapper">
+            <Input id="fv" label="Future Value (FV)" type="number" prefix="$" value="" placeholder="0.00" />
+          </div>
+          <div id="pmt-wrapper">
+            <Input id="pmt" label="Periodic Payment (PMT)" type="number" prefix="$" value="100" placeholder="0.00" />
+          </div>
+          <div id="rate-wrapper">
+            <Input id="rate" label="Annual Interest Rate" type="number" suffix="%" value="6.5" placeholder="0.00" />
+          </div>
+          <div id="periods-wrapper">
+            <Input id="periods" label="Number of Periods" type="number" value="120" placeholder="e.g. months, years" />
+          </div>
+          <Select id="compounding" label="Compounding Frequency" options={[
+            { value: '1', label: 'Annually' },
+            { value: '2', label: 'Semi-Annually' },
+            { value: '4', label: 'Quarterly' },
+            { value: '12', label: 'Monthly' },
+            { value: '26', label: 'Bi-Weekly' },
+            { value: '52', label: 'Weekly' },
+            { value: '365', label: 'Daily' }
+          ]} value="12" />
+        </div>
+
+        <!-- Payment Timing and Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <ToggleSwitch 
+            id="timing" 
+            label="Annuity Due (Beginning)" 
+            checked={false} 
+            description="Payments made at start of period"
+          />
+        </div>
+        
+        <div class="pt-4 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Results & Charts (Right Column) -->
+    <div class="lg:col-span-5 space-y-6">
+      <div id="result-container">
+        <ResultCard 
+          title="Future Value (FV)" 
+          value="$22,176.43" 
+          description="Total balance accumulated over 120 periods." 
+          highlight={true} 
+        />
+      </div>
+
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Progression</h4>
+        <div class="h-64 relative">
+          <canvas id="tvm-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Schedule Table Section -->
+  <div class="mt-12 border-t border-hairline pt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Calculation Schedule</h3>
+        <p class="text-sm text-body mt-1">Period-by-period progression breakdown of balance and interest.</p>
+      </div>
+      <button 
+        id="toggle-schedule" 
+        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+      >
+        Show Detailed Table
+      </button>
+    </div>
+
+    <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
+      <div class="overflow-x-auto max-h-[450px]">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+            <tr>
+              <th class="px-5 py-3">Period</th>
+              <th class="px-5 py-3 text-right">Starting Bal</th>
+              <th class="px-5 py-3 text-right">Payment</th>
+              <th class="px-5 py-3 text-right">Interest</th>
+              <th class="px-5 py-3 text-right">Ending Bal</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body" class="divide-y divide-hairline">
+            <!-- Dynamic rows inject here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO & Educational Text Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Understanding the Time Value of Money (TVM).</h2>
+      <p>
+        The <strong>Time Value of Money (TVM)</strong> is a fundamental financial concept asserting that money available now is worth more than the identical sum in the future due to its potential earning capacity. This core principle holds that, provided money can earn interest, any amount of money is worth more the sooner it is received.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Five Key Variables</h3>
+        <ul class="list-disc pl-5 space-y-1.5 text-sm">
+          <li><strong>Present Value (PV)</strong>: The current value of a future sum of money or stream of cash flows, discounted at a specific rate of return.</li>
+          <li><strong>Future Value (FV)</strong>: The value of a current asset at a specified date in the future based on an assumed rate of growth.</li>
+          <li><strong>Periodic Payment (PMT)</strong>: A constant amount paid or received each period (such as a mortgage payment or savings deposit).</li>
+          <li><strong>Annual Interest Rate</strong>: The nominal annual percentage growth rate.</li>
+          <li><strong>Number of Periods (NPER)</strong>: The total number of payment/compounding intervals.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Mathematical Formula</h3>
+        <p class="text-sm">
+          The mathematical equation governing ordinary annuities (payments made at the end of each period) is:
+        </p>
+        <div class="bg-canvas-soft border border-hairline p-4 rounded font-mono text-xs text-ink overflow-x-auto my-3">
+          PV * (1 + r)^n + PMT * [((1 + r)^n - 1) / r] + FV = 0
+        </div>
+        <p class="text-xs text-mute leading-relaxed">
+          Where <code class="bg-canvas-soft px-1 rounded font-mono">r</code> is the periodic interest rate, and <code class="bg-canvas-soft px-1 rounded font-mono">n</code> is the total number of periods. For payments at the beginning of the period (Annuity Due), payments are compounded for one extra sub-period.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is a TVM calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              A Time Value of Money (TVM) calculator is a tool designed to compute financial parameters such as Present Value (PV), Future Value (FV), Periodic Payments (PMT), interest rates, and loan terms. It models cash flows to demonstrate how the value of money fluctuates over time when subject to compound interest.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I use a TVM calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              To use a TVM calculator, first select the variable you want to solve for. Then, input the other known values (for example, entering PV, PMT, rate, and periods to calculate FV). You must also specify the compounding frequency (e.g. monthly) and whether payments occur at the beginning or end of each period.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I solve TVM calculations on a calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              On a traditional or software calculator, TVM calculations are solved by assigning values to variables represented by buttons or inputs (PV, FV, PMT, I/Y, and N). By entering any four variables and pressing the calculate key for the fifth, the calculator executes algebraic or numerical approximation algorithms to find the solution.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate TVM using a financial calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Using a financial calculator requires following standard sign conventions: cash outflows (like savings deposits or purchase costs) must be entered as negative numbers, and inflows (like cash-outs or loans received) must be entered as positive numbers. Enter the values for four variables and press the button of the target variable to solve it.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I use the TVM calculator on a BA II Plus?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              On the Texas Instruments BA II Plus, use the dedicated third row of keys: <code>N</code>, <code>I/Y</code>, <code>PV</code>, <code>PMT</code>, and <code>FV</code>. First, clear existing TVM memory by pressing <code>2nd</code> then <code>FV</code> (CLR TVM). Key in a number and press the corresponding TVM key to register it. To solve, press <code>CPT</code> (Compute) followed by the target key (e.g. <code>CPT</code> <code>FV</code>).
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I use the TVM Solver on a graphing calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              On graphing calculators like the TI-84 Plus, press the <code>APPS</code> key, select the <code>Finance</code> menu, and open the <code>TVM Solver</code>. Fill in the values for <code>N</code>, <code>I%</code>, <code>PV</code>, <code>PMT</code>, <code>FV</code>, and compounding terms (<code>P/Y</code> and <code>C/Y</code>). Place your blinking cursor on the line of the variable you wish to calculate and press <code>ALPHA</code> then <code>ENTER</code> (SOLVE).
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateTVM, generateTVMSchedule } from '../../lib/math/finance';
+  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('tvm-form') as HTMLFormElement;
+  const solveForSelect = document.getElementById('solve-for') as HTMLSelectElement;
+  const scenarioSelect = document.getElementById('scenario') as HTMLSelectElement;
+  
+  const pvInput = document.getElementById('pv') as HTMLInputElement;
+  const fvInput = document.getElementById('fv') as HTMLInputElement;
+  const pmtInput = document.getElementById('pmt') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const periodsInput = document.getElementById('periods') as HTMLInputElement;
+  
+  const compoundingSelect = document.getElementById('compounding') as HTMLSelectElement;
+  const timingCheckbox = document.getElementById('timing') as HTMLInputElement;
+  
+  const resultContainer = document.getElementById('result-container');
+  const toggleScheduleBtn = document.getElementById('toggle-schedule');
+  const scheduleWrapper = document.getElementById('schedule-wrapper');
+  const scheduleBody = document.getElementById('schedule-body');
+
+  let chartInstance: Chart | null = null;
+
+  // Manage UI Disabled States
+  function updateInputAvailability() {
+    const solveFor = solveForSelect.value;
+    
+    // Reset all
+    [pvInput, fvInput, pmtInput, rateInput, periodsInput].forEach(inp => {
+      inp.disabled = false;
+      const wrap = inp.closest('.flex-col');
+      wrap?.classList.remove('opacity-50');
+      inp.classList.remove('bg-canvas-soft-2', 'cursor-not-allowed');
+      inp.placeholder = '0.00';
+    });
+
+    // Disable target
+    let targetInput: HTMLInputElement | null = null;
+    if (solveFor === 'pv') targetInput = pvInput;
+    else if (solveFor === 'fv') targetInput = fvInput;
+    else if (solveFor === 'pmt') targetInput = pmtInput;
+    else if (solveFor === 'rate') targetInput = rateInput;
+    else if (solveFor === 'periods') targetInput = periodsInput;
+
+    if (targetInput) {
+      targetInput.disabled = true;
+      targetInput.value = '';
+      targetInput.placeholder = 'Calculated automatically...';
+      const wrap = targetInput.closest('.flex-col');
+      wrap?.classList.add('opacity-50');
+      targetInput.classList.add('bg-canvas-soft-2', 'cursor-not-allowed');
+    }
+  }
+
+  // Set Default Values based on Scenario
+  function handleScenarioChange() {
+    const scenario = scenarioSelect.value;
+    const solveFor = solveForSelect.value;
+
+    if (scenario === 'loan') {
+      pvInput.value = '300000'; // Standard loan
+      pmtInput.value = '1500';
+      fvInput.value = '0';
+      rateInput.value = '5.5';
+      periodsInput.value = '360'; // 30 years monthly
+      compoundingSelect.value = '12'; // Monthly
+      if (solveFor === 'fv') {
+        solveForSelect.value = 'pmt'; // Usually solve for payment for loans
+      }
+    } else {
+      pvInput.value = '10000';
+      pmtInput.value = '100';
+      fvInput.value = '';
+      rateInput.value = '6.5';
+      periodsInput.value = '120';
+      compoundingSelect.value = '12';
+      if (solveFor === 'pmt') {
+        solveForSelect.value = 'fv'; // Solve for FV for savings
+      }
+    }
+    updateInputAvailability();
+    performCalculation();
+  }
+
+  // Parse numeric values safely
+  const valOf = (el: HTMLInputElement, fallback = 0) => {
+    if (el.disabled) return fallback;
+    const parsed = parseFloat(el.value);
+    return isNaN(parsed) ? fallback : parsed;
+  };
+
+  // Perform TVM Calculation
+  function performCalculation() {
+    const solveFor = solveForSelect.value as 'pv' | 'fv' | 'pmt' | 'rate' | 'periods';
+    const scenario = scenarioSelect.value;
+    const compoundingFreq = parseInt(compoundingSelect.value) || 12;
+    const timing = timingCheckbox.checked ? 'beginning' : 'end';
+
+    // Inputs
+    let pvRaw = valOf(pvInput, 0);
+    let fvRaw = valOf(fvInput, 0);
+    let pmtRaw = valOf(pmtInput, 0);
+    let rateRaw = valOf(rateInput, 0);
+    let periods = valOf(periodsInput, 0);
+
+    // Apply Sign Convention based on Scenario
+    // Standard TVM formulas need opposite signs for inflows vs outflows
+    let pv = 0;
+    let fv = 0;
+    let pmt = 0;
+    let rate = rateRaw / 100;
+
+    if (scenario === 'savings') {
+      // In Savings:
+      // PV starting balance is a contribution (outflow -> negative)
+      // PMT periodic savings is a contribution (outflow -> negative)
+      // FV ending balance is cash-out (inflow -> positive)
+      pv = -Math.abs(pvRaw);
+      pmt = -Math.abs(pmtRaw);
+      fv = Math.abs(fvRaw);
+    } else {
+      // In Loan:
+      // PV loan amount is cash received (inflow -> positive)
+      // PMT periodic repayment is a cash repayment (outflow -> negative)
+      // FV remaining loan balance is cash owed (negative, usually 0)
+      pv = Math.abs(pvRaw);
+      pmt = -Math.abs(pmtRaw);
+      fv = -Math.abs(fvRaw);
+    }
+
+    try {
+      let result = calculateTVM(solveFor, {
+        pv, fv, pmt, rate, periods,
+        compoundingFrequency: compoundingFreq,
+        paymentFrequency: compoundingFreq, // Assume payments align with compounding
+        timing
+      });
+
+      if (isNaN(result) || !isFinite(result)) {
+        throw new Error('Mathematical boundary reached. No solution.');
+      }
+
+      // Update Form Value display (optional/read-only)
+      let displayValue = '';
+      let title = '';
+      let description = '';
+
+      if (solveFor === 'fv') {
+        // FV solved: display as positive absolute
+        result = Math.abs(result);
+        fvInput.value = result.toFixed(2);
+        displayValue = formatCurrency(result);
+        title = 'Future Value (FV)';
+        description = scenario === 'savings' 
+          ? `Total accumulated savings after ${periods} periods.` 
+          : `Remaining balance on the loan after ${periods} periods.`;
+        fv = -result; // Set for schedule
+      } else if (solveFor === 'pv') {
+        result = Math.abs(result);
+        pvInput.value = result.toFixed(2);
+        displayValue = formatCurrency(result);
+        title = 'Present Value (PV)';
+        description = scenario === 'savings'
+          ? `Initial amount needed today to reach your target.`
+          : `Total loan size you can borrow.`;
+        pv = scenario === 'savings' ? -result : result;
+      } else if (solveFor === 'pmt') {
+        result = Math.abs(result);
+        pmtInput.value = result.toFixed(2);
+        displayValue = formatCurrency(result);
+        title = 'Periodic Payment (PMT)';
+        description = scenario === 'savings'
+          ? `Monthly contribution needed to reach your goal.`
+          : `Periodic loan repayment amount.`;
+        pmt = -result;
+      } else if (solveFor === 'rate') {
+        // Result comes back as annual rate decimal
+        const pct = result * 100;
+        rateInput.value = pct.toFixed(3);
+        displayValue = formatPercentage(result);
+        title = 'Annual Interest Rate';
+        description = `Required growth rate per year to hit target values.`;
+        rate = result;
+      } else if (solveFor === 'periods') {
+        periodsInput.value = Math.ceil(result).toString();
+        displayValue = `${Math.ceil(result)} periods`;
+        title = 'Number of Periods';
+        description = `Time required to satisfy cash flow criteria.`;
+        periods = Math.ceil(result);
+      }
+
+      // Update Result Card
+      if (resultContainer) {
+        resultContainer.innerHTML = `
+          <div class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+            <div class="flex-1 min-w-0 text-left pr-2">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">${title}</h4>
+              <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">${description}</p>
+            </div>
+            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${displayValue}">
+              ${displayValue}
+            </div>
+          </div>
+        `;
+      }
+
+      // Generate and Render Schedule and Chart
+      const schedule = generateTVMSchedule({
+        pv, fv, pmt, rate, periods,
+        compoundingFrequency: compoundingFreq,
+        paymentFrequency: compoundingFreq,
+        timing
+      });
+
+      updateChart(schedule, scenario);
+      updateScheduleTable(schedule);
+
+    } catch (err: any) {
+      if (resultContainer) {
+        resultContainer.innerHTML = `
+          <div class="p-6 rounded-md flex flex-col items-center text-center justify-center min-h-[140px] bg-error-soft border border-error text-error-deep">
+            <h4 class="text-sm font-medium mb-2">Calculation Error</h4>
+            <div class="text-lg font-semibold leading-tight px-4">${err.message || 'No mathematical solution exists.'}</div>
+            <p class="text-xs mt-3 max-w-[80%] mx-auto">Please check that interest rate is valid and check sign inputs.</p>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Update Chart.js Growth Visual
+  function updateChart(schedule: any[], scenario: string) {
+    const canvas = document.getElementById('tvm-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = schedule.map(e => `${e.period}`);
+    const balances = schedule.map(e => Math.abs(e.endingBalance));
+    
+    // Accumulate total deposits/payments
+    let totalPaid = 0;
+    const paidData = schedule.map(e => {
+      totalPaid += Math.abs(e.payment);
+      return totalPaid;
+    });
+
+    const isLoan = scenario === 'loan';
+    const mainDatasetLabel = isLoan ? 'Remaining Principal' : 'Total Portfolio Value';
+    const secondaryDatasetLabel = isLoan ? 'Cumulative Repayments' : 'Cumulative Deposits';
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].label = mainDatasetLabel;
+      chartInstance.data.datasets[0].data = balances;
+      chartInstance.data.datasets[1].label = secondaryDatasetLabel;
+      chartInstance.data.datasets[1].data = paidData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: mainDatasetLabel,
+              data: balances,
+              borderColor: '#171717',
+              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              fill: true,
+              tension: 0.1,
+              borderWidth: 2,
+              pointRadius: 0,
+            },
+            {
+              label: secondaryDatasetLabel,
+              data: paidData,
+              borderColor: '#0070f3',
+              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              fill: true,
+              tension: 0.1,
+              borderWidth: 1.5,
+              pointRadius: 0,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                boxWidth: 8,
+                padding: 12,
+                font: {
+                  family: 'Geist, sans-serif',
+                  size: 10
+                }
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              padding: 10,
+              bodyFont: { family: 'Geist, sans-serif' },
+              titleFont: { family: 'Geist Mono, monospace' }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {
+                maxTicksLimit: 8,
+                font: { family: 'Geist Mono, monospace', size: 9 }
+              }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Update detailed table rows
+  function updateScheduleTable(schedule: any[]) {
+    if (!scheduleBody) return;
+    
+    // Render only first 200 rows if it is very large, to prevent DOM lag
+    const maxRender = 360;
+    const truncated = schedule.slice(0, maxRender);
+    
+    let html = '';
+    truncated.forEach(e => {
+      html += `
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
+          <td class="px-5 py-3 font-semibold text-body">${e.period}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.beginningBalance))}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.payment))}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.interest))}</td>
+          <td class="px-5 py-3 text-right font-medium">${formatCurrency(Math.abs(e.endingBalance))}</td>
+        </tr>
+      `;
+    });
+
+    if (schedule.length > maxRender) {
+      html += `
+        <tr class="bg-canvas-soft-2 font-mono text-xs">
+          <td colspan="5" class="px-5 py-3 text-center text-mute">
+            Showing first ${maxRender} of ${schedule.length} periods. Download API schedule for full datasets.
+          </td>
+        </tr>
+      `;
+    }
+
+    scheduleBody.innerHTML = html;
+  }
+
+  // Listeners
+  solveForSelect.addEventListener('change', () => {
+    updateInputAvailability();
+    performCalculation();
+  });
+
+  scenarioSelect.addEventListener('change', handleScenarioChange);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      // Re-trigger scenario change default UI states
+      handleScenarioChange();
+      performCalculation();
+    }, 0);
+  });
+
+  // Schedule toggle logic
+  if (toggleScheduleBtn && scheduleWrapper) {
+    toggleScheduleBtn.addEventListener('click', () => {
+      const isHidden = scheduleWrapper.classList.contains('hidden');
+      if (isHidden) {
+        scheduleWrapper.classList.remove('hidden');
+        toggleScheduleBtn.textContent = 'Hide Detailed Table';
+      } else {
+        scheduleWrapper.classList.add('hidden');
+        toggleScheduleBtn.textContent = 'Show Detailed Table';
+      }
+    });
+  }
+
+  // Initialize
+  updateInputAvailability();
+  performCalculation();
+</script>

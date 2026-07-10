@@ -1,0 +1,328 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="APR Calculator" 
+  description="Calculate the true Annual Percentage Rate (APR) of your loan by factoring in interest rates, term lengths, and upfront finance charges or broker fees."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="apr-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Loan Details</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="loan-amount" label="Loan Principal Amount" type="number" prefix="$" value="200000" placeholder="0.00" />
+            <Input id="interest-rate" label="Nominal Interest Rate" type="number" suffix="%" value="6.0" placeholder="0.00" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="term" label="Loan Term" type="number" suffix="years" value="30" placeholder="30" />
+            <Input id="fees" label="Upfront Fees & Closing Costs" type="number" prefix="$" value="4000" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="p-5 bg-canvas-soft border border-hairline rounded-md text-xs text-body leading-relaxed space-y-2">
+          <p class="font-semibold text-ink">What fees should be included in APR?</p>
+          <p>
+            Standard APR fees include: loan origination fees, points, underwriting charges, document prep fees, private mortgage insurance (PMI), and broker fees. 
+          </p>
+          <p class="text-mute">
+            *Do not include appraisal fees, title insurance, attorney fees, or notary costs, as these are typically third-party costs and not direct costs of credit.
+          </p>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate APR
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Visual Chart) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-apr">
+          <ResultCard 
+            title="Effective APR" 
+            value="6.19%" 
+            highlight={true} 
+            description="The real interest rate you pay annually once upfront fees are included."
+          />
+        </div>
+        <div id="res-nominal">
+          <ResultCard 
+            title="Interest Rate" 
+            value="6.00%" 
+            description="The base interest rate stated on your loan note."
+          />
+        </div>
+        <div id="res-payment">
+          <ResultCard 
+            title="Monthly Payment (P&I)" 
+            value="$1,199.10" 
+          />
+        </div>
+        <div id="res-fees">
+          <ResultCard 
+            title="Total Finance Fees" 
+            value="$4,000.00" 
+          />
+        </div>
+      </div>
+
+      <!-- Comparison Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Rate vs. APR Comparison</h4>
+        <div class="h-56 relative">
+          <canvas id="apr-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Understanding the Difference between APR and Interest Rate.</h2>
+      <p>
+        When shopping for a mortgage or loan, you will see two rates advertised: the **interest rate** and the **Annual Percentage Rate (APR)**. Understanding the distinction is vital to evaluating the true cost of borrowing:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Base Interest Rate</h3>
+        <p class="text-sm">
+          The interest rate is the nominal cost of borrowing the principal loan balance. It is used directly to calculate your monthly payment. For example, on a $200,000 loan at a 6% interest rate, your monthly principal & interest (P&I) payment will be exactly $1,199.10.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Annual Percentage Rate (APR)</h3>
+        <p class="text-sm">
+          The APR represents the broader cost of credit. It includes the base interest rate plus other charges (closing costs, points, fees) amortized over the life of the loan. In other words, it represents the rate you would pay if all upfront fees were converted into interest charges. 
+        </p>
+        <p class="text-xs text-mute mt-2">
+          If Loan A has a 5.8% interest rate but $8,000 in upfront fees (resulting in an APR of 6.2%), and Loan B has a 6.0% interest rate but only $1,000 in fees (resulting in an APR of 6.05%), **Loan B is cheaper overall** even though its interest rate is higher!
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is an APR calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              An APR (Annual Percentage Rate) calculator is a tool that computes the true annualized cost of borrowing a loan. Unlike nominal interest rates, it folds in closing costs, points, lender documentation fees, and origination charges to show the effective interest rate.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I use an APR calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              To use this APR calculator, enter your loan principal, the base interest rate, the loan term, and the total upfront lender fees or closing costs. The calculator automatically computes the actual monthly payment and solves for the equivalent APR.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate APR on a financial calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              On a financial calculator (like TI BA II Plus):
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-1 text-xs text-mute">
+              <li>Calculate your standard monthly payment (PMT) including interest and term.</li>
+              <li>Subtract closing fees from the principal to find net funded amount (Net PV).</li>
+              <li>Enter the monthly PMT, the Net PV, and the Term (N).</li>
+              <li>Solve for the periodic interest rate (I/Y). Multiply by 12 to find the nominal annual APR.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does APR affect the cost of a loan?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The wider the gap between the base interest rate and the APR, the more expensive the loan fees are. The APR represents the true baseline cost of credit, meaning that comparing APRs of different lenders is the best way to identify the cheapest overall loan.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate APR on a credit card?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Credit card APR is a nominal rate. Credit cards typically charge interest daily. To find your daily periodic interest rate, divide your card's APR by 365 (or 360). For example, a 21.9% APR divided by 365 yields a daily rate of exactly 0.06%.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I convert EAR to APR on a financial calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              On TI BA II Plus, use the interest conversion tool: press <code>2nd</code> then <code>2</code> (ICONV). Enter the Effective Annual Rate as <code>EFF</code>, press <code>ENTER</code>. Arrow up to <code>C/Y</code> (compounding periods per year), set it (e.g. 12 for monthly), press <code>ENTER</code>. Arrow down to <code>NOM</code> (Nominal Rate / APR) and press <code>CPT</code>.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateAPR, calculateLoanPMT } from '../../lib/math/loan';
+  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('apr-form') as HTMLFormElement;
+  
+  const loanInput = document.getElementById('loan-amount') as HTMLInputElement;
+  const rateInput = document.getElementById('interest-rate') as HTMLInputElement;
+  const termInput = document.getElementById('term') as HTMLInputElement;
+  const feesInput = document.getElementById('fees') as HTMLInputElement;
+
+  const resAprCard = document.getElementById('res-apr');
+  const resNominalCard = document.getElementById('res-nominal');
+  const resPaymentCard = document.getElementById('res-payment');
+  const resFeesCard = document.getElementById('res-fees');
+
+  let chartInstance: Chart | null = null;
+
+  // Calculate APR
+  function performCalculation() {
+    const loanAmount = Math.abs(parseFloat(loanInput.value)) || 0;
+    const interestRate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
+    const termYears = Math.abs(parseInt(termInput.value)) || 1;
+    const extraFees = Math.abs(parseFloat(feesInput.value)) || 0;
+
+    const apr = calculateAPR({ loanAmount, interestRate, termYears, extraFees });
+    const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate, years: termYears });
+
+    // Format
+    const aprFormatted = formatPercentage(apr);
+    const nominalFormatted = formatPercentage(interestRate);
+    const paymentFormatted = formatCurrency(pmt);
+    const feesFormatted = formatCurrency(extraFees);
+
+    // Update UI
+    if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = aprFormatted;
+    if (resNominalCard) resNominalCard.querySelector('.font-mono')!.textContent = nominalFormatted;
+    if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = paymentFormatted;
+    if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = feesFormatted;
+
+    // Update Chart
+    updateChart(interestRate * 100, apr * 100);
+  }
+
+  function updateChart(nominal: number, apr: number) {
+    const canvas = document.getElementById('apr-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [nominal, apr];
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Interest Rate', 'Effective APR'],
+          datasets: [
+            {
+              label: 'Percentage Rate (%)',
+              data: [nominal, apr],
+              backgroundColor: ['#4d4d4d', '#0070f3'],
+              borderColor: ['#4d4d4d', '#0070f3'],
+              borderWidth: 1,
+              barThickness: 48
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y', // horizontal bar chart
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${Number(context.raw).toFixed(3)}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Listeners
+  [loanInput, rateInput, termInput, feesInput].forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Initial calculation
+  performCalculation();
+</script>

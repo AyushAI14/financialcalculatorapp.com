@@ -1,0 +1,278 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="Tip Calculator" 
+  description="Quickly calculate tip amounts and split restaurant bills or service tabs among multiple friends, colleagues, or family members."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="tip-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Bill & Service</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="bill" label="Bill Amount" type="number" prefix="$" value="84.50" />
+            <Input id="tip-pct" label="Tip Percentage" type="number" suffix="%" value="18" />
+          </div>
+
+          <div class="pt-4 border-t border-hairline/60">
+            <Input id="split" label="Split Bill (Number of People)" type="number" value="3" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Tip
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-total-pp">
+          <ResultCard title="Total Per Person" value="$33.14" highlight={true} />
+        </div>
+        <div id="res-tip-pp">
+          <ResultCard title="Tip Per Person" value="$5.07" />
+        </div>
+        <div id="res-bill-total">
+          <ResultCard title="Total Bill" value="$99.71" />
+        </div>
+        <div id="res-tip-total">
+          <ResultCard title="Total Tip" value="$15.21" />
+        </div>
+      </div>
+
+      <!-- Bill Breakdown Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Bill vs. Tip Proportion</h4>
+        <div class="h-56 relative">
+          <canvas id="tip-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Tipping Etiquette and Standards.</h2>
+      <p>
+        Tipping is a common custom in many service industries, particularly in restaurants, bars, and hotels. Standards vary by country, region, and service quality:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Standard Restaurant Gratuity</h3>
+        <p class="text-sm">
+          In the United States, standard restaurant tip percentages are generally:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1 text-xs text-mute">
+          <li><strong>15%</strong>: Standard tipping rate for average service.</li>
+          <li><strong>18%</strong>: Good tipping rate for attentive, quality service.</li>
+          <li><strong>20%+</strong>: Excellent tipping rate for outstanding service or large group parties.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">How Splitting Works</h3>
+        <p class="text-sm">
+          When splitting bills, the calculator adds the total bill amount and the total tip amount, and then divides both by the number of people. This ensures that every diner pays their fair share of the base cost plus the service tip.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Tipping amounts depend on the service type and your location. In the US, standard sit-down restaurant service is tipped at **15% to 20%**, cab drivers and delivery personnel at **10% to 15%**, and valet or hotel staff at **$2 to $5** per service.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip for takeout?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              For takeout orders, tipping is not strictly mandatory, but **10%** is a polite standard to thank the kitchen and packaging staff for preparing your meal. For complicated or very large group takeout orders, tipping **15%** is customary.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip a waitress or server?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              In US sit-down restaurants, servers are standardly tipped **18% to 20%** for good service. If the service was subpar, dropping to **15%** is standard, whereas exceptional service is often rewarded with **22% or more**.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip movers?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Movers are generally tipped **$4 to $5 per hour per mover** for standard local moves. For a 4-hour local move with a crew of 3, a total tip of $50 to $60 ($20 to each mover) is highly appropriate.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip long-distance movers?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              For multi-day or long-distance moves, it is customary to tip **$40 to $50 per day per mover** (or roughly 5% to 8% of the total move bill divided among the crew). Providing cold water and lunch is also highly appreciated by the crew.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How much should I tip a doorman in NYC?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              For daily tasks (like hailing cabs or carrying heavy packages), tipping **$2 to $5** on the spot is standard. For annual holiday tipping, NYC residents typically give their building doorman **$50 to $150** depending on the building size and length of tenancy.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateTip } from '../../lib/math/misc';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('tip-form') as HTMLFormElement;
+  
+  const billInput = document.getElementById('bill') as HTMLInputElement;
+  const tipPctInput = document.getElementById('tip-pct') as HTMLInputElement;
+  const splitInput = document.getElementById('split') as HTMLInputElement;
+
+  const resTotalPpCard = document.getElementById('res-total-pp');
+  const resTipPpCard = document.getElementById('res-tip-pp');
+  const resBillTotalCard = document.getElementById('res-bill-total');
+  const resTipTotalCard = document.getElementById('res-tip-total');
+
+  let chartInstance: Chart | null = null;
+
+  // Run calculation
+  function performCalculation() {
+    const billAmount = parseFloat(billInput.value) || 0;
+    const tipPct = (parseFloat(tipPctInput.value) || 0) / 100;
+    const splitCount = parseInt(splitInput.value) || 1;
+
+    const res = calculateTip({ billAmount, tipPct, splitCount });
+
+    // Update Result Cards
+    if (resTotalPpCard) resTotalPpCard.querySelector('.font-mono')!.textContent = formatCurrency(res.totalPerPerson);
+    if (resTipPpCard) resTipPpCard.querySelector('.font-mono')!.textContent = formatCurrency(res.tipPerPerson);
+    if (resBillTotalCard) resBillTotalCard.querySelector('.font-mono')!.textContent = formatCurrency(res.totalAmount);
+    if (resTipTotalCard) resTipTotalCard.querySelector('.font-mono')!.textContent = formatCurrency(res.tipAmount);
+
+    // Update Chart
+    updateChart(billAmount, res.tipAmount);
+  }
+
+  function updateChart(bill: number, tip: number) {
+    const canvas = document.getElementById('tip-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dataset = [bill, tip];
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = dataset;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Base Bill Cost', 'Service Tip'],
+          datasets: [
+            {
+              data: dataset,
+              backgroundColor: ['#171717', '#0070f3'],
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'right',
+              labels: {
+                boxWidth: 10,
+                font: { family: 'Geist, sans-serif', size: 10 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${formatCurrency(context.raw as number)}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Listeners
+  [billInput, tipPctInput, splitInput].forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Initial calculation
+  performCalculation();
+</script>

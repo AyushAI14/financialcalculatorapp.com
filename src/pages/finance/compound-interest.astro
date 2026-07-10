@@ -1,0 +1,538 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+---
+
+<CalculatorLayout 
+  title="Compound Interest Calculator" 
+  description="Calculate how your money can grow over time with compound interest. Adjust starting principal, monthly additions, rates, and compounding terms."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="compound-form" class="space-y-6">
+        <!-- Synced Inputs & Range Sliders -->
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Investment Values</h3>
+          
+          <!-- Principal -->
+          <div class="space-y-2">
+            <Input id="principal" label="Initial Investment" type="number" prefix="$" value="10000" />
+            <RangeSlider id="principal-slider" label="Initial Investment Adjustment" min={0} max={250000} step={1000} value={10000} />
+          </div>
+
+          <!-- Monthly contribution -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="contribution" label="Monthly Contribution" type="number" prefix="$" value="200" />
+            <RangeSlider id="contribution-slider" label="Monthly Contribution Adjustment" min={0} max={5000} step={50} value={200} />
+          </div>
+
+          <!-- Interest Rate -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="rate" label="Annual Interest Rate" type="number" suffix="%" value="7.5" />
+            <RangeSlider id="rate-slider" label="Interest Rate Adjustment" min={0} max={25} step={0.1} value={7.5} />
+          </div>
+
+          <!-- Years -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="years" label="Length of Time" type="number" suffix="years" value="20" />
+            <RangeSlider id="years-slider" label="Time Duration Adjustment" min={1} max={50} step={1} value={20} />
+          </div>
+        </div>
+
+        <!-- Compounding Terms -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+          <Select id="compounding" label="Compounding Interval" options={[
+            { value: '1', label: 'Annually' },
+            { value: '2', label: 'Semi-Annually' },
+            { value: '4', label: 'Quarterly' },
+            { value: '12', label: 'Monthly' },
+            { value: '365', label: 'Daily' }
+          ]} value="12" />
+          
+          <ToggleSwitch 
+            id="timing" 
+            label="Beginning of Period" 
+            checked={false} 
+            description="Contributions made at start of month"
+          />
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Growth
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Stacked Bar Chart) -->
+    <div class="lg:col-span-6 space-y-6">
+      <!-- 3-up Result Cards Grid -->
+      <div class="flex flex-col gap-3">
+        <ResultCard 
+          id="res-total"
+          title="Ending Balance" 
+          value="$113,323.01" 
+          highlight={true} 
+        />
+        <ResultCard 
+          id="res-principal"
+          title="Total Principal" 
+          value="$58,000.00" 
+        />
+        <ResultCard 
+          id="res-interest"
+          title="Interest Earned" 
+          value="$55,323.01" 
+        />
+      </div>
+
+      <!-- Growth Chart Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Investment Growth Chart</h4>
+        <div class="h-80 relative">
+          <canvas id="growth-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Year-by-Year Schedule -->
+  <div class="mt-12 border-t border-hairline pt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Yearly Growth Breakdowns</h3>
+        <p class="text-sm text-body mt-1">Detailed growth of your principal and compound interest accrued annually.</p>
+      </div>
+      <button 
+        id="toggle-schedule" 
+        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+      >
+        Show Yearly Table
+      </button>
+    </div>
+
+    <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
+      <div class="overflow-x-auto max-h-[450px]">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+            <tr>
+              <th class="px-5 py-3">Year</th>
+              <th class="px-5 py-3 text-right">Starting Bal</th>
+              <th class="px-5 py-3 text-right">Deposits</th>
+              <th class="px-5 py-3 text-right">Interest</th>
+              <th class="px-5 py-3 text-right">Ending Bal</th>
+              <th class="px-5 py-3 text-right">Total Interest</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body" class="divide-y divide-hairline">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">The Magic of Compounding Interest.</h2>
+      <p>
+        Compound interest is the addition of interest to the principal sum of a loan or deposit, or in other words, <strong>interest on interest</strong>. It is the result of reinvesting interest, rather than paying it out, so that interest in the next period is then earned on the principal sum plus previously accumulated interest.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Compounding Intervals</h3>
+        <p class="text-sm">
+          The frequency of compounding (daily, monthly, quarterly, or annually) dictates how quickly interest accumulates. Standard compounding rates:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1.5 text-xs text-mute">
+          <li><strong>Annually (1x/year)</strong>: Interest calculated once a year.</li>
+          <li><strong>Quarterly (4x/year)</strong>: Interest calculated four times a year.</li>
+          <li><strong>Monthly (12x/year)</strong>: The standard for most savings and credit accounts.</li>
+          <li><strong>Daily (365x/year)</strong>: Compounded every day, giving the maximum rate of return.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Formula of Growth</h3>
+        <div class="bg-canvas-soft border border-hairline p-4 rounded font-mono text-xs text-ink overflow-x-auto my-3">
+          A = P * (1 + r/n)^(n*t)
+        </div>
+        <p class="text-xs text-mute leading-relaxed">
+          Where <code class="bg-canvas-soft px-1 rounded font-mono">A</code> is the final balance, <code class="bg-canvas-soft px-1 rounded font-mono">P</code> is the principal, <code class="bg-canvas-soft px-1 rounded font-mono">r</code> is the annual rate, <code class="bg-canvas-soft px-1 rounded font-mono">n</code> is the compound frequency, and <code class="bg-canvas-soft px-1 rounded font-mono">t</code> is the duration in years. With recurring deposits, annuity formulas are layered on top.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Compound interest is interest calculated on the initial principal and also on the accumulated interest of previous periods. It differs from simple interest, which is earned only on the initial principal amount.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does compound interest work?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              At the end of each interest period (e.g. monthly), the interest earned is added to your account balance. In the next period, the interest rate is applied to this new, larger balance. This creates a snowball effect where your money grows faster over time.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              You can calculate compound interest by using this calculator, mathematical formulas, or spreadsheet software. You need the starting principal, the interest rate, the compounding frequency, and the length of time the investment will grow.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is the formula for compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The basic formula is <code>A = P * (1 + r/n)^(n*t)</code>, where <code>A</code> is the final amount, <code>P</code> is the principal, <code>r</code> is the annual interest rate, <code>n</code> is the compounding frequency per year, and <code>t</code> is the time in years.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is the difference between simple and compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Simple interest is calculated only on the original principal amount (meaning you earn a flat amount of interest every period). Compound interest earns interest on both the principal and prior interest payments, leading to exponential growth.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does the age you start saving affect compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Starting early gives your money more time to compound. Because compound interest grows exponentially, saving even small amounts in your 20s can result in a much larger nest egg by retirement than saving much larger sums in your 40s or 50s.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is a compound interest account?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              A compound interest account is any financial account that pays interest and automatically reinvests that interest back into the balance. High-yield savings accounts, money market accounts, and brokerage investment accounts are common examples.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>Do CDs earn compound interest?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Yes, Certificate of Deposit (CD) accounts almost always earn compound interest. Interest is typically compounded daily or monthly and paid out at the end of the term or added back into the CD balance.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate compound interest in Excel?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              In Excel, you can use the Future Value formula: <code>=FV(rate, nper, pmt, [pv], [type])</code>. For example, <code>=FV(0.07/12, 120, -100, -10000, 0)</code> calculates the future value of a $10,000 principal growing at 7% compounded monthly for 10 years (120 months) with $100 monthly deposits.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { generateCompoundInterestSchedule } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('compound-form') as HTMLFormElement;
+  
+  const principalInput = document.getElementById('principal') as HTMLInputElement;
+  const principalSlider = document.getElementById('principal-slider') as HTMLInputElement;
+  
+  const contributionInput = document.getElementById('contribution') as HTMLInputElement;
+  const contributionSlider = document.getElementById('contribution-slider') as HTMLInputElement;
+  
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const rateSlider = document.getElementById('rate-slider') as HTMLInputElement;
+  
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  const yearsSlider = document.getElementById('years-slider') as HTMLInputElement;
+
+  const compoundingSelect = document.getElementById('compounding') as HTMLSelectElement;
+  const timingCheckbox = document.getElementById('timing') as HTMLInputElement;
+  
+  const toggleScheduleBtn = document.getElementById('toggle-schedule');
+  const scheduleWrapper = document.getElementById('schedule-wrapper');
+  const scheduleBody = document.getElementById('schedule-body');
+
+  let chartInstance: Chart | null = null;
+
+  // Sync Input and Sliders
+  function setupSyncedInputs(inp: HTMLInputElement, sli: HTMLInputElement) {
+    // Sync slider -> input
+    sli.addEventListener('input', (e: any) => {
+      inp.value = e.target.value;
+      performCalculation();
+    });
+
+    // Sync input -> slider
+    inp.addEventListener('input', () => {
+      const val = parseFloat(inp.value) || 0;
+      sli.value = Math.min(Math.max(val, parseFloat(sli.min)), parseFloat(sli.max)).toString();
+      
+      // Update RangeSlider's label value directly
+      const displayVal = document.getElementById(`${sli.id}-val`);
+      if (displayVal) displayVal.textContent = sli.value;
+      
+      performCalculation();
+    });
+  }
+
+  setupSyncedInputs(principalInput, principalSlider);
+  setupSyncedInputs(contributionInput, contributionSlider);
+  setupSyncedInputs(rateInput, rateSlider);
+  setupSyncedInputs(yearsInput, yearsSlider);
+
+  // Perform Calculation
+  function performCalculation() {
+    const principal = Math.abs(parseFloat(principalInput.value)) || 0;
+    const monthlyContribution = Math.abs(parseFloat(contributionInput.value)) || 0;
+    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
+    const years = Math.abs(parseInt(yearsInput.value)) || 1;
+    const compounding = parseInt(compoundingSelect.value) || 12;
+    const timing = timingCheckbox.checked ? 'beginning' : 'end';
+
+    const schedule = generateCompoundInterestSchedule({
+      principal,
+      monthlyContribution,
+      rate,
+      years,
+      compoundingFrequency: compounding,
+      timing
+    });
+
+    const finalEntry = schedule[schedule.length - 1];
+    
+    // Update Result Cards
+    updateResultCards({
+      totalBalance: finalEntry.endingBalance,
+      totalContributions: finalEntry.totalContributions,
+      totalInterest: finalEntry.totalInterest
+    });
+
+    // Update Chart & Schedule
+    updateChart(schedule);
+    updateScheduleTable(schedule);
+  }
+
+  function updateResultCards(res: { totalBalance: number, totalContributions: number, totalInterest: number }) {
+    const cards = ['res-total', 'res-principal', 'res-interest'];
+    
+    const rootTotal = document.getElementById('res-total');
+    const rootPrincipal = document.getElementById('res-principal');
+    const rootInterest = document.getElementById('res-interest');
+
+    if (rootTotal) {
+      rootTotal.querySelector('.font-mono')!.textContent = formatCurrency(res.totalBalance);
+      rootTotal.querySelector('.font-mono')!.setAttribute('title', formatCurrency(res.totalBalance));
+    }
+    if (rootPrincipal) {
+      rootPrincipal.querySelector('.font-mono')!.textContent = formatCurrency(res.totalContributions);
+      rootPrincipal.querySelector('.font-mono')!.setAttribute('title', formatCurrency(res.totalContributions));
+    }
+    if (rootInterest) {
+      rootInterest.querySelector('.font-mono')!.textContent = formatCurrency(res.totalInterest);
+      rootInterest.querySelector('.font-mono')!.setAttribute('title', formatCurrency(res.totalInterest));
+    }
+  }
+
+  function updateChart(schedule: any[]) {
+    const canvas = document.getElementById('growth-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = schedule.map(e => `Year ${e.year}`);
+    const principalData = schedule.map(e => e.totalContributions);
+    const interestData = schedule.map(e => e.totalInterest);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = principalData;
+      chartInstance.data.datasets[1].data = interestData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Total Deposits',
+              data: principalData,
+              backgroundColor: '#171717',
+              borderColor: '#171717',
+              borderWidth: 1,
+              stack: 'stack0'
+            },
+            {
+              label: 'Accrued Interest',
+              data: interestData,
+              backgroundColor: '#0070f3',
+              borderColor: '#0070f3',
+              borderWidth: 1,
+              stack: 'stack0'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                boxWidth: 8,
+                padding: 12,
+                font: { family: 'Geist, sans-serif', size: 10 }
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${formatCurrency(context.raw as number)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              stacked: true,
+              ticks: {
+                maxTicksLimit: 12,
+                font: { family: 'Geist Mono, monospace', size: 9 }
+              }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              stacked: true,
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function updateScheduleTable(schedule: any[]) {
+    if (!scheduleBody) return;
+    
+    let html = '';
+    schedule.forEach(e => {
+      html += `
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
+          <td class="px-5 py-3 font-semibold text-body">Year ${e.year}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.contributions)}</td>
+          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.interest)}</td>
+          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.totalInterest)}</td>
+        </tr>
+      `;
+    });
+
+    scheduleBody.innerHTML = html;
+  }
+
+  // Listeners
+  compoundingSelect.addEventListener('change', performCalculation);
+  timingCheckbox.addEventListener('change', performCalculation);
+  
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Table toggle logic
+  if (toggleScheduleBtn && scheduleWrapper) {
+    toggleScheduleBtn.addEventListener('click', () => {
+      const isHidden = scheduleWrapper.classList.contains('hidden');
+      if (isHidden) {
+        scheduleWrapper.classList.remove('hidden');
+        toggleScheduleBtn.textContent = 'Hide Yearly Table';
+      } else {
+        scheduleWrapper.classList.add('hidden');
+        toggleScheduleBtn.textContent = 'Show Yearly Table';
+      }
+    });
+  }
+
+  // Initial Calculation
+  performCalculation();
+</script>

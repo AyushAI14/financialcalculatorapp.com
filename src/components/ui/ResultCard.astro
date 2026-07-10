@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  value: string | number;
+  description?: string;
+  highlight?: boolean;
+}
+
+const { title, value, description, highlight = false } = Astro.props;
+---
+<div class:list={[
+  "px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full",
+  highlight ? "bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]" : "bg-canvas border border-hairline shadow-sm"
+]}>
+  <div class="flex-1 min-w-0 text-left pr-2">
+    <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">{title}</h4>
+    {description && <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">{description}</p>}
+  </div>
+  <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title={String(value)}>
+    {value}
+  </div>
+</div>

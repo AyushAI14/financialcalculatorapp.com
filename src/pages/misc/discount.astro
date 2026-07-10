@@ -1,0 +1,296 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="Discount & Tax Calculator" 
+  description="Determine the final cost of an item after applying discount percentages and local sales taxes. Visualize your absolute cash savings."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="discount-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Price parameters</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <Input id="original" label="Original Sticker Price" type="number" prefix="$" value="120.00" />
+            </div>
+            <Input id="discount" label="Discount Rate" type="number" suffix="%" value="25" />
+          </div>
+
+          <div class="pt-4 border-t border-hairline/60">
+            <Input id="tax" label="Sales Tax Rate" type="number" suffix="%" value="8.25" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Final Price
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-final">
+          <ResultCard title="Final Price" value="$97.43" highlight={true} description="The total amount you pay out-of-pocket at checkout." />
+        </div>
+        <div id="res-savings">
+          <ResultCard title="Total Savings" value="$30.00" description="Absolute cash savings from the discount." />
+        </div>
+        <div id="res-tax-amt">
+          <ResultCard title="Sales Tax" value="$7.43" description="Total sales tax paid on the discounted price." />
+        </div>
+      </div>
+
+      <!-- Price Progress Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Price Breakdown Comparison</h4>
+        <div class="h-64 relative">
+          <canvas id="discount-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Understanding Purchase Taxations & Discounts.</h2>
+      <p>
+        Shopping and retail math involves applying percentage changes to determine final checkout prices. Understanding how discounts and sales taxes stack is key to budgeting:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Discount Order of Operations</h3>
+        <p class="text-sm">
+          Sales tax is calculated on the **discounted price**, not the original sticker price.
+        </p>
+        <p class="text-xs text-mute mt-2">
+          If an item costs $100 and has a 20% discount, the price drops to $80. A sales tax rate of 8% is then calculated as 8% of $80 ($6.40), making the final checkout cost $86.40. You do not pay sales tax on the initial $20 discount!
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Stacking Percentage Discounts</h3>
+        <p class="text-sm">
+          Be careful when stacking coupons: a "20% off plus an extra 10% off" is not equivalent to 30% off. The 10% is calculated on the already-discounted balance, resulting in a total discount of 28% off the original price.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate a percentage discount?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              To calculate a percentage discount, multiply the original price by the discount percentage divided by 100. For example, a 20% discount on a $50 item is calculated as: <code>$50 * (20 / 100) = $10</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate the final price after a discount?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Subtract the discount amount from the original price. Alternatively, multiply the original price by (1 minus the discount rate in decimal form). For a 20% discount on $50: <code>$50 * (1 - 0.20) = $40</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate a discounted price with tax?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              First, calculate the discounted price. Next, calculate the tax amount on that discounted price (Discounted Price * Tax Rate). Add the tax amount to the discounted price to get the final checkout price.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate two discounts applied one after another?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Apply the first discount to the original price to find the intermediate price. Then apply the second discount to that intermediate price. The formula is: <code>Final = Original * (1 - d1) * (1 - d2)</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate three successive discounts?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Apply each discount sequentially. The formula is: <code>Final = Original * (1 - d1) * (1 - d2) * (1 - d3)</code>. For example, successive discounts of 20%, 10%, and 5% yield a final cost of 68.4% of the original price (a total discount of 31.6%).
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>Is a double discount the same as adding the two discount percentages?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              No. A double discount of "20% off plus an extra 10% off" is not 30% off. The second 10% is calculated on the remaining 80% balance (adding a 8% discount), which equals a total discount of **28%** off the original price.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does sales tax affect the final discounted price?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Sales tax increases the final checkout price by a percentage of the purchase price. Because tax is calculated after applying discounts, a larger discount reduces both the base price and the absolute tax amount you pay.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateDiscountAndTax } from '../../lib/math/misc';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('discount-form') as HTMLFormElement;
+  
+  const originalInput = document.getElementById('original') as HTMLInputElement;
+  const discountInput = document.getElementById('discount') as HTMLInputElement;
+  const taxInput = document.getElementById('tax') as HTMLInputElement;
+
+  const resFinalCard = document.getElementById('res-final');
+  const resSavingsCard = document.getElementById('res-savings');
+  const resTaxCard = document.getElementById('res-tax-amt');
+
+  let chartInstance: Chart | null = null;
+
+  // Run calculation
+  function performCalculation() {
+    const originalPrice = parseFloat(originalInput.value) || 0;
+    const discountPct = (parseFloat(discountInput.value) || 0) / 100;
+    const taxPct = (parseFloat(taxInput.value) || 0) / 100;
+
+    const res = calculateDiscountAndTax({ originalPrice, discountPct, taxPct });
+
+    // Update Result Cards
+    if (resFinalCard) resFinalCard.querySelector('.font-mono')!.textContent = formatCurrency(res.finalPrice);
+    if (resSavingsCard) resSavingsCard.querySelector('.font-mono')!.textContent = formatCurrency(res.discountAmount);
+    if (resTaxCard) resTaxCard.querySelector('.font-mono')!.textContent = formatCurrency(res.taxAmount);
+
+    // Update Chart
+    updateChart(originalPrice, res.discountedPrice, res.finalPrice);
+  }
+
+  function updateChart(orig: number, disc: number, final: number) {
+    const canvas = document.getElementById('discount-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dataset = [orig, disc, final];
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = dataset;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Sticker Price', 'Discounted Price', 'Checkout Price'],
+          datasets: [
+            {
+              label: 'Cost ($)',
+              data: dataset,
+              backgroundColor: ['#4d4d4d', '#a1a1a1', '#0070f3'],
+              borderColor: ['#4d4d4d', '#a1a1a1', '#0070f3'],
+              borderWidth: 1,
+              barThickness: 40
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${formatCurrency(context.raw as number)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Listeners
+  [originalInput, discountInput, taxInput].forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Initial calculation
+  performCalculation();
+</script>

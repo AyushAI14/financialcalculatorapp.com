@@ -1,0 +1,32 @@
+---
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  id: string;
+  label: string;
+  options: Option[];
+  value?: string;
+}
+
+const { id, label, options, value } = Astro.props;
+---
+<div class="flex flex-col gap-1.5">
+  <label for={id} class="text-sm font-medium text-ink">{label}</label>
+  <div class="relative">
+    <select
+      id={id}
+      name={id}
+      class="w-full h-10 bg-canvas text-ink text-sm border border-hairline rounded-sm pl-3 pr-8 appearance-none transition-colors focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+    >
+      {options.map(opt => (
+        <option value={opt.value} selected={opt.value === value}>{opt.label}</option>
+      ))}
+    </select>
+    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none bg-canvas rounded-r-sm">
+      <svg class="w-4 h-4 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </div>
+  </div>
+</div>

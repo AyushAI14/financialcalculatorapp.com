@@ -1,0 +1,360 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="Home Affordability Calculator" 
+  description="Estimate how much home you can afford based on your monthly household income, personal debts, downpayment reserves, and target lending DTI limits."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="affordability-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Financial Profile</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="income" label="Annual Gross Income" type="number" prefix="$" value="120000" placeholder="0.00" />
+            <Input id="debts" label="Monthly Personal Debts" type="number" prefix="$" value="450" placeholder="e.g. car, credit cards" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 border-t border-hairline/60">
+            <div class="md:col-span-2">
+              <Input id="downpayment" label="Down Payment Savings" type="number" prefix="$" value="40000" placeholder="0.00" />
+            </div>
+            <Input id="term" label="Loan Term" type="number" suffix="years" value="30" placeholder="30" />
+          </div>
+
+          <div class="pt-2 border-t border-hairline/60">
+            <Input id="rate" label="Expected Mortgage Interest Rate" type="number" suffix="%" value="5.8" placeholder="0.00" />
+          </div>
+        </div>
+
+        <!-- Collapsible Underwriting Params -->
+        <details class="group border border-hairline rounded-lg bg-canvas-soft">
+          <summary class="flex items-center justify-between p-4 text-sm font-medium text-ink cursor-pointer select-none">
+            <span>Taxes, Insurance & Lending Ratios (Optional)</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </summary>
+          <div class="p-5 border-t border-hairline bg-canvas space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Input id="tax-rate" label="Property Tax Rate" type="number" suffix="%" value="1.2" />
+              <Input id="insurance" label="Annual Insurance" type="number" prefix="$" value="1200" />
+              <Input id="hoa" label="Monthly HOA Fees" type="number" prefix="$" value="0" />
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+              <Input id="front-dti" label="Housing DTI Limit (Front-End)" type="number" suffix="%" value="28" />
+              <Input id="back-dti" label="Total Debt DTI Limit (Back-End)" type="number" suffix="%" value="36" />
+            </div>
+            <p class="text-[11px] text-mute leading-normal">
+              * **Front-End Ratio**: The maximum percentage of gross income going to housing expenses (PITI). Standard is 28%.
+              <br/>
+              * **Back-End Ratio**: The maximum percentage of gross income going to all debt obligations combined. Standard is 36%.
+            </p>
+          </div>
+        </details>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Budget
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-price">
+          <ResultCard title="Affordable Price" value="$384,100" highlight={true} description="Maximum home purchase price budget." />
+        </div>
+        <div id="res-loan">
+          <ResultCard title="Affordable Loan" value="$344,100" description="Maximum loan mortgage size." />
+        </div>
+        <div id="res-payment">
+          <ResultCard title="Monthly Budget" value="$2,800" description="Maximum monthly housing budget (PITI)." />
+        </div>
+      </div>
+
+      <!-- Payment Breakdown Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Housing Payment Breakdown (PITI)</h4>
+        <div class="h-64 relative">
+          <canvas id="payment-breakdown-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">How Much Mortgage Can You Qualify For?</h2>
+      <p>
+        Before you start shopping for a home, you must understand how banks and mortgage lenders assess your borrowing capacity. Lenders rely heavily on debt-to-income (DTI) metrics to determine mortgage qualifications:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The 28/36 Rule</h3>
+        <p class="text-sm">
+          Lenders standardly utilize the **28/36 qualifying guideline** to measure housing affordability:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1.5 text-xs text-mute">
+          <li><strong>Front-End DTI (28%)</strong>: Your total monthly housing payment (including Principal, Interest, Taxes, Insurance, and HOA fees—referred to as PITI) should not exceed 28% of your gross monthly household income.</li>
+          <li><strong>Back-End DTI (36%)</strong>: Your total monthly debt obligations (housing payments + credit cards + student loans + car loans + other debt payments) should not exceed 36% of gross monthly income.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">PITI Breakdown</h3>
+        <p class="text-sm">
+          Your monthly mortgage check is made up of multiple components:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1.5 text-xs text-mute">
+          <li><strong>Principal</strong>: The amount that goes directly to pay down your loan balance.</li>
+          <li><strong>Interest</strong>: The cost charged by the lender to borrow the money.</li>
+          <li><strong>Taxes</strong>: Property taxes collected and held in escrow.</li>
+          <li><strong>Insurance</strong>: Homeowners insurance premiums, plus PMI if your downpayment is less than 20%.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is home affordability?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Home affordability refers to the maximum home price and mortgage size a household can comfortably afford based on their gross income, personal debts, cash reserves for a downpayment, and local housing costs (taxes, insurance, HOA dues).
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How do I calculate home affordability?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Lenders calculate affordability using the **28/36 rule**. Multiply your gross monthly income by 28% to find the maximum allowed housing payment (PITI). Then multiply your income by 36% and subtract monthly debts to find the other housing limit. The smaller of the two figures represents your monthly housing budget.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does a home affordability calculator work?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              This calculator takes your income, debts, interest rate, and term to determine your maximum monthly housing budget. It then subtracts property taxes, insurance, and HOA dues to find the maximum allowed principal &amp; interest (P&amp;I) payment. Finally, it uses amortization math to convert that payment into a maximum loan size, adding your downpayment to find the affordable home purchase price.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What factors determine how much home I can afford?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The primary factors are:
+            </p>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-xs text-mute">
+              <li><strong>Annual Gross Income</strong>: The baseline for qualification.</li>
+              <li><strong>Down Payment Savings</strong>: Increases purchase price and avoids private mortgage insurance (PMI).</li>
+              <li><strong>Interest Rate</strong>: Lower interest rates boost purchasing power significantly.</li>
+              <li><strong>Personal Debts</strong>: Credit cards, student loans, or car payments reduce the size of the mortgage you qualify for.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is the Home Affordability Index?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              The Home Affordability Index (published by the National Association of Realtors) measures whether a typical family earns enough income to qualify for a mortgage on a median-priced home. An index value of 100 means a family earning the median income has exactly enough money to qualify for a median-priced home with a 20% downpayment.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateHomeAffordability, calculateLoanPMT } from '../../lib/math/loan';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('affordability-form') as HTMLFormElement;
+  
+  const incomeInput = document.getElementById('income') as HTMLInputElement;
+  const debtsInput = document.getElementById('debts') as HTMLInputElement;
+  const downpaymentInput = document.getElementById('downpayment') as HTMLInputElement;
+  const termInput = document.getElementById('term') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+
+  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement;
+  const insuranceInput = document.getElementById('insurance') as HTMLInputElement;
+  const hoaInput = document.getElementById('hoa') as HTMLInputElement;
+  const frontDtiInput = document.getElementById('front-dti') as HTMLInputElement;
+  const backDtiInput = document.getElementById('back-dti') as HTMLInputElement;
+
+  const resPriceCard = document.getElementById('res-price');
+  const resLoanCard = document.getElementById('res-loan');
+  const resPaymentCard = document.getElementById('res-payment');
+
+  let chartInstance: Chart | null = null;
+
+  // Run calculation
+  function performCalculation() {
+    const annualIncome = parseFloat(incomeInput.value) || 0;
+    const grossMonthlyIncome = annualIncome / 12;
+    const monthlyDebt = parseFloat(debtsInput.value) || 0;
+    const downPayment = parseFloat(downpaymentInput.value) || 0;
+    const termYears = parseInt(termInput.value) || 30;
+    const interestRate = (parseFloat(rateInput.value) || 0) / 100;
+
+    const propertyTaxRate = (parseFloat(taxRateInput.value) || 0) / 100;
+    const homeownerInsuranceAnnual = parseFloat(insuranceInput.value) || 0;
+    const hoaMonthly = parseFloat(hoaInput.value) || 0;
+    
+    const frontEndDTI = (parseFloat(frontDtiInput.value) || 28) / 100;
+    const backEndDTI = (parseFloat(backDtiInput.value) || 36) / 100;
+
+    const res = calculateHomeAffordability({
+      grossMonthlyIncome,
+      monthlyDebt,
+      downPayment,
+      interestRate,
+      termYears,
+      propertyTaxRate,
+      homeownerInsuranceAnnual,
+      hoaMonthly,
+      frontEndDTI,
+      backEndDTI
+    });
+
+    // Format results
+    const priceFormatted = formatCurrency(res.affordableHomePrice);
+    const loanFormatted = formatCurrency(res.affordableLoanAmount);
+    const paymentLimitFormatted = formatCurrency(res.monthlyPaymentLimit);
+
+    // Update Result Cards
+    if (resPriceCard) {
+      resPriceCard.querySelector('.font-mono')!.textContent = priceFormatted;
+    }
+    if (resLoanCard) {
+      resLoanCard.querySelector('.font-mono')!.textContent = loanFormatted;
+    }
+    if (resPaymentCard) {
+      resPaymentCard.querySelector('.font-mono')!.textContent = paymentLimitFormatted;
+    }
+
+    // Calculate exact payment breakdown for the chart
+    const mortgagePI = calculateLoanPMT({
+      principal: res.affordableLoanAmount,
+      rate: interestRate,
+      years: termYears
+    });
+    
+    const monthlyTax = (res.affordableHomePrice * propertyTaxRate) / 12;
+    const monthlyIns = homeownerInsuranceAnnual / 12;
+    
+    // Update Chart
+    updateChart(mortgagePI, monthlyTax, monthlyIns, hoaMonthly);
+  }
+
+  function updateChart(pi: number, tax: number, ins: number, hoa: number) {
+    const canvas = document.getElementById('payment-breakdown-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dataVals = [pi, tax, ins, hoa];
+    
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = dataVals;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal & Interest', 'Property Taxes', 'Home Insurance', 'HOA Dues'],
+          datasets: [
+            {
+              data: dataVals,
+              backgroundColor: ['#171717', '#4d4d4d', '#0070f3', '#a1a1a1'],
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'right',
+              labels: {
+                boxWidth: 10,
+                font: { family: 'Geist, sans-serif', size: 10 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.label}: ${formatCurrency(context.raw as number)}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Listeners
+  const allInputs = [
+    incomeInput, debtsInput, downpaymentInput, termInput, rateInput,
+    taxRateInput, insuranceInput, hoaInput, frontDtiInput, backDtiInput
+  ];
+
+  allInputs.forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Initial calculation
+  performCalculation();
+</script>

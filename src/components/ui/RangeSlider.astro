@@ -1,0 +1,47 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  value: number;
+  prefix?: string;
+  suffix?: string;
+}
+
+const { id, label, min, max, step = 1, value, prefix, suffix } = Astro.props;
+---
+<div class="flex flex-col gap-2">
+  <div class="flex items-center justify-between">
+    <label for={id} class="text-sm font-medium text-ink">{label}</label>
+    <div class="flex items-center gap-0.5 bg-canvas-soft-2 px-2 py-0.5 rounded border border-hairline text-xs font-mono font-medium text-ink shadow-[0_1px_2px_rgba(0,0,0,0.01)]">
+      {prefix && <span>{prefix}</span>}
+      <span id={`${id}-val`}>{value}</span>
+      {suffix && <span>{suffix}</span>}
+    </div>
+  </div>
+  <div class="relative flex items-center group">
+    <input
+      type="range"
+      id={id}
+      min={min}
+      max={max}
+      step={step}
+      value={value}
+      class="w-full h-1 bg-hairline rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none transition-colors group-hover:bg-hairline-strong [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:transition-transform"
+    />
+  </div>
+</div>
+
+<script is:inline>
+  // Automatically update the value display label when the slider moves
+  document.querySelectorAll('input[type="range"]').forEach(slider => {
+    const valDisplay = document.getElementById(`${slider.id}-val`);
+    if (valDisplay) {
+      slider.addEventListener('input', (e) => {
+        valDisplay.textContent = e.target.value;
+      });
+    }
+  });
+</script>

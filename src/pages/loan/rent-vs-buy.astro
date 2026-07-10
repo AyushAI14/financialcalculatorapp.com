@@ -1,0 +1,398 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+---
+
+<CalculatorLayout 
+  title="Rent vs. Buy Calculator" 
+  description="Compare the financial costs and long-term net worth impact of renting a property (and investing cash savings) vs. buying a home."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="rent-vs-buy-form" class="space-y-6">
+        <!-- Renter Settings -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Renter Parameters</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input id="rent" label="Monthly Rent" type="number" prefix="$" value="1800" />
+            <Input id="rent-inflation" label="Rent Inflation" type="number" suffix="%" value="3.0" />
+            <Input id="portfolio-return" label="Portfolio Return" type="number" suffix="%" value="7.5" />
+          </div>
+        </div>
+
+        <!-- Buyer Settings -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Buyer Parameters</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <Input id="home-price" label="Home Purchase Price" type="number" prefix="$" value="380000" />
+            </div>
+            <Input id="downpayment" label="Down Payment" type="number" prefix="$" value="76000" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="rate" label="Mortgage Rate" type="number" suffix="%" value="5.5" />
+            <Input id="term" label="Loan Term" type="number" suffix="years" value="30" />
+            <Input id="appreciation" label="Appreciation" type="number" suffix="%" value="4.0" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="tax-rate" label="Property Tax Rate" type="number" suffix="%" value="1.2" />
+            <Input id="insurance" label="Annual Insurance" type="number" prefix="$" value="1200" />
+            <Input id="maintenance" label="Annual Maintenance" type="number" suffix="%" value="1.0" />
+          </div>
+        </div>
+
+        <!-- General Parameters -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+          <Input id="duration" label="Comparison Horizon" type="number" suffix="years" value="15" />
+          <div class="grid grid-cols-2 gap-3">
+            <Input id="buy-fees" label="Buying Cost" type="number" suffix="%" value="2.0" />
+            <Input id="sell-fees" label="Selling Cost" type="number" suffix="%" value="6.0" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Run Comparison
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results & Charts) -->
+    <div class="lg:col-span-6 space-y-6">
+      <!-- Result Cards -->
+      <div class="flex flex-col gap-3">
+        <div id="res-winner">
+          <ResultCard title="Financial Winner" value="Buying" highlight={true} description="Buying yields a higher net worth after 15 years." />
+        </div>
+        <div id="res-buyer-nw">
+          <ResultCard title="Buyer Net Worth" value="$257,808.20" />
+        </div>
+        <div id="res-renter-nw">
+          <ResultCard title="Renter Net Worth" value="$192,442.10" />
+        </div>
+      </div>
+
+      <!-- Net Worth Chart Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Net Worth Projection over Time</h4>
+        <div class="h-80 relative">
+          <canvas id="nw-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Is It Better to Rent or Buy a Home?</h2>
+      <p>
+        The decision between renting and buying is one of the biggest financial decisions most people make. The conventional wisdom is that renting is "throwing money away" and buying "builds equity." In reality, the comparison is highly dependent on time horizons, asset appreciation, inflation, and investment rates.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The Renter's Opportunity Cost</h3>
+        <p class="text-sm">
+          A renter does not pay a large downpayment, closing costs, property taxes, homeowner insurance, or home maintenance fees. 
+        </p>
+        <p class="text-xs text-mute mt-2">
+          To conduct a fair comparison, the calculator assumes the renter takes the money they *would* have spent on a home (the downpayment, upfront closing costs, and the monthly surplus when renting is cheaper than buying) and invests it into a portfolio (e.g., index funds) earning a steady rate of return.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Unrecoverable Buying Costs</h3>
+        <p class="text-sm">
+          Homeowners build equity, but they also pay substantial "sunk costs" that do not build wealth:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1.5 text-xs text-mute">
+          <li><strong>Mortgage Interest</strong>: The cost of borrowing money.</li>
+          <li><strong>Property Taxes</strong>: Paid annually to local governments.</li>
+          <li><strong>Maintenance</strong>: Typically 1% to 2% of the home value per year.</li>
+          <li><strong>Transaction Fees</strong>: Agent fees (typically 5%-6%) when selling the home.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>Is it better to rent or buy a home?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              There is no single answer. Buying builds equity and provides stability, but incurs unrecoverable sunk costs (taxes, interest, maintenance). Renting is highly flexible and leaves capital free to invest elsewhere. Renting is often cheaper for short-term stays, while buying is usually better long-term.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>When should I rent instead of buying?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              You should rent if you plan to live in the area for less than 3 to 5 years, want to avoid home maintenance responsibilities, have volatile income, or prefer to keep your downpayment savings invested in the stock market.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>When should I buy instead of renting?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              You should buy if you plan to stay in the home for at least 5 to 7 years, desire stable housing costs (a fixed-rate mortgage protects you from rent hikes), want to customize your living space, or want to build long-term real estate equity.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does a rent vs. buy calculator work?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              It simulates year-by-year cash flows for both paths. For buying, it tracks equity growth, mortgage payments, maintenance, taxes, and transaction fees. For renting, it tracks monthly rent costs, and assumes the renter invests the downpayment savings into a portfolio. It identifies which path yields a higher net worth at the end of the term.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What factors should I consider when comparing renting vs. buying?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              Key factors include the **Price-to-Rent Ratio** in your city, home price appreciation expectations, rent inflation rates, mortgage interest rates, and the returns you can generate by investing in stocks instead of buying a home.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How long do I need to stay in a home for buying to make sense?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              In most real estate markets, it takes between **4 to 7 years** (often called the break-even point) for buying to beat renting. This duration is required to amortize upfront purchasing closing costs (2%-5%) and selling transaction costs (5%-6% in agent commissions).
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { simulateRentVsBuy } from '../../lib/math/loan';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('rent-vs-buy-form') as HTMLFormElement;
+  
+  const rentInput = document.getElementById('rent') as HTMLInputElement;
+  const rentInflationInput = document.getElementById('rent-inflation') as HTMLInputElement;
+  const portfolioReturnInput = document.getElementById('portfolio-return') as HTMLInputElement;
+  
+  const homePriceInput = document.getElementById('home-price') as HTMLInputElement;
+  const downpaymentInput = document.getElementById('downpayment') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const termInput = document.getElementById('term') as HTMLInputElement;
+  const appreciationInput = document.getElementById('appreciation') as HTMLInputElement;
+  
+  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement;
+  const insuranceInput = document.getElementById('insurance') as HTMLInputElement;
+  const maintenanceInput = document.getElementById('maintenance') as HTMLInputElement;
+  
+  const durationInput = document.getElementById('duration') as HTMLInputElement;
+  const buyFeesInput = document.getElementById('buy-fees') as HTMLInputElement;
+  const sellFeesInput = document.getElementById('sell-fees') as HTMLInputElement;
+
+  const resWinnerCard = document.getElementById('res-winner');
+  const resBuyerCard = document.getElementById('res-buyer-nw');
+  const resRenterCard = document.getElementById('res-renter-nw');
+
+  let chartInstance: Chart | null = null;
+
+  // Run simulation
+  function performCalculation() {
+    const monthlyRent = parseFloat(rentInput.value) || 0;
+    const rentInflation = (parseFloat(rentInflationInput.value) || 0) / 100;
+    const renterInvestmentReturn = (parseFloat(portfolioReturnInput.value) || 0) / 100;
+    
+    const homePrice = parseFloat(homePriceInput.value) || 0;
+    const downPayment = parseFloat(downpaymentInput.value) || 0;
+    const mortgageRate = (parseFloat(rateInput.value) || 0) / 100;
+    const mortgageTermYears = parseInt(termInput.value) || 30;
+    const appreciationRate = (parseFloat(appreciationInput.value) || 0) / 100;
+    
+    const propertyTaxRate = (parseFloat(taxRateInput.value) || 0) / 100;
+    const insuranceAnnual = parseFloat(insuranceInput.value) || 0;
+    const maintenanceRate = (parseFloat(maintenanceInput.value) || 0) / 100;
+    
+    const simulationYears = parseInt(durationInput.value) || 15;
+    const buyingFeesRate = (parseFloat(buyFeesInput.value) || 0) / 100;
+    const sellingFeesRate = (parseFloat(sellFeesInput.value) || 0) / 100;
+
+    const schedule = simulateRentVsBuy({
+      monthlyRent, rentInflation, renterInvestmentReturn,
+      homePrice, downPayment, mortgageRate, mortgageTermYears,
+      propertyTaxRate, insuranceAnnual, maintenanceRate, appreciationRate,
+      buyingFeesRate, sellingFeesRate, simulationYears
+    });
+
+    const finalYear = schedule[schedule.length - 1];
+
+    const buyerNw = finalYear.buyerNetWorth;
+    const renterNw = finalYear.renterPortfolioValue;
+
+    // Determine winner
+    let winner = 'Renting';
+    let diff = Math.abs(buyerNw - renterNw);
+    let desc = '';
+    
+    if (buyerNw > renterNw) {
+      winner = 'Buying';
+      desc = `Buying is better by ${formatCurrency(diff)} in net worth.`;
+    } else {
+      winner = 'Renting';
+      desc = `Renting is better by ${formatCurrency(diff)} in net worth.`;
+    }
+
+    // Update Result Cards
+    if (resWinnerCard) {
+      resWinnerCard.querySelector('.font-mono')!.textContent = winner;
+      resWinnerCard.querySelector('p')!.textContent = desc;
+    }
+    if (resBuyerCard) resBuyerCard.querySelector('.font-mono')!.textContent = formatCurrency(buyerNw);
+    if (resRenterCard) resRenterCard.querySelector('.font-mono')!.textContent = formatCurrency(renterNw);
+
+    // Update Chart
+    updateChart(schedule);
+  }
+
+  function updateChart(schedule: any[]) {
+    const canvas = document.getElementById('nw-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = schedule.map(e => `Yr ${e.year}`);
+    const buyerNwData = schedule.map(e => e.buyerNetWorth);
+    const renterNwData = schedule.map(e => e.renterPortfolioValue);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = buyerNwData;
+      chartInstance.data.datasets[1].data = renterNwData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Buyer Net Worth',
+              data: buyerNwData,
+              borderColor: '#171717',
+              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              fill: false,
+              tension: 0.1,
+              borderWidth: 2,
+              pointRadius: 3
+            },
+            {
+              label: 'Renter Net Worth',
+              data: renterNwData,
+              borderColor: '#0070f3',
+              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              fill: false,
+              tension: 0.1,
+              borderWidth: 2,
+              pointRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                boxWidth: 10,
+                font: { family: 'Geist, sans-serif', size: 10 }
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Listeners
+  const inputs = [
+    rentInput, rentInflationInput, portfolioReturnInput,
+    homePriceInput, downpaymentInput, rateInput, termInput, appreciationInput,
+    taxRateInput, insuranceInput, maintenanceInput,
+    durationInput, buyFeesInput, sellFeesInput
+  ];
+
+  inputs.forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Initial simulation
+  performCalculation();
+</script>

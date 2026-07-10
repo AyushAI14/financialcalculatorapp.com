@@ -1,0 +1,424 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+---
+
+<CalculatorLayout 
+  title="Retirement Planner" 
+  description="Forecast your retirement nest egg size and simulate annual spending drawdowns. Optimize contribution goals, inflation impacts, and life expectancy boundaries."
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Form Inputs (Left Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="retirement-form" class="space-y-6">
+        <!-- Age parameters -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Timeline Settings</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input id="current-age" label="Current Age" type="number" value="30" />
+            <Input id="retire-age" label="Retirement Age" type="number" value="65" />
+            <Input id="life-exp" label="Life Expectancy" type="number" value="85" />
+          </div>
+        </div>
+
+        <!-- Savings & Contributions -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Savings & Contributions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-savings" label="Current Savings" type="number" prefix="$" value="50000" />
+            <Input id="contribution" label="Monthly Deposit" type="number" prefix="$" value="500" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <Input id="income-needed" label="Monthly Spending (In retirement)" type="number" prefix="$" value="4500" placeholder="in today's dollars" />
+            <Input id="inflation" label="Annual Inflation Rate" type="number" suffix="%" value="2.5" />
+          </div>
+        </div>
+
+        <!-- Expected Returns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+          <Input id="return-pre" label="Pre-Retirement Return" type="number" suffix="%" value="7.5" />
+          <Input id="return-post" label="Post-Retirement Return" type="number" suffix="%" value="5.0" />
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Run Forecast
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results & Graph (Right Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <!-- Results Grid -->
+      <div class="flex flex-col gap-3">
+        <div id="res-status">
+          <ResultCard title="Funding Status" value="Sufficient" highlight={true} description="Your plan will successfully fund your retirement." />
+        </div>
+        <div id="res-actual">
+          <ResultCard title="Projected Nest Egg" value="$1,234,567" />
+        </div>
+        <div id="res-target">
+          <ResultCard title="Required Nest Egg" value="$987,654" />
+        </div>
+      </div>
+
+      <!-- Retirement Hill Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Projection (Retirement Hill)</h4>
+        <div class="h-80 relative">
+          <canvas id="retirement-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Year-by-Year Schedule -->
+  <div class="mt-12 border-t border-hairline pt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Annual Ledger Projection</h3>
+        <p class="text-sm text-body mt-1">Year-by-year logs tracking accumulation deposits, compounding interest, and retirement drawdowns.</p>
+      </div>
+      <button 
+        id="toggle-schedule" 
+        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+      >
+        Show Annual Ledger
+      </button>
+    </div>
+
+    <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
+      <div class="overflow-x-auto max-h-[450px]">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+            <tr>
+              <th class="px-5 py-3">Age</th>
+              <th class="px-5 py-3 text-right">Starting Bal</th>
+              <th class="px-5 py-3 text-right">Annual Deposits</th>
+              <th class="px-5 py-3 text-right">Annual Withdrawals</th>
+              <th class="px-5 py-3 text-right">Interest Earned</th>
+              <th class="px-5 py-3 text-right">Ending Bal</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body" class="divide-y divide-hairline">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Retirement Planning: Funding the Retirement Hill.</h2>
+      <p>
+        Retirement planning is the process of setting retirement income goals and simulating the savings and asset compounding needed to reach them. It follows a distinct two-phase trajectory: the **Accumulation Phase** and the **Distribution Phase**.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">1. The Accumulation Phase</h3>
+        <p class="text-sm">
+          During your working years, you contribute recurring deposits. These funds compound based on your pre-retirement interest rate. The goal is to reach your peak net worth (the top of the "Retirement Hill") by the day you retire.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">2. The Distribution Phase</h3>
+        <p class="text-sm">
+          Upon retirement, you stop deposits and begin withdrawing monthly spending income. Because of inflation, the nominal amount you withdraw must increase each year to maintain your purchasing power. Your remaining nest egg continues to compound, but at a more conservative post-retirement growth rate.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="border-t border-hairline pt-12 space-y-6">
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+      <div class="divide-y divide-hairline">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is a retirement planner?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              A retirement planner is a comprehensive tool or process used to forecast your financial status in retirement. It takes into account current assets, ongoing savings rates, expected rates of return (both pre- and post-retirement), inflation, and desired spending to project whether you will have sufficient funds.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How does a retirement planner calculator work?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              It works in two steps: first, it simulates the accumulation of your savings up to your retirement age. Second, it calculates the required nest egg size to sustain your desired monthly retirement income (inflated annually to protect purchasing power) throughout your expected lifespan, identifying any cash surpluses or shortfalls.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What is a flexible retirement planner?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              A flexible retirement planner is a simulation model that allows you to vary assumptions (like changing retirement ages, altering pre/post rates of return, adjusting inflation, or testing different spending levels) to see how sensitive your plan is to market or timeline variations.
+            </p>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>What should a complete retirement plan include?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              A complete plan includes:
+            </p>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-xs text-mute">
+              <li><strong>Target Nest Egg and Timeline</strong>: Clear goals for savings and age brackets.</li>
+              <li><strong>Tax-Advantaged Accounts</strong>: Maximizing 401(k), IRAs, or HSA contributions.</li>
+              <li><strong>Social Security and Pensions</strong>: Factoring in guaranteed government or employer payouts.</li>
+              <li><strong>Health Care &amp; Estate Planning</strong>: Budgeting for Medicare, insurance, and legacy wills.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="group py-4">
+          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+            <span>How is a retirement planner different from a retirement calculator?</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+            <p>
+              While simple retirement calculators usually only multiply your current savings by a flat growth rate to estimate a final balance, a retirement planner conducts a **dual-phase cash flow simulation** (accumulation and withdrawal) that explicitly factors in inflation-adjusted spending targets and conservative post-retirement asset rates.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { simulateRetirementPath } from '../../lib/math/retirement';
+  import { formatCurrency } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('retirement-form') as HTMLFormElement;
+  
+  const currentAgeInput = document.getElementById('current-age') as HTMLInputElement;
+  const retireAgeInput = document.getElementById('retire-age') as HTMLInputElement;
+  const lifeExpInput = document.getElementById('life-exp') as HTMLInputElement;
+  
+  const currentSavingsInput = document.getElementById('current-savings') as HTMLInputElement;
+  const contributionInput = document.getElementById('contribution') as HTMLInputElement;
+  const incomeNeededInput = document.getElementById('income-needed') as HTMLInputElement;
+  const inflationInput = document.getElementById('inflation') as HTMLInputElement;
+  
+  const returnPreInput = document.getElementById('return-pre') as HTMLInputElement;
+  const returnPostInput = document.getElementById('return-post') as HTMLInputElement;
+
+  const resStatusCard = document.getElementById('res-status');
+  const resActualCard = document.getElementById('res-actual');
+  const resTargetCard = document.getElementById('res-target');
+
+  const toggleScheduleBtn = document.getElementById('toggle-schedule');
+  const scheduleWrapper = document.getElementById('schedule-wrapper');
+  const scheduleBody = document.getElementById('schedule-body');
+
+  let chartInstance: Chart | null = null;
+
+  // Run Forecast
+  function performCalculation() {
+    const currentAge = parseInt(currentAgeInput.value) || 30;
+    const retirementAge = parseInt(retireAgeInput.value) || 65;
+    const lifeExpectancy = parseInt(lifeExpInput.value) || 85;
+    
+    const currentSavings = parseFloat(currentSavingsInput.value) || 0;
+    const monthlyContribution = parseFloat(contributionInput.value) || 0;
+    const monthlyIncomeNeededPost = parseFloat(incomeNeededInput.value) || 0;
+    
+    const inflationRate = (parseFloat(inflationInput.value) || 0) / 100;
+    const investmentReturnPre = (parseFloat(returnPreInput.value) || 0) / 100;
+    const investmentReturnPost = (parseFloat(returnPostInput.value) || 0) / 100;
+
+    const res = simulateRetirementPath({
+      currentAge,
+      retirementAge,
+      lifeExpectancy,
+      currentSavings,
+      monthlyContribution,
+      contributionIncreaseRate: inflationRate, // Contributions grow with inflation
+      investmentReturnPre,
+      investmentReturnPost,
+      inflationRate,
+      monthlyIncomeNeededPost
+    });
+
+    // Update Result Cards
+    const actualNestEggFormatted = formatCurrency(res.actualNestEgg);
+    const targetNestEggFormatted = formatCurrency(res.targetNestEgg);
+    
+    let statusText = 'Sufficient';
+    let statusDesc = `Plan exceeds the target nest egg by ${formatCurrency(Math.max(0, res.actualNestEgg - res.targetNestEgg))}.`;
+    
+    if (!res.isFundingSufficient) {
+      statusText = 'Shortfall';
+      statusDesc = `Shortfall of ${formatCurrency(res.targetNestEgg - res.actualNestEgg)} from target.`;
+      
+      // Style status card red
+      resStatusCard?.querySelector('.p-6')?.classList.add('bg-error-soft', 'text-error-deep', 'border-error');
+      resStatusCard?.querySelector('.p-6')?.classList.remove('bg-canvas-soft', 'border-hairline-strong');
+    } else {
+      resStatusCard?.querySelector('.p-6')?.classList.remove('bg-error-soft', 'text-error-deep', 'border-error');
+      resStatusCard?.querySelector('.p-6')?.classList.add('bg-canvas-soft', 'border-hairline-strong');
+    }
+
+    if (resStatusCard) {
+      resStatusCard.querySelector('.font-mono')!.textContent = statusText;
+      resStatusCard.querySelector('p')!.textContent = statusDesc;
+    }
+    if (resActualCard) resActualCard.querySelector('.font-mono')!.textContent = actualNestEggFormatted;
+    if (resTargetCard) resTargetCard.querySelector('.font-mono')!.textContent = targetNestEggFormatted;
+
+    // Update Chart
+    updateChart(res.schedule, retirementAge);
+    // Update Table
+    updateScheduleTable(res.schedule);
+  }
+
+  function updateChart(schedule: any[], retirementAge: number) {
+    const canvas = document.getElementById('retirement-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = schedule.map(e => `Age ${e.age}`);
+    const balances = schedule.map(e => e.endingBalance);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = balances;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Nest Egg Balance',
+              data: balances,
+              borderColor: '#171717',
+              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              fill: true,
+              tension: 0.15,
+              borderWidth: 2,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function updateScheduleTable(schedule: any[]) {
+    if (!scheduleBody) return;
+    
+    let html = '';
+    schedule.forEach(e => {
+      const rowStyle = e.withdrawals > 0 ? 'bg-canvas-soft-2/40' : '';
+      html += `
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink ${rowStyle}">
+          <td class="px-5 py-3 font-semibold text-body">Age ${e.age}</td>
+          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.contributions)}</td>
+          <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.withdrawals)}</td>
+          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.interest)}</td>
+          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+        </tr>
+      `;
+    });
+
+    scheduleBody.innerHTML = html;
+  }
+
+  // Listeners
+  const allInputs = [
+    currentAgeInput, retireAgeInput, lifeExpInput,
+    currentSavingsInput, contributionInput, incomeNeededInput,
+    inflationInput, returnPreInput, returnPostInput
+  ];
+
+  allInputs.forEach(el => {
+    el.addEventListener('input', performCalculation);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(performCalculation, 0);
+  });
+
+  // Table toggle
+  if (toggleScheduleBtn && scheduleWrapper) {
+    toggleScheduleBtn.addEventListener('click', () => {
+      const isHidden = scheduleWrapper.classList.contains('hidden');
+      if (isHidden) {
+        scheduleWrapper.classList.remove('hidden');
+        toggleScheduleBtn.textContent = 'Hide Annual Ledger';
+      } else {
+        scheduleWrapper.classList.add('hidden');
+        toggleScheduleBtn.textContent = 'Show Annual Ledger';
+      }
+    });
+  }
+
+  // Initial Calculation
+  performCalculation();
+</script>
