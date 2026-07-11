@@ -122,17 +122,32 @@ import Layout from '../layouts/Layout.astro';
         ? '<span class="px-2 py-0.5 bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400 border border-green-200 dark:border-green-900 rounded text-[10px] font-medium">👍 Helpful</span>'
         : '<span class="px-2 py-0.5 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-400 border border-red-200 dark:border-red-900 rounded text-[10px] font-medium">👎 Not Helpful</span>';
 
+      const commentHtml = item.message
+        ? `<div class="mt-2 text-xs font-normal text-body bg-canvas-soft-2 p-2.5 rounded border border-hairline max-w-xl whitespace-pre-wrap">💬 "${escapeHtml(item.message)}"</div>`
+        : '';
+
       return `
         <tr class="hover:bg-canvas-soft transition-colors text-ink">
           <td class="px-5 py-3 font-semibold text-body">
             <a href="${item.url}" class="hover:underline text-link">${item.name}</a>
             <span class="text-[10px] font-mono text-mute block mt-0.5">${item.url}</span>
+            ${commentHtml}
           </td>
           <td class="px-5 py-3">${ratingBadge}</td>
           <td class="px-5 py-3 font-mono text-mute">${dateStr}</td>
         </tr>
       `;
     }).join('');
+  }
+
+  // Simple HTML escape function to prevent injection in local dashboard view
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   function handleUnlock() {

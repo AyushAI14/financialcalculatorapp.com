@@ -238,11 +238,27 @@ const faqSchema = faqs.length > 0 ? {
       )}
 
       <!-- Feedback Widget -->
-      <div class="mt-12 border-t border-hairline pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 no-print">
-        <span class="text-xs text-mute font-mono">Was this calculator helpful?</span>
-        <div id="feedback-widget" class="flex items-center gap-2">
-          <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes">👍 Yes</button>
-          <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no">👎 No</button>
+      <div class="mt-12 border-t border-hairline pt-6 no-print">
+        <div id="feedback-widget-container" class="space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <span class="text-xs text-mute font-mono">Was this calculator helpful?</span>
+            <div id="feedback-widget" class="flex items-center gap-2">
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes">👍 Yes</button>
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no">👎 No</button>
+            </div>
+          </div>
+          <div id="feedback-text-container" class="hidden space-y-2.5 max-w-xl transition-all duration-300">
+            <textarea
+              id="feedback-comment"
+              placeholder="Any comments or suggestions? (Optional)"
+              rows="3"
+              class="w-full p-3 bg-canvas border border-hairline text-ink text-xs rounded-lg focus:outline-none focus:border-hairline-strong transition-colors resize-none"
+            ></textarea>
+            <div class="flex justify-end gap-2">
+              <button type="button" id="feedback-skip-btn" class="px-3.5 py-1 bg-canvas hover:bg-canvas-soft text-mute text-xs border border-hairline rounded-full cursor-pointer transition-colors font-medium">Skip</button>
+              <button type="button" id="feedback-submit-btn" class="px-4 py-1.5 bg-primary text-on-primary text-xs rounded-full cursor-pointer hover:opacity-90 transition-opacity font-semibold">Submit Comments</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -254,31 +270,60 @@ const faqSchema = faqs.length > 0 ? {
 
   // Feedback Widget Handlers
   const buttons = document.querySelectorAll('.feedback-btn');
+  const textContainer = document.getElementById('feedback-text-container');
+  const commentTextarea = document.getElementById('feedback-comment') as HTMLTextAreaElement | null;
+  const skipBtn = document.getElementById('feedback-skip-btn');
+  const submitBtn = document.getElementById('feedback-submit-btn');
+  const widgetContainer = document.getElementById('feedback-widget-container');
+
+  let selectedRating: string | null = null;
+
   buttons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const rating = (e.currentTarget as HTMLButtonElement).dataset.val || 'yes';
-      const pageUrl = window.location.pathname;
-      const pageName = document.querySelector('h1')?.textContent || document.title.split(' - ')[0];
+      buttons.forEach(b => b.classList.remove('bg-canvas-soft-2', 'border-hairline-strong'));
+      const target = e.currentTarget as HTMLButtonElement;
+      target.classList.add('bg-canvas-soft-2', 'border-hairline-strong');
 
-      let feedbackList = [];
-      try {
-        feedbackList = JSON.parse(safeGetItem('feedback_responses', '[]'));
-      } catch (err) {}
+      selectedRating = target.dataset.val || 'yes';
 
-      feedbackList.push({
-        url: pageUrl,
-        name: pageName,
-        rating: rating,
-        timestamp: Date.now()
-      });
-
-      safeSetItem('feedback_responses', JSON.stringify(feedbackList));
-
-      const widget = document.getElementById('feedback-widget');
-      if (widget) {
-        widget.innerHTML = `<span class="text-xs text-success font-medium animate-fade-in">Thank you for your feedback!</span>`;
+      if (textContainer) {
+        textContainer.classList.remove('hidden');
       }
     });
+  });
+
+  function saveFeedback(comment = '') {
+    if (!selectedRating) return;
+    const pageUrl = window.location.pathname;
+    const pageName = document.querySelector('h1')?.textContent || document.title.split(' - ')[0];
+
+    let feedbackList = [];
+    try {
+      feedbackList = JSON.parse(safeGetItem('feedback_responses', '[]'));
+    } catch (err) {}
+
+    feedbackList.push({
+      url: pageUrl,
+      name: pageName,
+      rating: selectedRating,
+      message: comment.trim(),
+      timestamp: Date.now()
+    });
+
+    safeSetItem('feedback_responses', JSON.stringify(feedbackList));
+
+    if (widgetContainer) {
+      widgetContainer.innerHTML = `<span class="text-xs text-success font-medium animate-fade-in">Thank you for your feedback!</span>`;
+    }
+  }
+
+  skipBtn?.addEventListener('click', () => {
+    saveFeedback();
+  });
+
+  submitBtn?.addEventListener('click', () => {
+    const comment = commentTextarea?.value || '';
+    saveFeedback(comment);
   });
 
   // 1. Record Visited page inside recent_calculators
