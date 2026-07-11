@@ -153,21 +153,67 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       <slot />
     </main>
 
-    <footer class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-24 border-t border-hairline pt-8 pb-12 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-mute font-mono">
-      <div>
-        &copy; {new Date().getFullYear()} FinCompute. All rights reserved.
+    <footer class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-32 border-t border-hairline pt-16 pb-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
+        <!-- Col 1: Brand & Description -->
+        <div class="lg:col-span-2 space-y-4">
+          <a href="/" class="flex items-center gap-2 hover:opacity-85 transition-opacity w-fit">
+            <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <span class="font-bold text-sm tracking-tight text-ink font-mono">FinCompute</span>
+          </a>
+          <p class="text-xs text-mute leading-relaxed max-w-sm font-sans">
+            A premium suite of interactive financial calculators formulated with precise mathematics and clean, glowing, modern interfaces. Plan your savings, investments, loans, and tax allocations dynamically.
+          </p>
+        </div>
+
+        <!-- Col 2: Calculators -->
+        <div class="space-y-4">
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Calculators</h4>
+          <ul class="space-y-2 text-xs font-sans text-mute">
+            <li><a href="/finance/compound-interest" class="hover:text-ink transition-colors">Compound Interest</a></li>
+            <li><a href="/finance/paycheck" class="hover:text-ink transition-colors">Paycheck Calculator</a></li>
+            <li><a href="/finance/net-worth" class="hover:text-ink transition-colors">Net Worth Tracker</a></li>
+            <li><a href="/loan/mortgage" class="hover:text-ink transition-colors">Mortgage Calculator</a></li>
+            <li><a href="/finance/college-savings" class="hover:text-ink transition-colors">College Savings (529)</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Comparisons -->
+        <div class="space-y-4">
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Comparisons</h4>
+          <ul class="space-y-2 text-xs font-sans text-mute">
+            <li><a href="/compare/snowball-vs-avalanche" class="hover:text-ink transition-colors">Snowball vs Avalanche</a></li>
+            <li><a href="/compare/roth-vs-traditional-ira" class="hover:text-ink transition-colors">Roth vs Traditional IRA</a></li>
+            <li><a href="/compare/apr-vs-nominal" class="hover:text-ink transition-colors">APR vs Nominal Interest</a></li>
+            <li><a href="/loan/rent-vs-buy" class="hover:text-ink transition-colors">Rent vs Buy Decision</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Resources & Legal -->
+        <div class="space-y-4">
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Resources</h4>
+          <ul class="space-y-2 text-xs font-sans text-mute">
+            <li><a href="/blog" class="hover:text-ink transition-colors">Blog & Insights</a></li>
+            <li><a href="/glossary" class="hover:text-ink transition-colors">Financial Glossary</a></li>
+            <li><a href="/about" class="hover:text-ink transition-colors">About Us</a></li>
+            <li><a href="/contact" class="hover:text-ink transition-colors">Contact Support</a></li>
+            <li><a href="/privacy" class="hover:text-ink transition-colors">Privacy Policy</a></li>
+            <li><a href="/terms" class="hover:text-ink transition-colors">Terms of Service</a></li>
+            <li><a href="/disclaimer" class="hover:text-ink transition-colors">Disclaimer</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="flex flex-wrap gap-x-6 gap-y-2 justify-center">
-        <a href="/blog" class="hover:text-ink transition-colors">Blog</a>
-        <a href="/glossary" class="hover:text-ink transition-colors">Glossary</a>
-        <a href="/compare/snowball-vs-avalanche" class="hover:text-ink transition-colors">Snowball vs Avalanche</a>
-        <a href="/compare/roth-vs-traditional-ira" class="hover:text-ink transition-colors">Roth vs Trad IRA</a>
-        <a href="/compare/apr-vs-nominal" class="hover:text-ink transition-colors">APR vs Nominal</a>
-        <a href="/about" class="hover:text-ink transition-colors">About</a>
-        <a href="/contact" class="hover:text-ink transition-colors">Contact</a>
-        <a href="/privacy" class="hover:text-ink transition-colors">Privacy Policy</a>
-        <a href="/terms" class="hover:text-ink transition-colors">Terms of Service</a>
-        <a href="/disclaimer" class="hover:text-ink transition-colors">Disclaimer</a>
+
+      <!-- Footer Bottom -->
+      <div class="border-t border-hairline pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-mute font-mono">
+        <div>
+          &copy; {new Date().getFullYear()} FinCompute. All rights reserved.
+        </div>
+        <div class="flex items-center gap-2 text-mute/50 font-sans">
+          <span>Simple. Precise. Interactive.</span>
+        </div>
       </div>
     </footer>
 
