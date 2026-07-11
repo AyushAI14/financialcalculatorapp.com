@@ -36,7 +36,7 @@ const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix, 
       class:list={[
         "w-full h-10 bg-canvas text-ink text-sm border border-hairline rounded-sm transition-colors focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]",
         prefix ? "pl-7" : "pl-3",
-        suffix ? "pr-8" : "pr-3"
+        suffix ? (suffix.length > 4 ? "pr-20" : (suffix.length > 2 ? "pr-14" : "pr-8")) : "pr-3"
       ]}
     />
     {suffix && <span class="absolute right-3 text-mute text-sm pointer-events-none">{suffix}</span>}
