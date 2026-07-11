@@ -106,16 +106,36 @@ if (typeof window !== 'undefined') {
   if (!Chart.defaults.datasets.doughnut) {
     Chart.defaults.datasets.doughnut = {} as any;
   }
-  Chart.defaults.datasets.doughnut.borderWidth = 0; // Borderless slices for clean neon look
-  
-  // Faint clean gridlines
-  Chart.defaults.scale = {
-    ...Chart.defaults.scale,
-    grid: {
-      color: 'rgba(128, 128, 128, 0.08)',
-      tickColor: 'rgba(128, 128, 128, 0.08)'
+  Chart.defaults.datasets.doughnut.borderColor = (context: any) => {
+    if (typeof document !== 'undefined') {
+      const isDark = document.documentElement.classList.contains('dark');
+      return isDark ? '#171717' : '#ffffff';
     }
+    return '#171717';
   };
+  Chart.defaults.datasets.doughnut.borderWidth = 2.5; // Beautiful outline separation gap
+
+  // Pie Chart styling
+  if (!Chart.defaults.datasets.pie) {
+    Chart.defaults.datasets.pie = {} as any;
+  }
+  Chart.defaults.datasets.pie.borderColor = (context: any) => {
+    if (typeof document !== 'undefined') {
+      const isDark = document.documentElement.classList.contains('dark');
+      return isDark ? '#171717' : '#ffffff';
+    }
+    return '#171717';
+  };
+  Chart.defaults.datasets.pie.borderWidth = 2.5;
+
+  // Faint clean gridlines safely without replacing the defaults.scale object descriptor
+  if (Chart.defaults.scale) {
+    if (!Chart.defaults.scale.grid) {
+      Chart.defaults.scale.grid = {} as any;
+    }
+    Chart.defaults.scale.grid.color = 'rgba(128, 128, 128, 0.08)';
+    Chart.defaults.scale.grid.tickColor = 'rgba(128, 128, 128, 0.08)';
+  }
 
   // Premium typography & Legend styling
   if (!Chart.defaults.plugins.legend) {
@@ -202,14 +222,13 @@ if (typeof window !== 'undefined') {
     }
   });
 
-  // 3. Register the neon line shadow/glow plugin globally
+  // 3. Register the neon global shadow/glow plugin for all chart types (line, bar, doughnut, pie)
   Chart.register({
-    id: 'lineShadow',
+    id: 'globalGlow',
     beforeDatasetsDraw: (chart: any) => {
-      if (chart.config.type !== 'line') return;
-      
       const { ctx } = chart;
       const originalStroke = ctx.stroke;
+      const originalFill = ctx.fill;
 
       ctx.stroke = function () {
         ctx.save();
@@ -227,14 +246,35 @@ if (typeof window !== 'undefined') {
           ctx.shadowOffsetY = 0;
         }
         
-        originalStroke.apply(this, arguments);
+        const res = originalStroke.apply(this, arguments);
         ctx.restore();
+        return res;
+      };
+
+      ctx.fill = function () {
+        ctx.save();
+        const fillStyle = ctx.fillStyle;
+
+        // Apply glow to colored fills (bars, pie/doughnut segments)
+        if (
+          typeof fillStyle === 'string' &&
+          !fillStyle.includes('rgba(128, 128, 128') &&
+          !fillStyle.includes('rgba(0, 0, 0, 0')
+        ) {
+          ctx.shadowColor = fillStyle;
+          ctx.shadowBlur = 12; // High neon glow for fills
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        }
+
+        const res = originalFill.apply(this, arguments);
+        ctx.restore();
+        return res;
       };
     },
     afterDatasetsDraw: (chart: any) => {
-      if (chart.config.type === 'line') {
-        chart.ctx.stroke = CanvasRenderingContext2D.prototype.stroke;
-      }
+      chart.ctx.stroke = CanvasRenderingContext2D.prototype.stroke;
+      chart.ctx.fill = CanvasRenderingContext2D.prototype.fill;
     }
   });
 
