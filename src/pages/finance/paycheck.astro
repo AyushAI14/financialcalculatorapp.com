@@ -1,0 +1,327 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is FICA tax?",
+    answer: "FICA stands for the Federal Insurance Contributions Act. It consists of Social Security tax (6.2% on income up to the annual wage limit) and Medicare tax (1.45% on all earnings, plus 0.9% additional on earnings above $200,000)."
+  },
+  {
+    question: "What is the difference between pre-tax and post-tax deductions?",
+    answer: "Pre-tax deductions (like traditional 401k or health insurance premiums) are taken out before taxes are calculated, reducing your taxable income. Post-tax deductions (like Roth 401k or Roth IRA contributions) are taken out after taxes and do not reduce taxable income."
+  },
+  {
+    question: "What is the difference between gross pay and net pay?",
+    answer: "Gross pay is the total amount of money you earn before any deductions are made. Net pay (or take-home pay) is the amount you actually receive in your paycheck after taxes, FICA, health insurance, and retirement contributions are deducted."
+  },
+  {
+    question: "How does my W-4 filing status affect my paycheck?",
+    answer: "Your Form W-4 tells your employer how much federal income tax to withhold based on your filing status (Single, Married, Head of Household), dependents, and other income adjustments. Adjusting your W-4 can increase your take-home pay or help you avoid owing a large tax bill at the end of the year."
+  },
+  {
+    question: "Why do state and local taxes vary so much?",
+    answer: "Each state set its own income tax brackets (some states have no income tax at all, like Texas and Florida, while others have progressive tax rates). Local taxes may also apply depending on the specific city or county you work or live in."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Paycheck Take-Home Pay Calculator" 
+  description="Estimate your net take-home pay per paycheck and annually by calculating federal, state, and FICA tax withholdings along with pre-tax and post-tax deductions."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="paycheck-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Salary & Pay Schedule</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="75000" data-freq="biweekly" data-pre="6000" data-post="1200" data-state="4.5">Standard $75k</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="150000" data-freq="semimonthly" data-pre="18000" data-post="2400" data-state="6.0">Tech Lead $150k</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="gross-pay" label="Gross Annual Salary" type="number" prefix="$" value="75000" placeholder="0.00" tooltip="Your base annual gross earnings before any taxes or deductions." />
+            <Select id="frequency" label="Pay Frequency" options={[
+              { value: 'weekly', label: 'Weekly (52 checks/yr)' },
+              { value: 'biweekly', label: 'Bi-Weekly (26 checks/yr)' },
+              { value: 'semimonthly', label: 'Semi-Monthly (24 checks/yr)' },
+              { value: 'monthly', label: 'Monthly (12 checks/yr)' }
+            ]} value="biweekly" />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Taxes & Deductions</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="state-rate" label="State Tax Rate" type="number" suffix="%" value="4.5" placeholder="4.0" tooltip="Estimated flat state income tax rate." />
+            <Input id="pretax" label="Pre-Tax Deductions (Annual)" type="number" prefix="$" value="6000" placeholder="0.00" tooltip="Annual pre-tax 401(k), HSA, or health premiums." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="posttax" label="Post-Tax Deductions (Annual)" type="number" prefix="$" value="1200" placeholder="0.00" tooltip="Annual post-tax Roth 401(k), union dues, or charitable deductions." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Net Pay
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-period-net">
+          <ResultCard title="Take-Home Pay per Paycheck" value="$2,034.62" highlight={true} description="Estimated net deposit amount in your bank account per pay period." />
+        </div>
+        <div id="res-annual-net">
+          <ResultCard title="Annual Net Income" value="$52,900.00" description="Total take-home pay across the entire year." />
+        </div>
+      </div>
+
+      <!-- Breakdown Pie Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Salary Breakdown Breakdown</h4>
+        <div class="h-64 relative">
+          <canvas id="paycheck-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown Table -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">Withholding Schedule</h4>
+        <div class="text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-body font-medium">Federal Income Tax</span>
+            <span class="font-mono text-ink" id="withhold-fed">$6,250.00 / yr</span>
+          </div>
+          <div class="flex justify-between border-t border-hairline/60 pt-2">
+            <span class="text-body font-medium">FICA Tax (SS + Medicare)</span>
+            <span class="font-mono text-ink" id="withhold-fica">$5,737.50 / yr</span>
+          </div>
+          <div class="flex justify-between border-t border-hairline/60 pt-2">
+            <span class="text-body font-medium">State Income Tax</span>
+            <span class="font-mono text-ink" id="withhold-state">$3,105.00 / yr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Paycheck CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculatePaycheck } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('paycheck-form') as HTMLFormElement;
+
+  const grossInput = document.getElementById('gross-pay') as HTMLInputElement;
+  const freqSelect = document.getElementById('frequency') as HTMLSelectElement;
+  const stateInput = document.getElementById('state-rate') as HTMLInputElement;
+  const preInput = document.getElementById('pretax') as HTMLInputElement;
+  const postInput = document.getElementById('posttax') as HTMLInputElement;
+
+  const resPeriodNet = document.getElementById('res-period-net');
+  const resAnnualNet = document.getElementById('res-annual-net');
+
+  const withholdFed = document.getElementById('withhold-fed');
+  const withholdFica = document.getElementById('withhold-fica');
+  const withholdState = document.getElementById('withhold-state');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'gross-pay': { required: true, min: 1 },
+    'state-rate': { required: true, min: 0, max: 100 },
+    'pretax': { required: true, min: 0 },
+    'posttax': { required: true, min: 0 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resPeriodNet) resPeriodNet.querySelector('.font-mono')!.textContent = '--';
+      if (resAnnualNet) resAnnualNet.querySelector('.font-mono')!.textContent = '--';
+      
+      if (withholdFed) withholdFed.textContent = '--';
+      if (withholdFica) withholdFica.textContent = '--';
+      if (withholdState) withholdState.textContent = '--';
+      return;
+    }
+
+    const gross = parseFloat(grossInput.value);
+    const payFreq = freqSelect.value as any;
+    const stateRate = parseFloat(stateInput.value) / 100;
+    const pretax = parseFloat(preInput.value);
+    const posttax = parseFloat(postInput.value);
+
+    const result = calculatePaycheck({
+      grossPay: gross,
+      payFrequency: payFreq,
+      preTaxDeductions: pretax,
+      postTaxDeductions: posttax,
+      stateTaxRate: stateRate
+    });
+
+    const frequencyLabel = payFreq === 'weekly' ? 'check' : payFreq === 'biweekly' ? 'bi-weekly check' : payFreq === 'semimonthly' ? 'semi-monthly check' : 'month';
+
+    // Update UI
+    if (resPeriodNet) {
+      resPeriodNet.querySelector('.font-mono')!.textContent = formatCurrency(result.perPeriodNet);
+      resPeriodNet.querySelector('.text-body')!.textContent = `Estimated take-home amount per ${frequencyLabel}.`;
+    }
+    if (resAnnualNet) resAnnualNet.querySelector('.font-mono')!.textContent = formatCurrency(result.annualNet);
+
+    if (withholdFed) withholdFed.textContent = `${formatCurrency(result.annualFederalTax)} / yr`;
+    if (withholdFica) withholdFica.textContent = `${formatCurrency(result.annualFicaTax)} / yr`;
+    if (withholdState) withholdState.textContent = `${formatCurrency(result.annualStateTax)} / yr`;
+
+    // Update Chart
+    updateChart(result.annualNet, result.annualFederalTax, result.annualFicaTax, result.annualStateTax, pretax, posttax);
+  }
+
+  function updateChart(net: number, fed: number, fica: number, state: number, pre: number, post: number) {
+    const canvas = document.getElementById('paycheck-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [net, fed, fica, state, pre, post];
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Net Take-Home', 'Federal Tax', 'FICA Tax', 'State Tax', 'Pre-Tax Deductions', 'Post-Tax Deductions'],
+          datasets: [
+            {
+              data: [net, fed, fica, state, pre, post],
+              backgroundColor: ['#0070f3', '#7928ca', '#f5a623', '#ff0080', '#3291ff', '#50e3c2'],
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { font: { family: 'Geist, sans-serif', size: 9 } }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [grossInput, freqSelect, stateInput, preInput, postInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      grossInput.value = target.dataset.gross || '0';
+      freqSelect.value = target.dataset.freq || 'biweekly';
+      preInput.value = target.dataset.pre || '0';
+      postInput.value = target.dataset.post || '0';
+      stateInput.value = target.dataset.state || '0';
+
+      [grossInput, stateInput, preInput, postInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      grossInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const gross = parseFloat(grossInput.value);
+    const payFreq = freqSelect.value as any;
+    const stateRate = parseFloat(stateInput.value) / 100;
+    const pretax = parseFloat(preInput.value);
+    const posttax = parseFloat(postInput.value);
+
+    const result = calculatePaycheck({
+      grossPay: gross,
+      payFrequency: payFreq,
+      preTaxDeductions: pretax,
+      postTaxDeductions: posttax,
+      stateTaxRate: stateRate
+    });
+
+    const headers = ['Financial Metric', 'Annual Amount', 'Per Pay Period'];
+    const rows = [
+      ['Gross Pay', formatCurrency(result.annualGross), formatCurrency(result.perPeriodGross)],
+      ['Pre-Tax Deductions', formatCurrency(pretax), formatCurrency(pretax / result.periods)],
+      ['Federal Income Tax', formatCurrency(result.annualFederalTax), formatCurrency(result.perPeriodFederal)],
+      ['FICA Taxes (SS + Med)', formatCurrency(result.annualFicaTax), formatCurrency(result.perPeriodFica)],
+      ['State Income Tax', formatCurrency(result.annualStateTax), formatCurrency(result.perPeriodState)],
+      ['Post-Tax Deductions', formatCurrency(posttax), formatCurrency(posttax / result.periods)],
+      ['NET TAKE-HOME PAY', formatCurrency(result.annualNet), formatCurrency(result.perPeriodNet)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `paycheck-withholding-${gross}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [grossInput, stateInput, preInput, postInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('paycheck-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

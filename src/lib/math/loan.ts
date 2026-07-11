@@ -379,3 +379,258 @@ export function simulateRentVsBuy(params: RentVsBuyParams): RentVsBuyYearSimulat
 
   return list;
 }
+
+// ─── DEBT SNOWBALL VS AVALANCHE PAYOFF SIMULATOR ───
+
+export interface DebtItem {
+  name: string;
+  balance: number;
+  rate: number; // e.g. 0.18 for 18%
+  minPayment: number;
+}
+
+export interface DebtSimPeriod {
+  month: number;
+  balance: number;
+  interest: number;
+}
+
+export interface DebtSimResult {
+  months: number;
+  totalInterest: number;
+  history: DebtSimPeriod[];
+}
+
+export function simulateDebtPayoff(
+  debts: DebtItem[],
+  totalMonthlyPayment: number,
+  strategy: 'snowball' | 'avalanche'
+): DebtSimResult {
+  const activeDebts = debts.map(d => ({ ...d }));
+  let months = 0;
+  let totalInterest = 0;
+  const history: DebtSimPeriod[] = [];
+
+  const maxMonths = 600; // 50 years cap
+
+  while (activeDebts.some(d => d.balance > 0) && months < maxMonths) {
+    months++;
+    let monthlyInterest = 0;
+    
+    // 1. Accrue interest first
+    activeDebts.forEach(d => {
+      if (d.balance > 0) {
+        const interest = d.balance * (d.rate / 12);
+        d.balance += interest;
+        monthlyInterest += interest;
+        totalInterest += interest;
+      }
+    });
+
+    // 2. Pay minimums on all active debts
+    let availableFunds = totalMonthlyPayment;
+    
+    activeDebts.forEach(d => {
+      if (d.balance > 0) {
+        const payment = Math.min(d.balance, d.minPayment);
+        d.balance -= payment;
+        availableFunds -= payment;
+      }
+    });
+
+    // 3. Allocate leftover funds to the target debt based on strategy
+    if (availableFunds > 0) {
+      const remainingDebts = activeDebts.filter(d => d.balance > 0);
+      
+      if (remainingDebts.length > 0) {
+        if (strategy === 'snowball') {
+          // smallest balance first
+          remainingDebts.sort((a, b) => a.balance - b.balance);
+        } else {
+          // highest interest rate first
+          remainingDebts.sort((a, b) => b.rate - a.rate);
+        }
+
+        const target = remainingDebts[0];
+        const extraPayment = Math.min(target.balance, availableFunds);
+        target.balance -= extraPayment;
+      }
+    }
+
+    const currentTotalBalance = activeDebts.reduce((acc, d) => acc + d.balance, 0);
+    history.push({
+      month: months,
+      balance: currentTotalBalance,
+      interest: monthlyInterest
+    });
+
+    if (currentTotalBalance <= 0) break;
+  }
+
+  return {
+    months,
+    totalInterest,
+    history
+  };
+}
+
+// ─── REFINANCE CALCULATOR ───
+
+export interface RefinanceParams {
+  currentBalance: number;
+  currentRate: number; // e.g. 0.065
+  currentTermRemaining: number; // remaining years
+  newRate: number; // e.g. 0.05
+  newTerm: number; // new loan term in years
+  closingCosts: number;
+}
+
+export interface RefinanceResult {
+  currentPMT: number;
+  newPMT: number;
+  monthlySavings: number;
+  breakEvenMonths: number;
+  currentTotalRemaining: number;
+  newTotalCost: number;
+  lifetimeSavings: number;
+}
+
+export function calculateRefinance(params: RefinanceParams): RefinanceResult {
+  const { currentBalance, currentRate, currentTermRemaining, newRate, newTerm, closingCosts } = params;
+
+  // Monthly P&I for current loan
+  const currentPMT = calculateLoanPMT({
+    principal: currentBalance,
+    rate: currentRate,
+    years: currentTermRemaining
+  });
+
+  // Monthly P&I for new loan
+  const newPMT = calculateLoanPMT({
+    principal: currentBalance,
+    rate: newRate,
+    years: newTerm
+  });
+
+  const monthlySavings = currentPMT - newPMT;
+  const breakEvenMonths = monthlySavings > 0 ? closingCosts / monthlySavings : Infinity;
+
+  // Total costs over remaining life of current loan
+  const currentTotalRemaining = currentPMT * (currentTermRemaining * 12);
+  // Total costs of new loan over its term + closing costs
+  const newTotalCost = (newPMT * (newTerm * 12)) + closingCosts;
+
+  const lifetimeSavings = currentTotalRemaining - newTotalCost;
+
+  return {
+    currentPMT,
+    newPMT,
+    monthlySavings,
+    breakEvenMonths,
+    currentTotalRemaining,
+    newTotalCost,
+    lifetimeSavings
+  };
+}
+
+// ─── STUDENT LOAN IDR REPAYMENT ───
+
+export interface StudentLoanParams {
+  balance: number;
+  rate: number;
+  agi: number;
+  familySize: number;
+  plan: 'SAVE' | 'PAYE' | 'IBR';
+  loanType: 'undergrad' | 'grad' | 'mixed';
+}
+
+export interface StudentLoanResult {
+  monthlyPayment: number;
+  discretionaryIncome: number;
+  povertyThreshold: number;
+  standardPMT: number;
+}
+
+export function calculateStudentLoanIDR(params: StudentLoanParams): StudentLoanResult {
+  const { balance, rate, agi, familySize, plan, loanType } = params;
+
+  // 2026 Federal Poverty Guidelines (simplified estimate)
+  const povertyBase = 15800 + (familySize - 1) * 5400;
+
+  let multiplier = 1.5; // standard IBR/PAYE
+  let paymentPercentage = 0.10; // standard IBR/PAYE 10%
+
+  if (plan === 'SAVE') {
+    multiplier = 2.25; // 225%
+    if (loanType === 'undergrad') {
+      paymentPercentage = 0.05; // 5%
+    } else if (loanType === 'grad') {
+      paymentPercentage = 0.10; // 10%
+    } else {
+      paymentPercentage = 0.075; // Mixed undergrad/grad average
+    }
+  } else if (plan === 'IBR') {
+    paymentPercentage = 0.10;
+  }
+
+  const povertyThreshold = povertyBase * multiplier;
+  const discretionaryIncome = Math.max(0, agi - povertyThreshold);
+  const annualPayment = discretionaryIncome * paymentPercentage;
+  const monthlyPayment = Math.max(0, annualPayment / 12);
+
+  const standardPMT = calculateLoanPMT({
+    principal: balance,
+    rate: rate,
+    years: 10
+  });
+
+  return {
+    monthlyPayment,
+    discretionaryIncome,
+    povertyThreshold,
+    standardPMT
+  };
+}
+
+// ─── DEBT-TO-INCOME (DTI) ───
+
+export interface DTIParams {
+  grossMonthlyIncome: number;
+  monthlyHousing: number;
+  carLoans: number;
+  studentLoans: number;
+  creditCards: number;
+  otherDebts: number;
+}
+
+export interface DTIResult {
+  frontEndDTI: number;
+  backEndDTI: number;
+  totalDebt: number;
+  totalOtherDebt: number;
+  frontEndSafe: boolean;
+  backEndSafe: boolean;
+}
+
+export function calculateDTI(params: DTIParams): DTIResult {
+  const { grossMonthlyIncome, monthlyHousing, carLoans, studentLoans, creditCards, otherDebts } = params;
+
+  const totalOtherDebt = carLoans + studentLoans + creditCards + otherDebts;
+  const totalDebt = monthlyHousing + totalOtherDebt;
+
+  const frontEndDTI = grossMonthlyIncome > 0 ? (monthlyHousing / grossMonthlyIncome) : 0;
+  const backEndDTI = grossMonthlyIncome > 0 ? (totalDebt / grossMonthlyIncome) : 0;
+
+  const frontEndSafe = frontEndDTI <= 0.28;
+  const backEndSafe = backEndDTI <= 0.36;
+
+  return {
+    frontEndDTI,
+    backEndDTI,
+    totalDebt,
+    totalOtherDebt,
+    frontEndSafe,
+    backEndSafe
+  };
+}
+

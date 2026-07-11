@@ -458,4 +458,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
   // Init
   performReturnCalc();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', () => {
+    performReturnCalc();
+    performCAPMCalc();
+  });
 </script>

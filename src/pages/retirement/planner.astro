@@ -421,4 +421,7 @@ import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 
   // Initial Calculation
   performCalculation();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', performCalculation);
 </script>

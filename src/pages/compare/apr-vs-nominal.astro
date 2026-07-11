@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Nominal Interest Rate vs. APR: What's the Difference? - FinCompute.com" 
+  description="Learn the differences between your loan's base interest rate (nominal rate) and the Annual Percentage Rate (APR) including fee impacts."
+>
+  <div class="max-w-4xl mx-auto py-8 px-4 space-y-10">
+    <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
+      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Interest Rate vs. APR</h1>
+      <p class="text-sm text-body max-w-2xl">Understand nominal interest rates versus Annual Percentage Rates (APR) to find the best borrowing deals.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Nominal Rate -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🏷️</span>
+          <h2 class="text-xl font-bold text-ink">Nominal Interest Rate</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          The advertised base interest rate on your loan. Lenders use this percentage rate to compute the periodic interest accrued directly on your outstanding balance, excluding any fee disclosures.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Scope:</strong> Base cost of borrowing the principal only.</li>
+          <li><strong>Purpose:</strong> Used to compute the basic monthly amortization payment.</li>
+          <li><strong>Limitation:</strong> Hides loan fees, points, and origination charges.</li>
+        </ul>
+      </div>
+
+      <!-- APR -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl text-link">💸</span>
+          <h2 class="text-xl font-bold text-ink">Annual Percentage Rate (APR)</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          The comprehensive annual cost of borrowing, incorporating both the base nominal rate and all administrative fees, points, broker commissions, and closing costs.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Scope:</strong> Base rate + all closing costs and upfront charges.</li>
+          <li><strong>Purpose:</strong> Provides a standard metric to compare competing lenders.</li>
+          <li><strong>Advantage:</strong> A truer, more transparent representation of actual cost.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
+      <table class="w-full border-collapse text-left text-xs">
+        <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+          <tr>
+            <th class="px-5 py-3.5">Feature</th>
+            <th class="px-5 py-3.5">Nominal Interest Rate</th>
+            <th class="px-5 py-3.5">APR</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-hairline text-body">
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Includes Closing Costs?</td>
+            <td class="px-5 py-3">No</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (origination, points, broker fees)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Used for Interest Accrual</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (compounds on principal)</td>
+            <td class="px-5 py-3">No (only used for overall cost comparison)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Comparison Accuracy</td>
+            <td class="px-5 py-3">Low (a low rate can hide very high fees)</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">High (standardized metric for true cost)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Call to action -->
+    <div class="text-center py-6 bg-canvas-soft border border-hairline rounded-lg space-y-3 no-print">
+      <h3 class="text-sm font-semibold text-ink">Calculate your true APR</h3>
+      <p class="text-xs text-body max-w-md mx-auto">Input your loan amount, base rate, and upfront closing fees to compute your true Annual Percentage Rate.</p>
+      <a 
+        href="/loan/apr" 
+        class="inline-block px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity"
+      >
+        Try APR Calculator →
+      </a>
+    </div>
+  </div>
+</Layout>

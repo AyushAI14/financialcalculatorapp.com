@@ -7,12 +7,24 @@ interface Props {
   value?: string | number;
   prefix?: string;
   suffix?: string;
+  tooltip?: string;
 }
 
-const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix } = Astro.props;
+const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix, tooltip } = Astro.props;
 ---
-<div class="flex flex-col gap-1.5">
-  <label for={id} class="text-sm font-medium text-ink">{label}</label>
+<div class="flex flex-col gap-1.5 w-full relative">
+  <div class="flex items-center gap-1.5">
+    <label for={id} class="text-sm font-medium text-ink">{label}</label>
+    {tooltip && (
+      <div class="group relative cursor-help select-none">
+        <span class="w-3.5 h-3.5 rounded-full border border-mute/50 text-[10px] text-mute flex items-center justify-center font-mono hover:bg-canvas-soft-2 transition-colors">?</span>
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-primary text-on-primary text-[10px] leading-normal rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-normal">
+          {tooltip}
+          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary"></div>
+        </div>
+      </div>
+    )}
+  </div>
   <div class="relative flex items-center">
     {prefix && <span class="absolute left-3 text-mute text-sm pointer-events-none">{prefix}</span>}
     <input
@@ -29,4 +41,6 @@ const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix }
     />
     {suffix && <span class="absolute right-3 text-mute text-sm pointer-events-none">{suffix}</span>}
   </div>
+  <!-- Validation Error Container -->
+  <span id={`${id}-error`} class="text-[10px] text-error font-medium mt-0.5 leading-none hidden"></span>
 </div>

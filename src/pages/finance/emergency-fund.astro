@@ -1,0 +1,253 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import Select from '../../components/ui/Select.astro';
+
+const faqs = [
+  {
+    question: "How much emergency fund is recommended?",
+    answer: "Most financial advisors recommend saving 3 to 6 months of essential living expenses. If your income is highly volatile (e.g. freelancing) or you have dependents, targeting 9 to 12 months is safer."
+  },
+  {
+    question: "What expenses should be included in an emergency fund budget?",
+    answer: "Include only essential living costs: housing (mortgage/rent), utility bills, groceries, mandatory loan repayments, insurance, and medical costs. Exclude discretionary costs like dining out or streaming services."
+  },
+  {
+    question: "Where should I keep my emergency fund?",
+    answer: "Keep your emergency fund in a liquid, safe, and interest-bearing account, such as a High-Yield Savings Account (HYSA) or a Money Market Account. Avoid investing this money in the stock market or locking it in long-term CDs, as you need to access it immediately without penalty when an emergency arises."
+  },
+  {
+    question: "Should I pay off debt or build an emergency fund first?",
+    answer: "Financial experts generally advise building a starter emergency fund of $1,000 to one month of expenses first. Once you have this safety net to avoid taking on new debt for small emergencies, you can focus on aggressively paying down high-interest debt (like credit cards) before completing your full 3-to-6-month fund."
+  },
+  {
+    question: "When is it appropriate to use emergency fund savings?",
+    answer: "Only use it for expenses that are unexpected, urgent, and absolutely necessary (e.g., job loss, emergency medical care, critical car or home repairs). Do not use it for predictable expenses (like holiday gifts or annual insurance premiums) or discretionary purchases."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Emergency Fund Calculator" 
+  description="Estimate how much money you need to cover essential expenses during an unexpected event (like job loss or medical emergencies) and plan your savings timeline."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="emergency-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Expenses & Target</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="3500" data-sav="5000" data-months="6" data-contrib="250">6-Month Target</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="2500" data-sav="2000" data-months="3" data-contrib="150">3-Month Target</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="expenses" label="Monthly Living Expenses" type="number" prefix="$" value="3500" placeholder="0.00" tooltip="Total monthly cost of your housing, food, transport, bills, and debt repayments." />
+            <Input id="savings" label="Current Cash Savings" type="number" prefix="$" value="5000" placeholder="0.00" tooltip="The cash you already have set aside for emergencies." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Select id="target-months" label="Target Months" options={[
+              { value: '3', label: '3 Months' },
+              { value: '6', label: '6 Months' },
+              { value: '9', label: '9 Months' },
+              { value: '12', label: '12 Months' }
+            ]} value="6" />
+            <Input id="contribution" label="Monthly Savings Rate" type="number" prefix="$" value="250" placeholder="0.00" suffix="/mo" tooltip="The cash amount you plan to save each month to build this fund." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Goal
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-target-amount">
+          <ResultCard title="Target Fund Goal" value="$21,000.00" highlight={true} description="Total savings required to cover essential monthly expenses for the target duration." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-shortfall">
+            <ResultCard title="Remaining Shortfall" value="$16,000.00" />
+          </div>
+          <div id="res-months-to-goal">
+            <ResultCard title="Months to Goal" value="64.0 months" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Savings Progress Bar Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
+        <div class="flex justify-between text-xs font-mono text-mute uppercase tracking-wider">
+          <span>Goal Progress</span>
+          <span id="progress-text">23.8%</span>
+        </div>
+        <div class="w-full bg-canvas-soft border border-hairline rounded-full h-3.5 overflow-hidden">
+          <div id="progress-bar" class="bg-primary h-full rounded-full transition-all duration-500" style="width: 23.8%;"></div>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Savings CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateEmergencyFund } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  // DOM Elements
+  const form = document.getElementById('emergency-form') as HTMLFormElement;
+
+  const expInput = document.getElementById('expenses') as HTMLInputElement;
+  const savInput = document.getElementById('savings') as HTMLInputElement;
+  const monthsSelect = document.getElementById('target-months') as HTMLSelectElement;
+  const contribInput = document.getElementById('contribution') as HTMLInputElement;
+
+  const resTarget = document.getElementById('res-target-amount');
+  const resShortfall = document.getElementById('res-shortfall');
+  const resMonths = document.getElementById('res-months-to-goal');
+
+  const progressText = document.getElementById('progress-text');
+  const progressBar = document.getElementById('progress-bar');
+
+  const validationRules = {
+    'expenses': { required: true, min: 1 },
+    'savings': { required: true, min: 0 },
+    'contribution': { required: true, min: 0 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resTarget) resTarget.querySelector('.font-mono')!.textContent = '--';
+      if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = '--';
+      if (resMonths) resMonths.querySelector('.font-mono')!.textContent = '--';
+      
+      if (progressText) progressText.textContent = '--%';
+      if (progressBar) progressBar.style.width = '0%';
+      return;
+    }
+
+    const expenses = parseFloat(expInput.value);
+    const savings = parseFloat(savInput.value);
+    const months = parseInt(monthsSelect.value);
+    const contribution = parseFloat(contribInput.value);
+
+    const result = calculateEmergencyFund(expenses, savings, months, contribution);
+
+    const formattedTarget = formatCurrency(result.targetAmount);
+    const formattedShortfall = formatCurrency(result.shortfall);
+    const monthsText = result.shortfall > 0 ? (contribution > 0 ? `${result.monthsToGoal.toFixed(1)} months` : 'Infinity (Savings rate = $0)') : 'Funded';
+
+    // Update UI
+    if (resTarget) resTarget.querySelector('.font-mono')!.textContent = formattedTarget;
+    if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = formattedShortfall;
+    if (resMonths) resMonths.querySelector('.font-mono')!.textContent = monthsText;
+
+    // Progress Bar
+    const progressClamped = Math.min(100, Math.max(0, result.progressPercent));
+    if (progressText) progressText.textContent = `${progressClamped.toFixed(1)}%`;
+    if (progressBar) progressBar.style.width = `${progressClamped}%`;
+  }
+
+  // Bind input listeners
+  [expInput, savInput, monthsSelect, contribInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      expInput.value = target.dataset.exp || '0';
+      savInput.value = target.dataset.sav || '0';
+      monthsSelect.value = target.dataset.months || '6';
+      contribInput.value = target.dataset.contrib || '0';
+
+      [expInput, savInput, contribInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      expInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const expenses = parseFloat(expInput.value);
+    const savings = parseFloat(savInput.value);
+    const months = parseInt(monthsSelect.value);
+    const contribution = parseFloat(contribInput.value);
+
+    const result = calculateEmergencyFund(expenses, savings, months, contribution);
+
+    const headers = ['Metric Description', 'Value'];
+    const rows = [
+      ['Monthly Expenses Baseline', formatCurrency(expenses)],
+      ['Target Duration (Months)', `${months} Months`],
+      ['Target Emergency Fund Goal', formatCurrency(result.targetAmount)],
+      ['Current Capital Saved', formatCurrency(savings)],
+      ['Remaining Capital Shortfall', formatCurrency(result.shortfall)],
+      ['Monthly Savings Contribution', formatCurrency(contribution)],
+      ['Goal Completion Percentage', `${result.progressPercent.toFixed(2)}%`],
+      ['Time to Reach Savings Goal', result.shortfall > 0 ? (contribution > 0 ? `${result.monthsToGoal.toFixed(1)} Months` : 'Infinite') : 'Already Funded']
+    ];
+
+    downloadDataAsCSV(headers, rows, `emergency-fund-savings.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [expInput, savInput, contribInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('emergency-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

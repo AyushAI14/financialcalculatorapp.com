@@ -1,0 +1,338 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "When should I refinance my loan?",
+    answer: "It generally makes sense to refinance if you can secure a lower interest rate, reduce your monthly payment, or shorten your term. The main goal is ensuring your total interest savings exceed the closing costs."
+  },
+  {
+    question: "What closing costs are associated with refinancing?",
+    answer: "Refinancing costs typically include application fees, origination fees, appraisal costs, title search and insurance, credit report fees, and recording fees. These range from 2% to 6% of the loan amount."
+  },
+  {
+    question: "How do I calculate my refinance break-even point?",
+    answer: "To find your break-even point, divide your total refinance closing costs by your monthly payment savings. For example, if closing costs are $3,000 and you save $150 per month, your break-even point is 20 months ($3,000 / $150). If you plan to sell or move before reaching this point, refinancing may not make financial sense."
+  },
+  {
+    question: "What is a 'no-closing-cost' refinance?",
+    answer: "A no-closing-cost refinance doesn't mean the fees are waived. Instead, the lender either rolls the closing costs into your new total loan balance or charges a slightly higher interest rate to cover them. This avoids paying cash upfront but increases the lifetime cost of the loan."
+  },
+  {
+    question: "Does refinancing lower my monthly payment or total interest?",
+    answer: "It can do both, but it depends on the new loan's term. If you refinance to a lower rate with the same or shorter term, you save on both. However, if you reset your term back to 30 years to get the lowest possible monthly payment, you might end up paying more total interest over the life of the loan despite the monthly savings."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Loan Refinance Calculator" 
+  description="Determine if refinancing your mortgage, auto loan, or personal loan is worth it by calculating monthly payment savings, lifetime interest savings, and your break-even point."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="refinance-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Current Loan parameters</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="300000" data-crate="6.8" data-cterm="25" data-nrate="5.2" data-nterm="30" data-costs="5000">Mortgage 30y</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="25000" data-crate="8.5" data-cterm="3" data-nrate="5.5" data-nterm="3" data-costs="300">Auto Loan</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-balance" label="Outstanding Loan Balance" type="number" prefix="$" value="300000" placeholder="0.00" tooltip="The remaining balance of your active loan." />
+            <Input id="current-rate" label="Current Interest Rate" type="number" suffix="%" value="6.8" placeholder="0.00" tooltip="The annual interest rate on your current loan note." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="current-term" label="Remaining Term" type="number" suffix="years" value="25" placeholder="25" tooltip="The remaining years left on your current loan." />
+            <Input id="closing-costs" label="Refinancing Closing Costs" type="number" prefix="$" value="5000" placeholder="0.00" tooltip="All fees (application, appraisal, title, points) charged to close the new loan." />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">New Refinance Loan parameters</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="new-rate" label="New Annual Interest Rate" type="number" suffix="%" value="5.2" placeholder="0.00" tooltip="The interest rate offered on the new refinance loan." />
+            <Input id="new-term" label="New Loan Term" type="number" suffix="years" value="30" placeholder="30" tooltip="The duration of the new loan in years." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Break-Even
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-break-even">
+          <ResultCard title="Break-Even Point" value="62.4 months" highlight={true} description="The time required for your monthly interest savings to offset your closing costs." />
+        </div>
+        <div id="res-monthly-savings">
+          <ResultCard title="Monthly Payment Savings" value="$80.12" description="Current monthly payment minus your new monthly payment." />
+        </div>
+        <div id="res-lifetime-savings">
+          <ResultCard title="Net Lifetime Savings" value="$23,836.00" description="Total remaining cost of current loan minus total cost of the new loan." />
+        </div>
+      </div>
+
+      <!-- Payment Comparison Card -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-4">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Payment Comparison</h4>
+        <div class="grid grid-cols-2 gap-4 divide-x divide-hairline">
+          <div class="space-y-1">
+            <span class="text-xs text-mute font-mono block">Current Loan P&I</span>
+            <span class="text-xl font-semibold text-ink font-mono" id="comp-current-pmt">$2,082.72</span>
+          </div>
+          <div class="pl-4 space-y-1">
+            <span class="text-xs text-mute font-mono block">New Refinanced P&I</span>
+            <span class="text-xl font-semibold text-ink font-mono" id="comp-new-pmt">$1,647.33</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formula steps -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">1. Monthly Savings</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-savings">
+                Savings = CurrentPMT - NewPMT
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">2. Break-Even Period</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-breakeven">
+                Break-Even Months = ClosingCosts / MonthlySavings
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">3. Net Lifetime Savings</p>
+              <p class="mb-1">Compares the remaining payments of the old loan against the new loan payments plus closing costs.</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-lifetime">
+                Net Savings = (CurrentPMT × RemainingMonths) - (NewPMT × NewMonths + ClosingCosts)
+              </code>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Results CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateRefinance } from '../../lib/math/loan';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  // DOM Elements
+  const form = document.getElementById('refinance-form') as HTMLFormElement;
+
+  const currentBal = document.getElementById('current-balance') as HTMLInputElement;
+  const currentRate = document.getElementById('current-rate') as HTMLInputElement;
+  const currentTerm = document.getElementById('current-term') as HTMLInputElement;
+  const closingCostsInput = document.getElementById('closing-costs') as HTMLInputElement;
+  const newRate = document.getElementById('new-rate') as HTMLInputElement;
+  const newTerm = document.getElementById('new-term') as HTMLInputElement;
+
+  const resBreakEven = document.getElementById('res-break-even');
+  const resSavings = document.getElementById('res-monthly-savings');
+  const resLifetime = document.getElementById('res-lifetime-savings');
+
+  const compCurrent = document.getElementById('comp-current-pmt');
+  const compNew = document.getElementById('comp-new-pmt');
+
+  const validationRules = {
+    'current-balance': { required: true, min: 1 },
+    'current-rate': { required: true, min: 0, max: 100 },
+    'current-term': { required: true, min: 0.1, max: 100 },
+    'closing-costs': { required: true, min: 0 },
+    'new-rate': { required: true, min: 0, max: 100 },
+    'new-term': { required: true, min: 1, max: 100, integer: true }
+  };
+
+  function performCalculation() {
+    const stepSavings = document.getElementById('step-savings');
+    const stepBreakeven = document.getElementById('step-breakeven');
+    const stepLifetime = document.getElementById('step-lifetime');
+
+    if (!validateForm(validationRules)) {
+      if (resBreakEven) resBreakEven.querySelector('.font-mono')!.textContent = '--';
+      if (resSavings) resSavings.querySelector('.font-mono')!.textContent = '--';
+      if (resLifetime) resLifetime.querySelector('.font-mono')!.textContent = '--';
+      if (compCurrent) compCurrent.textContent = '--';
+      if (compNew) compNew.textContent = '--';
+      
+      if (stepSavings) stepSavings.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepBreakeven) stepBreakeven.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepLifetime) stepLifetime.innerHTML = 'Enter valid inputs to view formulas.';
+      return;
+    }
+
+    const currentBalance = parseFloat(currentBal.value);
+    const cRate = parseFloat(currentRate.value) / 100;
+    const cTerm = parseFloat(currentTerm.value);
+    const closingCosts = parseFloat(closingCostsInput.value);
+    const nRate = parseFloat(newRate.value) / 100;
+    const nTerm = parseInt(newTerm.value);
+
+    const result = calculateRefinance({
+      currentBalance,
+      currentRate: cRate,
+      currentTermRemaining: cTerm,
+      newRate: nRate,
+      newTerm: nTerm,
+      closingCosts
+    });
+
+    const isBreakEvenFinite = isFinite(result.breakEvenMonths) && result.breakEvenMonths > 0;
+    const breakEvenText = isBreakEvenFinite ? `${result.breakEvenMonths.toFixed(1)} months` : 'Never (No Savings)';
+    const formattedSavings = formatCurrency(result.monthlySavings);
+    const formattedLifetime = formatCurrency(result.lifetimeSavings);
+
+    // Update UI
+    if (resBreakEven) resBreakEven.querySelector('.font-mono')!.textContent = breakEvenText;
+    if (resSavings) resSavings.querySelector('.font-mono')!.textContent = formattedSavings;
+    if (resLifetime) resLifetime.querySelector('.font-mono')!.textContent = formattedLifetime;
+
+    if (compCurrent) compCurrent.textContent = formatCurrency(result.currentPMT);
+    if (compNew) compNew.textContent = formatCurrency(result.newPMT);
+
+    // formulas updates
+    if (stepSavings) {
+      stepSavings.innerHTML = `Savings = ${formatCurrency(result.currentPMT)} - ${formatCurrency(result.newPMT)} = <strong>${formattedSavings} / mo</strong>`;
+    }
+    if (stepBreakeven) {
+      if (isBreakEvenFinite) {
+        stepBreakeven.innerHTML = `Break-Even Months = ${formatCurrency(closingCosts)} / ${formattedSavings} = <strong>${result.breakEvenMonths.toFixed(1)} Months</strong>`;
+      } else {
+        stepBreakeven.innerHTML = `Break-Even Months = ${formatCurrency(closingCosts)} / ${formattedSavings} = <strong>No Break-Even (New payment is higher)</strong>`;
+      }
+    }
+    if (stepLifetime) {
+      stepLifetime.innerHTML = `Remaining Old Loan = ${formatCurrency(result.currentPMT)} × ${cTerm*12} mo = ${formatCurrency(result.currentTotalRemaining)}<br/>New Loan Total = (${formatCurrency(result.newPMT)} × ${nTerm*12} mo) + ${formatCurrency(closingCosts)} = ${formatCurrency(result.newTotalCost)}<br/>Net Savings = ${formatCurrency(result.currentTotalRemaining)} - ${formatCurrency(result.newTotalCost)} = <strong>${formattedLifetime}</strong>`;
+    }
+  }
+
+  // Bind input listeners
+  [currentBal, currentRate, currentTerm, closingCostsInput, newRate, newTerm].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      currentBal.value = target.dataset.bal || '0';
+      currentRate.value = target.dataset.crate || '0';
+      currentTerm.value = target.dataset.cterm || '0';
+      newRate.value = target.dataset.nrate || '0';
+      newTerm.value = target.dataset.nterm || '0';
+      closingCostsInput.value = target.dataset.costs || '0';
+
+      [currentBal, currentRate, currentTerm, closingCostsInput, newRate, newTerm].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      currentBal.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const currentBalance = parseFloat(currentBal.value);
+    const cRate = parseFloat(currentRate.value) / 100;
+    const cTerm = parseFloat(currentTerm.value);
+    const closingCosts = parseFloat(closingCostsInput.value);
+    const nRate = parseFloat(newRate.value) / 100;
+    const nTerm = parseInt(newTerm.value);
+
+    const result = calculateRefinance({
+      currentBalance,
+      currentRate: cRate,
+      currentTermRemaining: cTerm,
+      newRate: nRate,
+      newTerm: nTerm,
+      closingCosts
+    });
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ['Outstanding Loan Balance', formatCurrency(currentBalance)],
+      ['Current Interest Rate', `${currentRate.value}%`],
+      ['Remaining Term (Years)', cTerm],
+      ['Refinancing Closing Costs', formatCurrency(closingCosts)],
+      ['New Interest Rate', `${newRate.value}%`],
+      ['New Term (Years)', nTerm],
+      ['Current Monthly Payment', formatCurrency(result.currentPMT)],
+      ['New Monthly Payment', formatCurrency(result.newPMT)],
+      ['Monthly Savings', formatCurrency(result.monthlySavings)],
+      ['Break-Even Period (Months)', isFinite(result.breakEvenMonths) ? result.breakEvenMonths.toFixed(1) : 'Never'],
+      ['Remaining Payments on Old Loan', formatCurrency(result.currentTotalRemaining)],
+      ['Total Cost of New Loan', formatCurrency(result.newTotalCost)],
+      ['Net Lifetime Savings', formatCurrency(result.lifetimeSavings)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `refinance-calculation-${currentBalance}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [currentBal, currentRate, currentTerm, closingCostsInput, newRate, newTerm].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize URL parameter sync
+  syncInputsWithURL('refinance-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

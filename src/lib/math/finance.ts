@@ -352,3 +352,330 @@ export function calculateROI(params: ROIParams) {
     annualizedRoi
   };
 }
+
+// ─── INFLATION & PURCHASING POWER ───
+
+export interface InflationResult {
+  futurePrice: number;
+  purchasingPower: number;
+}
+
+export function calculateInflation(amount: number, rate: number, years: number): InflationResult {
+  const futurePrice = amount * Math.pow(1 + rate, years);
+  const purchasingPower = amount / Math.pow(1 + rate, years);
+  return { futurePrice, purchasingPower };
+}
+
+// ─── PAYCHECK GROSS-TO-NET ───
+
+export interface PaycheckParams {
+  grossPay: number;
+  payFrequency: 'weekly' | 'biweekly' | 'semimonthly' | 'monthly';
+  preTaxDeductions: number;
+  postTaxDeductions: number;
+  stateTaxRate: number;
+}
+
+export interface PaycheckResult {
+  annualGross: number;
+  annualFederalTax: number;
+  annualFicaTax: number;
+  annualStateTax: number;
+  annualNet: number;
+  perPeriodGross: number;
+  perPeriodFederal: number;
+  perPeriodFica: number;
+  perPeriodState: number;
+  perPeriodNet: number;
+  periods: number;
+}
+
+export function calculatePaycheck(params: PaycheckParams): PaycheckResult {
+  const { grossPay, payFrequency, preTaxDeductions, postTaxDeductions, stateTaxRate } = params;
+
+  const annualPreTax = Math.max(0, grossPay - preTaxDeductions);
+  
+  // Federal standard deduction for single taxpayer (estimated $15,000 for 2026)
+  const standardDeduction = 15000;
+  const taxableFederal = Math.max(0, annualPreTax - standardDeduction);
+
+  const brackets = [
+    { limit: 11600, rate: 0.10 },
+    { limit: 47150, rate: 0.12 },
+    { limit: 100525, rate: 0.22 },
+    { limit: 191950, rate: 0.24 },
+    { limit: 243725, rate: 0.32 },
+    { limit: 609350, rate: 0.35 },
+    { limit: Infinity, rate: 0.37 }
+  ];
+
+  let federalTax = 0;
+  let remainingTaxable = taxableFederal;
+  let previousLimit = 0;
+
+  for (const b of brackets) {
+    const range = b.limit - previousLimit;
+    const taxableInRange = Math.min(remainingTaxable, range);
+    federalTax += taxableInRange * b.rate;
+    remainingTaxable -= taxableInRange;
+    previousLimit = b.limit;
+    if (remainingTaxable <= 0) break;
+  }
+
+  // FICA: Social Security (6.2% up to $176k cap) + Medicare (1.45% base, +0.9% > $200k)
+  const ssTax = Math.min(grossPay, 176000) * 0.062;
+  const medBase = grossPay * 0.0145;
+  const medAdditional = Math.max(0, grossPay - 200000) * 0.009;
+  const medicareTax = medBase + medAdditional;
+  const ficaTax = ssTax + medicareTax;
+
+  // State Tax
+  const stateTax = annualPreTax * stateTaxRate;
+
+  // Net annual take-home
+  const annualNet = Math.max(0, annualPreTax - federalTax - ficaTax - stateTax - postTaxDeductions);
+
+  let periods = 12;
+  if (payFrequency === 'weekly') periods = 52;
+  else if (payFrequency === 'biweekly') periods = 26;
+  else if (payFrequency === 'semimonthly') periods = 24;
+
+  return {
+    annualGross: grossPay,
+    annualFederalTax: federalTax,
+    annualFicaTax: ficaTax,
+    annualStateTax: stateTax,
+    annualNet,
+    perPeriodGross: grossPay / periods,
+    perPeriodFederal: federalTax / periods,
+    perPeriodFica: ficaTax / periods,
+    perPeriodState: stateTax / periods,
+    perPeriodNet: annualNet / periods,
+    periods
+  };
+}
+
+// ─── NET WORTH TRACKER ───
+
+export interface NetWorthResult {
+  totalAssets: number;
+  totalLiabilities: number;
+  netWorth: number;
+}
+
+export function calculateNetWorth(assets: number[], liabilities: number[]): NetWorthResult {
+  const totalAssets = assets.reduce((a, b) => a + b, 0);
+  const totalLiabilities = liabilities.reduce((a, b) => a + b, 0);
+  return {
+    totalAssets,
+    totalLiabilities,
+    netWorth: totalAssets - totalLiabilities
+  };
+}
+
+// ─── EMERGENCY FUND CALCULATOR ───
+
+export interface EmergencyFundResult {
+  targetAmount: number;
+  shortfall: number;
+  progressPercent: number;
+  monthsToGoal: number;
+}
+
+export function calculateEmergencyFund(monthlyExpenses: number, currentSavings: number, targetMonths: number, monthlyContribution: number): EmergencyFundResult {
+  const targetAmount = monthlyExpenses * targetMonths;
+  const shortfall = Math.max(0, targetAmount - currentSavings);
+  const progressPercent = targetAmount > 0 ? (currentSavings / targetAmount) * 100 : 100;
+  const monthsToGoal = (monthlyContribution > 0 && shortfall > 0) ? shortfall / monthlyContribution : 0;
+  return { targetAmount, shortfall, progressPercent, monthsToGoal };
+}
+
+// ─── INVESTMENT FEE / EXPENSE RATIO IMPACT ───
+
+export interface FeeImpactResult {
+  valueA: number;
+  valueB: number;
+  valueNoFee: number;
+  lostToFeesA: number;
+  lostToFeesB: number;
+  difference: number;
+  totalContributions: number;
+}
+
+export function calculateFeeImpact(
+  initial: number,
+  monthly: number,
+  returnRate: number,
+  feeA: number,
+  feeB: number,
+  years: number
+): FeeImpactResult {
+  const periods = years * 12;
+  const rA = (returnRate - feeA) / 12;
+  const rB = (returnRate - feeB) / 12;
+  const rNoFee = returnRate / 12;
+
+  let valA = initial;
+  let valB = initial;
+  let valNoFee = initial;
+  let cumContributions = initial;
+
+  for (let m = 1; m <= periods; m++) {
+    valA = (valA + monthly) * (1 + rA);
+    valB = (valB + monthly) * (1 + rB);
+    valNoFee = (valNoFee + monthly) * (1 + rNoFee);
+    cumContributions += monthly;
+  }
+
+  const lostToFeesA = valNoFee - valA;
+  const lostToFeesB = valNoFee - valB;
+  const difference = valA - valB;
+
+  return {
+    valueA: valA,
+    valueB: valB,
+    valueNoFee: valNoFee,
+    lostToFeesA,
+    lostToFeesB,
+    difference,
+    totalContributions: cumContributions
+  };
+}
+
+// ─── ROTH VS TRADITIONAL IRA COMPARISON ───
+
+export interface CompareIRAResult {
+  rothBalance: number;
+  tradBalanceGross: number;
+  tradBalanceNet: number;
+  totalTaxSavings: number;
+  rothWins: boolean;
+}
+
+export function compareIRA(
+  currentAge: number,
+  retirementAge: number,
+  annualContribution: number,
+  rateOfReturn: number,
+  currentTaxRate: number,
+  retirementTaxRate: number
+): CompareIRAResult {
+  const years = retirementAge - currentAge;
+  if (years <= 0) return { rothBalance: 0, tradBalanceGross: 0, tradBalanceNet: 0, totalTaxSavings: 0, rothWins: true };
+
+  let rothBalance = 0;
+  let tradBalanceGross = 0;
+  
+  for (let y = 1; y <= years; y++) {
+    rothBalance = (rothBalance + annualContribution) * (1 + rateOfReturn);
+    tradBalanceGross = (tradBalanceGross + annualContribution) * (1 + rateOfReturn);
+  }
+
+  const tradBalanceNet = tradBalanceGross * (1 - retirementTaxRate);
+  const taxSavingsAnnual = annualContribution * currentTaxRate;
+  const totalTaxSavings = taxSavingsAnnual * years;
+
+  return {
+    rothBalance,
+    tradBalanceGross,
+    tradBalanceNet,
+    totalTaxSavings,
+    rothWins: rothBalance > tradBalanceNet
+  };
+}
+
+// ─── COLLEGE SAVINGS (529) CALCULATOR ───
+
+export interface CollegeSavingsResult {
+  total4YearCost: number;
+  endingBalance: number;
+  shortfall: number;
+  pmtNeeded: number;
+}
+
+export function calculateCollegeSavings(
+  currentAge: number,
+  enrollmentAge: number,
+  currentAnnualCost: number,
+  costInflation: number,
+  currentSaved: number,
+  monthlyContribution: number,
+  returnRate: number
+): CollegeSavingsResult {
+  const yearsToSave = enrollmentAge - currentAge;
+  if (yearsToSave <= 0) return { total4YearCost: currentAnnualCost * 4, endingBalance: currentSaved, shortfall: 0, pmtNeeded: 0 };
+
+  let total4YearCost = 0;
+  for (let i = 0; i < 4; i++) {
+    total4YearCost += currentAnnualCost * Math.pow(1 + costInflation, yearsToSave + i);
+  }
+
+  let balance = currentSaved;
+  const monthlyReturn = returnRate / 12;
+  const totalMonths = yearsToSave * 12;
+  for (let m = 1; m <= totalMonths; m++) {
+    balance = (balance + monthlyContribution) * (1 + monthlyReturn);
+  }
+
+  const shortfall = Math.max(0, total4YearCost - balance);
+
+  const fvSaved = currentSaved * Math.pow(1 + monthlyReturn, totalMonths);
+  const targetFromPMT = Math.max(0, total4YearCost - fvSaved);
+  const pmtNeeded = monthlyReturn === 0 ? (targetFromPMT / totalMonths) : (targetFromPMT * monthlyReturn) / (Math.pow(1 + monthlyReturn, totalMonths) - 1);
+
+  return {
+    total4YearCost,
+    endingBalance: balance,
+    shortfall,
+    pmtNeeded
+  };
+}
+
+// ─── CRYPTO DCA CALCULATOR ───
+
+export interface CryptoDCAPeriod {
+  period: number;
+  invested: number;
+  value: number;
+}
+
+export interface CryptoDCAResult {
+  totalInvested: number;
+  futureValue: number;
+  profit: number;
+  roi: number;
+  history: CryptoDCAPeriod[];
+}
+
+export function calculateCryptoDCA(
+  purchaseAmount: number,
+  frequency: 'weekly' | 'monthly',
+  years: number,
+  projectedAnnualGrowth: number
+): CryptoDCAResult {
+  let periods = years * 12;
+  let rate = projectedAnnualGrowth / 12;
+  if (frequency === 'weekly') {
+    periods = years * 52;
+    rate = projectedAnnualGrowth / 52;
+  }
+
+  let balance = 0;
+  let invested = 0;
+  const history: CryptoDCAPeriod[] = [];
+
+  for (let p = 1; p <= periods; p++) {
+    balance = (balance + purchaseAmount) * (1 + rate);
+    invested += purchaseAmount;
+    history.push({ period: p, invested, value: balance });
+  }
+
+  return {
+    totalInvested: invested,
+    futureValue: balance,
+    profit: balance - invested,
+    roi: invested > 0 ? (balance - invested) / invested : 0,
+    history
+  };
+}
+

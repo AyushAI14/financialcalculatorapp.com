@@ -1,0 +1,325 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is net worth?",
+    answer: "Net worth is the total value of everything you own (assets) minus everything you owe (liabilities). It is a key metric used to measure your overall financial health."
+  },
+  {
+    question: "How often should I calculate my net worth?",
+    answer: "Most financial planners recommend updating your net worth quarterly or semi-annually. Monthly updates are also common, but can cause unnecessary stress due to minor market fluctuations."
+  },
+  {
+    question: "What counts as an asset vs. a liability?",
+    answer: "Assets are items of economic value that you own (e.g., cash, savings accounts, retirement accounts, brokerage portfolios, real estate, and vehicles). Liabilities are debts or financial obligations that you owe to others (e.g., mortgages, student loans, credit card balances, car loans, and personal loans)."
+  },
+  {
+    question: "Should I include my house and mortgage in my net worth?",
+    answer: "Yes. You should list your home's current market value as an asset and your remaining mortgage balance as a liability. The difference represents your home equity, which is a key component of your total wealth."
+  },
+  {
+    question: "What does it mean to have a negative net worth?",
+    answer: "A negative net worth occurs when your total liabilities exceed your total assets. This is very common for young adults and recent graduates who have accumulated significant student or auto debt but haven't had time to build savings or buy appreciating assets yet."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Net Worth Tracker" 
+  description="Keep track of your financial progress by listing your assets (what you own) and your liabilities (what you owe) to calculate your true net worth."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="networth-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Assets (What You Own)</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="15000" data-inv="85000" data-re="350000" data-veh="20000" data-mort="250000" data-stud="20000" data-cc="3000" data-other="5000">Homeowner</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="8000" data-inv="25000" data-re="0" data-veh="12000" data-mort="0" data-stud="15000" data-cc="1500" data-other="0">Renter / Starter</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="asset-cash" label="Cash & Bank Accounts" type="number" prefix="$" value="15000" />
+            <Input id="asset-investments" label="Retirement & Investment Portfolios" type="number" prefix="$" value="85000" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="asset-realestate" label="Real Estate / Home Value" type="number" prefix="$" value="350000" />
+            <Input id="asset-vehicles" label="Vehicles & Physical Assets" type="number" prefix="$" value="20000" />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Your Liabilities (What You Owe)</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="liability-mortgage" label="Mortgage Balance" type="number" prefix="$" value="250000" />
+            <Input id="liability-student" label="Student Loan Balance" type="number" prefix="$" value="20000" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="liability-credit" label="Credit Card Balances" type="number" prefix="$" value="3000" />
+            <Input id="liability-other" label="Other Loans & Debts" type="number" prefix="$" value="5000" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Net Worth
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-networth">
+          <ResultCard title="Net Worth" value="$182,000.00" highlight={true} description="Total Assets minus Total Liabilities." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-assets">
+            <ResultCard title="Total Assets" value="$470,000.00" />
+          </div>
+          <div id="res-liabilities">
+            <ResultCard title="Total Liabilities" value="$278,000.00" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Asset vs Liability Distribution Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Sheet Structure</h4>
+        <div class="h-64 relative">
+          <canvas id="networth-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Balance Sheet CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateNetWorth } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('networth-form') as HTMLFormElement;
+
+  const cashInput = document.getElementById('asset-cash') as HTMLInputElement;
+  const invInput = document.getElementById('asset-investments') as HTMLInputElement;
+  const reInput = document.getElementById('asset-realestate') as HTMLInputElement;
+  const vehInput = document.getElementById('asset-vehicles') as HTMLInputElement;
+
+  const mortInput = document.getElementById('liability-mortgage') as HTMLInputElement;
+  const studInput = document.getElementById('liability-student') as HTMLInputElement;
+  const ccInput = document.getElementById('liability-credit') as HTMLInputElement;
+  const otherInput = document.getElementById('liability-other') as HTMLInputElement;
+
+  const resNet = document.getElementById('res-networth');
+  const resAss = document.getElementById('res-assets');
+  const resLia = document.getElementById('res-liabilities');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'asset-cash': { required: true, min: 0 },
+    'asset-investments': { required: true, min: 0 },
+    'asset-realestate': { required: true, min: 0 },
+    'asset-vehicles': { required: true, min: 0 },
+    'liability-mortgage': { required: true, min: 0 },
+    'liability-student': { required: true, min: 0 },
+    'liability-credit': { required: true, min: 0 },
+    'liability-other': { required: true, min: 0 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resNet) resNet.querySelector('.font-mono')!.textContent = '--';
+      if (resAss) resAss.querySelector('.font-mono')!.textContent = '--';
+      if (resLia) resLia.querySelector('.font-mono')!.textContent = '--';
+      return;
+    }
+
+    const assets = [
+      parseFloat(cashInput.value),
+      parseFloat(invInput.value),
+      parseFloat(reInput.value),
+      parseFloat(vehInput.value)
+    ];
+
+    const liabilities = [
+      parseFloat(mortInput.value),
+      parseFloat(studInput.value),
+      parseFloat(ccInput.value),
+      parseFloat(otherInput.value)
+    ];
+
+    const result = calculateNetWorth(assets, liabilities);
+
+    // Update UI
+    if (resNet) resNet.querySelector('.font-mono')!.textContent = formatCurrency(result.netWorth);
+    if (resAss) resAss.querySelector('.font-mono')!.textContent = formatCurrency(result.totalAssets);
+    if (resLia) resLia.querySelector('.font-mono')!.textContent = formatCurrency(result.totalLiabilities);
+
+    // Update Chart
+    updateChart(result.totalAssets, result.totalLiabilities);
+  }
+
+  function updateChart(assets: number, liabilities: number) {
+    const canvas = document.getElementById('networth-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [assets, liabilities];
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Total Assets', 'Total Liabilities'],
+          datasets: [
+            {
+              data: [assets, liabilities],
+              backgroundColor: ['#0070f3', '#ff0080'],
+              borderWidth: 1,
+              barThickness: 48
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [cashInput, invInput, reInput, vehInput, mortInput, studInput, ccInput, otherInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      cashInput.value = target.dataset.cash || '0';
+      invInput.value = target.dataset.inv || '0';
+      reInput.value = target.dataset.re || '0';
+      vehInput.value = target.dataset.veh || '0';
+      
+      mortInput.value = target.dataset.mort || '0';
+      studInput.value = target.dataset.stud || '0';
+      ccInput.value = target.dataset.cc || '0';
+      otherInput.value = target.dataset.other || '0';
+
+      [cashInput, invInput, reInput, vehInput, mortInput, studInput, ccInput, otherInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      cashInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const cash = parseFloat(cashInput.value);
+    const inv = parseFloat(invInput.value);
+    const re = parseFloat(reInput.value);
+    const veh = parseFloat(vehInput.value);
+
+    const mort = parseFloat(mortInput.value);
+    const stud = parseFloat(studInput.value);
+    const cc = parseFloat(ccInput.value);
+    const other = parseFloat(otherInput.value);
+
+    const result = calculateNetWorth([cash, inv, re, veh], [mort, stud, cc, other]);
+
+    const headers = ['Category', 'Item Description', 'Value'];
+    const rows = [
+      ['Asset', 'Cash & Bank Accounts', formatCurrency(cash)],
+      ['Asset', 'Retirement & Investment Portfolios', formatCurrency(inv)],
+      ['Asset', 'Real Estate / Home Value', formatCurrency(re)],
+      ['Asset', 'Vehicles & Physical Assets', formatCurrency(veh)],
+      ['Asset Summary', 'TOTAL ASSETS', formatCurrency(result.totalAssets)],
+      ['Liability', 'Mortgage Balance', formatCurrency(mort)],
+      ['Liability', 'Student Loan Balance', formatCurrency(stud)],
+      ['Liability', 'Credit Card Balances', formatCurrency(cc)],
+      ['Liability', 'Other Loans & Debts', formatCurrency(other)],
+      ['Liability Summary', 'TOTAL LIABILITIES', formatCurrency(result.totalLiabilities)],
+      ['Balance Sheet', 'NET WORTH', formatCurrency(result.netWorth)]
+    ];
+
+    downloadDataAsCSV(headers, rows, 'net-worth-balance-sheet.csv');
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [cashInput, invInput, reInput, vehInput, mortInput, studInput, ccInput, otherInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('networth-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

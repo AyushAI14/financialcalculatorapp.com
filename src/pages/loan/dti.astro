@@ -1,0 +1,348 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is the 28/36 rule?",
+    answer: "The 28/36 rule is a standard mortgage underwriting guideline. It states that a household should spend a maximum of 28% of its gross monthly income on housing expenses, and a maximum of 36% on total debt payments (including housing, credit cards, auto loans, and student loans)."
+  },
+  {
+    question: "How does DTI affect my mortgage application?",
+    answer: "Lenders use DTI to measure your ability to manage monthly payments. A high DTI indicates you might be over-leveraged, leading to rejection or higher interest rates. DTIs below 36% are considered low risk."
+  },
+  {
+    question: "What is the difference between front-end and back-end DTI?",
+    answer: "Front-end DTI (housing ratio) only calculates the percentage of gross monthly income spent on housing costs like mortgage payments, property taxes, home insurance, and HOA fees. Back-end DTI (total debt ratio) includes your housing costs plus all other recurring monthly debts like student loans, credit cards, car payments, and personal loans."
+  },
+  {
+    question: "What is the maximum DTI ratio lenders will accept?",
+    answer: "For standard conventional mortgages, lenders usually prefer a back-end DTI of 36% or less, though many will approve up to 43%. Government-backed loans like FHA and VA loans can be more flexible, sometimes allowing back-end DTIs up to 50% or higher if you have a strong credit score or significant cash reserves."
+  },
+  {
+    question: "How can I lower my Debt-to-Income ratio?",
+    answer: "You can lower your DTI by either increasing your gross monthly income (e.g., getting a raise, starting a side business) or paying down your recurring debts. Focus on paying off smaller loans entirely to eliminate their minimum monthly payment from your DTI calculation."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Debt-to-Income (DTI) Ratio Calculator" 
+  description="Calculate your front-end DTI (housing cost ratio) and back-end DTI (total monthly debt ratio) to see if you meet standard mortgage qualifying guidelines."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="dti-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Income & Housing</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-income="8000" data-house="1800" data-car="350" data-stud="150" data-cc="100" data-other="0">Healthy</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-income="5000" data-house="1600" data-car="450" data-stud="300" data-cc="250" data-other="100">Over-Leveraged</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="income" label="Gross Monthly Income" type="number" prefix="$" value="8000" placeholder="0.00" tooltip="Your total pre-tax earnings per month." />
+            <Input id="housing" label="Monthly Housing Cost" type="number" prefix="$" value="1800" placeholder="0.00" tooltip="Monthly mortgage payment (PITI) or rent." />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Other Monthly Debt Payments</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="car" label="Auto Loan Payments" type="number" prefix="$" value="350" placeholder="0.00" tooltip="Total monthly payments on car loans or leases." />
+            <Input id="student" label="Student Loan Payments" type="number" prefix="$" value="150" placeholder="0.00" tooltip="Total monthly student loan bill obligations." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="credit" label="Credit Card Minimums" type="number" prefix="$" value="100" placeholder="0.00" tooltip="The sum of all credit card minimum monthly payments." />
+            <Input id="other" label="Other Monthly Debts" type="number" prefix="$" value="0" placeholder="0.00" tooltip="Personal loans, child support, or other recurring debt obligations." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate DTI
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-backend">
+          <ResultCard title="Back-End DTI (Total Debt)" value="30.0%" highlight={true} description="Total monthly debts divided by gross income. Target: Under 36%." />
+        </div>
+        <div id="res-frontend">
+          <ResultCard title="Front-End DTI (Housing)" value="22.5%" description="Housing expenses divided by gross income. Target: Under 28%." />
+        </div>
+        <div id="res-total-debt">
+          <ResultCard title="Total Monthly Debts" value="$2,400.00" description="Sum of housing and all other recurring monthly debt payments." />
+        </div>
+      </div>
+
+      <!-- Guidelines Box -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-4">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Guideline Check (28/36 Rule)</h4>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-body">Housing (Front-End Limit: 28%)</span>
+            <span id="badge-frontend" class="px-3 py-1 text-xs font-mono font-medium rounded-full">--</span>
+          </div>
+          <div class="flex items-center justify-between border-t border-hairline/60 pt-2">
+            <span class="text-sm text-body">Total Debts (Back-End Limit: 36%)</span>
+            <span id="badge-backend" class="px-3 py-1 text-xs font-mono font-medium rounded-full">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulas Display -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-3 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">Front-End DTI Ratio</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-front">
+                Front-End Ratio = Monthly Housing Costs / Gross Monthly Income
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">Back-End DTI Ratio</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-back">
+                Back-End Ratio = (Monthly Housing + Other Debts) / Gross Monthly Income
+              </code>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Results CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateDTI } from '../../lib/math/loan';
+  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  // DOM Elements
+  const form = document.getElementById('dti-form') as HTMLFormElement;
+
+  const incomeInput = document.getElementById('income') as HTMLInputElement;
+  const housingInput = document.getElementById('housing') as HTMLInputElement;
+  const carInput = document.getElementById('car') as HTMLInputElement;
+  const studentInput = document.getElementById('student') as HTMLInputElement;
+  const creditInput = document.getElementById('credit') as HTMLInputElement;
+  const otherInput = document.getElementById('other') as HTMLInputElement;
+
+  const resBackend = document.getElementById('res-backend');
+  const resFrontend = document.getElementById('res-frontend');
+  const resTotalDebt = document.getElementById('res-total-debt');
+
+  const badgeFront = document.getElementById('badge-frontend');
+  const badgeBack = document.getElementById('badge-backend');
+
+  const validationRules = {
+    'income': { required: true, min: 1 },
+    'housing': { required: true, min: 0 },
+    'car': { required: true, min: 0 },
+    'student': { required: true, min: 0 },
+    'credit': { required: true, min: 0 },
+    'other': { required: true, min: 0 }
+  };
+
+  function performCalculation() {
+    const stepFront = document.getElementById('step-front');
+    const stepBack = document.getElementById('step-back');
+
+    if (!validateForm(validationRules)) {
+      if (resBackend) resBackend.querySelector('.font-mono')!.textContent = '--%';
+      if (resFrontend) resFrontend.querySelector('.font-mono')!.textContent = '--%';
+      if (resTotalDebt) resTotalDebt.querySelector('.font-mono')!.textContent = '--';
+      
+      if (badgeFront) {
+        badgeFront.textContent = '--';
+        badgeFront.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-canvas-soft text-mute';
+      }
+      if (badgeBack) {
+        badgeBack.textContent = '--';
+        badgeBack.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-canvas-soft text-mute';
+      }
+
+      if (stepFront) stepFront.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepBack) stepBack.innerHTML = 'Enter valid inputs to view formulas.';
+      return;
+    }
+
+    const income = parseFloat(incomeInput.value);
+    const housing = parseFloat(housingInput.value);
+    const car = parseFloat(carInput.value);
+    const student = parseFloat(studentInput.value);
+    const credit = parseFloat(creditInput.value);
+    const other = parseFloat(otherInput.value);
+
+    const result = calculateDTI({
+      grossMonthlyIncome: income,
+      monthlyHousing: housing,
+      carLoans: car,
+      studentLoans: student,
+      creditCards: credit,
+      otherDebts: other
+    });
+
+    const formattedFront = formatPercentage(result.frontEndDTI);
+    const formattedBack = formatPercentage(result.backEndDTI);
+    const formattedTotal = formatCurrency(result.totalDebt);
+
+    // Update UI
+    if (resFrontend) resFrontend.querySelector('.font-mono')!.textContent = formattedFront;
+    if (resBackend) resBackend.querySelector('.font-mono')!.textContent = formattedBack;
+    if (resTotalDebt) resTotalDebt.querySelector('.font-mono')!.textContent = formattedTotal;
+
+    // Badge Updates
+    if (badgeFront) {
+      if (result.frontEndSafe) {
+        badgeFront.textContent = 'Safe (Under 28%)';
+        badgeFront.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400';
+      } else {
+        badgeFront.textContent = 'Overlimit (Above 28%)';
+        badgeFront.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400';
+      }
+    }
+
+    if (badgeBack) {
+      if (result.backEndSafe) {
+        badgeBack.textContent = 'Safe (Under 36%)';
+        badgeBack.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400';
+      } else if (result.backEndDTI <= 0.43) {
+        badgeBack.textContent = 'Acceptable (36% - 43%)';
+        badgeBack.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400';
+      } else {
+        badgeBack.textContent = 'Critical (Above 43%)';
+        badgeBack.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400';
+      }
+    }
+
+    // Formulas
+    if (stepFront) {
+      stepFront.innerHTML = `Front-End DTI = ${formatCurrency(housing)} / ${formatCurrency(income)} = <strong>${formattedFront}</strong>`;
+    }
+    if (stepBack) {
+      stepBack.innerHTML = `Back-End DTI = (${formatCurrency(housing)} + ${formatCurrency(result.totalOtherDebt)}) / ${formatCurrency(income)} = ${formatCurrency(result.totalDebt)} / ${formatCurrency(income)} = <strong>${formattedBack}</strong>`;
+    }
+  }
+
+  // Bind input listeners
+  [incomeInput, housingInput, carInput, studentInput, creditInput, otherInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      incomeInput.value = target.dataset.income || '0';
+      housingInput.value = target.dataset.house || '0';
+      carInput.value = target.dataset.car || '0';
+      studentInput.value = target.dataset.student || '0';
+      creditInput.value = target.dataset.credit || '0';
+      otherInput.value = target.dataset.other || '0';
+
+      [incomeInput, housingInput, carInput, studentInput, creditInput, otherInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      incomeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const income = parseFloat(incomeInput.value);
+    const housing = parseFloat(housingInput.value);
+    const car = parseFloat(carInput.value);
+    const student = parseFloat(studentInput.value);
+    const credit = parseFloat(creditInput.value);
+    const other = parseFloat(otherInput.value);
+
+    const result = calculateDTI({
+      grossMonthlyIncome: income,
+      monthlyHousing: housing,
+      carLoans: car,
+      studentLoans: student,
+      creditCards: credit,
+      otherDebts: other
+    });
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ['Gross Monthly Income', formatCurrency(income)],
+      ['Monthly Housing Cost', formatCurrency(housing)],
+      ['Auto Loan Payments', formatCurrency(car)],
+      ['Student Loan Payments', formatCurrency(student)],
+      ['Credit Card Minimums', formatCurrency(credit)],
+      ['Other Monthly Debts', formatCurrency(other)],
+      ['Total Non-Housing Debt', formatCurrency(result.totalOtherDebt)],
+      ['Total Monthly Debts Combined', formatCurrency(result.totalDebt)],
+      ['Front-End DTI Ratio (Housing)', formatPercentage(result.frontEndDTI)],
+      ['Back-End DTI Ratio (Total)', formatPercentage(result.backEndDTI)],
+      ['Front-End Qualifying Check', result.frontEndSafe ? 'Pass (Under 28%)' : 'Fail'],
+      ['Back-End Qualifying Check', result.backEndSafe ? 'Pass (Under 36%)' : 'Warning/Fail']
+    ];
+
+    downloadDataAsCSV(headers, rows, `dti-calculation-${income}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [incomeInput, housingInput, carInput, studentInput, creditInput, otherInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize URL parameter sync
+  syncInputsWithURL('dti-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

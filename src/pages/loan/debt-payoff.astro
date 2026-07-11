@@ -1,0 +1,427 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is the Debt Snowball method?",
+    answer: "The Debt Snowball method involves paying off your smallest debt balances first, regardless of interest rates. It builds psychological momentum and motivation through quick wins."
+  },
+  {
+    question: "What is the Debt Avalanche method?",
+    answer: "The Debt Avalanche method involves paying off your highest interest rate debts first. Mathematically, this minimizes the total interest you pay and helps you become debt-free faster."
+  },
+  {
+    question: "Which method is better: Debt Snowball or Debt Avalanche?",
+    answer: "Mathematically, the Debt Avalanche method is superior because it minimizes the total interest paid. However, studies show that the Debt Snowball method is often more successful in practice because the psychological momentum of clearing individual accounts quickly helps people stay motivated and stick to their plan."
+  },
+  {
+    question: "How does the 'extra payment' roll over in these strategies?",
+    answer: "In both methods, you continue paying the minimum required payments on all your debts. Any extra cash you can afford is added to the payment of your target debt (either the smallest balance or highest interest). Once that target debt is fully paid off, you roll its entire monthly payment (minimum + the extra cash) into the next debt on your list."
+  },
+  {
+    question: "Can I do a hybrid of Snowball and Avalanche?",
+    answer: "Yes. Some people prefer to pay off one or two small debts first to get immediate visual progress and free up cash flow (Snowball), and then pivot to targeting the remaining debts by highest interest rate to save on interest costs (Avalanche)."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Debt Snowball vs Avalanche Calculator" 
+  description="Compare two popular strategies for paying off multiple debts: the Snowball method (smallest balances first) and the Avalanche method (highest interest rates first)."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="debt-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Debts</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="5000" data-r1="19.9" data-m1="150" data-b2="12000" data-r2="6.0" data-m2="280" data-b3="25000" data-r3="4.5" data-m3="260" data-budget="950">Standard</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="1500" data-r1="24.9" data-m1="75" data-b2="8000" data-r2="8.5" data-m2="180" data-b3="15000" data-r3="6.8" data-m3="190" data-budget="600">High Interest CCs</button>
+            </div>
+          </div>
+
+          <!-- Debt 1 (e.g. Credit Card) -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-link"></span>
+              Debt 1 (e.g. Credit Card)
+            </h4>
+            <div class="grid grid-cols-3 gap-3">
+              <Input id="debt1-balance" label="Balance" type="number" prefix="$" value="5000" />
+              <Input id="debt1-rate" label="Interest Rate" type="number" suffix="%" value="19.9" />
+              <Input id="debt1-min" label="Min Payment" type="number" prefix="$" value="150" />
+            </div>
+          </div>
+
+          <!-- Debt 2 (e.g. Car Loan) -->
+          <div class="space-y-3 pt-4 border-t border-hairline/60">
+            <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-violet"></span>
+              Debt 2 (e.g. Car Loan)
+            </h4>
+            <div class="grid grid-cols-3 gap-3">
+              <Input id="debt2-balance" label="Balance" type="number" prefix="$" value="12000" />
+              <Input id="debt2-rate" label="Interest Rate" type="number" suffix="%" value="6.0" />
+              <Input id="debt2-min" label="Min Payment" type="number" prefix="$" value="280" />
+            </div>
+          </div>
+
+          <!-- Debt 3 (e.g. Student Loan) -->
+          <div class="space-y-3 pt-4 border-t border-hairline/60">
+            <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan"></span>
+              Debt 3 (e.g. Student Loan)
+            </h4>
+            <div class="grid grid-cols-3 gap-3">
+              <Input id="debt3-balance" label="Balance" type="number" prefix="$" value="25000" />
+              <Input id="debt3-rate" label="Interest Rate" type="number" suffix="%" value="4.5" />
+              <Input id="debt3-min" label="Min Payment" type="number" prefix="$" value="260" />
+            </div>
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Monthly Budget allocation</h3>
+          <Input id="total-budget" label="Total Monthly Budget Amount" type="number" prefix="$" value="950" tooltip="The total amount you can pay towards all debts monthly. Must be at least the sum of minimum payments." />
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Compare Strategies
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Snowball Card -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+          <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Snowball Strategy</h4>
+          <div class="space-y-1">
+            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">0 mo</span>
+            <span class="text-[10px] text-mute block">Payoff Timeline</span>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">$0.00</span>
+            <span class="text-[9px] text-mute block">Total Interest Paid</span>
+          </div>
+        </div>
+
+        <!-- Avalanche Card -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3 border-link/30">
+          <h4 class="text-xs font-mono text-link uppercase tracking-wider">Avalanche Strategy</h4>
+          <div class="space-y-1">
+            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">0 mo</span>
+            <span class="text-[10px] text-mute block">Payoff Timeline</span>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">$0.00</span>
+            <span class="text-[9px] text-mute block">Total Interest Paid</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategy Comparison Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Total Balance Projection over Time</h4>
+        <div class="h-64 relative">
+          <canvas id="debt-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Formula steps -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>How Calculations are Computed</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-3 pt-3 border-t border-hairline leading-relaxed">
+            <p>Every month, the simulator performs these operations:</p>
+            <ol class="list-decimal pl-4 space-y-1">
+              <li>Interest accrues on all active debt accounts: <code>Interest = Balance × (APR / 12)</code>.</li>
+              <li>Required minimum payments are deducted from the monthly budget and applied to each debt.</li>
+              <li>Any leftover budget is focused entirely on the **Target Debt**:
+                <ul class="list-disc pl-4 mt-1">
+                  <li><strong>Snowball target:</strong> The debt with the smallest balance (psychological prioritization).</li>
+                  <li><strong>Avalanche target:</strong> The debt with the highest APR interest rate (mathematical prioritization).</li>
+                </ul>
+              </li>
+              <li>When the target debt is fully paid off, its minimum payment rolls over to the next target.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Comparison CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { simulateDebtPayoff } from '../../lib/math/loan';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('debt-form') as HTMLFormElement;
+
+  const b1 = document.getElementById('debt1-balance') as HTMLInputElement;
+  const r1 = document.getElementById('debt1-rate') as HTMLInputElement;
+  const m1 = document.getElementById('debt1-min') as HTMLInputElement;
+
+  const b2 = document.getElementById('debt2-balance') as HTMLInputElement;
+  const r2 = document.getElementById('debt2-rate') as HTMLInputElement;
+  const m2 = document.getElementById('debt2-min') as HTMLInputElement;
+
+  const b3 = document.getElementById('debt3-balance') as HTMLInputElement;
+  const r3 = document.getElementById('debt3-rate') as HTMLInputElement;
+  const m3 = document.getElementById('debt3-min') as HTMLInputElement;
+
+  const budgetInput = document.getElementById('total-budget') as HTMLInputElement;
+
+  const sbTime = document.getElementById('snowball-time');
+  const sbInterest = document.getElementById('snowball-interest');
+  const avTime = document.getElementById('avalanche-time');
+  const avInterest = document.getElementById('avalanche-interest');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'debt1-balance': { required: true, min: 0 },
+    'debt1-rate': { required: true, min: 0, max: 100 },
+    'debt1-min': { required: true, min: 0 },
+    'debt2-balance': { required: true, min: 0 },
+    'debt2-rate': { required: true, min: 0, max: 100 },
+    'debt2-min': { required: true, min: 0 },
+    'debt3-balance': { required: true, min: 0 },
+    'debt3-rate': { required: true, min: 0, max: 100 },
+    'debt3-min': { required: true, min: 0 },
+    'total-budget': {
+      required: true,
+      min: 1,
+      custom: (val: number) => {
+        const min1 = parseFloat(m1.value) || 0;
+        const min2 = parseFloat(m2.value) || 0;
+        const min3 = parseFloat(m3.value) || 0;
+        const totalMin = min1 + min2 + min3;
+        return val < totalMin ? `Budget must be at least the sum of minimum payments (${formatCurrency(totalMin)}).` : null;
+      }
+    }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (sbTime) sbTime.textContent = '--';
+      if (sbInterest) sbInterest.textContent = '--';
+      if (avTime) avTime.textContent = '--';
+      if (avInterest) avInterest.textContent = '--';
+      return;
+    }
+
+    const debts = [
+      { name: 'Debt 1', balance: parseFloat(b1.value), rate: parseFloat(r1.value)/100, minPayment: parseFloat(m1.value) },
+      { name: 'Debt 2', balance: parseFloat(b2.value), rate: parseFloat(r2.value)/100, minPayment: parseFloat(m2.value) },
+      { name: 'Debt 3', balance: parseFloat(b3.value), rate: parseFloat(r3.value)/100, minPayment: parseFloat(m3.value) }
+    ].filter(d => d.balance > 0);
+
+    if (debts.length === 0) {
+      if (sbTime) sbTime.textContent = '0 mo';
+      if (sbInterest) sbInterest.textContent = '$0.00';
+      if (avTime) avTime.textContent = '0 mo';
+      if (avInterest) avInterest.textContent = '$0.00';
+      return;
+    }
+
+    const budget = parseFloat(budgetInput.value);
+
+    // Run Simulations
+    const snowball = simulateDebtPayoff(debts, budget, 'snowball');
+    const avalanche = simulateDebtPayoff(debts, budget, 'avalanche');
+
+    // Update UI
+    if (sbTime) sbTime.textContent = `${snowball.months} mo`;
+    if (sbInterest) sbInterest.textContent = formatCurrency(snowball.totalInterest);
+    if (avTime) avTime.textContent = `${avalanche.months} mo`;
+    if (avInterest) avInterest.textContent = formatCurrency(avalanche.totalInterest);
+
+    // Update Chart
+    updateChart(snowball.history, avalanche.history);
+  }
+
+  function updateChart(sbHistory: any[], avHistory: any[]) {
+    const canvas = document.getElementById('debt-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const maxMonths = Math.max(sbHistory.length, avHistory.length);
+    const labels = Array.from({ length: maxMonths + 1 }, (_, i) => `${i} mo`);
+
+    const sbData = [sbHistory[0]?.balance || 0, ...sbHistory.map(h => h.balance)];
+    const avData = [avHistory[0]?.balance || 0, ...avHistory.map(h => h.balance)];
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = sbData;
+      chartInstance.data.datasets[1].data = avData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Debt Snowball',
+              data: sbData,
+              borderColor: '#7928ca',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            },
+            {
+              label: 'Debt Avalanche',
+              data: avData,
+              borderColor: '#0070f3',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { font: { family: 'Geist, sans-serif', size: 10 } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#ebebeb' },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [b1, r1, m1, b2, r2, m2, b3, r3, m3, budgetInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      b1.value = target.dataset.b1 || '0';
+      r1.value = target.dataset.r1 || '0';
+      m1.value = target.dataset.m1 || '0';
+      
+      b2.value = target.dataset.b2 || '0';
+      r2.value = target.dataset.r2 || '0';
+      m2.value = target.dataset.m2 || '0';
+      
+      b3.value = target.dataset.b3 || '0';
+      r3.value = target.dataset.r3 || '0';
+      m3.value = target.dataset.m3 || '0';
+      
+      budgetInput.value = target.dataset.budget || '0';
+      
+      [b1, r1, m1, b2, r2, m2, b3, r3, m3, budgetInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      b1.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    
+    const debts = [
+      { name: 'Debt 1', balance: parseFloat(b1.value), rate: parseFloat(r1.value)/100, minPayment: parseFloat(m1.value) },
+      { name: 'Debt 2', balance: parseFloat(b2.value), rate: parseFloat(r2.value)/100, minPayment: parseFloat(m2.value) },
+      { name: 'Debt 3', balance: parseFloat(b3.value), rate: parseFloat(r3.value)/100, minPayment: parseFloat(m3.value) }
+    ].filter(d => d.balance > 0);
+
+    const budget = parseFloat(budgetInput.value);
+    const snowball = simulateDebtPayoff(debts, budget, 'snowball');
+    const avalanche = simulateDebtPayoff(debts, budget, 'avalanche');
+
+    const headers = ['Month', 'Snowball Balance', 'Avalanche Balance'];
+    const rows: (string | number)[][] = [];
+
+    const maxMonths = Math.max(snowball.history.length, avalanche.history.length);
+    for (let m = 0; m <= maxMonths; m++) {
+      const sbVal = m === 0 ? debts.reduce((acc, d) => acc + d.balance, 0) : (snowball.history[m - 1]?.balance ?? 0);
+      const avVal = m === 0 ? debts.reduce((acc, d) => acc + d.balance, 0) : (avalanche.history[m - 1]?.balance ?? 0);
+      rows.push([m, sbVal.toFixed(2), avVal.toFixed(2)]);
+    }
+
+    downloadDataAsCSV(headers, rows, 'debt-payoff-comparison.csv');
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [b1, r1, m1, b2, r2, m2, b3, r3, m3, budgetInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize URL parameter sync
+  syncInputsWithURL('debt-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

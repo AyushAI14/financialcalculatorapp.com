@@ -14,16 +14,23 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     <div class="lg:col-span-6 space-y-6">
       <form id="apr-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Loan Details</h3>
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan Details</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">Auto Loan</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">Mortgage</button>
+            </div>
+          </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Input id="loan-amount" label="Loan Principal Amount" type="number" prefix="$" value="200000" placeholder="0.00" />
-            <Input id="interest-rate" label="Nominal Interest Rate" type="number" suffix="%" value="6.0" placeholder="0.00" />
+            <Input id="loan-amount" label="Loan Principal Amount" type="number" prefix="$" value="200000" placeholder="0.00" tooltip="The total amount of money borrowed before fees and interest." />
+            <Input id="interest-rate" label="Nominal Interest Rate" type="number" suffix="%" value="6.0" placeholder="0.00" tooltip="The base annual interest rate of the loan, excluding fees." />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
-            <Input id="term" label="Loan Term" type="number" suffix="years" value="30" placeholder="30" />
-            <Input id="fees" label="Upfront Fees & Closing Costs" type="number" prefix="$" value="4000" placeholder="0.00" />
+            <Input id="term" label="Loan Term" type="number" suffix="years" value="30" placeholder="30" tooltip="The duration of the loan in years until it is fully paid off." />
+            <Input id="fees" label="Upfront Fees & Closing Costs" type="number" prefix="$" value="4000" placeholder="0.00" tooltip="Closing costs, broker fees, points, and other lender charges to include in the APR." />
           </div>
         </div>
 
@@ -86,6 +93,45 @@ import ResultCard from '../../components/ui/ResultCard.astro';
         <div class="h-56 relative">
           <canvas id="apr-chart"></canvas>
         </div>
+      </div>
+
+      <!-- Formula Transparency & Step-by-Step Details -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Calculation Steps & Formulas</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">1. Base Monthly Payment (P&I)</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-base-formula">
+                PMT = Principal × [r(1 + r)^n] / [(1 + r)^n - 1]
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">2. Adjusted Net Loan Balance</p>
+              <p class="mb-1 leading-relaxed">Fees are deducted from the principal to find the actual net money received by the borrower.</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-net-loan">
+                Net Principal = Principal - Fees
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">3. Solving for APR (r_apr)</p>
+              <p class="mb-1 leading-relaxed">The APR is the interest rate that equates the Net Principal with the base monthly payments (P&I) over the loan term.</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-solve-apr">
+                Net Principal = PMT × [1 - (1 + r_apr)^-n] / r_apr
+              </code>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- CSV Export Trigger -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Results CSV
+        </button>
       </div>
     </div>
   </div>
@@ -205,9 +251,21 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 </CalculatorLayout>
 
 <script>
+  import type { Chart } from 'chart.js';
   import { calculateAPR, calculateLoanPMT } from '../../lib/math/loan';
   import { formatCurrency, formatPercentage } from '../../lib/utils';
-  import Chart from 'chart.js/auto';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  let ChartClass: any = null;
+  async function getChartClass() {
+    if (!ChartClass) {
+      const module = await import('chart.js/auto');
+      ChartClass = module.default;
+    }
+    return ChartClass;
+  }
 
   // DOM Elements
   const form = document.getElementById('apr-form') as HTMLFormElement;
@@ -224,17 +282,43 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
   let chartInstance: Chart | null = null;
 
+  // Validation Rules
+  const validationRules = {
+    'loan-amount': { required: true, min: 1 },
+    'interest-rate': { required: true, min: 0, max: 100 },
+    'term': { required: true, min: 1, max: 100, integer: true },
+    'fees': { required: true, min: 0 },
+  };
+
   // Calculate APR
   function performCalculation() {
-    const loanAmount = Math.abs(parseFloat(loanInput.value)) || 0;
-    const interestRate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
-    const termYears = Math.abs(parseInt(termInput.value)) || 1;
-    const extraFees = Math.abs(parseFloat(feesInput.value)) || 0;
+    // Formula DOM elements
+    const stepBaseFormula = document.getElementById('step-base-formula');
+    const stepNetLoan = document.getElementById('step-net-loan');
+    const stepSolveApr = document.getElementById('step-solve-apr');
+
+    if (!validateForm(validationRules)) {
+      // Clear UI when values are invalid
+      if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = '--%';
+      if (resNominalCard) resNominalCard.querySelector('.font-mono')!.textContent = '--%';
+      if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = '--';
+      if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = '--';
+      
+      if (stepBaseFormula) stepBaseFormula.innerHTML = 'Enter valid inputs to see formula steps.';
+      if (stepNetLoan) stepNetLoan.innerHTML = 'Enter valid inputs to see formula steps.';
+      if (stepSolveApr) stepSolveApr.innerHTML = 'Enter valid inputs to see formula steps.';
+      return;
+    }
+
+    const loanAmount = parseFloat(loanInput.value);
+    const interestRate = parseFloat(rateInput.value) / 100;
+    const termYears = parseInt(termInput.value);
+    const extraFees = parseFloat(feesInput.value);
 
     const apr = calculateAPR({ loanAmount, interestRate, termYears, extraFees });
     const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate, years: termYears });
 
-    // Format
+    // Format using selected currency (dynamically fetches from localStorage)
     const aprFormatted = formatPercentage(apr);
     const nominalFormatted = formatPercentage(interestRate);
     const paymentFormatted = formatCurrency(pmt);
@@ -246,15 +330,31 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = paymentFormatted;
     if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = feesFormatted;
 
+    // Update formulas with user values plugged-in
+    if (stepBaseFormula) {
+      const monthlyRate = interestRate / 12;
+      const totalMonths = termYears * 12;
+      stepBaseFormula.innerHTML = `PMT = ${formatCurrency(loanAmount)} × [${monthlyRate.toFixed(6)} × (1 + ${monthlyRate.toFixed(6)})^${totalMonths}] / [(1 + ${monthlyRate.toFixed(6)})^${totalMonths} - 1]<br/><strong class="text-ink mt-1 block">PMT = ${paymentFormatted} / month</strong>`;
+    }
+    if (stepNetLoan) {
+      stepNetLoan.innerHTML = `Net Principal = ${formatCurrency(loanAmount)} - ${formatCurrency(extraFees)} = <strong class="text-ink">${formatCurrency(loanAmount - extraFees)}</strong>`;
+    }
+    if (stepSolveApr) {
+      const totalMonths = termYears * 12;
+      stepSolveApr.innerHTML = `${formatCurrency(loanAmount - extraFees)} = ${paymentFormatted} × [1 - (1 + r_apr)^-${totalMonths}] / r_apr<br/>Solving for r_apr yields monthly rate, multiplied by 12 = <strong class="text-ink mt-1 block">Effective APR = ${aprFormatted}</strong>`;
+    }
+
     // Update Chart
     updateChart(interestRate * 100, apr * 100);
   }
 
-  function updateChart(nominal: number, apr: number) {
+  async function updateChart(nominal: number, apr: number) {
     const canvas = document.getElementById('apr-chart') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const Chart = await getChartClass();
 
     if (chartInstance) {
       chartInstance.data.datasets[0].data = [nominal, apr];
@@ -283,7 +383,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: function(context) {
+                label: function(context: any) {
                   return ` ${Number(context.raw).toFixed(3)}%`;
                 }
               }
@@ -294,7 +394,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
               grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
-                callback: function(value) {
+                callback: function(value: any) {
                   return value + '%';
                 }
               }
@@ -311,7 +411,59 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
   // Listeners
   [loanInput, rateInput, termInput, feesInput].forEach(el => {
-    el.addEventListener('input', performCalculation);
+    el.addEventListener('input', () => {
+      // Validate individual field as user types
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      loanInput.value = target.dataset.amount || '0';
+      rateInput.value = target.dataset.rate || '0';
+      termInput.value = target.dataset.term || '0';
+      feesInput.value = target.dataset.fees || '0';
+      
+      // Clear previous validation highlights
+      [loanInput, rateInput, termInput, feesInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      
+      // Trigger input events to sync with URL parameters
+      loanInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const loanAmount = parseFloat(loanInput.value);
+    const interestRate = parseFloat(rateInput.value);
+    const termYears = parseInt(termInput.value);
+    const extraFees = parseFloat(feesInput.value);
+    
+    const apr = calculateAPR({ loanAmount, interestRate: interestRate/100, termYears, extraFees });
+    const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate/100, years: termYears });
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ['Loan Principal Amount', formatCurrency(loanAmount)],
+      ['Nominal Annual Interest Rate', formatPercentage(interestRate/100)],
+      ['Loan Term', `${termYears} Years`],
+      ['Upfront closing fees', formatCurrency(extraFees)],
+      ['Monthly Payment (P&I)', formatCurrency(pmt)],
+      ['True Effective APR', formatPercentage(apr)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `apr-calculation-${loanAmount}.csv`);
   });
 
   form.addEventListener('submit', (e) => {
@@ -320,8 +472,22 @@ import ResultCard from '../../components/ui/ResultCard.astro';
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      // Clear errors
+      [loanInput, rateInput, termInput, feesInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
   });
+
+  // Initialize URL parameter sync
+  syncInputsWithURL('apr-form', performCalculation);
+
+  // Currency change handler
+  window.addEventListener('currency-change', performCalculation);
 
   // Initial calculation
   performCalculation();

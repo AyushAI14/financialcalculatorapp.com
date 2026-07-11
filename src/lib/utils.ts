@@ -1,11 +1,19 @@
-/**
- * Formats a number as a currency string.
- * @example formatCurrency(1234.56) // "$1,234.56"
- */
-export function formatCurrency(value: number, locale = 'en-US', currency = 'USD'): string {
-  return new Intl.NumberFormat(locale, {
+import { safeGetItem } from './storage';
+
+export function formatCurrency(value: number, locale?: string, currency?: string): string {
+  const selectedCurrency = currency || safeGetItem('currency', 'USD');
+  
+  let selectedLocale = locale || 'en-US';
+  if (!locale) {
+    if (selectedCurrency === 'EUR') selectedLocale = 'de-DE';
+    else if (selectedCurrency === 'GBP') selectedLocale = 'en-GB';
+    else if (selectedCurrency === 'INR') selectedLocale = 'en-IN';
+    else selectedLocale = 'en-US';
+  }
+
+  return new Intl.NumberFormat(selectedLocale, {
     style: 'currency',
-    currency: currency,
+    currency: selectedCurrency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);

@@ -12,12 +12,24 @@ const calculators = [
       { name: 'Stock Return Calculator', url: '/finance/stock-return' },
       { name: 'CAPM Calculator', url: '/finance/stock-return' },
       { name: 'Dividend Calculator', url: '/finance/dividend' },
+      { name: 'Inflation Calculator', url: '/finance/inflation', badge: 'New' },
+      { name: 'Paycheck Calculator', url: '/finance/paycheck', badge: 'New' },
+      { name: 'Net Worth Tracker', url: '/finance/net-worth', badge: 'New' },
+      { name: 'Emergency Fund Calculator', url: '/finance/emergency-fund', badge: 'New' },
+      { name: 'Investment Fee Calculator', url: '/finance/fee-impact', badge: 'New' },
+      { name: 'College Savings (529)', url: '/finance/college-savings', badge: 'New' },
+      { name: 'Crypto DCA Calculator', url: '/finance/crypto-dca', badge: 'New' },
     ]
   },
   {
     category: 'Loan & Mortgage',
     links: [
       { name: 'Loan Calculator', url: '/loan/calculator', badge: 'Updated' },
+      { name: 'Mortgage Calculator', url: '/loan/mortgage', badge: 'New' },
+      { name: 'Debt Snowball vs Avalanche', url: '/loan/debt-payoff', badge: 'New' },
+      { name: 'Loan Refinance Calculator', url: '/loan/refinance', badge: 'New' },
+      { name: 'Student Loan IDR Calculator', url: '/loan/student-loan', badge: 'New' },
+      { name: 'Debt-to-Income (DTI) Calculator', url: '/loan/dti', badge: 'New' },
       { name: 'APR Calculator', url: '/loan/apr' },
       { name: 'Rent vs Buy Calculator', url: '/loan/rent-vs-buy' },
       { name: 'Home Affordability Calculator', url: '/loan/home-affordability' },
@@ -28,6 +40,7 @@ const calculators = [
     links: [
       { name: 'Retirement Planner', url: '/retirement/planner' },
       { name: '401k Contribution Calculator', url: '/retirement/401k' },
+      { name: 'Roth vs Trad IRA', url: '/retirement/ira-comparison', badge: 'New' },
     ]
   },
   {
@@ -163,8 +176,29 @@ const calculators = [
     </div>
   </section>
 
+  <!-- Search & Recently Used Tray -->
+  <div class="max-w-2xl mx-auto mb-16 space-y-6 relative z-10 no-print">
+    <div class="relative flex items-center">
+      <svg class="absolute left-4 w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input 
+        type="text" 
+        id="calc-search" 
+        placeholder="Search calculators (e.g. mortgage, compounding, loan, ROI)..." 
+        class="w-full h-12 bg-canvas text-ink text-sm border border-hairline rounded-lg pl-11 pr-4 focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-sm transition-colors"
+      />
+    </div>
+
+    <!-- Recently Used tray -->
+    <div id="recently-used-section" class="hidden p-4 bg-canvas border border-hairline rounded-lg text-left transition-all">
+      <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2.5">Recently Used Calculators</h3>
+      <div id="recently-used-list" class="flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+
   <!-- Categories Grid -->
-  <section id="categories-section" class="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+  <section id="categories-section" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     {calculators.map(cat => (
       <div class="bg-canvas border border-hairline rounded-lg p-6 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col h-full group relative overflow-hidden">
         
@@ -197,3 +231,49 @@ const calculators = [
     ))}
   </section>
 </Layout>
+
+<script>
+  import { safeGetItem } from '../lib/storage';
+
+  // Search filtering logic
+  const searchInput = document.getElementById('calc-search') as HTMLInputElement | null;
+  const categoryCards = document.querySelectorAll('#categories-section > div');
+
+  searchInput?.addEventListener('input', (e) => {
+    const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    
+    categoryCards.forEach(card => {
+      let cardHasMatch = false;
+      const links = card.querySelectorAll('ul li');
+      
+      links.forEach(li => {
+        const text = li.textContent?.toLowerCase() || '';
+        if (text.includes(query)) {
+          (li as HTMLElement).style.display = 'block';
+          cardHasMatch = true;
+        } else {
+          (li as HTMLElement).style.display = 'none';
+        }
+      });
+      
+      (card as HTMLElement).style.display = cardHasMatch ? 'flex' : 'none';
+    });
+  });
+
+  // Recently Used Listing
+  if (typeof window !== 'undefined') {
+    const recents = JSON.parse(safeGetItem('recent_calculators', '[]'));
+    const recentsSection = document.getElementById('recently-used-section');
+    const recentsList = document.getElementById('recently-used-list');
+
+    if (recents.length > 0 && recentsSection && recentsList) {
+      recentsSection.classList.remove('hidden');
+      recentsList.innerHTML = recents.map((item: any) => `
+        <a href="${item.url}" class="px-3 py-1.5 text-xs bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-full text-body hover:text-ink transition-colors flex items-center gap-1.5">
+          <span>⏱️</span>
+          <span>${item.name}</span>
+        </a>
+      `).join('');
+    }
+  }
+</script>

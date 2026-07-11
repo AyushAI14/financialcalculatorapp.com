@@ -1,0 +1,346 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is the SAVE plan?",
+    answer: "The Saving on a Valuable Education (SAVE) plan is the newest income-driven repayment (IDR) plan. It raises the discretionary income shield to 225% of the poverty line, lowers payments to 5% of discretionary income for undergraduate loans, and stops unpaid interest from accumulating."
+  },
+  {
+    question: "How is discretionary income calculated for student loans?",
+    answer: "Discretionary income is the difference between your Adjusted Gross Income (AGI) and a percentage of the federal poverty guideline for your family size (150% for PAYE/IBR, 225% for SAVE)."
+  },
+  {
+    question: "How does student loan forgiveness work under IDR plans?",
+    answer: "If you pay under an IDR plan for 20 or 25 years (or as little as 10 years under SAVE for low initial balances), any remaining student debt is forgiven. However, under current tax laws, this forgiven balance may be treated as taxable income, although federal tax on forgiven student loans is temporarily suspended through 2025."
+  },
+  {
+    question: "Which IDR plan is best for me?",
+    answer: "For most borrowers, the SAVE plan offers the lowest monthly payment and the best interest subsidy. However, if your income is very high relative to your debt, plans like PAYE or IBR might be better because they cap your monthly payment at what it would be under the Standard 10-Year Repayment Plan, whereas SAVE has no payment cap."
+  },
+  {
+    question: "Can I switch student loan repayment plans at any time?",
+    answer: "Yes, you can apply to switch repayment plans for free at studentaid.gov. However, switching plans can sometimes cause outstanding unpaid interest to capitalize (be added to your principal balance), which means you will start paying interest on that interest."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Student Loan IDR Calculator" 
+  description="Estimate your monthly student loan payments under Income-Driven Repayment (IDR) plans like SAVE, PAYE, and IBR based on your income, loan type, and family size."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="student-loan-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan & Income Details</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="40000" data-rate="5.5" data-agi="55000" data-size="1" data-plan="SAVE" data-type="undergrad">Undergrad Single</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="90000" data-rate="6.8" data-agi="85000" data-size="3" data-plan="SAVE" data-type="grad">Grad Family of 3</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="balance" label="Total Student Loan Balance" type="number" prefix="$" value="40000" placeholder="0.00" tooltip="The total amount of outstanding federal student loans." />
+            <Input id="interest-rate" label="Average Interest Rate" type="number" suffix="%" value="5.5" placeholder="0.00" tooltip="The weighted average annual interest rate of your loans." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="agi" label="Adjusted Gross Income (AGI)" type="number" prefix="$" value="55000" placeholder="0.00" tooltip="Your annual Adjusted Gross Income from your tax return." />
+            <Input id="family-size" label="Family Size" type="number" value="1" placeholder="1" tooltip="Number of members in your household." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Select id="plan" label="Repayment Plan" options={[
+              { value: 'SAVE', label: 'SAVE (5%-10% discretionary)' },
+              { value: 'PAYE', label: 'PAYE (10% discretionary)' },
+              { value: 'IBR', label: 'IBR (10% discretionary)' }
+            ]} value="SAVE" />
+            
+            <Select id="loan-type" label="Loan Type" options={[
+              { value: 'undergrad', label: 'Undergraduate Loans Only' },
+              { value: 'grad', label: 'Graduate Loans Only' },
+              { value: 'mixed', label: 'Mixed Undergrad & Grad' }
+            ]} value="undergrad" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Repayment
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-idr-pmt">
+          <ResultCard title="IDR Monthly Payment" value="$81.25" highlight={true} description="Estimated monthly payment under the selected income-driven plan." />
+        </div>
+        <div id="res-discretionary">
+          <ResultCard title="Discretionary Income" value="$19,500.00" description="Annual income above the poverty guideline multiplier." />
+        </div>
+        <div id="res-standard-pmt">
+          <ResultCard title="Standard 10-Year Payment" value="$434.11" description="Base payment under the standard amortized 10-year repayment schedule." />
+        </div>
+      </div>
+
+      <!-- Plan Details Box -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Plan Guideline Estimates</h4>
+        <div class="grid grid-cols-2 gap-4 divide-x divide-hairline text-left">
+          <div>
+            <span class="text-xs text-mute font-mono block">Federal Poverty Line</span>
+            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-base">$15,800</span>
+          </div>
+          <div class="pl-4">
+            <span class="text-xs text-mute font-mono block">Income Shield Limit</span>
+            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-shield">$35,550</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formula steps -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">1. Federal Poverty Line Shield</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-shield">
+                Threshold = PovertyBase × Multiplier (2.25 for SAVE, 1.50 for others)
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">2. Discretionary Income</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-disc">
+                Discretionary = AGI - Threshold
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">3. Monthly Payment Calculation</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-payment">
+                Payment = (Discretionary × Rate) / 12 (Rate = 5% undergrad, 10% grad/others)
+              </code>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Results CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateStudentLoanIDR } from '../../lib/math/loan';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  // DOM Elements
+  const form = document.getElementById('student-loan-form') as HTMLFormElement;
+
+  const balanceInput = document.getElementById('balance') as HTMLInputElement;
+  const rateInput = document.getElementById('interest-rate') as HTMLInputElement;
+  const agiInput = document.getElementById('agi') as HTMLInputElement;
+  const sizeInput = document.getElementById('family-size') as HTMLInputElement;
+  const planSelect = document.getElementById('plan') as HTMLSelectElement;
+  const typeSelect = document.getElementById('loan-type') as HTMLSelectElement;
+
+  const resIdrPmt = document.getElementById('res-idr-pmt');
+  const resDiscretionary = document.getElementById('res-discretionary');
+  const resStandardPmt = document.getElementById('res-standard-pmt');
+
+  const valPovertyBase = document.getElementById('val-poverty-base');
+  const valPovertyShield = document.getElementById('val-poverty-shield');
+
+  const validationRules = {
+    'balance': { required: true, min: 1 },
+    'interest-rate': { required: true, min: 0, max: 100 },
+    'agi': { required: true, min: 0 },
+    'family-size': { required: true, min: 1, integer: true }
+  };
+
+  function performCalculation() {
+    const stepShield = document.getElementById('step-shield');
+    const stepDisc = document.getElementById('step-disc');
+    const stepPayment = document.getElementById('step-payment');
+
+    if (!validateForm(validationRules)) {
+      if (resIdrPmt) resIdrPmt.querySelector('.font-mono')!.textContent = '--';
+      if (resDiscretionary) resDiscretionary.querySelector('.font-mono')!.textContent = '--';
+      if (resStandardPmt) resStandardPmt.querySelector('.font-mono')!.textContent = '--';
+      
+      if (valPovertyBase) valPovertyBase.textContent = '--';
+      if (valPovertyShield) valPovertyShield.textContent = '--';
+
+      if (stepShield) stepShield.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepDisc) stepDisc.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepPayment) stepPayment.innerHTML = 'Enter valid inputs to view formulas.';
+      return;
+    }
+
+    const balance = parseFloat(balanceInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const agi = parseFloat(agiInput.value);
+    const familySize = parseInt(sizeInput.value);
+    const plan = planSelect.value as 'SAVE' | 'PAYE' | 'IBR';
+    const loanType = typeSelect.value as 'undergrad' | 'grad' | 'mixed';
+
+    const result = calculateStudentLoanIDR({
+      balance,
+      rate,
+      agi,
+      familySize,
+      plan,
+      loanType
+    });
+
+    const formattedMonthly = formatCurrency(result.monthlyPayment);
+    const formattedDiscretionary = formatCurrency(result.discretionaryIncome);
+    const formattedStandard = formatCurrency(result.standardPMT);
+
+    const povertyBase = 15800 + (familySize - 1) * 5400;
+    const multiplier = plan === 'SAVE' ? 2.25 : 1.5;
+    const povertyShield = povertyBase * multiplier;
+
+    // Update UI
+    if (resIdrPmt) resIdrPmt.querySelector('.font-mono')!.textContent = formattedMonthly;
+    if (resDiscretionary) resDiscretionary.querySelector('.font-mono')!.textContent = formattedDiscretionary;
+    if (resStandardPmt) resStandardPmt.querySelector('.font-mono')!.textContent = formattedStandard;
+
+    if (valPovertyBase) valPovertyBase.textContent = formatCurrency(povertyBase);
+    if (valPovertyShield) valPovertyShield.textContent = formatCurrency(povertyShield);
+
+    // Formulas
+    if (stepShield) {
+      stepShield.innerHTML = `Poverty Line = $15,800 + (${familySize} - 1) × $5,400 = <strong>${formatCurrency(povertyBase)}</strong><br/>Shield Limit (${multiplier * 100}%) = ${formatCurrency(povertyBase)} × ${multiplier} = <strong>${formatCurrency(povertyShield)}</strong>`;
+    }
+    if (stepDisc) {
+      stepDisc.innerHTML = `Discretionary Income = AGI - ShieldLimit = ${formatCurrency(agi)} - ${formatCurrency(povertyShield)} = <strong>${formattedDiscretionary} / yr</strong>`;
+    }
+    if (stepPayment) {
+      const planRate = plan === 'SAVE' ? (loanType === 'undergrad' ? 0.05 : loanType === 'grad' ? 0.10 : 0.075) : 0.10;
+      stepPayment.innerHTML = `Monthly Repayment = (Discretionary × ${planRate * 100}%) / 12 = (${formattedDiscretionary} × ${planRate}) / 12 = <strong>${formattedMonthly} / mo</strong>`;
+    }
+  }
+
+  // Bind input listeners
+  [balanceInput, rateInput, agiInput, sizeInput, planSelect, typeSelect].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      balanceInput.value = target.dataset.bal || '0';
+      rateInput.value = target.dataset.rate || '0';
+      agiInput.value = target.dataset.agi || '0';
+      sizeInput.value = target.dataset.size || '1';
+      planSelect.value = target.dataset.plan || 'SAVE';
+      typeSelect.value = target.dataset.type || 'undergrad';
+
+      [balanceInput, rateInput, agiInput, sizeInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      balanceInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const balance = parseFloat(balanceInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const agi = parseFloat(agiInput.value);
+    const familySize = parseInt(sizeInput.value);
+    const plan = planSelect.value;
+    const loanType = typeSelect.value;
+
+    const result = calculateStudentLoanIDR({
+      balance,
+      rate,
+      agi,
+      familySize,
+      plan: plan as any,
+      loanType: loanType as any
+    });
+
+    const povertyBase = 15800 + (familySize - 1) * 5400;
+    const multiplier = plan === 'SAVE' ? 2.25 : 1.5;
+    const povertyShield = povertyBase * multiplier;
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ['Student Loan Balance', formatCurrency(balance)],
+      ['Average Interest Rate', `${rateInput.value}%`],
+      ['Adjusted Gross Income (AGI)', formatCurrency(agi)],
+      ['Family Size', familySize],
+      ['Repayment Plan Selected', plan],
+      ['Loan Type Category', loanType],
+      ['Federal Poverty Line', formatCurrency(povertyBase)],
+      ['Income Shield Limit', formatCurrency(povertyShield)],
+      ['Discretionary Income', formatCurrency(result.discretionaryIncome)],
+      ['IDR Monthly Payment', formatCurrency(result.monthlyPayment)],
+      ['Standard 10-Year Payment', formatCurrency(result.standardPMT)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `student-loan-idr-${balance}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [balanceInput, rateInput, agiInput, sizeInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize URL parameter sync
+  syncInputsWithURL('student-loan-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

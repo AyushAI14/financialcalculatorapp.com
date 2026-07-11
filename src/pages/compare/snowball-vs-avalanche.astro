@@ -1,0 +1,98 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Debt Snowball vs. Debt Avalanche: Which is Better? - FinCompute.com" 
+  description="Compare the Debt Snowball (smallest balance first) and Debt Avalanche (highest interest first) payoff strategies to decide which is best for your debt-free journey."
+>
+  <div class="max-w-4xl mx-auto py-8 px-4 space-y-10">
+    <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
+      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Debt Snowball vs. Debt Avalanche</h1>
+      <p class="text-sm text-body max-w-2xl">A side-by-side evaluation of the two most popular methodologies for structured personal debt elimination.</p>
+    </header>
+
+    <!-- Comparison Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Snowball -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">❄️</span>
+          <h2 class="text-xl font-bold text-ink">The Debt Snowball</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Focuses on paying off the **smallest debt balances first**, regardless of their interest rates. Once the smallest debt is wiped out, you roll its payment into the next smallest debt, building psychological momentum.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Primary Focus:</strong> Smallest account balances.</li>
+          <li><strong>Benefit:</strong> Quick psychological wins and fast motivation.</li>
+          <li><strong>Drawback:</strong> Costs more in total interest paid over time.</li>
+        </ul>
+      </div>
+
+      <!-- Avalanche -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl text-link">⚡</span>
+          <h2 class="text-xl font-bold text-ink">The Debt Avalanche</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Focuses on paying off the **highest interest rate (APR) debts first**, regardless of their balance sizes. This minimizes the accumulation of compounding interest fees, saving you the maximum amount of cash.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Primary Focus:</strong> Highest interest rates (APR).</li>
+          <li><strong>Benefit:</strong> Mathematically optimized to minimize interest.</li>
+          <li><strong>Drawback:</strong> Can take longer to get the first account fully paid off.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
+      <table class="w-full border-collapse text-left text-xs">
+        <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+          <tr>
+            <th class="px-5 py-3.5">Feature</th>
+            <th class="px-5 py-3.5">Debt Snowball</th>
+            <th class="px-5 py-3.5">Debt Avalanche</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-hairline text-body">
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Selection Rule</td>
+            <td class="px-5 py-3">Pay smallest balance first</td>
+            <td class="px-5 py-3">Pay highest APR first</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Mathematical Cost</td>
+            <td class="px-5 py-3">Higher total interest paid</td>
+            <td class="px-5 py-3 font-semibold text-link">Lowest interest paid (optimized)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Time to Debt-Free</td>
+            <td class="px-5 py-3">Potentially longer</td>
+            <td class="px-5 py-3 font-semibold text-link">Fastest possible timeframe</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Psychological Strategy</td>
+            <td class="px-5 py-3 font-semibold text-violet">Behavioral motivation & quick wins</td>
+            <td class="px-5 py-3">Discipline & logical optimization</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Call to action -->
+    <div class="text-center py-6 bg-canvas-soft border border-hairline rounded-lg space-y-3 no-print">
+      <h3 class="text-sm font-semibold text-ink">Compare both strategies with your own numbers</h3>
+      <p class="text-xs text-body max-w-md mx-auto">Input your active balances and interest rates to calculate exactly how much money and time you could save.</p>
+      <a 
+        href="/loan/debt-payoff" 
+        class="inline-block px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity"
+      >
+        Try Debt Payoff Simulator →
+      </a>
+    </div>
+  </div>
+</Layout>

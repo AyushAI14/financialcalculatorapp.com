@@ -473,4 +473,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
   // Initial calculation
   performCalculation();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', performCalculation);
 </script>

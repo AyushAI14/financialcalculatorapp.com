@@ -505,4 +505,7 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
 
   // Initial Calculation
   performCalculation();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', performCalculation);
 </script>

@@ -1,0 +1,356 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is an expense ratio?",
+    answer: "An expense ratio is the annual fee charged by a mutual fund or ETF to manage the fund. It is expressed as a percentage of your total investment (e.g. 0.10% means $1 per year for every $1,000 invested)."
+  },
+  {
+    question: "How do fees compound over time?",
+    answer: "Fees directly reduce your annual return. Because of compound interest, the money lost to fees is money that cannot grow, resulting in a significantly lower retirement nest egg over 20-40 years."
+  },
+  {
+    question: "What is a good expense ratio for an index fund?",
+    answer: "For passive index funds and ETFs, a good expense ratio is typically below 0.10% (some are as low as 0.03%). Actively managed mutual funds often charge 0.50% to 1.50% or more, which drag down long-term returns."
+  },
+  {
+    question: "What other investment fees should I look out for?",
+    answer: "Beyond expense ratios, watch for front-end or back-end sales loads (commissions on buying/selling shares), annual advisor management fees (typically 0.50% to 1.50% of assets under management), custody fees, and transaction or brokerage commissions."
+  },
+  {
+    question: "How much can a 1% fee difference affect my retirement savings?",
+    answer: "Over 30 to 40 years, a 1% difference in fees can reduce your total wealth at retirement by 25% to 30%. Because that 1% fee is taken out every year, you lose both the fee cash itself and all the compounding growth that money would have generated over the decades."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Investment Fee & Expense Ratio Calculator" 
+  description="See how expense ratios and annual fees drag down your investment portfolio's growth over time, and calculate how much you could save with lower-fee options."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="fee-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Investment Settings</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="10000" data-month="500" data-rate="8.0" data-fa="0.05" data-fb="0.85" data-years="30">Low ETF vs Active MF</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="50000" data-month="1000" data-rate="7.0" data-fa="0.10" data-fb="1.25" data-years="25">Robo Advisor vs Advisor</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="initial" label="Initial Investment" type="number" prefix="$" value="10000" placeholder="0.00" tooltip="The starting balance of your investment portfolio." />
+            <Input id="monthly" label="Monthly Contribution" type="number" prefix="$" value="500" placeholder="0.00" tooltip="Additional cash added to the portfolio every month." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="return-rate" label="Expected Rate of Return" type="number" suffix="%" value="8.0" placeholder="0.0" tooltip="Estimated gross annual return before any fees." />
+            <Input id="years" label="Time Horizon" type="number" suffix="years" value="30" placeholder="30" tooltip="The number of years you plan to hold these investments." />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Fee Option Comparisons</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="fee-a" label="Option A Expense Ratio (Low Fee)" type="number" suffix="%" value="0.05" placeholder="0.05" tooltip="Expense ratio for a low-cost index fund or ETF." />
+            <Input id="fee-b" label="Option B Expense Ratio (High Fee)" type="number" suffix="%" value="0.85" placeholder="0.85" tooltip="Expense ratio for an actively managed fund or advisory program." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Impact
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-difference">
+          <ResultCard title="Total Savings (Fee Difference)" value="$125,482.01" highlight={true} description="The extra money in your pocket by choosing Option A over Option B." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-val-a">
+            <ResultCard title="Option A Final Value" value="$780,112.55" />
+          </div>
+          <div id="res-val-b">
+            <ResultCard title="Option B Final Value" value="$654,630.54" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Projections Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Portfolio Trajectories Comparison</h4>
+        <div class="h-64 relative">
+          <canvas id="fee-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Opportunity Cost disclosures -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">Opportunity Cost of Fees</h4>
+        <div class="text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-body font-medium">Lost to Fees under Option A</span>
+            <span class="font-mono text-ink text-right" id="lost-a">$12,305.50</span>
+          </div>
+          <div class="flex justify-between border-t border-hairline/60 pt-2">
+            <span class="text-body font-medium">Lost to Fees under Option B</span>
+            <span class="font-mono text-ink text-right" id="lost-b">$137,787.51</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Comparison CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateFeeImpact } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('fee-form') as HTMLFormElement;
+
+  const initialInput = document.getElementById('initial') as HTMLInputElement;
+  const monthlyInput = document.getElementById('monthly') as HTMLInputElement;
+  const rateInput = document.getElementById('return-rate') as HTMLInputElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  const feeAInput = document.getElementById('fee-a') as HTMLInputElement;
+  const feeBInput = document.getElementById('fee-b') as HTMLInputElement;
+
+  const resDiff = document.getElementById('res-difference');
+  const resValA = document.getElementById('res-val-a');
+  const resValB = document.getElementById('res-val-b');
+
+  const lostA = document.getElementById('lost-a');
+  const lostB = document.getElementById('lost-b');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'initial': { required: true, min: 0 },
+    'monthly': { required: true, min: 0 },
+    'return-rate': { required: true, min: 0, max: 100 },
+    'years': { required: true, min: 1, max: 100, integer: true },
+    'fee-a': { required: true, min: 0, max: 20 },
+    'fee-b': { required: true, min: 0, max: 20 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resDiff) resDiff.querySelector('.font-mono')!.textContent = '--';
+      if (resValA) resValA.querySelector('.font-mono')!.textContent = '--';
+      if (resValB) resValB.querySelector('.font-mono')!.textContent = '--';
+      
+      if (lostA) lostA.textContent = '--';
+      if (lostB) lostB.textContent = '--';
+      return;
+    }
+
+    const initial = parseFloat(initialInput.value);
+    const monthly = parseFloat(monthlyInput.value);
+    const returnRate = parseFloat(rateInput.value) / 100;
+    const years = parseInt(yearsInput.value);
+    const feeA = parseFloat(feeAInput.value) / 100;
+    const feeB = parseFloat(feeBInput.value) / 100;
+
+    const result = calculateFeeImpact(initial, monthly, returnRate, feeA, feeB, years);
+
+    // Update UI
+    if (resDiff) resDiff.querySelector('.font-mono')!.textContent = formatCurrency(result.difference);
+    if (resValA) resValA.querySelector('.font-mono')!.textContent = formatCurrency(result.valueA);
+    if (resValB) resValB.querySelector('.font-mono')!.textContent = formatCurrency(result.valueB);
+
+    if (lostA) lostA.textContent = formatCurrency(result.lostToFeesA);
+    if (lostB) lostB.textContent = formatCurrency(result.lostToFeesB);
+
+    // Generate chart data projections year-by-year
+    const labels = [];
+    const dataA = [];
+    const dataB = [];
+    const dataNoFee = [];
+
+    for (let y = 0; y <= years; y++) {
+      labels.push(`Yr ${y}`);
+      const r = calculateFeeImpact(initial, monthly, returnRate, feeA, feeB, y);
+      dataA.push(r.valueA);
+      dataB.push(r.valueB);
+      dataNoFee.push(r.valueNoFee);
+    }
+
+    updateChart(labels, dataA, dataB, dataNoFee);
+  }
+
+  function updateChart(labels: string[], dataA: number[], dataB: number[], dataNoFee: number[]) {
+    const canvas = document.getElementById('fee-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = dataA;
+      chartInstance.data.datasets[1].data = dataB;
+      chartInstance.data.datasets[2].data = dataNoFee;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Option A (Low Fee)',
+              data: dataA,
+              borderColor: '#0070f3',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            },
+            {
+              label: 'Option B (High Fee)',
+              data: dataB,
+              borderColor: '#ff0080',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            },
+            {
+              label: 'Gross (No Fees)',
+              data: dataNoFee,
+              borderColor: '#ebebeb',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderDash: [5, 5],
+              borderWidth: 1.5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { font: { family: 'Geist, sans-serif', size: 9 } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#ebebeb' },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [initialInput, monthlyInput, rateInput, yearsInput, feeAInput, feeBInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      initialInput.value = target.dataset.init || '0';
+      monthlyInput.value = target.dataset.month || '0';
+      rateInput.value = target.dataset.rate || '0';
+      feeAInput.value = target.dataset.fa || '0';
+      feeBInput.value = target.dataset.fb || '0';
+      yearsInput.value = target.dataset.years || '0';
+
+      [initialInput, monthlyInput, rateInput, yearsInput, feeAInput, feeBInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      initialInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const initial = parseFloat(initialInput.value);
+    const monthly = parseFloat(monthlyInput.value);
+    const returnRate = parseFloat(rateInput.value) / 100;
+    const years = parseInt(yearsInput.value);
+    const feeA = parseFloat(feeAInput.value) / 100;
+    const feeB = parseFloat(feeBInput.value) / 100;
+
+    const headers = ['Year', 'Option A Value', 'Option B Value', 'Gross No Fees Value'];
+    const rows = [];
+    for (let y = 0; y <= years; y++) {
+      const r = calculateFeeImpact(initial, monthly, returnRate, feeA, feeB, y);
+      rows.push([y, r.valueA.toFixed(2), r.valueB.toFixed(2), r.valueNoFee.toFixed(2)]);
+    }
+
+    downloadDataAsCSV(headers, rows, `fee-impact-projection-${initial}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [initialInput, monthlyInput, rateInput, yearsInput, feeAInput, feeBInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('fee-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

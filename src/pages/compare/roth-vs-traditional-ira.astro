@@ -1,0 +1,97 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Roth IRA vs. Traditional IRA: Which is Better? - FinCompute.com" 
+  description="Compare Roth and Traditional IRAs side-by-side to understand tax brackets, income limits, deductions, and tax-free retirement growth rules."
+>
+  <div class="max-w-4xl mx-auto py-8 px-4 space-y-10">
+    <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
+      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Roth IRA vs. Traditional IRA</h1>
+      <p class="text-sm text-body max-w-2xl">A side-by-side comparison of the two main tax-advantaged retirement accounts in the United States.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Traditional -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📉</span>
+          <h2 class="text-xl font-bold text-ink">Traditional IRA</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Contributions are made with **pre-tax dollars** (meaning they are tax-deductible in the year you make them). Earnings grow tax-deferred, but all withdrawals during retirement are taxed as ordinary income.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Tax Timing:</strong> Pay taxes later (during retirement).</li>
+          <li><strong>Immediate Benefit:</strong> Deduct contributions to lower this year's taxable income.</li>
+          <li><strong>Best If:</strong> Your tax bracket will be lower in retirement than it is now.</li>
+        </ul>
+      </div>
+
+      <!-- Roth -->
+      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl text-link">📈</span>
+          <h2 class="text-xl font-bold text-ink">Roth IRA</h2>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Contributions are made with **post-tax dollars** (meaning you receive no immediate tax deduction). However, your investments grow 100% tax-free, and all qualified withdrawals in retirement are completely tax-free.
+        </p>
+        <ul class="space-y-2 text-xs text-mute list-disc pl-4">
+          <li><strong>Tax Timing:</strong> Pay taxes now (when you contribute).</li>
+          <li><strong>Retirement Benefit:</strong> Withdrawals of principal & gains are 100% tax-free.</li>
+          <li><strong>Best If:</strong> Your tax bracket will be higher in retirement than it is now.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
+      <table class="w-full border-collapse text-left text-xs">
+        <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+          <tr>
+            <th class="px-5 py-3.5">Feature</th>
+            <th class="px-5 py-3.5">Traditional IRA</th>
+            <th class="px-5 py-3.5">Roth IRA</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-hairline text-body">
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Tax Deduction</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (reduces current tax bill)</td>
+            <td class="px-5 py-3">No (contributed post-tax)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Retirement Withdrawals</td>
+            <td class="px-5 py-3">Taxed as ordinary income</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">100% Tax-Free</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Required Minimum Distributions (RMDs)</td>
+            <td class="px-5 py-3">Required starting at age 73</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">None during owner's lifetime</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-semibold text-ink">Contribution Rules</td>
+            <td class="px-5 py-3">Anyone with earned income can contribute</td>
+            <td class="px-5 py-3">Subject to income limits (phases out at higher incomes)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Call to action -->
+    <div class="text-center py-6 bg-canvas-soft border border-hairline rounded-lg space-y-3 no-print">
+      <h3 class="text-sm font-semibold text-ink">Model your own tax scenario</h3>
+      <p class="text-xs text-body max-w-md mx-auto">Compare final portfolio values based on your age, contribution amount, and current vs. expected retirement tax brackets.</p>
+      <a 
+        href="/retirement/ira-comparison" 
+        class="inline-block px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity"
+      >
+        Compare Roth vs Traditional IRA →
+      </a>
+    </div>
+  </div>
+</Layout>

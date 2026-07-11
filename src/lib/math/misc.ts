@@ -129,7 +129,7 @@ export function calculateAutoLoan(params: AutoLoanParams) {
     salesTax,
     monthlyPayment,
     totalInterest,
-    totalCost: financedAmount => financedAmount + downPayment + tradeInValue + totalInterest // total cost of ownership including cash paid
+    totalCost: (financedAmount: number) => financedAmount + downPayment + tradeInValue + totalInterest // total cost of ownership including cash paid
   };
 }
 

@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="Financial Insights Blog - FinCompute.com" description="Deep dives into financial planning, loan structures, debt payoff strategies, and purchasing power math from the FinCompute team.">
+  <div class="max-w-4xl mx-auto py-8 px-4">
+    <header class="mb-12 border-b border-hairline pb-8">
+      <h1 class="text-4xl font-extrabold tracking-tight text-ink">Financial Insights Blog</h1>
+      <p class="text-sm text-body mt-2">Deep dives, guides, and educational articles exploring interest rates, debt dynamics, tax schedules, and saving strategies.</p>
+    </header>
+
+    <div class="space-y-10">
+      {sortedPosts.length === 0 ? (
+        <p class="text-mute text-sm">No articles published yet.</p>
+      ) : (
+        sortedPosts.map(post => (
+          <article class="space-y-2.5">
+            <div class="flex items-center gap-3 text-xs font-mono text-mute">
+              <span>{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>•</span>
+              <span>By {post.data.author}</span>
+            </div>
+            
+            <h2 class="text-2xl font-bold tracking-tight text-ink hover:text-primary transition-colors">
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
+            
+            <p class="text-sm text-body leading-relaxed max-w-2xl">{post.data.description}</p>
+            
+            <div class="flex items-center gap-2 pt-1.5 no-print">
+              {post.data.tags.map(tag => (
+                <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))
+      )}
+    </div>
+  </div>
+</Layout>

@@ -12,6 +12,8 @@
   --color-canvas-soft: var(--canvas-soft);
   --color-canvas-soft-2: var(--canvas-soft-2);
   --color-link: var(--link);
+  --color-error: var(--error);
+  --color-success: var(--success);
 
   --font-sans: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
@@ -29,6 +31,8 @@
   --canvas-soft: #fafafa;
   --canvas-soft-2: #f5f5f5;
   --link: #0070f3;
+  --error: #ee0000;
+  --success: #0070f3;
 }
 
 /* System Dark Mode Preference */
@@ -45,6 +49,8 @@
     --canvas-soft: #000000;
     --canvas-soft-2: #141414;
     --link: #3291ff;
+    --error: #ff453a;
+    --success: #3291ff;
   }
 }
 
@@ -61,6 +67,8 @@ html.dark {
   --canvas-soft: #000000;
   --canvas-soft-2: #141414;
   --link: #3291ff;
+  --error: #ff453a;
+  --success: #3291ff;
 }
 
 @layer base {
@@ -83,5 +91,52 @@ html.dark {
   /* Optimize Chart.js Canvas Colors in Dark Mode */
   html.dark canvas {
     filter: invert(1) hue-rotate(180deg) opacity(0.9);
+  }
+}
+
+/* Print Optimization Styles */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt !important;
+  }
+  
+  header, footer, aside, button, select, #currency-select, .no-print, input[type="range"] {
+    display: none !important;
+  }
+  
+  main {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background-color: transparent !important;
+  }
+
+  /* Form layouts formatting for print */
+  form {
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  input, select, textarea {
+    border-bottom: 1px solid #000000 !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    background: transparent !important;
+    color: #000000 !important;
+    padding-left: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Prevent page splitting within cards and lists */
+  tr, .card, canvas, .grid > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }

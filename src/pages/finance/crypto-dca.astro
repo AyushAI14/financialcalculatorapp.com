@@ -1,0 +1,308 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is Dollar-Cost Averaging (DCA)?",
+    answer: "Dollar-Cost Averaging is the practice of investing a fixed dollar amount on a regular basis (e.g. weekly or monthly) regardless of the asset's price. This smooths out short-term price volatility and removes emotional timing decisions."
+  },
+  {
+    question: "How does DCA apply to high-volatility assets like Crypto?",
+    answer: "Because cryptocurrencies exhibit extreme price swings, DCA is a popular strategy to mitigate price risk. By buying at regular intervals, you buy more units when prices are low and fewer units when prices are high."
+  },
+  {
+    question: "Is DCA better than investing a lump sum?",
+    answer: "DCA is generally safer and reduces timing risk, making it ideal for highly volatile assets. However, in a steadily rising market, a lump-sum investment tends to yield higher returns because the entire amount is exposed to growth early on."
+  },
+  {
+    question: "What is the best frequency for crypto DCA?",
+    answer: "For long-term investors (holding over 2-3 years), the performance differences between daily, weekly, and monthly DCA are historically negligible. Select a frequency that aligns with your cash flow and paycheck schedule, and consider trading fees which can eat into smaller, more frequent transactions."
+  },
+  {
+    question: "Does DCA guarantee profits in cryptocurrency?",
+    answer: "No, DCA does not guarantee a profit or protect against persistent down-trends. If a cryptocurrency depreciates to zero or fails to recover, DCA will only average down your losses. It is crucial to perform fundamental research on the assets you select for a long-term DCA strategy."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Crypto DCA Calculator" 
+  description="Simulate the growth of a recurring dollar-cost-average (DCA) investment strategy in Bitcoin, Ethereum, or other crypto assets based on projected annual growth rates."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="crypto-dca-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">DCA Settings</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50" data-freq="weekly" data-years="3" data-growth="20.0">Weekly Accumulator</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="200" data-freq="monthly" data-years="5" data-growth="15.0">Monthly Long-Term</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="purchase-amount" label="Recurring Purchase Amount" type="number" prefix="$" value="50" placeholder="0.00" tooltip="The cash amount you allocate for each buy order." />
+            <Select id="frequency" label="Purchase Frequency" options={[
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'monthly', label: 'Monthly' }
+            ]} value="weekly" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="years" label="Duration" type="number" suffix="years" value="3" placeholder="3" tooltip="How many years you plan to run this DCA program." />
+            <Input id="projected-growth" label="Projected Annual Growth" type="number" suffix="%" value="20.0" placeholder="20.0" tooltip="Estimated average annual compounding growth rate." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Run Simulation
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-future-value">
+          <ResultCard title="Projected Portfolio Value" value="$11,048.91" highlight={true} description="The total value of your crypto holdings at the end of the simulation." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-total-invested">
+            <ResultCard title="Total Cash Invested" value="$7,800.00" />
+          </div>
+          <div id="res-roi">
+            <ResultCard title="Total Return (ROI)" value="+41.6%" />
+          </div>
+        </div>
+        <div id="res-profit">
+          <ResultCard title="Projected Capital Gains" value="$3,248.91" description="The net profit or gains generated by the investments." />
+        </div>
+      </div>
+
+      <!-- DCA Projection Line Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">DCA Accumulation Path</h4>
+        <div class="h-64 relative">
+          <canvas id="dca-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download DCA Schedule CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateCryptoDCA } from '../../lib/math/finance';
+  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('crypto-dca-form') as HTMLFormElement;
+
+  const amountInput = document.getElementById('purchase-amount') as HTMLInputElement;
+  const freqSelect = document.getElementById('frequency') as HTMLSelectElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  const growthInput = document.getElementById('projected-growth') as HTMLInputElement;
+
+  const resVal = document.getElementById('res-future-value');
+  const resInvested = document.getElementById('res-total-invested');
+  const resRoi = document.getElementById('res-roi');
+  const resProfit = document.getElementById('res-profit');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'purchase-amount': { required: true, min: 1 },
+    'years': { required: true, min: 1, max: 20, integer: true },
+    'projected-growth': { required: true, min: 0, max: 200 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resVal) resVal.querySelector('.font-mono')!.textContent = '--';
+      if (resInvested) resInvested.querySelector('.font-mono')!.textContent = '--';
+      if (resRoi) resRoi.querySelector('.font-mono')!.textContent = '--%';
+      if (resProfit) resProfit.querySelector('.font-mono')!.textContent = '--';
+      return;
+    }
+
+    const amount = parseFloat(amountInput.value);
+    const freq = freqSelect.value as 'weekly' | 'monthly';
+    const years = parseInt(yearsInput.value);
+    const growth = parseFloat(growthInput.value) / 100;
+
+    const result = calculateCryptoDCA(amount, freq, years, growth);
+
+    // Update UI
+    if (resVal) resVal.querySelector('.font-mono')!.textContent = formatCurrency(result.futureValue);
+    if (resInvested) resInvested.querySelector('.font-mono')!.textContent = formatCurrency(result.totalInvested);
+    if (resRoi) resRoi.querySelector('.font-mono')!.textContent = (result.roi >= 0 ? '+' : '') + formatPercentage(result.roi);
+    if (resProfit) resProfit.querySelector('.font-mono')!.textContent = formatCurrency(result.profit);
+
+    updateChart(result.history, freq);
+  }
+
+  function updateChart(history: any[], freq: 'weekly' | 'monthly') {
+    const canvas = document.getElementById('dca-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Filter points to prevent chart performance lag (max 60 points)
+    const step = Math.max(1, Math.ceil(history.length / 60));
+    const filteredHistory = history.filter((_, idx) => idx % step === 0);
+
+    const labels = filteredHistory.map(h => `${freq === 'weekly' ? 'Wk' : 'Mo'} ${h.period}`);
+    const investedData = filteredHistory.map(h => h.invested);
+    const valueData = filteredHistory.map(h => h.value);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = investedData;
+      chartInstance.data.datasets[1].data = valueData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Total Invested Capital',
+              data: investedData,
+              borderColor: '#4d4d4d',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 1.5,
+              borderDash: [4, 4]
+            },
+            {
+              label: 'Crypto Portfolio Value',
+              data: valueData,
+              borderColor: '#0070f3',
+              backgroundColor: 'rgba(0, 112, 243, 0.04)',
+              tension: 0.1,
+              fill: true,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { font: { family: 'Geist, sans-serif', size: 9 } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [amountInput, freqSelect, yearsInput, growthInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      amountInput.value = target.dataset.amount || '0';
+      freqSelect.value = target.dataset.freq || 'weekly';
+      yearsInput.value = target.dataset.years || '0';
+      growthInput.value = target.dataset.growth || '0';
+
+      [amountInput, yearsInput, growthInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      amountInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const amount = parseFloat(amountInput.value);
+    const freq = freqSelect.value as 'weekly' | 'monthly';
+    const years = parseInt(yearsInput.value);
+    const growth = parseFloat(growthInput.value) / 100;
+
+    const result = calculateCryptoDCA(amount, freq, years, growth);
+
+    const headers = [freq === 'weekly' ? 'Week' : 'Month', 'Total Invested', 'Portfolio Value'];
+    const rows = result.history.map(h => [h.period, h.invested.toFixed(2), h.value.toFixed(2)]);
+
+    downloadDataAsCSV(headers, rows, `crypto-dca-schedule.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [amountInput, yearsInput, growthInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('crypto-dca-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

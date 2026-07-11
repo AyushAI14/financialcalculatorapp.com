@@ -1,0 +1,321 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is inflation?",
+    answer: "Inflation is the general increase in prices and fall in the purchasing value of money over time. It means your money buys fewer goods and services in the future than it does today."
+  },
+  {
+    question: "How does inflation affect my savings?",
+    answer: "If the inflation rate is higher than the interest rate you earn on your savings, your savings will lose purchasing power over time, even though the nominal dollar balance grows."
+  },
+  {
+    question: "How is inflation officially measured?",
+    answer: "Inflation is typically measured using indices like the Consumer Price Index (CPI) or the Personal Consumption Expenditures (PCE) price index. These track the average change over time in the prices paid by urban consumers for a market basket of consumer goods and services."
+  },
+  {
+    question: "What is the historical average inflation rate?",
+    answer: "Historically in the United States, the long-term average annual inflation rate has hovered around 3.2% (since 1913). Most modern central banks target an annual inflation rate of 2.0% as a healthy benchmark for economic growth."
+  },
+  {
+    question: "How can I protect my money from losing value to inflation?",
+    answer: "To beat inflation, your capital needs to earn a return higher than the inflation rate. You can protect your wealth by investing in inflation-resistant assets such as equities (stocks), real estate, commodities, or government-backed inflation-indexed bonds like TIPS or I-Bonds."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Inflation & Purchasing Power Calculator" 
+  description="Calculate how inflation erodes the value of your cash savings over time, and see the future price of goods and services."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="inflation-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Inflation Parameters</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="10000" data-rate="3.2" data-years="10">10y Normal</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50000" data-rate="2.5" data-years="30">30y Safe</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="5000" data-rate="6.5" data-years="5">High Inflation</button>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <Input id="amount" label="Current Dollar Amount" type="number" prefix="$" value="10000" placeholder="0.00" tooltip="The cash amount you wish to project." />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+              <Input id="rate" label="Annual Inflation Rate" type="number" suffix="%" value="3.2" placeholder="0.0" tooltip="The expected average yearly inflation rate (historical US average is ~3.2%)." />
+              <Input id="years" label="Number of Years" type="number" suffix="years" value="10" placeholder="10" tooltip="How far into the future you want to project." />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Inflation
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-purchasing-power">
+          <ResultCard title="Future Purchasing Power" value="$7,298.81" highlight={true} description="What today's cash amount will be worth in terms of buying power in the future." />
+        </div>
+        <div id="res-future-price">
+          <ResultCard title="Future Cost of Goods" value="$13,702.41" description="What costs $10,000 today will cost in the future under this inflation rate." />
+        </div>
+      </div>
+
+      <!-- Purchasing Power Decay Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Purchasing Power Erosion</h4>
+        <div class="h-64 relative">
+          <canvas id="inflation-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Formulas Display -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">1. Future Value / Cost of Goods</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-future-price">
+                FV = Amount × (1 + Rate)ⁿ
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">2. Future Purchasing Power</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-purchasing-power">
+                Purchasing Power = Amount / (1 + Rate)ⁿ
+              </code>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Results CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateInflation } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('inflation-form') as HTMLFormElement;
+
+  const amountInput = document.getElementById('amount') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+
+  const resPower = document.getElementById('res-purchasing-power');
+  const resPrice = document.getElementById('res-future-price');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'amount': { required: true, min: 1 },
+    'rate': { required: true, min: -10, max: 100 },
+    'years': { required: true, min: 1, max: 100, integer: true }
+  };
+
+  function performCalculation() {
+    const stepPrice = document.getElementById('step-future-price');
+    const stepPower = document.getElementById('step-purchasing-power');
+
+    if (!validateForm(validationRules)) {
+      if (resPower) resPower.querySelector('.font-mono')!.textContent = '--';
+      if (resPrice) resPrice.querySelector('.font-mono')!.textContent = '--';
+      
+      if (stepPrice) stepPrice.innerHTML = 'Enter valid inputs to view formulas.';
+      if (stepPower) stepPower.innerHTML = 'Enter valid inputs to view formulas.';
+      return;
+    }
+
+    const amount = parseFloat(amountInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const years = parseInt(yearsInput.value);
+
+    const result = calculateInflation(amount, rate, years);
+
+    const formattedPower = formatCurrency(result.purchasingPower);
+    const formattedPrice = formatCurrency(result.futurePrice);
+
+    // Update UI
+    if (resPower) resPower.querySelector('.font-mono')!.textContent = formattedPower;
+    if (resPrice) resPrice.querySelector('.font-mono')!.textContent = formattedPrice;
+
+    // Formulas
+    if (stepPrice) {
+      stepPrice.innerHTML = `FV = ${formatCurrency(amount)} × (1 + ${rate.toFixed(4)})^${years} = <strong>${formattedPrice}</strong>`;
+    }
+    if (stepPower) {
+      stepPower.innerHTML = `Buying Power = ${formatCurrency(amount)} / (1 + ${rate.toFixed(4)})^${years} = <strong>${formattedPower}</strong>`;
+    }
+
+    // Build chart data
+    const history = [];
+    for (let y = 0; y <= years; y++) {
+      history.push({
+        year: y,
+        power: amount / Math.pow(1 + rate, y)
+      });
+    }
+
+    updateChart(history);
+  }
+
+  function updateChart(history: any[]) {
+    const canvas = document.getElementById('inflation-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const labels = history.map(h => `Year ${h.year}`);
+    const data = history.map(h => h.power);
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = data;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Purchasing Power ($)',
+              data,
+              borderColor: '#ff0080',
+              backgroundColor: 'rgba(255, 0, 128, 0.05)',
+              tension: 0.1,
+              fill: true,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: '#ebebeb' },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [amountInput, rateInput, yearsInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      amountInput.value = target.dataset.amount || '0';
+      rateInput.value = target.dataset.rate || '0';
+      yearsInput.value = target.dataset.years || '0';
+
+      [amountInput, rateInput, yearsInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      amountInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const amount = parseFloat(amountInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const years = parseInt(yearsInput.value);
+
+    const headers = ['Year', 'Purchasing Power', 'Future Cost of Goods'];
+    const rows = [];
+    for (let y = 0; y <= years; y++) {
+      const power = amount / Math.pow(1 + rate, y);
+      const price = amount * Math.pow(1 + rate, y);
+      rows.push([y, power.toFixed(2), price.toFixed(2)]);
+    }
+
+    downloadDataAsCSV(headers, rows, `inflation-projection-${amount}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [amountInput, rateInput, yearsInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('inflation-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

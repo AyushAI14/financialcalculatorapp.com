@@ -1,0 +1,281 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is a 529 plan?",
+    answer: "A 529 plan is a tax-advantaged savings plan designed to encourage saving for future education costs. It offers tax-free growth and tax-free withdrawals when used for qualified education expenses."
+  },
+  {
+    question: "How fast do college costs increase?",
+    answer: "Historically, college tuition fees inflate at about 4% to 6% per year, which is significantly faster than the general cost of living."
+  },
+  {
+    question: "What happens to 529 funds if my child does not go to college?",
+    answer: "If the beneficiary doesn't attend college, you can change the beneficiary to another qualifying family member, or roll over up to $35,000 lifetime into a Roth IRA for the beneficiary (subject to annual contribution limits). Otherwise, non-qualified withdrawals are subject to income taxes and a 10% penalty on the earnings portion."
+  },
+  {
+    question: "Can I use a 529 plan for trade schools or K-12 tuition?",
+    answer: "Yes. 529 plan funds can be used for qualified expenses at eligible vocational/trade schools, registered apprenticeship programs, and up to $10,000 per year per student for private or public elementary and secondary (K-12) school tuition."
+  },
+  {
+    question: "How does a 529 plan impact financial aid eligibility?",
+    answer: "529 plans owned by a parent have a minimal impact on federal financial aid. Only up to 5.64% of the asset's value is factored into the Student Aid Index (SAI), whereas assets owned directly by the student are assessed at a much higher rate of 20%."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="College Savings (529) Calculator" 
+  description="Estimate the future cost of a 4-year college education and calculate how much you need to save monthly in a 529 plan to reach your funding goal."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="college-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Education & Savings Settings</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="5" data-rage="18" data-cost="25000" data-inf="5.0" data-saved="5000" data-contrib="200" data-rate="6.5">Public 4-Year</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="2" data-rage="18" data-cost="55000" data-inf="4.5" data-saved="10000" data-contrib="400" data-rate="7.0">Private 4-Year</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-age" label="Child's Current Age" type="number" value="5" placeholder="5" tooltip="Your child's age today." />
+            <Input id="enrollment-age" label="College Start Age" type="number" value="18" placeholder="18" tooltip="The age at which your child starts college (usually 18)." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="current-cost" label="Current Annual Cost" type="number" prefix="$" value="25000" placeholder="0.00" tooltip="Estimated current annual cost of tuition, room, and board." />
+            <Input id="cost-inflation" label="Annual Cost Inflation" type="number" suffix="%" value="5.0" placeholder="5.0" tooltip="The annual percentage rate college tuition is expected to increase." />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Portfolio Details</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-saved" label="Initial Saved Capital" type="number" prefix="$" value="5000" placeholder="0.00" tooltip="Money already set aside for college expenses." />
+            <Input id="monthly-contribution" label="Monthly Contribution" type="number" prefix="$" value="200" placeholder="0.00" tooltip="Additional savings added to the account every month." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="return-rate" label="Annual Portfolio Return" type="number" suffix="%" value="6.5" placeholder="6.5" tooltip="Estimated gross annual investment return on the 529 portfolio." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Target
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-total-cost">
+          <ResultCard title="Future 4-Year College Cost" value="$187,005.12" highlight={true} description="Total estimated tuition, room, and board costs for 4 years of college (accounting for inflation)." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-balance">
+            <ResultCard title="Projected 529 Balance" value="$64,302.21" />
+          </div>
+          <div id="res-shortfall">
+            <ResultCard title="Remaining Shortfall" value="$122,702.91" />
+          </div>
+        </div>
+        <div id="res-contrib-needed">
+          <ResultCard title="Recommended Monthly Payment" value="$581.12" description="Monthly contribution required to completely fund the target college costs." />
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download College Plan CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateCollegeSavings } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+
+  // DOM Elements
+  const form = document.getElementById('college-form') as HTMLFormElement;
+
+  const currentAgeInput = document.getElementById('current-age') as HTMLInputElement;
+  const enrollmentAgeInput = document.getElementById('enrollment-age') as HTMLInputElement;
+  const costInput = document.getElementById('current-cost') as HTMLInputElement;
+  const inflationInput = document.getElementById('cost-inflation') as HTMLInputElement;
+  const savedInput = document.getElementById('current-saved') as HTMLInputElement;
+  const contributionInput = document.getElementById('monthly-contribution') as HTMLInputElement;
+  const returnInput = document.getElementById('return-rate') as HTMLInputElement;
+
+  const resCost = document.getElementById('res-total-cost');
+  const resBalance = document.getElementById('res-balance');
+  const resShortfall = document.getElementById('res-shortfall');
+  const resContribNeeded = document.getElementById('res-contrib-needed');
+
+  const validationRules = {
+    'current-age': { required: true, min: 0, max: 25 },
+    'enrollment-age': {
+      required: true,
+      min: 1,
+      max: 30,
+      custom: (val: number) => {
+        const cage = parseInt(currentAgeInput.value) || 0;
+        return val <= cage ? 'College start age must be greater than current age.' : null;
+      }
+    },
+    'current-cost': { required: true, min: 1 },
+    'cost-inflation': { required: true, min: 0, max: 25 },
+    'current-saved': { required: true, min: 0 },
+    'monthly-contribution': { required: true, min: 0 },
+    'return-rate': { required: true, min: 0, max: 25 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resCost) resCost.querySelector('.font-mono')!.textContent = '--';
+      if (resBalance) resBalance.querySelector('.font-mono')!.textContent = '--';
+      if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = '--';
+      if (resContribNeeded) resContribNeeded.querySelector('.font-mono')!.textContent = '--';
+      return;
+    }
+
+    const cage = parseInt(currentAgeInput.value);
+    const rage = parseInt(enrollmentAgeInput.value);
+    const currentCost = parseFloat(costInput.value);
+    const costInflation = parseFloat(inflationInput.value) / 100;
+    const saved = parseFloat(savedInput.value);
+    const contribution = parseFloat(contributionInput.value);
+    const returnRate = parseFloat(returnInput.value) / 100;
+
+    const result = calculateCollegeSavings(
+      cage,
+      rage,
+      currentCost,
+      costInflation,
+      saved,
+      contribution,
+      returnRate
+    );
+
+    // Update UI
+    if (resCost) resCost.querySelector('.font-mono')!.textContent = formatCurrency(result.total4YearCost);
+    if (resBalance) resBalance.querySelector('.font-mono')!.textContent = formatCurrency(result.endingBalance);
+    if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = formatCurrency(result.shortfall);
+    if (resContribNeeded) resContribNeeded.querySelector('.font-mono')!.textContent = formatCurrency(result.pmtNeeded);
+  }
+
+  // Bind input listeners
+  [currentAgeInput, enrollmentAgeInput, costInput, inflationInput, savedInput, contributionInput, returnInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      currentAgeInput.value = target.dataset.cage || '0';
+      enrollmentAgeInput.value = target.dataset.rage || '0';
+      costInput.value = target.dataset.cost || '0';
+      inflationInput.value = target.dataset.inf || '0';
+      savedInput.value = target.dataset.saved || '0';
+      contributionInput.value = target.dataset.contrib || '0';
+      returnInput.value = target.dataset.rate || '0';
+
+      [currentAgeInput, enrollmentAgeInput, costInput, inflationInput, savedInput, contributionInput, returnInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      currentAgeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const cage = parseInt(currentAgeInput.value);
+    const rage = parseInt(enrollmentAgeInput.value);
+    const currentCost = parseFloat(costInput.value);
+    const costInflation = parseFloat(inflationInput.value) / 100;
+    const saved = parseFloat(savedInput.value);
+    const contribution = parseFloat(contributionInput.value);
+    const returnRate = parseFloat(returnInput.value) / 100;
+
+    const result = calculateCollegeSavings(
+      cage,
+      rage,
+      currentCost,
+      costInflation,
+      saved,
+      contribution,
+      returnRate
+    );
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ["Child's Current Age", cage],
+      ['College Enrollment Age', rage],
+      ['Current Annual College Cost', formatCurrency(currentCost)],
+      ['Tuition Inflation Rate', `${inflationInput.value}%`],
+      ['Initial Saved Portfolio Capital', formatCurrency(saved)],
+      ['Current Monthly Savings rate', formatCurrency(contribution)],
+      ['Investment Rate of Return', `${returnInput.value}%`],
+      ['Eestimated Future 4-Year Cost', formatCurrency(result.total4YearCost)],
+      ['Projected 529 Portfolio Balance', formatCurrency(result.endingBalance)],
+      ['Projected Funding Shortfall', formatCurrency(result.shortfall)],
+      ['Recommended Monthly Contribution', formatCurrency(result.pmtNeeded)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `college-savings-plan.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [currentAgeInput, enrollmentAgeInput, costInput, inflationInput, savedInput, contributionInput, returnInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('college-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

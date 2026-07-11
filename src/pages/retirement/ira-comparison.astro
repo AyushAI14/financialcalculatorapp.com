@@ -1,0 +1,366 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is the key difference between a Roth and Traditional IRA?",
+    answer: "Traditional IRA contributions are generally made pre-tax (reducing your current taxable income), but withdrawals in retirement are taxed as ordinary income. Roth IRA contributions are made with post-tax dollars; growth and withdrawals in retirement are completely tax-free."
+  },
+  {
+    question: "Which IRA plan is better for me?",
+    answer: "As a general rule, if you expect your tax bracket to be higher in retirement than it is today, a Roth IRA is better. If you expect your tax bracket in retirement to be lower than it is today, a Traditional IRA is better."
+  },
+  {
+    question: "What are the contribution limits for IRAs in 2024?",
+    answer: "For 2024, the annual contribution limit for both Traditional and Roth IRAs is $7,000 for those under age 50, and $8,000 for those age 50 or older (which includes a $1,000 catch-up contribution)."
+  },
+  {
+    question: "Are there income limits for contributing to Traditional and Roth IRAs?",
+    answer: "Roth IRAs have strict income limits; in 2024, eligibility phases out between $146,000 and $161,000 for single filers, and $230,000 to $240,000 for married couples filing jointly. Anyone can contribute to a Traditional IRA regardless of income, but the tax deductibility phases out if your income is high and you have access to a workplace retirement plan (like a 401k)."
+  },
+  {
+    question: "Can I withdraw money from my IRA before age 59½ without penalty?",
+    answer: "With a Roth IRA, you can withdraw your original contributions at any time for any reason tax- and penalty-free, but withdrawing earnings early incurs taxes and a 10% penalty. With a Traditional IRA, withdrawing any funds early generally triggers both regular income tax and a 10% penalty, except for specific IRS-approved exemptions (e.g., qualifying first-time home purchase, higher education expenses, or disability)."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Roth vs Traditional IRA Calculator" 
+  description="Compare Traditional and Roth IRAs to determine which retirement account will maximize your net take-home wealth after accounting for current and future tax brackets."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="ira-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Profile & Contribution</h3>
+            <div class="flex items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="30" data-rage="65" data-contrib="7000" data-rate="7.0" data-curtax="22" data-rettax="15">Low Future Tax</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="25" data-rage="65" data-contrib="7000" data-rate="8.0" data-curtax="12" data-rettax="22">High Future Tax</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-age" label="Current Age" type="number" value="30" placeholder="30" tooltip="Your current age in years." />
+            <Input id="retirement-age" label="Retirement Target Age" type="number" value="65" placeholder="65" tooltip="The age at which you plan to retire and start making withdrawals." />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-hairline/60">
+            <Input id="contribution" label="Annual IRA Contribution" type="number" prefix="$" value="7000" placeholder="7000" tooltip="Annual amount contributed (2024 conventional limit is $7,000; catch-up is $8,000)." />
+            <Input id="return-rate" label="Annual Rate of Return" type="number" suffix="%" value="7.0" placeholder="7.0" tooltip="Estimated gross annual return on portfolio investments." />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Tax Bracket Assumptions</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-tax" label="Current Income Tax Rate" type="number" suffix="%" value="22" placeholder="22" tooltip="Your current marginal tax bracket." />
+            <Input id="retirement-tax" label="Retirement Income Tax Rate" type="number" suffix="%" value="15" placeholder="15" tooltip="Your expected marginal tax bracket when you retire." />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Compare IRAs
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-winner">
+          <ResultCard title="Advantage Winner" value="Roth IRA Wins" highlight={true} description="The plan that provides the highest net wealth at retirement." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="res-roth">
+            <ResultCard title="Roth IRA Net Value" value="$1,037,682.00" />
+          </div>
+          <div id="res-traditional">
+            <ResultCard title="Traditional Net Value" value="$882,029.70" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Projections Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Portfolio Projections</h4>
+        <div class="h-64 relative">
+          <canvas id="ira-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Opportunity Cost disclosures -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">Contribution Tax Savings</h4>
+        <div class="text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-body font-medium">Annual Tax Saved (Traditional)</span>
+            <span class="font-mono text-ink text-right" id="savings-annual">$1,540.00 / yr</span>
+          </div>
+          <div class="flex justify-between border-t border-hairline/60 pt-2">
+            <span class="text-body font-medium">Cumulative Lifetime Tax Savings</span>
+            <span class="font-mono text-ink text-right" id="savings-cum">$53,900.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export CSV -->
+      <div class="flex gap-4 no-print">
+        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+          <span>📊</span> Download Comparison CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { compareIRA } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  // DOM Elements
+  const form = document.getElementById('ira-form') as HTMLFormElement;
+
+  const currentAgeInput = document.getElementById('current-age') as HTMLInputElement;
+  const retirementAgeInput = document.getElementById('retirement-age') as HTMLInputElement;
+  const contributionInput = document.getElementById('contribution') as HTMLInputElement;
+  const rateInput = document.getElementById('return-rate') as HTMLInputElement;
+  const currentTaxInput = document.getElementById('current-tax') as HTMLInputElement;
+  const retirementTaxInput = document.getElementById('retirement-tax') as HTMLInputElement;
+
+  const resWinner = document.getElementById('res-winner');
+  const resRoth = document.getElementById('res-roth');
+  const resTrad = document.getElementById('res-traditional');
+
+  const savingsAnnual = document.getElementById('savings-annual');
+  const savingsCum = document.getElementById('savings-cum');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'current-age': { required: true, min: 0, max: 100 },
+    'retirement-age': {
+      required: true,
+      min: 1,
+      max: 100,
+      custom: (val: number) => {
+        const cage = parseInt(currentAgeInput.value) || 0;
+        return val <= cage ? 'Retirement age must be greater than current age.' : null;
+      }
+    },
+    'contribution': { required: true, min: 1 },
+    'return-rate': { required: true, min: 0, max: 100 },
+    'current-tax': { required: true, min: 0, max: 100 },
+    'retirement-tax': { required: true, min: 0, max: 100 }
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resWinner) resWinner.querySelector('.font-mono')!.textContent = '--';
+      if (resRoth) resRoth.querySelector('.font-mono')!.textContent = '--';
+      if (resTrad) resTrad.querySelector('.font-mono')!.textContent = '--';
+      
+      if (savingsAnnual) savingsAnnual.textContent = '--';
+      if (savingsCum) savingsCum.textContent = '--';
+      return;
+    }
+
+    const cage = parseInt(currentAgeInput.value);
+    const rage = parseInt(retirementAgeInput.value);
+    const contrib = parseFloat(contributionInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const curTax = parseFloat(currentTaxInput.value) / 100;
+    const retTax = parseFloat(retirementTaxInput.value) / 100;
+
+    const result = compareIRA(cage, rage, contrib, rate, curTax, retTax);
+
+    // Winner badge logic
+    let winnerText = 'Traditional IRA Wins';
+    if (result.rothWins) {
+      winnerText = 'Roth IRA Wins';
+    } else if (result.rothBalance === result.tradBalanceNet) {
+      winnerText = 'Both Plans Equal';
+    }
+
+    // Update UI
+    if (resWinner) {
+      resWinner.querySelector('.font-mono')!.textContent = winnerText;
+    }
+    if (resRoth) resRoth.querySelector('.font-mono')!.textContent = formatCurrency(result.rothBalance);
+    if (resTrad) resTrad.querySelector('.font-mono')!.textContent = formatCurrency(result.tradBalanceNet);
+
+    const taxSavedAnnualVal = contrib * curTax;
+    const taxSavedCumVal = taxSavedAnnualVal * (rage - cage);
+    if (savingsAnnual) savingsAnnual.textContent = `${formatCurrency(taxSavedAnnualVal)} / yr`;
+    if (savingsCum) savingsCum.textContent = formatCurrency(taxSavedCumVal);
+
+    // Build Chart Projection Data
+    const labels = [];
+    const rothData = [];
+    const tradData = [];
+
+    const years = rage - cage;
+    for (let y = 0; y <= years; y++) {
+      labels.push(`Age ${cage + y}`);
+      const r = compareIRA(cage, cage + y, contrib, rate, curTax, retTax);
+      rothData.push(r.rothBalance);
+      tradData.push(r.tradBalanceNet);
+    }
+
+    updateChart(labels, rothData, tradData);
+  }
+
+  function updateChart(labels: string[], roth: number[], trad: number[]) {
+    const canvas = document.getElementById('ira-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = roth;
+      chartInstance.data.datasets[1].data = trad;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Roth IRA (Tax-Free Net)',
+              data: roth,
+              borderColor: '#0070f3',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            },
+            {
+              label: 'Traditional IRA (Post-Tax Net)',
+              data: trad,
+              borderColor: '#7928ca',
+              backgroundColor: 'transparent',
+              tension: 0.1,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { font: { family: 'Geist, sans-serif', size: 9 } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#ebebeb' },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              grid: { color: '#ebebeb' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return '$' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [currentAgeInput, retirementAgeInput, contributionInput, rateInput, currentTaxInput, retirementTaxInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      currentAgeInput.value = target.dataset.cage || '0';
+      retirementAgeInput.value = target.dataset.rage || '0';
+      contributionInput.value = target.dataset.contrib || '0';
+      rateInput.value = target.dataset.rate || '0';
+      currentTaxInput.value = target.dataset.curtax || '0';
+      retirementTaxInput.value = target.dataset.rettax || '0';
+
+      [currentAgeInput, retirementAgeInput, contributionInput, rateInput, currentTaxInput, retirementTaxInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      currentAgeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const cage = parseInt(currentAgeInput.value);
+    const rage = parseInt(retirementAgeInput.value);
+    const contrib = parseFloat(contributionInput.value);
+    const rate = parseFloat(rateInput.value) / 100;
+    const curTax = parseFloat(currentTaxInput.value) / 100;
+    const retTax = parseFloat(retirementTaxInput.value) / 100;
+
+    const headers = ['Age', 'Roth IRA Net Value', 'Traditional IRA Net Value'];
+    const rows = [];
+    const years = rage - cage;
+    for (let y = 0; y <= years; y++) {
+      const r = compareIRA(cage, cage + y, contrib, rate, curTax, retTax);
+      rows.push([cage + y, r.rothBalance.toFixed(2), r.tradBalanceNet.toFixed(2)]);
+    }
+
+    downloadDataAsCSV(headers, rows, `ira-comparison-${cage}-to-${rage}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [currentAgeInput, retirementAgeInput, contributionInput, rateInput, currentTaxInput, retirementTaxInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initialize sync
+  syncInputsWithURL('ira-form', performCalculation);
+
+  // Currency select change listener
+  window.addEventListener('currency-change', performCalculation);
+
+  // Initial Calculation
+  performCalculation();
+</script>

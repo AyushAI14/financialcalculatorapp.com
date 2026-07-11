@@ -1,0 +1,169 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Feedback Dashboard - FinCompute.com" 
+  description="View user helpfulness feedback ratings and submissions collected across all calculators."
+>
+  <!-- Passcode Unlock Overlay -->
+  <div id="unlock-overlay" class="fixed inset-0 bg-canvas/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="max-w-sm w-full bg-canvas border border-hairline p-6 rounded-lg shadow-lg space-y-4 text-center">
+      <div class="w-12 h-12 rounded-full bg-canvas-soft border border-hairline flex items-center justify-center text-lg mx-auto">🔒</div>
+      <div>
+        <h3 class="text-sm font-semibold text-ink">Authorization Required</h3>
+        <p class="text-[11px] text-body mt-1">Please enter the admin passcode to view dashboard metrics.</p>
+      </div>
+      <input type="password" id="passcode-input" placeholder="Enter passcode..." class="w-full h-10 px-3 bg-canvas text-ink text-sm border border-hairline rounded focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong text-center" />
+      <div id="passcode-error" class="hidden text-xs text-error font-medium">Incorrect passcode. Please try again.</div>
+      <button id="unlock-btn" class="w-full py-2 bg-primary text-on-primary rounded font-semibold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
+        Unlock Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Container (Initially Hidden / Blurry until unlocked) -->
+  <div id="dashboard-content" class="max-w-4xl mx-auto py-8 px-4 space-y-8 invisible">
+    <header class="border-b border-hairline pb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-ink">Feedback Submissions</h1>
+        <p class="text-xs text-body mt-1">Review helpfulness ratings left by users across FinCompute calculators.</p>
+      </div>
+      <button id="clear-feedback-btn" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline hover:border-error hover:text-error text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm no-print">
+        Clear All Feedback
+      </button>
+    </header>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
+        <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Total Ratings</h4>
+        <p class="text-3xl font-bold text-ink mt-1 font-mono" id="total-ratings-count">0</p>
+      </div>
+      <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
+        <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Helpful (👍 Yes)</h4>
+        <p class="text-3xl font-bold text-green-700 dark:text-green-400 mt-1 font-mono" id="yes-count">0</p>
+      </div>
+      <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
+        <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Helpfulness Ratio</h4>
+        <p class="text-3xl font-bold text-link mt-1 font-mono" id="helpful-ratio">0%</p>
+      </div>
+    </div>
+
+    <!-- Feedbacks Table/List -->
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
+      <div class="px-5 py-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Submission Log</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left text-xs">
+          <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+            <tr>
+              <th class="px-5 py-3">Calculator</th>
+              <th class="px-5 py-3">Rating</th>
+              <th class="px-5 py-3">Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="feedback-tbody" class="divide-y divide-hairline text-body">
+            <tr>
+              <td colspan="3" class="px-5 py-8 text-center text-mute">No feedback submissions recorded yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { safeGetItem, safeSetItem } from '../lib/storage';
+
+  const overlay = document.getElementById('unlock-overlay');
+  const dashboardContent = document.getElementById('dashboard-content');
+  const passcodeInp = document.getElementById('passcode-input') as HTMLInputElement | null;
+  const unlockBtn = document.getElementById('unlock-btn');
+  const errorEl = document.getElementById('passcode-error');
+
+  const tbody = document.getElementById('feedback-tbody');
+  const totalCountEl = document.getElementById('total-ratings-count');
+  const yesCountEl = document.getElementById('yes-count');
+  const ratioEl = document.getElementById('helpful-ratio');
+  const clearBtn = document.getElementById('clear-feedback-btn');
+
+  const CORRECT_PASSCODE = 'admin123';
+
+  function renderFeedback() {
+    const list = JSON.parse(safeGetItem('feedback_responses', '[]'));
+
+    if (totalCountEl) totalCountEl.textContent = String(list.length);
+
+    const yesCount = list.filter((item: any) => item.rating === 'yes').length;
+    if (yesCountEl) yesCountEl.textContent = String(yesCount);
+
+    const ratio = list.length > 0 ? Math.round((yesCount / list.length) * 100) : 0;
+    if (ratioEl) ratioEl.textContent = `${ratio}%`;
+
+    if (!tbody) return;
+
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="3" class="px-5 py-8 text-center text-mute">No feedback submissions recorded yet.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    const sorted = list.sort((a: any, b: any) => b.timestamp - a.timestamp);
+
+    tbody.innerHTML = sorted.map((item: any) => {
+      const dateStr = new Date(item.timestamp).toLocaleString();
+      const ratingBadge = item.rating === 'yes'
+        ? '<span class="px-2 py-0.5 bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400 border border-green-200 dark:border-green-900 rounded text-[10px] font-medium">👍 Helpful</span>'
+        : '<span class="px-2 py-0.5 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-400 border border-red-200 dark:border-red-900 rounded text-[10px] font-medium">👎 Not Helpful</span>';
+
+      return `
+        <tr class="hover:bg-canvas-soft transition-colors text-ink">
+          <td class="px-5 py-3 font-semibold text-body">
+            <a href="${item.url}" class="hover:underline text-link">${item.name}</a>
+            <span class="text-[10px] font-mono text-mute block mt-0.5">${item.url}</span>
+          </td>
+          <td class="px-5 py-3">${ratingBadge}</td>
+          <td class="px-5 py-3 font-mono text-mute">${dateStr}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function handleUnlock() {
+    if (!passcodeInp) return;
+    if (passcodeInp.value === CORRECT_PASSCODE) {
+      safeSetItem('feedback_unlocked', 'true');
+      overlay?.classList.add('hidden');
+      dashboardContent?.classList.remove('invisible');
+      renderFeedback();
+    } else {
+      if (errorEl) errorEl.classList.remove('hidden');
+      passcodeInp.value = '';
+    }
+  }
+
+  // Check initial state
+  if (safeGetItem('feedback_unlocked', 'false') === 'true') {
+    overlay?.classList.add('hidden');
+    dashboardContent?.classList.remove('invisible');
+    renderFeedback();
+  }
+
+  unlockBtn?.addEventListener('click', handleUnlock);
+  passcodeInp?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleUnlock();
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all feedback logs?')) {
+      safeSetItem('feedback_responses', '[]');
+      renderFeedback();
+    }
+  });
+</script>

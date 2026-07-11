@@ -3,20 +3,44 @@ import '../styles/global.css';
 
 interface Props {
   title: string;
+  description?: string;
+  canonicalUrl?: string;
 }
 
-const { title } = Astro.props;
+const { 
+  title, 
+  description = "A premium suite of financial calculators for all your needs. Formulated with precise math and a clean interface.",
+  canonicalUrl
+} = Astro.props;
+
+const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://fincompute.com').href;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="A premium suite of financial calculators for all your needs." />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={resolvedCanonical} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={resolvedCanonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={resolvedCanonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/og-image.png" />
+    
     <!-- Add Geist Font from Vercel -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
@@ -24,9 +48,11 @@ const { title } = Astro.props;
     <!-- Dark Mode Blocker Script -->
     <script is:inline>
       const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-          return localStorage.getItem('theme');
-        }
+        try {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+        } catch (e) {}
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
           return 'dark';
         }
@@ -41,36 +67,85 @@ const { title } = Astro.props;
         document.documentElement.classList.add('light');
       }
     </script>
+    <!-- Register Service Worker for PWA -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .catch((err) => console.warn('Service Worker registration failed:', err));
+        });
+      }
+    </script>
   </head>
   <body class="bg-canvas-soft text-ink font-sans antialiased selection:bg-primary selection:text-on-primary pb-24">
-    <!-- Navbar -->
-    <header class="sticky top-0 z-50 bg-canvas border-b border-hairline h-16 flex items-center">
-      <div class="max-w-[1400px] w-full mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
+    <!-- Navbar (Floating Pill) -->
+    <header class="sticky top-4 z-50 max-w-[950px] w-[92%] mx-auto bg-canvas/75 backdrop-blur-md border border-hairline rounded-full h-12 flex items-center px-4 sm:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] mt-4">
+      <div class="w-full flex items-center justify-between">
+        <!-- Logo -->
         <a href="/" class="flex items-center gap-2 hover:opacity-85 transition-opacity">
-          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <span class="font-semibold tracking-tight text-ink">FinCompute</span>
+          <span class="font-bold text-xs tracking-tight text-ink font-mono">FinCompute</span>
         </a>
-        <div class="flex items-center gap-4">
-          <nav class="hidden md:flex gap-4">
-            <a href="/#categories-section" class="text-body text-sm font-medium hover:text-ink transition-colors px-3 py-1 rounded-full hover:bg-canvas-soft">Browse Calculators</a>
-          </nav>
-          <button id="theme-toggle" class="p-2 rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors cursor-pointer" aria-label="Toggle dark mode">
+
+        <!-- Center Capsule Links -->
+        <nav class="hidden md:flex items-center gap-0.5 bg-canvas-soft border border-hairline rounded-full p-0.5 shadow-inner">
+          <a href="/#categories-section" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Calculators</a>
+          <a href="/blog" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Blog</a>
+          <a href="/about" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">About</a>
+          <a href="/contact" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Contact</a>
+        </nav>
+
+        <!-- Right side tools -->
+        <div class="flex items-center gap-1">
+          <!-- Currency Selector -->
+          <div class="relative flex items-center mr-1">
+            <select id="currency-select" class="bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none" aria-label="Select currency">
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="INR">INR (₹)</option>
+            </select>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" class="p-1.5 rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors cursor-pointer border border-transparent hover:border-hairline" aria-label="Toggle dark mode">
             <!-- Sun Icon (visible in dark mode) -->
-            <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg id="sun-icon" class="w-3.5 h-3.5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
             </svg>
             <!-- Moon Icon (visible in light mode) -->
-            <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg id="moon-icon" class="w-3.5 h-3.5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors cursor-pointer border border-transparent hover:border-hairline" aria-label="Open menu">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
           </button>
         </div>
       </div>
+
+      <!-- Mobile Menu overlay (Card style below the navbar) -->
+      <div id="mobile-menu" class="hidden md:hidden absolute left-0 right-0 top-14 bg-canvas/95 backdrop-blur-xl border border-hairline rounded-2xl p-4 shadow-xl z-50 animate-fade-in mx-auto w-full">
+        <nav class="flex flex-col gap-1">
+          <a href="/#categories-section" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Calculators</a>
+          <a href="/blog" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Blog</a>
+          <a href="/about" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">About</a>
+          <a href="/contact" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Contact</a>
+          <div class="border-t border-hairline my-2"></div>
+          <a href="/privacy" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Privacy Policy</a>
+          <a href="/terms" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Terms of Service</a>
+          <a href="/disclaimer" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Disclaimer</a>
+        </nav>
+      </div>
     </header>
 
-    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-8">
       <slot />
     </main>
 
@@ -78,7 +153,12 @@ const { title } = Astro.props;
       <div>
         &copy; {new Date().getFullYear()} FinCompute. All rights reserved.
       </div>
-      <div class="flex gap-6">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 justify-center">
+        <a href="/blog" class="hover:text-ink transition-colors">Blog</a>
+        <a href="/glossary" class="hover:text-ink transition-colors">Glossary</a>
+        <a href="/compare/snowball-vs-avalanche" class="hover:text-ink transition-colors">Snowball vs Avalanche</a>
+        <a href="/compare/roth-vs-traditional-ira" class="hover:text-ink transition-colors">Roth vs Trad IRA</a>
+        <a href="/compare/apr-vs-nominal" class="hover:text-ink transition-colors">APR vs Nominal</a>
         <a href="/about" class="hover:text-ink transition-colors">About</a>
         <a href="/contact" class="hover:text-ink transition-colors">Contact</a>
         <a href="/privacy" class="hover:text-ink transition-colors">Privacy Policy</a>
@@ -87,20 +167,51 @@ const { title } = Astro.props;
       </div>
     </footer>
 
-    <!-- Theme Toggle logic -->
+    <!-- Theme Toggle & Mobile Menu logic -->
     <script>
+      import { safeGetItem, safeSetItem } from '../lib/storage';
+
       const themeToggleBtn = document.getElementById('theme-toggle');
       themeToggleBtn?.addEventListener('click', () => {
         const isDark = document.documentElement.classList.contains('dark');
         if (isDark) {
           document.documentElement.classList.remove('dark');
           document.documentElement.classList.add('light');
-          localStorage.setItem('theme', 'light');
+          safeSetItem('theme', 'light');
         } else {
           document.documentElement.classList.add('dark');
           document.documentElement.classList.remove('light');
-          localStorage.setItem('theme', 'dark');
+          safeSetItem('theme', 'dark');
         }
+      });
+
+      // Currency Selection logic
+      const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
+      if (currencySelect) {
+        const storedCurrency = safeGetItem('currency', 'USD');
+        currencySelect.value = storedCurrency;
+        currencySelect.addEventListener('change', () => {
+          safeSetItem('currency', currencySelect.value);
+          window.dispatchEvent(new CustomEvent('currency-change', { detail: currencySelect.value }));
+        });
+      }
+
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      let menuOpen = false;
+
+      mobileMenuBtn?.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu?.classList.toggle('hidden', !menuOpen);
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+      });
+
+      mobileMenu?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          menuOpen = false;
+          mobileMenu?.classList.add('hidden');
+          document.body.style.overflow = '';
+        });
       });
     </script>
   </body>
