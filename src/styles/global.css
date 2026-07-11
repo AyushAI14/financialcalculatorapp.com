@@ -88,7 +88,10 @@ html.dark {
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
 
-  /* Optimize Chart.js Canvas Colors in Dark Mode */
+  /* Optimize Chart.js Canvas Colors in Dark Mode and allow vertical touch scrolling */
+  canvas {
+    touch-action: pan-y;
+  }
   html.dark canvas {
     filter: invert(1) hue-rotate(180deg) opacity(0.9);
   }

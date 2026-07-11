@@ -21,7 +21,15 @@ const { id, label, min, max, step = 1, value, prefix, suffix } = Astro.props;
       {suffix && <span>{suffix}</span>}
     </div>
   </div>
-  <div class="relative flex items-center group">
+  <div class="relative flex items-center gap-3 group">
+    <button 
+      type="button" 
+      class="slider-control-btn minus bg-canvas hover:bg-canvas-soft border border-hairline w-8 h-8 rounded-full flex items-center justify-center text-body hover:text-ink font-semibold select-none cursor-pointer transition-colors shadow-sm shrink-0" 
+      data-target={id}
+      aria-label="Decrease value"
+    >
+      &minus;
+    </button>
     <input
       type="range"
       id={id}
@@ -29,8 +37,16 @@ const { id, label, min, max, step = 1, value, prefix, suffix } = Astro.props;
       max={max}
       step={step}
       value={value}
-      class="w-full h-1 bg-hairline rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none transition-colors group-hover:bg-hairline-strong [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:transition-transform"
+      class="flex-1 h-1.5 bg-hairline rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none transition-colors group-hover:bg-hairline-strong [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:hover:scale-105 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:hover:scale-105 [&::-moz-range-thumb]:transition-transform"
     />
+    <button 
+      type="button" 
+      class="slider-control-btn plus bg-canvas hover:bg-canvas-soft border border-hairline w-8 h-8 rounded-full flex items-center justify-center text-body hover:text-ink font-semibold select-none cursor-pointer transition-colors shadow-sm shrink-0" 
+      data-target={id}
+      aria-label="Increase value"
+    >
+      &plus;
+    </button>
   </div>
 </div>
 
@@ -43,5 +59,38 @@ const { id, label, min, max, step = 1, value, prefix, suffix } = Astro.props;
         valDisplay.textContent = e.target.value;
       });
     }
+  });
+
+  // Handle minus and plus buttons for precise slider adjustments
+  document.querySelectorAll('.slider-control-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetBtn = e.currentTarget;
+      const targetId = targetBtn.dataset.target;
+      if (!targetId) return;
+      const slider = document.getElementById(targetId);
+      if (slider) {
+        const step = parseFloat(slider.step) || 1;
+        const min = parseFloat(slider.min) || 0;
+        const max = parseFloat(slider.max) || 100;
+        const currentVal = parseFloat(slider.value) || min;
+        
+        let newVal = currentVal;
+        if (targetBtn.classList.contains('minus')) {
+          newVal = Math.max(min, currentVal - step);
+        } else {
+          newVal = Math.min(max, currentVal + step);
+        }
+        
+        slider.value = String(newVal);
+        
+        // Update label display
+        const valDisplay = document.getElementById(`${targetId}-val`);
+        if (valDisplay) valDisplay.textContent = String(newVal);
+
+        // Dispatch input and change events so page calculators recalculate in real-time
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
   });
 </script>

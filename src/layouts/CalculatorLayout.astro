@@ -108,6 +108,8 @@ const faqSchema = faqs.length > 0 ? {
   <!-- Inject Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(webAppSchema)} />
   {faqSchema && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />}
+  
+
   <div class="max-w-[1400px] mx-auto py-4 lg:py-8 flex flex-col lg:flex-row gap-8">
     <!-- Sidebar / Mobile Navigation -->
     <aside class="w-full lg:w-64 flex-shrink-0">
