@@ -91,13 +91,6 @@ const faqs = [
         </div>
       </div>
 
-      <!-- Breakdown Pie Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Salary Breakdown Breakdown</h4>
-        <div class="h-64 relative">
-          <canvas id="paycheck-chart"></canvas>
-        </div>
-      </div>
 
       <!-- Detailed Breakdown Table -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
@@ -134,7 +127,7 @@ const faqs = [
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
-  import Chart from 'chart.js/auto';
+
 
   // DOM Elements
   const form = document.getElementById('paycheck-form') as HTMLFormElement;
@@ -152,7 +145,7 @@ const faqs = [
   const withholdFica = document.getElementById('withhold-fica');
   const withholdState = document.getElementById('withhold-state');
 
-  let chartInstance: Chart | null = null;
+
 
   const validationRules = {
     'gross-pay': { required: true, min: 1 },
@@ -191,7 +184,7 @@ const faqs = [
     // Update UI
     if (resPeriodNet) {
       resPeriodNet.querySelector('.font-mono')!.textContent = formatCurrency(result.perPeriodNet);
-      resPeriodNet.querySelector('.text-body')!.textContent = `Estimated take-home amount per ${frequencyLabel}.`;
+      resPeriodNet.querySelector('p')!.textContent = `Estimated take-home amount per ${frequencyLabel}.`;
     }
     if (resAnnualNet) resAnnualNet.querySelector('.font-mono')!.textContent = formatCurrency(result.annualNet);
 
@@ -199,45 +192,10 @@ const faqs = [
     if (withholdFica) withholdFica.textContent = `${formatCurrency(result.annualFicaTax)} / yr`;
     if (withholdState) withholdState.textContent = `${formatCurrency(result.annualStateTax)} / yr`;
 
-    // Update Chart
-    updateChart(result.annualNet, result.annualFederalTax, result.annualFicaTax, result.annualStateTax, pretax, posttax);
+
   }
 
-  function updateChart(net: number, fed: number, fica: number, state: number, pre: number, post: number) {
-    const canvas = document.getElementById('paycheck-chart') as HTMLCanvasElement;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
 
-    if (chartInstance) {
-      chartInstance.data.datasets[0].data = [net, fed, fica, state, pre, post];
-      chartInstance.update();
-    } else {
-      chartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Net Take-Home', 'Federal Tax', 'FICA Tax', 'State Tax', 'Pre-Tax Deductions', 'Post-Tax Deductions'],
-          datasets: [
-            {
-              data: [net, fed, fica, state, pre, post],
-              backgroundColor: ['#0070f3', '#7928ca', '#f5a623', '#ff0080', '#3291ff', '#50e3c2'],
-              borderWidth: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'right',
-              labels: { font: { family: 'Geist, sans-serif', size: 9 } }
-            }
-          }
-        }
-      });
-    }
-  }
 
   // Bind input listeners
   [grossInput, freqSelect, stateInput, preInput, postInput].forEach(el => {
