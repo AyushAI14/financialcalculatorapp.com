@@ -204,7 +204,8 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       const mobileMenu = document.getElementById('mobile-menu');
       let menuOpen = false;
 
-      mobileMenuBtn?.addEventListener('click', () => {
+      mobileMenuBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
         menuOpen = !menuOpen;
         mobileMenu?.classList.toggle('hidden', !menuOpen);
         document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -216,6 +217,15 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
           mobileMenu?.classList.add('hidden');
           document.body.style.overflow = '';
         });
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (menuOpen && mobileMenu && !mobileMenu.contains(e.target as Node) && mobileMenuBtn && !mobileMenuBtn.contains(e.target as Node)) {
+          menuOpen = false;
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
       });
     </script>
   </body>

@@ -38,9 +38,9 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <form id="crypto-dca-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">DCA Settings</h3>
-            <div class="flex items-center gap-1.5 no-print">
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">Presets:</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50" data-freq="weekly" data-years="3" data-growth="20.0">Weekly Accumulator</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="200" data-freq="monthly" data-years="5" data-growth="15.0">Monthly Long-Term</button>
@@ -78,7 +78,7 @@ const faqs = [
         <div id="res-future-value">
           <ResultCard title="Projected Portfolio Value" value="$11,048.91" highlight={true} description="The total value of your crypto holdings at the end of the simulation." />
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div id="res-total-invested">
             <ResultCard title="Total Cash Invested" value="$7,800.00" />
           </div>

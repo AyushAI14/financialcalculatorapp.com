@@ -38,9 +38,9 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <form id="emergency-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <div class="flex items-center justify-between border-b border-hairline pb-2 mb-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Expenses & Target</h3>
-            <div class="flex items-center gap-1.5 no-print">
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">Presets:</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="3500" data-sav="5000" data-months="6" data-contrib="250">6-Month Target</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="2500" data-sav="2000" data-months="3" data-contrib="150">3-Month Target</button>
@@ -80,7 +80,7 @@ const faqs = [
         <div id="res-target-amount">
           <ResultCard title="Target Fund Goal" value="$21,000.00" highlight={true} description="Total savings required to cover essential monthly expenses for the target duration." />
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div id="res-shortfall">
             <ResultCard title="Remaining Shortfall" value="$16,000.00" />
           </div>

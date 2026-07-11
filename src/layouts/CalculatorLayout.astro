@@ -112,7 +112,7 @@ const faqSchema = faqs.length > 0 ? {
     <!-- Sidebar / Mobile Navigation -->
     <aside class="w-full lg:w-64 flex-shrink-0">
       <!-- Mobile Collapsible Menu -->
-      <details class="lg:hidden mb-4 border border-hairline rounded bg-canvas shadow-sm">
+      <details id="mobile-nav-details" class="lg:hidden mb-4 border border-hairline rounded bg-canvas shadow-sm">
         <summary class="flex items-center justify-between px-4 py-3 text-sm font-medium text-ink cursor-pointer select-none">
           <span class="flex items-center gap-2">
             <svg class="w-4 h-4 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -188,10 +188,6 @@ const faqSchema = faqs.length > 0 ? {
 
     <!-- Main Content -->
     <main class="flex-1 bg-canvas border border-hairline rounded-lg p-6 lg:p-10 shadow-sm min-h-[600px] relative">
-      <!-- Last Updated Badge -->
-      <div class="absolute top-4 right-6 text-[10px] font-mono text-mute bg-canvas-soft px-2 py-0.5 rounded border border-hairline no-print">
-        Updated: {lastUpdated}
-      </div>
 
       <div class="mb-10">
         <h1 class="text-3xl font-semibold tracking-[-1.28px] text-ink mb-3">{title}</h1>
@@ -394,4 +390,20 @@ const faqSchema = faqs.length > 0 ? {
 
   // Run initial UI update for scenarios
   updateScenariosUI();
+
+  // Close mobile navigation collapsible details menu when clicking outside or on a link
+  const mobileNavDetails = document.getElementById('mobile-nav-details') as HTMLDetailsElement | null;
+  if (mobileNavDetails) {
+    document.addEventListener('click', (e) => {
+      if (!mobileNavDetails.contains(e.target as Node)) {
+        mobileNavDetails.removeAttribute('open');
+      }
+    });
+
+    mobileNavDetails.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNavDetails.removeAttribute('open');
+      });
+    });
+  }
 </script>
