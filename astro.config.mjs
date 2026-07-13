@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://fincompute.com',
+  site: 'https://fincompute.vercel.app',
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'hover'

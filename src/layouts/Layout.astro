@@ -13,7 +13,7 @@ const {
   canonicalUrl
 } = Astro.props;
 
-const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://fincompute.com').href;
+const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://fincompute.vercel.app').href;
 ---
 
 <!doctype html>

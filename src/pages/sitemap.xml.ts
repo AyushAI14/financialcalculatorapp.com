@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content';
 
 export async function GET(context: any) {
-  const siteUrl = (context.site ? context.site.toString() : 'https://fincompute.com').replace(/\/$/, '');
+  const siteUrl = (context.site ? context.site.toString() : 'https://fincompute.vercel.app').replace(/\/$/, '');
   
   // Get all static pages from src/pages/ using import.meta.glob
   const pages = import.meta.glob('./**/*.astro');

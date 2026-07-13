@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fincompute.com/sitemap.xml
+Sitemap: https://fincompute.vercel.app/sitemap.xml
