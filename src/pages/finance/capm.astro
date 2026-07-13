@@ -1,0 +1,264 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "What is the Capital Asset Pricing Model (CAPM)?",
+    answer: "CAPM is a financial model that calculates the expected rate of return on an investment or asset, given its systematic risk level (Beta). It serves as a foundation for determining the cost of equity capital."
+  },
+  {
+    question: "What does Asset Beta (β) represent?",
+    answer: "Beta measures the volatility or systematic risk of an asset relative to the broader market. A Beta of 1.0 indicates price movements in lockstep with the market. Beta > 1.0 means higher volatility (higher risk/return), while Beta < 1.0 means lower volatility."
+  },
+  {
+    question: "What is the Risk-Free Rate?",
+    answer: "The risk-free rate is the theoretical rate of return on an investment with zero risk. In practice, it is typically represented by the yield of long-term government bonds, such as the US 10-Year Treasury Bond."
+  },
+  {
+    question: "What is the Market Risk Premium?",
+    answer: "The market risk premium is the additional return investors expect for holding a risky market portfolio instead of risk-free assets. It is calculated as the Expected Market Return minus the Risk-Free Rate (Rm - Rf)."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="CAPM Calculator" 
+  description="Estimate the expected rate of return and cost of equity capital for an asset based on the Capital Asset Pricing Model (CAPM)."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="capm-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Market Risk & Returns</h3>
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-rf="4.2" data-beta="1.0" data-rm="9.0">Broad Market</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-rf="4.2" data-beta="1.35" data-rm="9.5">Tech Equity</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-rf="4.2" data-beta="0.65" data-rm="8.5">Utility Equity</button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="risk-free" label="Risk-Free Rate (Rf)" type="number" suffix="%" value="4.2" placeholder="e.g. 10-Yr Treasury Yield" />
+            <Input id="beta" label="Asset Beta (β)" type="number" value="1.15" placeholder="e.g. 1.0 = market average" />
+          </div>
+          <div class="pt-4 border-t border-hairline/60">
+            <Input id="market-return" label="Expected Market Return (Rm)" type="number" suffix="%" value="9.0" />
+          </div>
+        </div>
+
+        <div class="p-5 bg-canvas-soft border border-hairline rounded-md text-xs text-body leading-relaxed space-y-2">
+          <p class="font-semibold text-ink">Understanding Asset Beta (β):</p>
+          <p>
+            * **Beta = 1.0**: The asset's price moves in perfect lockstep with the market.
+            <br/>
+            * **Beta &gt; 1.0**: The asset is more volatile than the market (e.g. technology stocks). Offers higher expected returns but higher risk.
+            <br/>
+            * **Beta &lt; 1.0**: The asset is less volatile than the market (e.g. utility stocks). Lower risk, lower expected returns.
+          </p>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate CAPM
+          </button>
+          <button type="reset" id="reset-capm-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div id="res-capm">
+        <ResultCard 
+          title="Expected Rate of Return (CAPM)" 
+          value="9.72%" 
+          highlight={true} 
+          description="The minimum expected rate of return required by investors given the asset's risk profile."
+        />
+      </div>
+
+      <!-- Risk Premium Visual Bar -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Cost of Capital Breakdown</h4>
+        <div class="h-64 relative">
+          <canvas id="capm-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Formulas Display -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">CAPM Required Return Equation</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words">
+                E(R) = Rf + β × (Rm - Rf)
+              </code>
+            </div>
+            <div id="formula-values" class="space-y-1 text-xs text-mute mt-2">
+              <!-- Dynamically updated variables values -->
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Section -->
+  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Understanding the Capital Asset Pricing Model (CAPM)</h2>
+      <p>
+        CAPM is widely used in finance for pricing risky securities and generating estimates of the expected returns for assets, taking into account both the risk of those assets and the cost of capital.
+      </p>
+      <p>
+        The model captures the relationship between systematic risk and expected return, specifically the idea that investors need to be compensated for two things: the time value of money (represented by the risk-free rate) and systematic risk (represented by beta and the market risk premium).
+      </p>
+    </div>
+  </article>
+</CalculatorLayout>
+
+<script>
+  import { calculateCAPM } from '../../lib/math/retirement';
+  import { formatPercentage } from '../../lib/utils';
+  import Chart from 'chart.js/auto';
+
+  const capmForm = document.getElementById('capm-form') as HTMLFormElement;
+  const riskFreeInput = document.getElementById('risk-free') as HTMLInputElement;
+  const betaInput = document.getElementById('beta') as HTMLInputElement;
+  const marketInput = document.getElementById('market-return') as HTMLInputElement;
+  const resCapmCard = document.getElementById('res-capm');
+  const formulaValues = document.getElementById('formula-values');
+
+  let capmChartInstance: Chart | null = null;
+
+  function performCAPMCalc() {
+    const riskFreeRate = (parseFloat(riskFreeInput.value) || 0) / 100;
+    const beta = parseFloat(betaInput.value) || 0;
+    const marketReturn = (parseFloat(marketInput.value) || 0) / 100;
+
+    const expectedReturn = calculateCAPM({ riskFreeRate, beta, marketReturn });
+
+    if (resCapmCard) {
+      resCapmCard.querySelector('.font-mono')!.textContent = formatPercentage(expectedReturn);
+    }
+
+    const riskPremium = beta * (marketReturn - riskFreeRate);
+
+    // Update formula text helper
+    if (formulaValues) {
+      formulaValues.innerHTML = `
+        <p>• Risk-Free Rate (Rf) = ${(riskFreeRate * 100).toFixed(2)}%</p>
+        <p>• Asset Beta (β) = ${beta.toFixed(2)}</p>
+        <p>• Market Risk Premium (Rm - Rf) = ${((marketReturn - riskFreeRate) * 100).toFixed(2)}%</p>
+        <p>• Cost of Equity = ${(riskFreeRate * 100).toFixed(2)}% + ${beta.toFixed(2)} × ${((marketReturn - riskFreeRate) * 100).toFixed(2)}% = ${(expectedReturn * 100).toFixed(2)}%</p>
+      `;
+    }
+
+    updateCAPMChart(riskFreeRate * 100, riskPremium * 100);
+  }
+
+  function updateCAPMChart(riskFree: number, premium: number) {
+    const canvas = document.getElementById('capm-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dataset = [riskFree, premium];
+
+    if (capmChartInstance) {
+      capmChartInstance.data.datasets[0].data = dataset;
+      capmChartInstance.update();
+    } else {
+      capmChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Risk-Free Rate', 'Market Risk Premium'],
+          datasets: [
+            {
+              data: dataset,
+              backgroundColor: ['#4d4d4d', '#7928ca'],
+              borderWidth: 1,
+              barThickness: 40
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${Number(context.raw).toFixed(2)}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
+            },
+            y: {
+              grid: { color: 'rgba(128, 128, 128, 0.08)' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Preset Buttons
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      riskFreeInput.value = target.dataset.rf || '';
+      betaInput.value = target.dataset.beta || '';
+      marketInput.value = target.dataset.rm || '';
+      performCAPMCalc();
+      
+      // Dispatch events to sync URL
+      riskFreeInput.dispatchEvent(new Event('input', { bubbles: true }));
+      betaInput.dispatchEvent(new Event('input', { bubbles: true }));
+      marketInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // Listeners
+  [riskFreeInput, betaInput, marketInput].forEach(el => {
+    el.addEventListener('input', performCAPMCalc);
+  });
+  capmForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCAPMCalc();
+  });
+  capmForm.addEventListener('reset', () => {
+    setTimeout(performCAPMCalc, 0);
+  });
+
+  // Init
+  performCAPMCalc();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', performCAPMCalc);
+</script>

@@ -323,20 +323,56 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     }
 
     // Standard Render Results
-    if (resultWrapper && resTimeCard && resInterestCard && resTotalCard) {
-      // Restore initial structure if it was overwritten by error
+    if (resultWrapper) {
+      const totalPayments = balance + res.totalInterest;
+      const interestPct = totalPayments > 0 ? (res.totalInterest / totalPayments) * 100 : 0;
+      
+      let takeawayText = '';
+      if (interestPct > 35) {
+        takeawayText = `
+          <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink mt-3">
+            <span class="text-link">📢 Takeaway:</span> Over the payoff course, interest charges will account for <strong class="text-error-deep">${interestPct.toFixed(1)}%</strong> of your total payments (<strong class="text-error-deep">${formatCurrency(res.totalInterest)}</strong>). Consider paying more than the minimum to significantly reduce this waste.
+          </div>
+        `;
+      } else {
+        takeawayText = `
+          <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink mt-3">
+            <span class="text-link">📢 Takeaway:</span> You will pay off your balance in ${res.monthsToPayoff} months. Total interest fees will be <strong class="text-link">${formatCurrency(res.totalInterest)}</strong>, which is ${(interestPct).toFixed(1)}% of your total payoff out-of-pocket.
+          </div>
+        `;
+      }
+
       resultWrapper.innerHTML = `
         <div class="flex flex-col gap-3">
-          <div id="res-time">
-            <ResultCard title="Time to Payoff" value="${res.monthsToPayoff} months" highlight={true} description="Total duration required to pay down the balance." />
+          <div id="res-time" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+            <div class="flex-1 min-w-0 text-left pr-2">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
+              <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">Total duration required to pay down the balance.</p>
+            </div>
+            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${res.monthsToPayoff} months">
+              ${res.monthsToPayoff} months
+            </div>
           </div>
-          <div id="res-interest">
-            <ResultCard title="Total Interest" value="${formatCurrency(res.totalInterest)}" />
+
+          <div id="res-interest" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+            <div class="flex-1 min-w-0 text-left pr-2">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
+            </div>
+            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(res.totalInterest)}">
+              ${formatCurrency(res.totalInterest)}
+            </div>
           </div>
-          <div id="res-total">
-            <ResultCard title="Total Payments" value="${formatCurrency(balance + res.totalInterest)}" />
+
+          <div id="res-total" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+            <div class="flex-1 min-w-0 text-left pr-2">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
+            </div>
+            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(totalPayments)}">
+              ${formatCurrency(totalPayments)}
+            </div>
           </div>
         </div>
+        ${takeawayText}
       `;
     }
 

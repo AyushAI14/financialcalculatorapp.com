@@ -1,12 +1,14 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
 ---
 
 <Layout 
   title="Nominal Interest Rate vs. APR: What's the Difference? - FinCompute.com" 
   description="Learn the differences between your loan's base interest rate (nominal rate) and the Annual Percentage Rate (APR) including fee impacts."
 >
-  <div class="max-w-4xl mx-auto py-8 px-4 space-y-10">
+  <div class="max-w-6xl mx-auto py-8 px-4 space-y-12">
     <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
       <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Interest Rate vs. APR</h1>
@@ -48,7 +50,7 @@ import Layout from '../../layouts/Layout.astro';
     </div>
 
     <!-- Comparative Table -->
-    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm max-w-4xl mx-auto">
       <table class="w-full border-collapse text-left text-xs">
         <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
           <tr>
@@ -57,19 +59,19 @@ import Layout from '../../layouts/Layout.astro';
             <th class="px-5 py-3.5">APR</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-hairline text-body">
+        <tbody class="divide-y divide-hairline text-body text-ink">
           <tr>
-            <td class="px-5 py-3 font-semibold text-ink">Includes Closing Costs?</td>
+            <td class="px-5 py-3 font-semibold">Includes Closing Costs?</td>
             <td class="px-5 py-3">No</td>
             <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (origination, points, broker fees)</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold text-ink">Used for Interest Accrual</td>
+            <td class="px-5 py-3 font-semibold">Used for Interest Accrual</td>
             <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (compounds on principal)</td>
             <td class="px-5 py-3">No (only used for overall cost comparison)</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold text-ink">Comparison Accuracy</td>
+            <td class="px-5 py-3 font-semibold">Comparison Accuracy</td>
             <td class="px-5 py-3">Low (a low rate can hide very high fees)</td>
             <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">High (standardized metric for true cost)</td>
           </tr>
@@ -77,16 +79,270 @@ import Layout from '../../layouts/Layout.astro';
       </table>
     </div>
 
-    <!-- Call to action -->
-    <div class="text-center py-6 bg-canvas-soft border border-hairline rounded-lg space-y-3 no-print">
-      <h3 class="text-sm font-semibold text-ink">Calculate your true APR</h3>
-      <p class="text-xs text-body max-w-md mx-auto">Input your loan amount, base rate, and upfront closing fees to compute your true Annual Percentage Rate.</p>
-      <a 
-        href="/loan/apr" 
-        class="inline-block px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity"
-      >
-        Try APR Calculator →
-      </a>
-    </div>
+    <!-- Embedded Calculator Section -->
+    <section class="border-t border-hairline pt-12 space-y-6">
+      <div class="text-center max-w-xl mx-auto space-y-2">
+        <h2 class="text-2xl font-bold text-ink">Interactive APR Calculator</h2>
+        <p class="text-xs text-mute">Input your borrowing amount and upfront fees below to calculate your true Annual Percentage Rate.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
+        <!-- Left Column (Inputs) -->
+        <div class="lg:col-span-6 space-y-6">
+          <form id="apr-form" class="space-y-6">
+            <div class="space-y-5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-2">
+                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan Details</h3>
+                <div class="flex flex-wrap items-center gap-1.5 no-print">
+                  <span class="text-[10px] text-mute font-mono">Presets:</span>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">Auto Loan</button>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">Mortgage</button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <Input id="loan-amount" label="Loan Principal" type="number" prefix="$" value="200000" />
+                <Input id="interest-rate" label="Nominal Rate" type="number" suffix="%" value="6.0" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 pt-3 border-t border-hairline/60">
+                <Input id="term" label="Loan Term" type="number" suffix="years" value="30" />
+                <Input id="fees" label="Upfront Fees" type="number" prefix="$" value="4000" />
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-hairline flex gap-3">
+              <button type="submit" class="px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity cursor-pointer">
+                Calculate APR
+              </button>
+              <button type="reset" id="reset-btn" class="px-6 py-2 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+                Clear
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column (Results) -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="flex flex-col gap-3">
+            <div id="res-apr">
+              <ResultCard title="Effective APR" value="6.19%" highlight={true} description="The real interest rate you pay annually once upfront fees are included." />
+            </div>
+            <div id="res-nominal">
+              <ResultCard title="Interest Rate" value="6.00%" description="The base interest rate stated on your loan note." />
+            </div>
+            <div id="res-payment">
+              <ResultCard title="Monthly Payment (P&I)" value="$1,199.10" />
+            </div>
+            <div id="res-fees">
+              <ResultCard title="Total Finance Fees" value="$4,000.00" />
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="bg-canvas border border-hairline rounded-lg p-4 shadow-sm">
+            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2">Rate vs. APR Comparison</h4>
+            <div class="h-56 relative">
+              <canvas id="apr-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Download CSV -->
+          <div class="flex gap-4 no-print">
+            <button id="download-csv-btn" class="w-full py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+              <span>📊</span> Download Results CSV
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>
+
+<script>
+  import { calculateAPR, calculateLoanPMT } from '../../lib/math/loan';
+  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import { validateForm, validateField } from '../../lib/validation';
+  import { downloadDataAsCSV } from '../../lib/csv-exporter';
+  import Chart from 'chart.js/auto';
+
+  const form = document.getElementById('apr-form') as HTMLFormElement;
+  
+  const loanInput = document.getElementById('loan-amount') as HTMLInputElement;
+  const rateInput = document.getElementById('interest-rate') as HTMLInputElement;
+  const termInput = document.getElementById('term') as HTMLInputElement;
+  const feesInput = document.getElementById('fees') as HTMLInputElement;
+
+  const resAprCard = document.getElementById('res-apr');
+  const resNominalCard = document.getElementById('res-nominal');
+  const resPaymentCard = document.getElementById('res-payment');
+  const resFeesCard = document.getElementById('res-fees');
+
+  let chartInstance: Chart | null = null;
+
+  const validationRules = {
+    'loan-amount': { required: true, min: 1 },
+    'interest-rate': { required: true, min: 0, max: 100 },
+    'term': { required: true, min: 1, max: 100, integer: true },
+    'fees': { required: true, min: 0 },
+  };
+
+  function performCalculation() {
+    if (!validateForm(validationRules)) {
+      if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = '--%';
+      if (resNominalCard) resNominalCard.querySelector('.font-mono')!.textContent = '--%';
+      if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = '--';
+      if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = '--';
+      return;
+    }
+
+    const loanAmount = parseFloat(loanInput.value);
+    const interestRate = parseFloat(rateInput.value) / 100;
+    const termYears = parseInt(termInput.value);
+    const extraFees = parseFloat(feesInput.value);
+
+    const apr = calculateAPR({ loanAmount, interestRate, termYears, extraFees });
+    const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate, years: termYears });
+
+    if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = formatPercentage(apr);
+    if (resNominalCard) resNominalCard.querySelector('.font-mono')!.textContent = formatPercentage(interestRate);
+    if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = formatCurrency(pmt);
+    if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = formatCurrency(extraFees);
+
+    updateChart(interestRate * 100, apr * 100);
+  }
+
+  function updateChart(nominal: number, apr: number) {
+    const canvas = document.getElementById('apr-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [nominal, apr];
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Interest Rate', 'Effective APR'],
+          datasets: [
+            {
+              label: 'Percentage Rate (%)',
+              data: [nominal, apr],
+              backgroundColor: ['#4d4d4d', '#0070f3'],
+              borderColor: ['#4d4d4d', '#0070f3'],
+              borderWidth: 1,
+              barThickness: 48
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context: any) {
+                  return ` ${Number(context.raw).toFixed(3)}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(128, 128, 128, 0.08)' },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: function(value: any) {
+                  return value + '%';
+                }
+              }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Bind input listeners
+  [loanInput, rateInput, termInput, feesInput].forEach(el => {
+    el.addEventListener('input', () => {
+      validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
+    });
+  });
+
+  // Preset scenarios click handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      loanInput.value = target.dataset.amount || '0';
+      rateInput.value = target.dataset.rate || '0';
+      termInput.value = target.dataset.term || '0';
+      feesInput.value = target.dataset.fees || '0';
+      
+      [loanInput, rateInput, termInput, feesInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+
+      performCalculation();
+      loanInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
+
+  // CSV Export handler
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  downloadCsvBtn?.addEventListener('click', () => {
+    if (!validateForm(validationRules)) return;
+    const loanAmount = parseFloat(loanInput.value);
+    const interestRate = parseFloat(rateInput.value);
+    const termYears = parseInt(termInput.value);
+    const extraFees = parseFloat(feesInput.value);
+    
+    const apr = calculateAPR({ loanAmount, interestRate: interestRate/100, termYears, extraFees });
+    const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate/100, years: termYears });
+
+    const headers = ['Financial Metric', 'Value'];
+    const rows = [
+      ['Loan Principal Amount', formatCurrency(loanAmount)],
+      ['Nominal Annual Interest Rate', formatPercentage(interestRate/100)],
+      ['Loan Term', `${termYears} Years`],
+      ['Upfront closing fees', formatCurrency(extraFees)],
+      ['Monthly Payment (P&I)', formatCurrency(pmt)],
+      ['True Effective APR', formatPercentage(apr)]
+    ];
+
+    downloadDataAsCSV(headers, rows, `apr-calculation-${loanAmount}.csv`);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performCalculation();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      [loanInput, rateInput, termInput, feesInput].forEach(el => {
+        el.classList.remove('border-error');
+        const errEl = document.getElementById(`${el.id}-error`);
+        if (errEl) errEl.classList.add('hidden');
+      });
+      performCalculation();
+    }, 0);
+  });
+
+  // Initial calculation
+  performCalculation();
+
+  // Listen for currency changes
+  window.addEventListener('currency-change', performCalculation);
+</script>

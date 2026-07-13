@@ -26,7 +26,14 @@ const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix, 
     )}
   </div>
   <div class="relative flex items-center">
-    {prefix && <span class="absolute left-3 text-mute text-sm pointer-events-none">{prefix}</span>}
+    {prefix && (
+      <span 
+        class="absolute left-3 text-mute text-sm pointer-events-none" 
+        data-currency-prefix={prefix === '$' ? "true" : undefined}
+      >
+        {prefix}
+      </span>
+    )}
     <input
       type={type}
       id={id}
@@ -44,3 +51,32 @@ const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix, 
   <!-- Validation Error Container -->
   <span id={`${id}-error`} class="text-[10px] text-error font-medium mt-0.5 leading-none hidden"></span>
 </div>
+
+<script>
+  import { safeGetItem } from '../../lib/storage';
+
+  function updateCurrencySymbol() {
+    const symbols: Record<string, string> = {
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      INR: '₹'
+    };
+    const currentCurrency = safeGetItem('currency', 'USD');
+    const symbol = symbols[currentCurrency] || '$';
+    
+    document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+      span.textContent = symbol;
+    });
+  }
+
+  // Register listeners (Astro script is executed once per page load)
+  if (!(window as any).__currency_listener_registered) {
+    (window as any).__currency_listener_registered = true;
+    window.addEventListener('currency-change', updateCurrencySymbol);
+    document.addEventListener('DOMContentLoaded', updateCurrencySymbol);
+  }
+  
+  // Run immediately on client load
+  updateCurrencySymbol();
+</script>

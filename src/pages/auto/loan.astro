@@ -74,6 +74,9 @@ import ResultCard from '../../components/ui/ResultCard.astro';
         </div>
       </div>
 
+      <div id="auto-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
+      </div>
+
       <!-- Purchase Price Breakdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
         <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Total Cost of Purchase Breakdown</h4>
@@ -256,6 +259,25 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     if (resFinancedCard) resFinancedCard.querySelector('.font-mono')!.textContent = formatCurrency(res.financedAmount);
     if (resInterestCard) resInterestCard.querySelector('.font-mono')!.textContent = formatCurrency(res.totalInterest);
     if (resCostCard) resCostCard.querySelector('.font-mono')!.textContent = formatCurrency(totalOutOfPocket);
+
+    const takeawayEl = document.getElementById('auto-takeaway');
+    if (takeawayEl) {
+      takeawayEl.classList.remove('hidden');
+      const downPercent = vehiclePrice > 0 ? (downPayment / vehiclePrice) * 100 : 0;
+      let notes = [];
+      if (downPercent < 20) {
+        notes.push(`Your down payment is ${(downPercent).toFixed(1)}% (less than the recommended <strong class="text-link">20%</strong>), increasing the risk of negative equity.`);
+      }
+      if (termMonths > 48) {
+        notes.push(`Your term of ${termMonths} months exceeds the recommended <strong class="text-link">48 months</strong>, which increases your interest fees to <strong class="text-ink">${formatCurrency(res.totalInterest)}</strong>.`);
+      }
+      if (notes.length === 0) {
+        notes.push(`Your auto loan setup perfectly aligns with the conservative 20/4 rule of thumb! You will pay a total of <strong class="text-ink">${formatCurrency(totalOutOfPocket)}</strong> over the life of the loan.`);
+      }
+      takeawayEl.innerHTML = `
+        <span class="text-link">📢 Takeaway:</span> ${notes.join(' ')}
+      `;
+    }
 
     // Update Chart
     updateChart(vehiclePrice, res.salesTax + fees, res.totalInterest);

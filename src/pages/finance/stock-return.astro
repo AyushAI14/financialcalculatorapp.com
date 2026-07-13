@@ -1,36 +1,42 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+
+const faqs = [
+  {
+    question: "How do I calculate stock returns?",
+    answer: "To calculate total stock return, subtract the purchase price from the selling price to find capital gains. Add any dividends received. Divide this sum by the initial purchase price, and multiply by 100 to get a percentage return."
+  },
+  {
+    question: "What is CAGR in stock returns?",
+    answer: "CAGR stands for Compound Annual Growth Rate. It represents the annualized rate of return on your investment over a holding period, assuming the gains compounded annually."
+  },
+  {
+    question: "What is the difference between simple return and annualized return?",
+    answer: "Simple return measures the total percentage gain or loss regardless of time. Annualized return (CAGR) scales the return to a standard 1-year period, allowing you to compare investments held for different durations."
+  }
+];
 ---
 
 <CalculatorLayout 
-  title="Stock Return & CAPM Calculator" 
-  description="Analyze equity performance using standard investment yield metrics or estimate risk-adjusted cost of capital using the CAPM model."
+  title="Stock Return Calculator" 
+  description="Analyze your stock market investments by calculating capital gains, total yield, dividend income, and annualized CAGR returns."
+  faqs={faqs}
 >
-  <!-- Sub-Tabs to toggle between Return and CAPM -->
-  <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-8">
-    <button 
-      id="tab-return" 
-      class="px-4 py-2 text-sm font-semibold rounded bg-primary text-on-primary shadow-sm cursor-pointer transition-colors"
-    >
-      Stock Return Calculator
-    </button>
-    <button 
-      id="tab-capm" 
-      class="px-4 py-2 text-sm font-medium rounded hover:bg-canvas-soft text-body hover:text-ink cursor-pointer transition-colors"
-    >
-      CAPM Pricing Model
-    </button>
-  </div>
-
-  <!-- ─── SUB-PAGE 1: STOCK RETURN ─── -->
   <div id="section-return" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="return-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Purchase & Sale Pricing</h3>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Purchase & Sale Pricing</h3>
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="120.50" data-sell="155.20" data-shares="100" data-holding="2.5" data-div="4.80">Short Trade</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="50.00" data-sell="110.00" data-shares="200" data-holding="5.0" data-div="12.00">Long Investment</button>
+            </div>
+          </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="buy-price" label="Purchase Price per Share" type="number" prefix="$" value="120.50" />
@@ -58,6 +64,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
       </form>
     </div>
 
+    <!-- Right Column (Results) -->
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-return-pct">
@@ -71,7 +78,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
         </div>
       </div>
 
-      <div class="flex flex-col gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div id="res-cost">
           <ResultCard title="Initial Cost" value="$12,050.00" />
         </div>
@@ -90,179 +97,42 @@ import ResultCard from '../../components/ui/ResultCard.astro';
           <canvas id="return-chart"></canvas>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- ─── SUB-PAGE 2: CAPM (HIDDEN BY DEFAULT) ─── -->
-  <div id="section-capm" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-    <div class="lg:col-span-6 space-y-6">
-      <form id="capm-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Market Risk & Returns</h3>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Input id="risk-free" label="Risk-Free Rate (Rf)" type="number" suffix="%" value="4.2" placeholder="e.g. 10-Yr Treasury Yield" />
-            <Input id="beta" label="Asset Beta (β)" type="number" value="1.15" placeholder="e.g. 1.0 = market average" />
+      <!-- Formula Breakdown -->
+      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+        <details class="group">
+          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+            <span>Formula Breakdown</span>
+            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+            <div>
+              <p class="font-semibold text-ink mb-1">1. Simple Return Formula</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words">
+                Total Return % = [(Sell Price - Buy Price + Dividends) / Buy Price] × 100
+              </code>
+            </div>
+            <div>
+              <p class="font-semibold text-ink mb-1">2. Annualized Return (CAGR)</p>
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words">
+                CAGR = (Total Return Ratio) ^ (1 / Years) - 1
+              </code>
+            </div>
+            <div id="return-takeaway-container" class="border-t border-hairline/60 pt-4 mt-2 font-medium text-ink hidden">
+              <!-- Takeaway sentence goes here -->
+            </div>
           </div>
-          <div class="pt-4 border-t border-hairline/60">
-            <Input id="market-return" label="Expected Market Return (Rm)" type="number" suffix="%" value="9.0" />
-          </div>
-        </div>
-
-        <div class="p-5 bg-canvas-soft border border-hairline rounded-md text-xs text-body leading-relaxed space-y-2">
-          <p class="font-semibold text-ink">Understanding Asset Beta (β):</p>
-          <p>
-            * **Beta = 1.0**: The asset's price moves in perfect lockstep with the market.
-            <br/>
-            * **Beta &gt; 1.0**: The asset is more volatile than the market (e.g. technology stocks). Offers higher expected returns but higher risk.
-            <br/>
-            * **Beta &lt; 1.0**: The asset is less volatile than the market (e.g. utility stocks). Lower risk, lower expected returns.
-          </p>
-        </div>
-
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate CAPM
-          </button>
-          <button type="reset" id="reset-capm-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div class="lg:col-span-6 space-y-6">
-      <div id="res-capm">
-        <ResultCard 
-          title="Expected Rate of Return (CAPM)" 
-          value="9.72%" 
-          highlight={true} 
-          description="The minimum expected rate of return required by investors given the asset's risk profile."
-        />
-      </div>
-
-      <!-- Risk Premium Visual Bar -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Cost of Capital Breakdown</h4>
-        <div class="h-64 relative">
-          <canvas id="capm-chart"></canvas>
-        </div>
+        </details>
       </div>
     </div>
   </div>
-
-  <!-- Educational SEO Section -->
-  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
-    <div>
-      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Equity Yields and Asset Pricing Models.</h2>
-      <p>
-        Evaluating equity investments involves analyzing past historical returns or projecting required rates of return based on risk levels.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div>
-        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Calculating Total Stock Return</h3>
-        <p class="text-sm">
-          A stock's total return comes from two distinct sources:
-        </p>
-        <ul class="list-disc pl-5 mt-1 space-y-1 text-xs text-mute">
-          <li><strong>Capital Gains</strong>: The appreciation of the share price from your purchase price to your selling price.</li>
-          <li><strong>Dividends</strong>: Cash distributions paid out by the corporation to shareholders.</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The CAPM Pricing Equation</h3>
-        <p class="text-sm">
-          The Capital Asset Pricing Model (CAPM) estimates the expected rate of return on an asset, factoring in its sensitivity to systematic market risk (Beta):
-        </p>
-        <div class="bg-canvas-soft border border-hairline p-3 rounded font-mono text-xs text-ink my-2">
-          E(Ri) = Rf + βi * (Rm - Rf)
-        </div>
-        <p class="text-xs text-mute leading-relaxed">
-          Where <code class="bg-canvas-soft px-1 rounded font-mono">Rf</code> is the risk-free rate, <code class="bg-canvas-soft px-1 rounded font-mono">βi</code> is the beta of the stock, and <code class="bg-canvas-soft px-1 rounded font-mono">Rm - Rf</code> is the expected market risk premium.
-        </p>
-      </div>
-    </div>
-
-    <!-- FAQ Section -->
-    <div class="border-t border-hairline pt-12 space-y-6">
-      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
-      <div class="divide-y divide-hairline">
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How do I calculate stock returns?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              To calculate the total stock return, subtract the purchase price from the selling price to find the capital gains. Add any dividends received during the holding period. Divide this sum by the initial purchase price, and multiply by 100 to get a percentage return.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How do I calculate the return on a stock?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              Enter the purchase price, selling price, holding duration, and dividends into this calculator. It will report your absolute net gains, simple ROI percentage, and your CAGR (Compound Annual Growth Rate) which represents the annualized return rate.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>What is the average stock market return, and how has it performed over the past 30 years?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              Historically, the S&amp;P 500 index has delivered an average annualized return of approximately **10% before inflation** (roughly 7% to 8% inflation-adjusted) over the past 30 years. Over shorter holding periods, volatility can cause annual returns to fluctuate wildly.
-            </p>
-          </div>
-        </details>
-      </div>
-    </div>
-  </article>
 </CalculatorLayout>
 
 <script>
-  import { calculateCAPM, calculateStockReturns } from '../../lib/math/retirement';
+  import { calculateStockReturns } from '../../lib/math/retirement';
   import { formatCurrency, formatPercentage } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 
-  // Tabs logic
-  const tabReturn = document.getElementById('tab-return') as HTMLButtonElement;
-  const tabCapm = document.getElementById('tab-capm') as HTMLButtonElement;
-  const secReturn = document.getElementById('section-return');
-  const secCapm = document.getElementById('section-capm');
-
-  function activateTab(activeTab: HTMLButtonElement, inactiveTab: HTMLButtonElement, showSection: HTMLElement | null, hideSection: HTMLElement | null) {
-    activeTab.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
-    activeTab.classList.remove('hover:bg-canvas-soft', 'text-body', 'hover:text-ink');
-    
-    inactiveTab.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-    inactiveTab.classList.add('hover:bg-canvas-soft', 'text-body', 'hover:text-ink');
-    
-    showSection?.classList.remove('hidden');
-    hideSection?.classList.add('hidden');
-  }
-
-  tabReturn.addEventListener('click', () => {
-    activateTab(tabReturn, tabCapm, secReturn, secCapm);
-    performReturnCalc();
-  });
-
-  tabCapm.addEventListener('click', () => {
-    activateTab(tabCapm, tabReturn, secCapm, secReturn);
-    performCAPMCalc();
-  });
-
-  // ─── STOCK RETURN CALCULATION ───
   const returnForm = document.getElementById('return-form') as HTMLFormElement;
   const buyPriceInput = document.getElementById('buy-price') as HTMLInputElement;
   const sellPriceInput = document.getElementById('sell-price') as HTMLInputElement;
@@ -276,12 +146,11 @@ import ResultCard from '../../components/ui/ResultCard.astro';
   const resCostCard = document.getElementById('res-cost');
   const resProceedsCard = document.getElementById('res-proceeds');
   const resDivCard = document.getElementById('res-div-total');
+  const takeawayContainer = document.getElementById('return-takeaway-container');
 
   let returnChartInstance: Chart | null = null;
 
   function performReturnCalc() {
-    if (secReturn?.classList.contains('hidden')) return;
-
     const buyPrice = Math.abs(parseFloat(buyPriceInput.value)) || 0;
     const sellPrice = Math.abs(parseFloat(sellPriceInput.value)) || 0;
     const shares = Math.abs(parseInt(sharesInput.value)) || 0;
@@ -297,6 +166,15 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     if (resCostCard) resCostCard.querySelector('.font-mono')!.textContent = formatCurrency(res.initialCost);
     if (resProceedsCard) resProceedsCard.querySelector('.font-mono')!.textContent = formatCurrency(res.salesProceeds);
     if (resDivCard) resDivCard.querySelector('.font-mono')!.textContent = formatCurrency(res.totalDividends);
+
+    // Plain English takeaway
+    if (takeawayContainer) {
+      takeawayContainer.classList.remove('hidden');
+      const currencySymbol = formatCurrency(0).replace(/0\.00/, '');
+      takeawayContainer.innerHTML = `
+        <span class="text-link">📢 Takeaway:</span> An initial investment of ${formatCurrency(res.initialCost)} grew to a total value of ${formatCurrency(res.salesProceeds + res.totalDividends)} (including dividends) over ${holdingPeriodYears} years, yielding an annualized return rate of <strong class="text-link">${(res.annualizedReturn * 100).toFixed(2)}%</strong>.
+      `;
+    }
 
     updateReturnChart(res.initialCost, res.salesProceeds - res.initialCost, res.totalDividends);
   }
@@ -347,91 +225,25 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     }
   }
 
-  // ─── CAPM CALCULATION ───
-  const capmForm = document.getElementById('capm-form') as HTMLFormElement;
-  const riskFreeInput = document.getElementById('risk-free') as HTMLInputElement;
-  const betaInput = document.getElementById('beta') as HTMLInputElement;
-  const marketInput = document.getElementById('market-return') as HTMLInputElement;
-  const resCapmCard = document.getElementById('res-capm');
-
-  let capmChartInstance: Chart | null = null;
-
-  function performCAPMCalc() {
-    if (secCapm?.classList.contains('hidden')) return;
-
-    const riskFreeRate = (parseFloat(riskFreeInput.value) || 0) / 100;
-    const beta = parseFloat(betaInput.value) || 1.0;
-    const marketReturn = (parseFloat(marketInput.value) || 0) / 100;
-
-    const expectedReturn = calculateCAPM({ riskFreeRate, beta, marketReturn });
-
-    if (resCapmCard) {
-      resCapmCard.querySelector('.font-mono')!.textContent = formatPercentage(expectedReturn);
-    }
-
-    // Risk premium is beta * (market - risk free)
-    const riskPremium = beta * (marketReturn - riskFreeRate);
-
-    updateCAPMChart(riskFreeRate * 100, riskPremium * 100);
-  }
-
-  function updateCAPMChart(riskFree: number, premium: number) {
-    const canvas = document.getElementById('capm-chart') as HTMLCanvasElement;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dataset = [riskFree, premium];
-
-    if (capmChartInstance) {
-      capmChartInstance.data.datasets[0].data = dataset;
-      capmChartInstance.update();
-    } else {
-      capmChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Risk-Free Rate', 'Market Risk Premium'],
-          datasets: [
-            {
-              data: dataset,
-              backgroundColor: ['#4d4d4d', '#7928ca'],
-              borderWidth: 1,
-              barThickness: 40
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return ` ${Number(context.raw).toFixed(2)}%`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
-            },
-            y: {
-              grid: { color: '#ebebeb' },
-              ticks: {
-                font: { family: 'Geist Mono, monospace', size: 9 },
-                callback: function(value) {
-                  return value + '%';
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-  }
+  // Presets Handlers
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      buyPriceInput.value = target.dataset.buy || '';
+      sellPriceInput.value = target.dataset.sell || '';
+      sharesInput.value = target.dataset.shares || '';
+      holdingInput.value = target.dataset.holding || '';
+      dividendsInput.value = target.dataset.div || '';
+      performReturnCalc();
+      
+      // Sync URL params
+      buyPriceInput.dispatchEvent(new Event('input', { bubbles: true }));
+      sellPriceInput.dispatchEvent(new Event('input', { bubbles: true }));
+      sharesInput.dispatchEvent(new Event('input', { bubbles: true }));
+      holdingInput.dispatchEvent(new Event('input', { bubbles: true }));
+      dividendsInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  });
 
   // Listeners
   [buyPriceInput, sellPriceInput, sharesInput, holdingInput, dividendsInput].forEach(el => {
@@ -445,23 +257,9 @@ import ResultCard from '../../components/ui/ResultCard.astro';
     setTimeout(performReturnCalc, 0);
   });
 
-  [riskFreeInput, betaInput, marketInput].forEach(el => {
-    el.addEventListener('input', performCAPMCalc);
-  });
-  capmForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    performCAPMCalc();
-  });
-  capmForm.addEventListener('reset', () => {
-    setTimeout(performCAPMCalc, 0);
-  });
-
   // Init
   performReturnCalc();
 
   // Listen for currency changes
-  window.addEventListener('currency-change', () => {
-    performReturnCalc();
-    performCAPMCalc();
-  });
+  window.addEventListener('currency-change', performReturnCalc);
 </script>

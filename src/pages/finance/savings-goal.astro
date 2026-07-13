@@ -95,6 +95,9 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
         </div>
       </div>
 
+      <div id="savings-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
+      </div>
+
       <!-- Growth Chart Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
         <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Savings Accumulation Progress</h4>
@@ -382,6 +385,15 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
     }
     if (resInterestCard) {
       resInterestCard.querySelector('.font-mono')!.textContent = formatCurrency(totalInterest);
+    }
+
+    const takeawayEl = document.getElementById('savings-takeaway');
+    if (takeawayEl) {
+      takeawayEl.classList.remove('hidden');
+      const pctInterest = targetGoal > 0 ? (totalInterest / targetGoal) * 100 : 0;
+      takeawayEl.innerHTML = `
+        <span class="text-link">📢 Takeaway:</span> To reach your goal of <strong class="text-ink">${formatCurrency(targetGoal)}</strong> in ${years} years, compound interest will cover <strong class="text-link">${pctInterest.toFixed(1)}%</strong> of the target (${formatCurrency(totalInterest)}). You only need to contribute <strong class="text-ink">${formatCurrency(totalDeposited)}</strong> out of pocket.
+      `;
     }
 
     // Compile into yearly entries for the chart and table

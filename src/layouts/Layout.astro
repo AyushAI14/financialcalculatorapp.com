@@ -24,6 +24,7 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={resolvedCanonical} />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
@@ -105,7 +106,7 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
         <div class="flex items-center gap-1">
           <!-- Currency Selector -->
           <div class="relative flex items-center mr-1">
-            <select id="currency-select" class="bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none" aria-label="Select currency">
+            <select id="currency-select" title="Rates: 1 USD = 0.92 EUR = 0.79 GBP = 83 INR" class="bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none" aria-label="Select currency">
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="GBP">GBP (£)</option>
@@ -166,6 +167,9 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
           <p class="text-xs text-mute leading-relaxed max-w-sm font-sans">
             A premium suite of interactive financial calculators formulated with precise mathematics and clean, glowing, modern interfaces. Plan your savings, investments, loans, and tax allocations dynamically.
           </p>
+          <p class="text-[10px] text-mute/80 leading-relaxed max-w-sm font-sans border-t border-hairline/60 pt-2.5">
+            <strong>Disclaimer:</strong> FinCompute is a provider of mathematical calculation tools for educational and informational purposes only. None of the calculators or results constitute professional financial advice (NFA), investment recommendations, tax advice, or legal advice. All calculations are theoretical estimations based on user inputs. Please consult a qualified professional before making financial commitments.
+          </p>
         </div>
 
         <!-- Col 2: Calculators -->
@@ -224,6 +228,7 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       const themeToggleBtn = document.getElementById('theme-toggle');
       themeToggleBtn?.addEventListener('click', () => {
         const isDark = document.documentElement.classList.contains('dark');
+        const newTheme = isDark ? 'light' : 'dark';
         if (isDark) {
           document.documentElement.classList.remove('dark');
           document.documentElement.classList.add('light');
@@ -233,16 +238,45 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
           document.documentElement.classList.remove('light');
           safeSetItem('theme', 'dark');
         }
+        window.dispatchEvent(new CustomEvent('theme-change', { detail: newTheme }));
       });
 
       // Currency Selection logic
       const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
       if (currencySelect) {
-        const storedCurrency = safeGetItem('currency', 'USD');
-        currencySelect.value = storedCurrency;
+        let previousCurrency = safeGetItem('currency', 'USD');
+        currencySelect.value = previousCurrency;
         currencySelect.addEventListener('change', () => {
-          safeSetItem('currency', currencySelect.value);
-          window.dispatchEvent(new CustomEvent('currency-change', { detail: currencySelect.value }));
+          const newCurrency = currencySelect.value;
+          const rates: Record<string, number> = {
+            USD: 1.0,
+            EUR: 0.92,
+            GBP: 0.79,
+            INR: 83.0
+          };
+          const oldRate = rates[previousCurrency] || 1.0;
+          const newRate = rates[newCurrency] || 1.0;
+          const ratio = newRate / oldRate;
+
+          // Convert values on all inputs associated with currency
+          document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+            const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+            if (input && input.value) {
+              const val = parseFloat(input.value.replace(/,/g, ''));
+              if (!isNaN(val)) {
+                const converted = val * ratio;
+                const hasDecimals = input.step === 'any' || input.value.includes('.') || input.getAttribute('data-decimals') === 'true';
+                input.value = Number(converted.toFixed(hasDecimals ? 2 : 0)).toString();
+                // Dispatch events to let individual calculator script recalculate
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }
+          });
+
+          safeSetItem('currency', newCurrency);
+          previousCurrency = newCurrency;
+          window.dispatchEvent(new CustomEvent('currency-change', { detail: newCurrency }));
         });
       }
 

@@ -95,6 +95,9 @@ const faqs = [
         </div>
       </div>
 
+      <div id="mortgage-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
+      </div>
+
       <!-- Payment Breakdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
         <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Monthly Payment Breakdown</h4>
@@ -235,6 +238,16 @@ const faqs = [
     if (resTotalMonthly) resTotalMonthly.querySelector('.font-mono')!.textContent = formattedTotal;
     if (resPI) resPI.querySelector('.font-mono')!.textContent = formattedPI;
     if (resLoanAmount) resLoanAmount.querySelector('.font-mono')!.textContent = formattedLoan;
+
+    const takeawayEl = document.getElementById('mortgage-takeaway');
+    if (takeawayEl) {
+      takeawayEl.classList.remove('hidden');
+      const totalCost = totalMonthly * termYears * 12;
+      const minIncome = (totalMonthly / 0.28) * 12;
+      takeawayEl.innerHTML = `
+        <span class="text-link">📢 Takeaway:</span> Over the ${termYears}-year term, you will pay a total of <strong class="text-ink">${formatCurrency(totalCost)}</strong> across all mortgage components. To comfortably afford this payment under the standard 28% housing rule of thumb, an annual gross household income of at least <strong class="text-link">${formatCurrency(minIncome)}</strong> is recommended.
+      `;
+    }
 
     // Formulas
     if (stepPIFormula) {

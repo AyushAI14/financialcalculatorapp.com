@@ -10,7 +10,7 @@ const calculators = [
       { name: 'ROI Calculator', url: '/finance/roi' },
       { name: 'Savings Goal Calculator', url: '/finance/savings-goal' },
       { name: 'Stock Return Calculator', url: '/finance/stock-return' },
-      { name: 'CAPM Calculator', url: '/finance/stock-return' },
+      { name: 'CAPM Calculator', url: '/finance/capm' },
       { name: 'Dividend Calculator', url: '/finance/dividend' },
       { name: 'Inflation Calculator', url: '/finance/inflation', badge: 'New' },
       { name: 'Paycheck Calculator', url: '/finance/paycheck', badge: 'New' },
@@ -197,8 +197,93 @@ const calculators = [
     </div>
   </div>
 
+  <!-- "Identify Your Problem" Scenario Finder Section -->
+  <section class="max-w-6xl mx-auto py-12 border-b border-hairline relative z-10 no-print">
+    <div class="text-center max-w-xl mx-auto mb-10 space-y-2">
+      <span class="px-2.5 py-0.5 bg-link/10 border border-link/25 text-link font-mono text-[10px] rounded-full uppercase font-semibold">Real-World Answers</span>
+      <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-ink">What financial question are you trying to answer?</h2>
+      <p class="text-xs text-mute">Select your current financial crossroad to get immediate math-backed insights.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Debt Payoff -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-violet-50 dark:bg-violet-950/40 border border-violet-100 dark:border-violet-900 flex items-center justify-center text-lg">⚡</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"I have multiple debts. How do I pay them off fastest?"</h3>
+          <p class="text-xs text-body leading-relaxed">Simulate and compare the Debt Snowball vs. Debt Avalanche strategies using your own numbers. Calculate exactly how many months and how much interest you will save.</p>
+        </div>
+        <a href="/compare/snowball-vs-avalanche" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Compare Payoff Strategies →
+        </a>
+      </div>
+
+      <!-- Card 2: Retirement IRA -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 flex items-center justify-center text-lg">📈</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"Should I put my savings in a Roth or Traditional IRA?"</h3>
+          <p class="text-xs text-body leading-relaxed">Model your ending portfolio values by comparing pre-tax versus post-tax compounding growth based on your current marginal tax bracket and expected retirement tax rate.</p>
+        </div>
+        <a href="/compare/roth-vs-traditional-ira" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Run IRA Tax Comparison →
+        </a>
+      </div>
+
+      <!-- Card 3: Home Buying -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 flex items-center justify-center text-lg">🏠</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"How much house can I actually afford to purchase?"</h3>
+          <p class="text-xs text-body leading-relaxed">Avoid the standard online traps. Determine your safe purchasing budget based on the 28/36 rule, incorporating down payments, local taxes, insurance, and HOA fees.</p>
+        </div>
+        <a href="/loan/home-affordability" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Calculate Home Affordability →
+        </a>
+      </div>
+
+      <!-- Card 4: Loan fees (APR vs Nominal) -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 flex items-center justify-center text-lg">🏷️</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"How much do closing costs and fees increase my rate?"</h3>
+          <p class="text-xs text-body leading-relaxed">Lenders advertise low nominal interest rates, but closing fees raise your actual cost. Factor in all fees to calculate your true Annual Percentage Rate (APR).</p>
+        </div>
+        <a href="/compare/apr-vs-nominal" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Calculate True Loan APR →
+        </a>
+      </div>
+
+      <!-- Card 5: Auto Financing -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-100 dark:border-cyan-900 flex items-center justify-center text-lg">🚗</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"Will sales tax and auto fees exceed my down payment?"</h3>
+          <p class="text-xs text-body leading-relaxed">Calculate out-of-pocket costs for a car loan. Grade your loan structure against the 20/4/10 rule of thumb to see if you risk going underwater on the vehicle.</p>
+        </div>
+        <a href="/auto/loan" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Analyze Auto Financing →
+        </a>
+      </div>
+
+      <!-- Card 6: Credit Card Payoff -->
+      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900 flex items-center justify-center text-lg">💳</div>
+          <h3 class="text-sm font-semibold text-ink leading-tight">"How much interest will I pay if I only pay minimums?"</h3>
+          <p class="text-xs text-body leading-relaxed">Avoid the credit card minimum payment trap. Discover how many years it will take to be debt-free and calculate the massive interest savings from paying even $50 more.</p>
+        </div>
+        <a href="/credit-card/payoff" class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
+          Simulate Credit Payoff →
+        </a>
+      </div>
+
+    </div>
+  </section>
+
   <!-- Categories Grid -->
-  <section id="categories-section" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+  <section id="categories-section" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pt-12">
     {calculators.map(cat => (
       <div class="bg-canvas border border-hairline rounded-lg p-6 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col h-full group relative overflow-hidden">
         

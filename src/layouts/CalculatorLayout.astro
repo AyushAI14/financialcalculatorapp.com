@@ -27,6 +27,7 @@ const categories = [
       { name: 'ROI Calculator', url: '/finance/roi' },
       { name: 'Savings Goal', url: '/finance/savings-goal' },
       { name: 'Stock Return', url: '/finance/stock-return' },
+      { name: 'CAPM Calculator', url: '/finance/capm' },
       { name: 'Dividend Calculator', url: '/finance/dividend' },
       { name: 'Inflation Calculator', url: '/finance/inflation' },
       { name: 'Paycheck Calculator', url: '/finance/paycheck' },
@@ -185,6 +186,12 @@ const faqSchema = faqs.length > 0 ? {
         <button id="save-scenario-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-2 flex items-center justify-center gap-1.5">
           <span>💾</span> Save Inputs
         </button>
+        <button id="compare-scenarios-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5 hidden">
+          <span>📊</span> Compare (0/2)
+        </button>
+        <button id="share-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5">
+          <span>🔗</span> Copy Share Link
+        </button>
       </div>
     </aside>
 
@@ -220,9 +227,45 @@ const faqSchema = faqs.length > 0 ? {
       )}
 
       <!-- Browser Privacy Note -->
-      <div class="mt-12 p-4 bg-canvas-soft border border-hairline border-dashed rounded-md text-xs text-mute flex items-center gap-2 no-print">
-        <span>🔒</span>
-        <span><strong>100% Private:</strong> All calculations execute locally in your web browser. We do not store or transmit your financial details.</span>
+      <div class="mt-12 p-4 bg-canvas-soft border border-hairline border-dashed rounded-md text-xs text-mute flex flex-col gap-2 no-print">
+        <div class="flex items-center gap-2">
+          <span>🔒</span>
+          <span><strong>100% Private:</strong> All calculations execute locally in your web browser. We do not store or transmit your financial details.</span>
+        </div>
+        <div class="flex items-center gap-2 border-t border-hairline/60 pt-2 mt-1">
+          <span>💱</span>
+          <span><strong>Currency Rates:</strong> Conversions use static rates (1 USD = 0.92 EUR = 0.79 GBP = 83 INR) for convenience.</span>
+        </div>
+      </div>
+
+      <!-- Scenario Comparison Modal -->
+      <div id="compare-modal" class="fixed inset-0 bg-ink/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-canvas border border-hairline rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in">
+          <header class="px-6 py-4 border-b border-hairline flex items-center justify-between bg-canvas-soft">
+            <h3 class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">Scenario Comparison</h3>
+            <button id="close-compare-modal" class="text-mute hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
+          </header>
+          <div class="p-6 overflow-y-auto space-y-6">
+            <div class="overflow-x-auto border border-hairline rounded-lg">
+              <table class="w-full border-collapse text-left text-xs">
+                <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+                  <tr>
+                    <th class="px-4 py-3">Metric</th>
+                    <th class="px-4 py-3" id="compare-scen-a-title">Scenario A</th>
+                    <th class="px-4 py-3" id="compare-scen-b-title">Scenario B</th>
+                    <th class="px-4 py-3">Difference</th>
+                  </tr>
+                </thead>
+                <tbody id="compare-modal-tbody" class="divide-y divide-hairline text-body text-ink">
+                  <!-- Generated comparison rows go here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <footer class="px-6 py-4 border-t border-hairline flex justify-end gap-2 bg-canvas-soft">
+            <button id="close-compare-modal-btn" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">Close</button>
+          </footer>
+        </div>
       </div>
 
       <!-- Related Calculators Section -->
@@ -299,16 +342,32 @@ const faqSchema = faqs.length > 0 ? {
     const pageUrl = window.location.pathname;
     const pageName = document.querySelector('h1')?.textContent || document.title.split(' - ')[0];
 
+    const payload = {
+      url: pageUrl,
+      name: pageName,
+      rating: selectedRating,
+      message: comment.trim()
+    };
+
+    // 1. Submit to server API endpoint
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).catch(err => {
+      console.error('Error submitting feedback to server:', err);
+    });
+
+    // 2. Fallback / save to local storage for backward compatibility & local display
     let feedbackList = [];
     try {
       feedbackList = JSON.parse(safeGetItem('feedback_responses', '[]'));
     } catch (err) {}
 
     feedbackList.push({
-      url: pageUrl,
-      name: pageName,
-      rating: selectedRating,
-      message: comment.trim(),
+      ...payload,
       timestamp: Date.now()
     });
 
@@ -349,41 +408,354 @@ const faqSchema = faqs.length > 0 ? {
   const form = document.querySelector('form');
   const scenarioKey = `scenarios:${window.location.pathname}`;
 
-  function updateScenariosUI() {
-    if (!scenariosList) return;
-    const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
-    if (saved.length === 0) {
-      scenariosList.innerHTML = `<span class="text-mute text-[11px] block">No saved scenarios yet.</span>`;
-      return;
+    let selectedIndices: number[] = [];
+
+    function updateScenariosUI() {
+      if (!scenariosList) return;
+      const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
+      if (saved.length === 0) {
+        scenariosList.innerHTML = `<span class="text-mute text-[11px] block">No saved scenarios yet.</span>`;
+        selectedIndices = [];
+        updateCompareButton();
+        return;
+      }
+      
+      scenariosList.innerHTML = saved.map((scenario: any, idx: number) => `
+        <div class="group flex items-center justify-between gap-2 p-1.5 hover:bg-canvas-soft-2 rounded transition-colors border border-transparent hover:border-hairline">
+          <input type="checkbox" class="compare-checkbox w-3.5 h-3.5 rounded border-hairline cursor-pointer text-primary focus:ring-transparent bg-canvas" data-index="${idx}" title="Select for comparison" ${selectedIndices.includes(idx) ? 'checked' : ''} />
+          <button class="load-scenario-btn text-left text-ink font-medium truncate flex-1 block" data-index="${idx}" title="Click to load scenario">
+            ${scenario.name}
+          </button>
+          <button class="delete-scenario-btn opacity-0 group-hover:opacity-100 text-mute hover:text-error transition-opacity font-bold px-1" data-index="${idx}" title="Delete scenario">
+            &times;
+          </button>
+        </div>
+      `).join('');
+
+      // Bind load listeners
+      scenariosList.querySelectorAll('.load-scenario-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index || '0');
+          loadScenario(idx);
+        });
+      });
+
+      // Bind delete listeners
+      scenariosList.querySelectorAll('.delete-scenario-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index || '0');
+          deleteScenario(idx);
+        });
+      });
+
+      // Bind compare checkbox handlers
+      const checkboxes = scenariosList.querySelectorAll('.compare-checkbox');
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const target = e.currentTarget as HTMLInputElement;
+          const idx = parseInt(target.dataset.index || '0');
+          if (target.checked) {
+            selectedIndices.push(idx);
+            if (selectedIndices.length > 2) {
+              // Uncheck the oldest one
+              const oldestIdx = selectedIndices.shift()!;
+              const oldestCb = scenariosList.querySelector(`.compare-checkbox[data-index="${oldestIdx}"]`) as HTMLInputElement | null;
+              if (oldestCb) oldestCb.checked = false;
+            }
+          } else {
+            selectedIndices = selectedIndices.filter(i => i !== idx);
+          }
+          updateCompareButton();
+        });
+      });
+
+      updateCompareButton();
     }
-    
-    scenariosList.innerHTML = saved.map((scenario: any, idx: number) => `
-      <div class="group flex items-center justify-between gap-1 p-1.5 hover:bg-canvas-soft-2 rounded transition-colors border border-transparent hover:border-hairline">
-        <button class="load-scenario-btn text-left text-ink font-medium truncate flex-1 block" data-index="${idx}" title="Click to load scenario">
-          ${scenario.name}
-        </button>
-        <button class="delete-scenario-btn opacity-0 group-hover:opacity-100 text-mute hover:text-error transition-opacity font-bold px-1" data-index="${idx}" title="Delete scenario">
-          &times;
-        </button>
-      </div>
-    `).join('');
 
-    // Bind load listeners
-    scenariosList.querySelectorAll('.load-scenario-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index || '0');
-        loadScenario(idx);
+    function updateCompareButton() {
+      const compareBtn = document.getElementById('compare-scenarios-btn');
+      if (compareBtn) {
+        if (selectedIndices.length === 2) {
+          compareBtn.classList.remove('hidden');
+          compareBtn.innerHTML = `<span>📊</span> Compare (2/2)`;
+        } else {
+          compareBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    // Capture comparison logic click
+    const compareBtn = document.getElementById('compare-scenarios-btn');
+    compareBtn?.addEventListener('click', () => {
+      if (selectedIndices.length !== 2) return;
+      
+      const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
+      const scA = saved[selectedIndices[0]];
+      const scB = saved[selectedIndices[1]];
+      
+      if (!scA || !scB || !form) return;
+
+      const titleA = document.getElementById('compare-scen-a-title');
+      const titleB = document.getElementById('compare-scen-b-title');
+      if (titleA) titleA.textContent = scA.name;
+      if (titleB) titleB.textContent = scB.name;
+
+      // 1. Capture current form inputs
+      const currentInputs: Record<string, string | boolean> = {};
+      Array.from(form.elements).forEach((el: any) => {
+        if (el.name) {
+          currentInputs[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+        }
+      });
+
+      const applyInputsAndRun = (data: Record<string, any>) => {
+        Object.entries(data).forEach(([name, val]) => {
+          const el = form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+          if (el) {
+            if (el.type === 'checkbox') {
+              (el as HTMLInputElement).checked = val === true;
+            } else {
+              el.value = String(val);
+            }
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+      };
+
+      const extractInputs = () => {
+        const result: Record<string, { label: string, value: string, numeric: number }> = {};
+        Array.from(form.elements).forEach((el: any) => {
+          if (el.name && el.type !== 'submit' && el.type !== 'reset' && el.type !== 'button') {
+            let labelText = el.name;
+            const labelEl = document.querySelector(`label[for="${el.id}"]`);
+            if (labelEl) {
+              labelText = labelEl.textContent || el.name;
+            } else {
+              const parentLabel = el.closest('div')?.querySelector('label');
+              if (parentLabel) labelText = parentLabel.textContent || el.name;
+            }
+            labelText = labelText.replace(/:$/, '').trim();
+
+            let displayVal = el.value;
+            if (el.type === 'checkbox') {
+              displayVal = el.checked ? 'Yes' : 'No';
+            } else if (el.tagName === 'SELECT') {
+              displayVal = el.options[el.selectedIndex]?.text || el.value;
+            }
+
+            const rawVal = el.type === 'checkbox' ? (el.checked ? 1 : 0) : parseFloat(el.value.replace(/,/g, ''));
+            result[el.name] = {
+              label: labelText,
+              value: displayVal,
+              numeric: isNaN(rawVal) ? 0 : rawVal
+            };
+          }
+        });
+        return result;
+      };
+
+      const extractOutputs = () => {
+        const result: Record<string, { label: string, value: string, numeric: number }> = {};
+        document.querySelectorAll('.result-card, [id^="res-"]').forEach((card, idx) => {
+          const titleEl = card.querySelector('h4, .text-xs, .text-[10px]');
+          const valEl = card.querySelector('.font-mono, p.text-3xl, .text-3xl');
+          if (titleEl && valEl) {
+            const labelText = titleEl.textContent?.trim() || `Output ${idx + 1}`;
+            const displayVal = valEl.textContent?.trim() || '';
+            const rawVal = parseFloat(displayVal.replace(/[^0-9.-]/g, ''));
+            result[labelText] = {
+              label: labelText,
+              value: displayVal,
+              numeric: isNaN(rawVal) ? 0 : rawVal
+            };
+          }
+        });
+        return result;
+      };
+
+      // Run Scenario A
+      applyInputsAndRun(scA.data);
+      const inputsA = extractInputs();
+      const outputsA = extractOutputs();
+
+      // Run Scenario B
+      applyInputsAndRun(scB.data);
+      const inputsB = extractInputs();
+      const outputsB = extractOutputs();
+
+      // Restore original inputs
+      applyInputsAndRun(currentInputs);
+
+      // Build Comparison Table Rows
+      const compareTbody = document.getElementById('compare-modal-tbody');
+      if (compareTbody) {
+        let rowsHtml = '';
+
+        // Add Inputs Header
+        rowsHtml += `<tr class="bg-canvas-soft font-mono uppercase text-mute font-semibold"><td colspan="4" class="px-4 py-2 text-[10px]">Form Inputs</td></tr>`;
+
+        Object.keys(inputsA).forEach(name => {
+          const itemA = inputsA[name];
+          const itemB = inputsB[name] || { value: '-', numeric: 0 };
+          const diff = itemB.numeric - itemA.numeric;
+          let diffHtml = '-';
+          if (typeof itemA.numeric === 'number' && !isNaN(itemA.numeric) && itemA.value !== 'Yes' && itemA.value !== 'No') {
+            const isPct = name.includes('rate') || name.includes('pct') || name.includes('percent');
+            const isCurr = !isPct && (name.includes('price') || name.includes('down') || name.includes('payment') || name.includes('amount') || name.includes('cost') || name.includes('contrib') || name.includes('ins') || name.includes('hoa') || name.includes('balance') || name.includes('budget') || name.includes('fee'));
+            
+            const diffSymbol = diff >= 0 ? '+' : '';
+            if (isCurr) {
+              const symbolMap: Record<string, string> = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
+              const symbol = symbolMap[safeGetItem('currency', 'USD')] || '$';
+              diffHtml = `${diffSymbol}${symbol}${diff.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+            } else if (isPct) {
+              diffHtml = `${diffSymbol}${diff.toFixed(2)}%`;
+            } else {
+              diffHtml = `${diffSymbol}${diff.toFixed(1)}`;
+            }
+          }
+
+          rowsHtml += `
+            <tr class="hover:bg-canvas-soft transition-colors">
+              <td class="px-4 py-2.5 font-semibold text-ink">${itemA.label}</td>
+              <td class="px-4 py-2.5 font-mono">${itemA.value}</td>
+              <td class="px-4 py-2.5 font-mono">${itemB.value}</td>
+              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link' : diff < 0 ? 'text-error' : 'text-mute'}">${diffHtml}</td>
+            </tr>
+          `;
+        });
+
+        // Add Outputs Header
+        rowsHtml += `<tr class="bg-canvas-soft font-mono uppercase text-mute font-semibold"><td colspan="4" class="px-4 py-2 text-[10px]">Calculated Results</td></tr>`;
+
+        Object.keys(outputsA).forEach(label => {
+          const itemA = outputsA[label];
+          const itemB = outputsB[label] || { value: '-', numeric: 0 };
+          const diff = itemB.numeric - itemA.numeric;
+          let diffHtml = '-';
+
+          if (!isNaN(diff)) {
+            const diffSymbol = diff >= 0 ? '+' : '';
+            const isPct = itemA.value.includes('%');
+            const isCurr = itemA.value.includes('$') || itemA.value.includes('€') || itemA.value.includes('£') || itemA.value.includes('₹') || label.toLowerCase().includes('interest') || label.toLowerCase().includes('balance') || label.toLowerCase().includes('amount') || label.toLowerCase().includes('cost') || label.toLowerCase().includes('gain') || label.toLowerCase().includes('payment') || label.toLowerCase().includes('proceeds') || label.toLowerCase().includes('shortfall') || label.toLowerCase().includes('net');
+
+            if (isCurr) {
+              const symbolMap: Record<string, string> = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
+              const symbol = symbolMap[safeGetItem('currency', 'USD')] || '$';
+              diffHtml = `${diffSymbol}${symbol}${diff.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+            } else if (isPct) {
+              diffHtml = `${diffSymbol}${diff.toFixed(2)}%`;
+            } else {
+              diffHtml = `${diffSymbol}${diff.toFixed(1)}`;
+            }
+          }
+
+          rowsHtml += `
+            <tr class="hover:bg-canvas-soft transition-colors font-medium">
+              <td class="px-4 py-2.5 text-ink">${itemA.label}</td>
+              <td class="px-4 py-2.5 font-mono text-ink">${itemA.value}</td>
+              <td class="px-4 py-2.5 font-mono text-ink">${itemB.value}</td>
+              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link font-semibold' : diff < 0 ? 'text-error font-semibold' : 'text-mute'}">${diffHtml}</td>
+            </tr>
+          `;
+        });
+
+        compareTbody.innerHTML = rowsHtml;
+      }
+
+      // Show modal
+      const modal = document.getElementById('compare-modal');
+      if (modal) modal.classList.remove('hidden');
+    });
+
+    // Close Modal Listeners
+    const compModal = document.getElementById('compare-modal');
+    const closeIds = ['close-compare-modal', 'close-compare-modal-btn'];
+    closeIds.forEach(id => {
+      document.getElementById(id)?.addEventListener('click', () => {
+        compModal?.classList.add('hidden');
       });
     });
 
-    // Bind delete listeners
-    scenariosList.querySelectorAll('.delete-scenario-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index || '0');
-        deleteScenario(idx);
+    compModal?.addEventListener('click', (e) => {
+      if (e.target === compModal) {
+        compModal.classList.add('hidden');
+      }
+    });
+
+    // Copy Share URL Click Handler
+    const shareBtn = document.getElementById('share-calculator-btn');
+    shareBtn?.addEventListener('click', () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        const originalText = shareBtn.innerHTML;
+        shareBtn.innerHTML = '<span>✅</span> Link Copied!';
+        setTimeout(() => {
+          shareBtn.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        alert("Failed to copy link: " + err);
       });
     });
-  }
+
+    // Global URL Sync (for pages that don't have it manually configured)
+    if (typeof window !== 'undefined' && form) {
+      if (form.getAttribute('data-synced') !== 'true') {
+        const params = new URLSearchParams(window.location.search);
+        
+        // 1. Sync from URL on load
+        Array.from(form.elements).forEach((el: any) => {
+          const input = el as HTMLInputElement | HTMLSelectElement;
+          const nameOrId = input.name || input.id;
+          if (!nameOrId || nameOrId === 'currency-select') return;
+          
+          const value = params.get(nameOrId);
+          if (value !== null) {
+            if (input.type === 'checkbox') {
+              (input as HTMLInputElement).checked = value === 'true';
+            } else {
+              input.value = value;
+            }
+          }
+        });
+
+        // Trigger updates once page completes loading
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            Array.from(form.elements).forEach((el: any) => {
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+              el.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+          }, 100);
+        });
+
+        // 2. Sync to URL on input/change
+        const handleGlobalInputSync = () => {
+          const newParams = new URLSearchParams();
+          Array.from(form.elements).forEach((el: any) => {
+            const input = el as HTMLInputElement | HTMLSelectElement;
+            const nameOrId = input.name || input.id;
+            if (!nameOrId || nameOrId === 'currency-select') return;
+
+            if (input.type === 'checkbox') {
+              if ((input as HTMLInputElement).checked) {
+                newParams.set(nameOrId, 'true');
+              }
+            } else if (input.value && input.value !== (input instanceof HTMLInputElement ? input.defaultValue : '')) {
+              newParams.set(nameOrId, input.value);
+            }
+          });
+          const newQueryString = newParams.toString();
+          const newUrl = `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`;
+          window.history.replaceState(null, '', newUrl);
+        };
+
+        form.addEventListener('input', handleGlobalInputSync);
+        form.addEventListener('change', handleGlobalInputSync);
+        form.setAttribute('data-synced', 'true');
+      }
+    }
 
   function loadScenario(idx: number) {
     if (!form) return;
