@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
-import sitemap from '@astrojs/sitemap';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -24,5 +23,4 @@ export default defineConfig({
   },
 
   adapter: vercel(),
-  integrations: [sitemap()],
 });
