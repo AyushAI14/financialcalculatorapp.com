@@ -1,4 +1,11 @@
 import { Chart, registerables } from 'chart.js';
+import type { ChartType, TooltipPositionerFunction } from 'chart.js';
+
+declare module 'chart.js' {
+  interface TooltipPositionerMap {
+    fixedTop: TooltipPositionerFunction<ChartType>;
+  }
+}
 
 // Register all standard Chart.js components (auto registration)
 Chart.register(...registerables);
@@ -7,7 +14,7 @@ Chart.register(...registerables);
 try {
   const tooltipPlugin = Chart.registry.getPlugin('tooltip') as any;
   if (tooltipPlugin && tooltipPlugin.positioners) {
-    tooltipPlugin.positioners.fixedTop = function(elements: any, eventPosition: any) {
+    tooltipPlugin.positioners.fixedTop = function(elements: any) {
       if (!elements || !elements.length) return false;
       const activePoint = elements[0];
       const x = activePoint.element.x;
@@ -106,7 +113,7 @@ if (typeof window !== 'undefined') {
   if (!Chart.defaults.datasets.doughnut) {
     Chart.defaults.datasets.doughnut = {} as any;
   }
-  Chart.defaults.datasets.doughnut.borderColor = (context: any) => {
+  Chart.defaults.datasets.doughnut.borderColor = () => {
     if (typeof document !== 'undefined') {
       const isDark = document.documentElement.classList.contains('dark');
       return isDark ? '#171717' : '#ffffff';
@@ -119,7 +126,7 @@ if (typeof window !== 'undefined') {
   if (!Chart.defaults.datasets.pie) {
     Chart.defaults.datasets.pie = {} as any;
   }
-  Chart.defaults.datasets.pie.borderColor = (context: any) => {
+  Chart.defaults.datasets.pie.borderColor = () => {
     if (typeof document !== 'undefined') {
       const isDark = document.documentElement.classList.contains('dark');
       return isDark ? '#171717' : '#ffffff';

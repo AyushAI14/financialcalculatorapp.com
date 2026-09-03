@@ -1,39 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
-<Layout title="Contact Us - FinCompute">
+<Layout title={t('contact.title', 'Contact Us - FinCompute')} description={t('contact.intro')} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
-    <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">Contact Us.</h1>
+    <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('contact.heading', 'Contact Us.')}</h1>
 
     <p>
-      Have a question, suggestion, or need to report an issue with one of our calculators? We'd love to hear from you.
+      {t('contact.intro', 'Have a question, suggestion, or need to report an issue with one of our calculators? We\'d love to hear from you.')}
     </p>
 
-    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Email</h2>
+    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.email.heading', 'Email')}</h2>
     <p>
-      You can reach us directly at <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>. We aim to respond within a few business days.
+      {t('contact.email.text', 'You can reach us directly at')} <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>. {t('contact.email.subtext', 'We aim to respond within a few business days.')}
     </p>
 
-    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Bug Reports</h2>
+    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.bugs.heading', 'Bug Reports')}</h2>
     <p>
-      If you've found a calculation error or a bug, please include the following in your message so we can investigate quickly:
+      {t('contact.bugs.text', 'If you\'ve found a calculation error or a bug, please include the following in your message so we can investigate quickly:')}
     </p>
     <ul class="list-disc pl-5 space-y-1">
-      <li>The calculator you were using</li>
-      <li>The input values you entered</li>
-      <li>The result you expected vs. what you received</li>
-      <li>Your browser and device (optional but helpful)</li>
+      <li>{t('contact.bugs.item1', 'The calculator you were using')}</li>
+      <li>{t('contact.bugs.item2', 'The input values you entered')}</li>
+      <li>{t('contact.bugs.item3', 'The result you expected vs. what you received')}</li>
+      <li>{t('contact.bugs.item4', 'Your browser and device (optional but helpful)')}</li>
     </ul>
 
-    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Feature Requests</h2>
+    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.features.heading', 'Feature Requests')}</h2>
     <p>
-      Want to see a new calculator or an improvement to an existing one? Send us a description of what you're looking for and we'll consider it for future updates.
+      {t('contact.features.text', 'Want to see a new calculator or an improvement to an existing one? Send us a description of what you\'re looking for and we\'ll consider it for future updates.')}
     </p>
 
-    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Partnerships</h2>
+    <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.partnerships.heading', 'Partnerships')}</h2>
     <p>
-      For business inquiries or partnership opportunities, reach out to <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>.
+      {t('contact.partnerships.text', 'For business inquiries or partnership opportunities, reach out to')} <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>.
     </p>
   </article>
 </Layout>

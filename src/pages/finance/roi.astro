@@ -3,18 +3,25 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('roi');
 ---
 
 <CalculatorLayout 
   title="ROI Calculator" 
-  description="Calculate your Return on Investment (ROI) and annualized ROI (CAGR). Understand net profits, percentage yields, and performance across durations."
+  description="Calculate the Return on Investment (ROI) and annualized ROI for any business venture, real estate deal, or stock purchase."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Form Inputs (Left Column) -->
     <div class="lg:col-span-7 space-y-6">
       <form id="roi-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Investment Performance</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Investment Performance', 'Investment Costs & Returns')}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="initial-investment" label="Initial Investment" type="number" prefix="$" value="50000" placeholder="0.00" />
@@ -37,7 +44,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
         <!-- Optional/Advanced details -->
         <details class="group border border-hairline rounded-lg bg-canvas-soft">
           <summary class="flex items-center justify-between p-4 text-sm font-medium text-ink cursor-pointer select-none">
-            <span>Advanced Cash Flows (Optional)</span>
+            <span>{t('Advanced Cash Flows (Optional)', 'Investment Costs & Returns')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
           <div class="p-5 border-t border-hairline bg-canvas space-y-5">
@@ -55,10 +62,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Returns
+            {t('Calculate Returns')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

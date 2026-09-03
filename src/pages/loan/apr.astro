@@ -1,13 +1,19 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('apr');
 ---
 
 <CalculatorLayout 
   title="APR Calculator" 
-  description="Calculate the true Annual Percentage Rate (APR) of your loan by factoring in interest rates, term lengths, and upfront finance charges or broker fees."
+  description="Determine the true Annual Percentage Rate (APR) of a loan by factoring in closing costs, points, and lender fees alongside the nominal interest rate."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
@@ -15,11 +21,11 @@ import ResultCard from '../../components/ui/ResultCard.astro';
       <form id="apr-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan Details</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Loan Details', 'Loan Parameters')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">Auto Loan</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">Mortgage</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">{t('Auto Loan')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">{t('Mortgage')}</button>
             </div>
           </div>
           
@@ -35,7 +41,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
         </div>
 
         <div class="p-5 bg-canvas-soft border border-hairline rounded-md text-xs text-body leading-relaxed space-y-2">
-          <p class="font-semibold text-ink">What fees should be included in APR?</p>
+          <p class="font-semibold text-ink">{t('What fees should be included in APR?')}</p>
           <p>
             Standard APR fees include: loan origination fees, points, underwriting charges, document prep fees, private mortgage insurance (PMI), and broker fees. 
           </p>
@@ -46,10 +52,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate APR
+            {t('Calculate APR')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

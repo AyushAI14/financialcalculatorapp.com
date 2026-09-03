@@ -3,29 +3,12 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "What is the SAVE plan?",
-    answer: "The Saving on a Valuable Education (SAVE) plan is the newest income-driven repayment (IDR) plan. It raises the discretionary income shield to 225% of the poverty line, lowers payments to 5% of discretionary income for undergraduate loans, and stops unpaid interest from accumulating."
-  },
-  {
-    question: "How is discretionary income calculated for student loans?",
-    answer: "Discretionary income is the difference between your Adjusted Gross Income (AGI) and a percentage of the federal poverty guideline for your family size (150% for PAYE/IBR, 225% for SAVE)."
-  },
-  {
-    question: "How does student loan forgiveness work under IDR plans?",
-    answer: "If you pay under an IDR plan for 20 or 25 years (or as little as 10 years under SAVE for low initial balances), any remaining student debt is forgiven. However, under current tax laws, this forgiven balance may be treated as taxable income, although federal tax on forgiven student loans is temporarily suspended through 2025."
-  },
-  {
-    question: "Which IDR plan is best for me?",
-    answer: "For most borrowers, the SAVE plan offers the lowest monthly payment and the best interest subsidy. However, if your income is very high relative to your debt, plans like PAYE or IBR might be better because they cap your monthly payment at what it would be under the Standard 10-Year Repayment Plan, whereas SAVE has no payment cap."
-  },
-  {
-    question: "Can I switch student loan repayment plans at any time?",
-    answer: "Yes, you can apply to switch repayment plans for free at studentaid.gov. However, switching plans can sometimes cause outstanding unpaid interest to capitalize (be added to your principal balance), which means you will start paying interest on that interest."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('student-loan');
 ---
 
 <CalculatorLayout 
@@ -39,11 +22,11 @@ const faqs = [
       <form id="student-loan-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan & Income Details</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Loan & Income Details')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="40000" data-rate="5.5" data-agi="55000" data-size="1" data-plan="SAVE" data-type="undergrad">Undergrad Single</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="90000" data-rate="6.8" data-agi="85000" data-size="3" data-plan="SAVE" data-type="grad">Grad Family of 3</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="40000" data-rate="5.5" data-agi="55000" data-size="1" data-plan="SAVE" data-type="undergrad">{t('Undergrad Single')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="90000" data-rate="6.8" data-agi="85000" data-size="3" data-plan="SAVE" data-type="grad">{t('Grad Family of 3')}</button>
             </div>
           </div>
 
@@ -74,10 +57,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Repayment
+            {t('Calculate Repayment')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -99,14 +82,14 @@ const faqs = [
 
       <!-- Plan Details Box -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Plan Guideline Estimates</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Plan Guideline Estimates')}</h4>
         <div class="grid grid-cols-2 gap-4 divide-x divide-hairline text-left">
           <div>
-            <span class="text-xs text-mute font-mono block">Federal Poverty Line</span>
+            <span class="text-xs text-mute font-mono block">{t('Federal Poverty Line')}</span>
             <span class="text-base font-semibold text-ink font-mono" id="val-poverty-base">$15,800</span>
           </div>
           <div class="pl-4">
-            <span class="text-xs text-mute font-mono block">Income Shield Limit</span>
+            <span class="text-xs text-mute font-mono block">{t('Income Shield Limit')}</span>
             <span class="text-base font-semibold text-ink font-mono" id="val-poverty-shield">$35,550</span>
           </div>
         </div>
@@ -116,7 +99,7 @@ const faqs = [
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Formula Breakdown</span>
+            <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
@@ -133,7 +116,7 @@ const faqs = [
               </code>
             </div>
             <div>
-              <p class="font-semibold text-ink mb-1">3. Monthly Payment Calculation</p>
+              <p class="font-semibold text-ink mb-1">3. Monthly Payment (IDR)</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-payment">
                 Payment = (Discretionary × Rate) / 12 (Rate = 5% undergrad, 10% grad/others)
               </code>
@@ -145,7 +128,7 @@ const faqs = [
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>

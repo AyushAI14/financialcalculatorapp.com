@@ -2,18 +2,25 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('tip');
 ---
 
 <CalculatorLayout 
   title="Tip Calculator" 
-  description="Quickly calculate tip amounts and split restaurant bills or service tabs among multiple friends, colleagues, or family members."
+  description="Quickly calculate bill tips, split total amounts among friends, and round up payments for dining and hospitality services."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="tip-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Bill & Service</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Bill & Service', 'Bill & Tip Details')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="bill" label="Bill Amount" type="number" prefix="$" value="84.50" />
@@ -27,10 +34,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Tip
+            {t('Calculate Tip')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

@@ -2,11 +2,16 @@
 import Layout from '../../layouts/Layout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
 <Layout 
   title="Roth IRA vs. Traditional IRA: Which is Better? - FinCompute.com" 
   description="Compare Roth and Traditional IRAs side-by-side to understand tax brackets, income limits, deductions, and tax-free retirement growth rules."
+  lang={lang}
 >
   <div class="max-w-6xl mx-auto py-8 px-4 space-y-12">
     <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">

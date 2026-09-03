@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+import { getLocalizedBlogPost } from '../../i18n/blogs';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -11,18 +13,25 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const localizedData = getLocalizedBlogPost(post.id, lang);
+const pageTitle = `${localizedData.title || post.data.title} - FinCompute Blog`;
+const pageDesc = localizedData.description || post.data.description;
+const contentHtml = localizedData.content;
 ---
 
-<Layout title={`${post.data.title} - FinCompute Blog`} description={post.data.description}>
+<Layout title={pageTitle} description={pageDesc} lang={lang}>
   <article class="max-w-3xl mx-auto py-8 px-4">
     <header class="mb-8 border-b border-hairline pb-6">
       <div class="flex items-center gap-3 text-xs font-mono text-mute mb-2">
-        <span>{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <span>{post.data.pubDate.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         <span>•</span>
-        <span>By {post.data.author}</span>
+        <span>{t('blog.by', 'By')} {post.data.author}</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">{post.data.title}</h1>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">{localizedData.title || post.data.title}</h1>
       
       <div class="flex items-center gap-2 mt-4 no-print">
         {post.data.tags.map(tag => (
@@ -33,13 +42,11 @@ const { Content } = await render(post);
       </div>
     </header>
 
-    <div class="blog-content prose prose-sm sm:prose-base dark:prose-invert max-w-none text-body leading-relaxed space-y-6">
-      <Content />
-    </div>
+    <div class="blog-content prose prose-sm sm:prose-base dark:prose-invert max-w-none text-body leading-relaxed space-y-6" set:html={contentHtml} />
 
     <footer class="mt-12 pt-8 border-t border-hairline no-print">
-      <a href="/blog" class="text-xs font-mono font-medium text-mute hover:text-ink transition-colors flex items-center gap-1">
-        ← Back to all posts
+      <a href={translatePath('/blog')} class="text-xs font-mono font-medium text-mute hover:text-ink transition-colors flex items-center gap-1">
+        {t('blog.back', '← Back to all posts')}
       </a>
     </footer>
   </article>
@@ -68,12 +75,16 @@ const { Content } = await render(post);
     margin-bottom: 0.75rem;
     color: var(--color-ink, #171717);
   }
-  .blog-content ul {
-    list-style-type: disc;
+  .blog-content ul, .blog-content ol {
     padding-left: 1.5rem;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
-    space-y: 0.25rem;
+  }
+  .blog-content ul {
+    list-style-type: disc;
+  }
+  .blog-content ol {
+    list-style-type: decimal;
   }
   .blog-content li {
     margin-bottom: 0.4rem;

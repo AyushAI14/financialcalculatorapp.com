@@ -4,11 +4,18 @@ import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('tvm');
 ---
 
 <CalculatorLayout 
   title="TVM Calculator" 
-  description="Calculate the Time Value of Money. Solve for Present Value (PV), Future Value (FV), Payment (PMT), Interest Rate, or Number of Periods (NPER)."
+  description="Calculate Present Value (PV), Future Value (FV), Payment (PMT), Interest Rate (I/Y), and Number of Periods (N) using Time Value of Money principles."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Form Inputs (Left Column) -->
@@ -79,10 +86,10 @@ import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
         
         <div class="pt-4 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate
+            {t('Calculate')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

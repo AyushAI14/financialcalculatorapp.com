@@ -1,21 +1,27 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('dividend');
 ---
 
 <CalculatorLayout 
   title="Dividend Calculator" 
-  description="Project your investment growth and income using Dividend Reinvestment Plans (DRIP). Track dividend compounding, appreciation, and taxation."
+  description="Project future dividend income, yield on cost, and portfolio growth with automatic dividend reinvestment (DRIP)."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="dividend-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Investment & Savings</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Investment & Savings', 'Stock Investment Details')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="initial" label="Initial Investment" type="number" prefix="$" value="20000" />
@@ -29,7 +35,7 @@ import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 
         <!-- Growth & Taxes -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Growth & Taxes</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Growth & Taxes', 'Dividend Stock Profile')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="div-growth" label="Annual Dividend Growth" type="number" suffix="%" value="5.0" placeholder="rate dividend yield increases" />
             <Input id="price-growth" label="Annual Share Price Growth" type="number" suffix="%" value="6.0" placeholder="capital gains rate" />
@@ -48,10 +54,10 @@ import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Growth
+            {t('Calculate Growth')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

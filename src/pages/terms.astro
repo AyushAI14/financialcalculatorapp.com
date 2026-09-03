@@ -1,11 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
-<Layout title="Terms of Service - FinCompute">
+<Layout title={`${t('nav.terms', 'Terms of Service')} - FinCompute`} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
-    <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">Terms of Service.</h1>
-    <p class="text-xs text-mute font-mono uppercase tracking-wider">Last updated: July 10, 2026</p>
+    <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('nav.terms', 'Terms of Service')}.</h1>
+    <p class="text-xs text-mute font-mono uppercase tracking-wider">{t('calc.lastUpdated', 'Last updated')}: July 10, 2026</p>
     
     <p>
       Please read these Terms of Service carefully before using the FinCompute suite of financial calculators.

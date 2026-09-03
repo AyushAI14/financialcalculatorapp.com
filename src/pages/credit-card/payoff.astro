@@ -3,18 +3,25 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('credit-card-payoff');
 ---
 
 <CalculatorLayout 
   title="Credit Card Payoff Calculator" 
-  description="Estimate how many months it will take to pay off your credit card balance. Compare fixed monthly contributions against minimum payment formulas."
+  description="Discover how long it will take to pay off your credit card balance with minimum payments versus accelerated payments, and calculate total interest savings."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="payoff-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Card Details</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Card Details', 'Credit Card Details')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="balance" label="Credit Card Balance" type="number" prefix="$" value="5000" />
@@ -40,10 +47,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Payoff
+            {t('Calculate Payoff')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -240,9 +247,6 @@ import ResultCard from '../../components/ui/ResultCard.astro';
   const minLimitContainer = document.getElementById('min-limit-container');
 
   const resultWrapper = document.getElementById('result-wrapper');
-  const resTimeCard = document.getElementById('res-time');
-  const resInterestCard = document.getElementById('res-interest');
-  const resTotalCard = document.getElementById('res-total');
 
   const toggleScheduleBtn = document.getElementById('toggle-schedule');
   const scheduleWrapper = document.getElementById('schedule-wrapper');

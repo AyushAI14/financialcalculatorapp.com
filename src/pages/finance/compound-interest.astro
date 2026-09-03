@@ -5,11 +5,18 @@ import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('compound-interest');
 ---
 
 <CalculatorLayout 
   title="Compound Interest Calculator" 
   description="Calculate how your money can grow over time with compound interest. Adjust starting principal, monthly additions, rates, and compounding terms."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
@@ -17,7 +24,7 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
       <form id="compound-form" class="space-y-6">
         <!-- Synced Inputs & Range Sliders -->
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Investment Values</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Investment Values')}</h3>
           
           <!-- Principal -->
           <div class="space-y-2">
@@ -64,10 +71,10 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Growth
+            {t('Calculate Growth')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -397,8 +404,6 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
   }
 
   function updateResultCards(res: { totalBalance: number, totalContributions: number, totalInterest: number }) {
-    const cards = ['res-total', 'res-principal', 'res-interest'];
-    
     const rootTotal = document.getElementById('res-total');
     const rootPrincipal = document.getElementById('res-principal');
     const rootInterest = document.getElementById('res-interest');

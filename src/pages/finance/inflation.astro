@@ -2,34 +2,17 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "What is inflation?",
-    answer: "Inflation is the general increase in prices and fall in the purchasing value of money over time. It means your money buys fewer goods and services in the future than it does today."
-  },
-  {
-    question: "How does inflation affect my savings?",
-    answer: "If the inflation rate is higher than the interest rate you earn on your savings, your savings will lose purchasing power over time, even though the nominal dollar balance grows."
-  },
-  {
-    question: "How is inflation officially measured?",
-    answer: "Inflation is typically measured using indices like the Consumer Price Index (CPI) or the Personal Consumption Expenditures (PCE) price index. These track the average change over time in the prices paid by urban consumers for a market basket of consumer goods and services."
-  },
-  {
-    question: "What is the historical average inflation rate?",
-    answer: "Historically in the United States, the long-term average annual inflation rate has hovered around 3.2% (since 1913). Most modern central banks target an annual inflation rate of 2.0% as a healthy benchmark for economic growth."
-  },
-  {
-    question: "How can I protect my money from losing value to inflation?",
-    answer: "To beat inflation, your capital needs to earn a return higher than the inflation rate. You can protect your wealth by investing in inflation-resistant assets such as equities (stocks), real estate, commodities, or government-backed inflation-indexed bonds like TIPS or I-Bonds."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('inflation');
 ---
 
 <CalculatorLayout 
-  title="Inflation & Purchasing Power Calculator" 
-  description="Calculate how inflation erodes the value of your cash savings over time, and see the future price of goods and services."
+  title="Inflation Calculator" 
+  description="Calculate how inflation erodes purchasing power over time and determine the future cost of goods and services."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -38,9 +21,9 @@ const faqs = [
       <form id="inflation-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Inflation Parameters</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Inflation Parameters')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="10000" data-rate="3.2" data-years="10">10y Normal</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50000" data-rate="2.5" data-years="30">30y Safe</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="5000" data-rate="6.5" data-years="5">High Inflation</button>
@@ -58,10 +41,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Inflation
+            {t('Calculate Inflation')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

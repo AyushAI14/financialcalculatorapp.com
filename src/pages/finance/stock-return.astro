@@ -2,26 +2,17 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "How do I calculate stock returns?",
-    answer: "To calculate total stock return, subtract the purchase price from the selling price to find capital gains. Add any dividends received. Divide this sum by the initial purchase price, and multiply by 100 to get a percentage return."
-  },
-  {
-    question: "What is CAGR in stock returns?",
-    answer: "CAGR stands for Compound Annual Growth Rate. It represents the annualized rate of return on your investment over a holding period, assuming the gains compounded annually."
-  },
-  {
-    question: "What is the difference between simple return and annualized return?",
-    answer: "Simple return measures the total percentage gain or loss regardless of time. Annualized return (CAGR) scales the return to a standard 1-year period, allowing you to compare investments held for different durations."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('stock-return');
 ---
 
 <CalculatorLayout 
   title="Stock Return Calculator" 
-  description="Analyze your stock market investments by calculating capital gains, total yield, dividend income, and annualized CAGR returns."
+  description="Calculate the total return, annualized return (CAGR), and capital gains on stock investments, including dividend reinvestment."
   faqs={faqs}
 >
   <div id="section-return" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -30,11 +21,11 @@ const faqs = [
       <form id="return-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Purchase & Sale Pricing</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Purchase & Sale Pricing', 'Stock Investment Details')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="120.50" data-sell="155.20" data-shares="100" data-holding="2.5" data-div="4.80">Short Trade</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="50.00" data-sell="110.00" data-shares="200" data-holding="5.0" data-div="12.00">Long Investment</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="120.50" data-sell="155.20" data-shares="100" data-holding="2.5" data-div="4.80">{t('Short Trade')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-buy="50.00" data-sell="110.00" data-shares="200" data-holding="5.0" data-div="12.00">{t('Long Investment')}</button>
             </div>
           </div>
           
@@ -49,16 +40,16 @@ const faqs = [
         </div>
 
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Dividends Received</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Dividends Received', 'Dividend Stock Profile')}</h3>
           <Input id="dividends-paid" label="Total Dividends Paid (Per share)" type="number" prefix="$" value="4.80" />
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Yields
+            {t('Calculate Yields')}
           </button>
           <button type="reset" id="reset-yields-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -170,7 +161,6 @@ const faqs = [
     // Plain English takeaway
     if (takeawayContainer) {
       takeawayContainer.classList.remove('hidden');
-      const currencySymbol = formatCurrency(0).replace(/0\.00/, '');
       takeawayContainer.innerHTML = `
         <span class="text-link">📢 Takeaway:</span> An initial investment of ${formatCurrency(res.initialCost)} grew to a total value of ${formatCurrency(res.salesProceeds + res.totalDividends)} (including dividends) over ${holdingPeriodYears} years, yielding an annualized return rate of <strong class="text-link">${(res.annualizedReturn * 100).toFixed(2)}%</strong>.
       `;

@@ -2,34 +2,17 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "What is a 529 plan?",
-    answer: "A 529 plan is a tax-advantaged savings plan designed to encourage saving for future education costs. It offers tax-free growth and tax-free withdrawals when used for qualified education expenses."
-  },
-  {
-    question: "How fast do college costs increase?",
-    answer: "Historically, college tuition fees inflate at about 4% to 6% per year, which is significantly faster than the general cost of living."
-  },
-  {
-    question: "What happens to 529 funds if my child does not go to college?",
-    answer: "If the beneficiary doesn't attend college, you can change the beneficiary to another qualifying family member, or roll over up to $35,000 lifetime into a Roth IRA for the beneficiary (subject to annual contribution limits). Otherwise, non-qualified withdrawals are subject to income taxes and a 10% penalty on the earnings portion."
-  },
-  {
-    question: "Can I use a 529 plan for trade schools or K-12 tuition?",
-    answer: "Yes. 529 plan funds can be used for qualified expenses at eligible vocational/trade schools, registered apprenticeship programs, and up to $10,000 per year per student for private or public elementary and secondary (K-12) school tuition."
-  },
-  {
-    question: "How does a 529 plan impact financial aid eligibility?",
-    answer: "529 plans owned by a parent have a minimal impact on federal financial aid. Only up to 5.64% of the asset's value is factored into the Student Aid Index (SAI), whereas assets owned directly by the student are assessed at a much higher rate of 20%."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('college-savings');
 ---
 
 <CalculatorLayout 
   title="College Savings (529) Calculator" 
-  description="Estimate the future cost of a 4-year college education and calculate how much you need to save monthly in a 529 plan to reach your funding goal."
+  description="Forecast future college tuition costs and determine the monthly 529 plan savings needed to cover your child's higher education."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -38,9 +21,9 @@ const faqs = [
       <form id="college-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Education & Savings Settings</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Education & Savings Settings')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="5" data-rage="18" data-cost="25000" data-inf="5.0" data-saved="5000" data-contrib="200" data-rate="6.5">Public 4-Year</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="2" data-rage="18" data-cost="55000" data-inf="4.5" data-saved="10000" data-contrib="400" data-rate="7.0">Private 4-Year</button>
             </div>
@@ -56,7 +39,7 @@ const faqs = [
             <Input id="cost-inflation" label="Annual Cost Inflation" type="number" suffix="%" value="5.0" placeholder="5.0" tooltip="The annual percentage rate college tuition is expected to increase." />
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Portfolio Details</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Portfolio Details', 'Investment Settings')}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="current-saved" label="Initial Saved Capital" type="number" prefix="$" value="5000" placeholder="0.00" tooltip="Money already set aside for college expenses." />
@@ -70,10 +53,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Target
+            {t('Calculate Target')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

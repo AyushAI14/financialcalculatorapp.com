@@ -23,4 +23,43 @@ export default defineConfig({
   },
 
   adapter: vercel(),
+  i18n: {
+    defaultLocale: 'en',
+    locales: [
+      'en',
+      'es',
+      { codes: ['zh-Hans', 'zh-CN', 'zh-SG', 'zh'], path: 'zh-cn' },
+      { codes: ['zh-Hant', 'zh-TW', 'zh-HK'], path: 'zh-tw' },
+      'de',
+      'ja',
+      'fr',
+      'ko',
+      'it',
+      'pt',
+      'ar',
+      'hi',
+      'ru',
+      'id'
+    ],
+    routing: {
+      prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
+      fallbackType: 'rewrite'
+    },
+    fallback: {
+      es: 'en',
+      'zh-cn': 'en',
+      'zh-tw': 'en',
+      de: 'en',
+      ja: 'en',
+      fr: 'en',
+      ko: 'en',
+      it: 'en',
+      pt: 'en',
+      ar: 'en',
+      hi: 'en',
+      ru: 'en',
+      id: 'en'
+    }
+  }
 });

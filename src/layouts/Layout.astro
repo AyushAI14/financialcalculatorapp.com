@@ -1,45 +1,69 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
+import LanguagePicker from '../components/LanguagePicker.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath, getHreflangList, isRtl } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
 
 interface Props {
   title: string;
   description?: string;
   canonicalUrl?: string;
+  lang?: Lang;
 }
+
+const detectedLang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const lang = Astro.props.lang || detectedLang;
+const rtl = isRtl(lang);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
 
 const { 
   title, 
-  description = "A premium suite of financial calculators for all your needs. Formulated with precise math and a clean interface.",
+  description = t("site.description"),
   canonicalUrl
 } = Astro.props;
 
-const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://fincompute.vercel.app').href;
+const localizedPageTitle = t(title, title);
+const localizedPageDescription = description ? t(description, description) : t("site.description");
+
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://fincompute.vercel.app').replace(/\/+$/, '');
+const localizedPath = translatePath(Astro.url.pathname, lang);
+const formattedPath = localizedPath === '/' ? '/' : (localizedPath.endsWith('/') ? localizedPath : `${localizedPath}/`);
+const resolvedCanonical = canonicalUrl || `${siteOrigin}${formattedPath}`;
+const hreflangList = getHreflangList(Astro.url, siteOrigin);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={rtl ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
+    <meta name="description" content={localizedPageDescription} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={resolvedCanonical} />
     <link rel="manifest" href="/manifest.json" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{localizedPageTitle}</title>
+
+    <!-- Hreflang markup for each supported language -->
+    {hreflangList.map(({ code, href }) => (
+      <link rel="alternate" hreflang={code} href={href} />
+    ))}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={resolvedCanonical} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={localizedPageTitle} />
+    <meta property="og:description" content={localizedPageDescription} />
+    <meta property="og:locale" content={lang} />
     <meta property="og:image" content="/og-image.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={resolvedCanonical} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={localizedPageTitle} />
+    <meta name="twitter:description" content={localizedPageDescription} />
     <meta name="twitter:image" content="/og-image.png" />
     
     <!-- Preconnect to jsDelivr for faster font delivery -->
@@ -87,7 +111,7 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
     <header class="sticky top-4 z-50 max-w-[950px] w-[92%] mx-auto bg-canvas/75 backdrop-blur-md border border-hairline rounded-full h-12 flex items-center px-4 sm:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] mt-4">
       <div class="w-full flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-2 hover:opacity-85 transition-opacity">
+        <a href={translatePath('/')} class="flex items-center gap-2 hover:opacity-85 transition-opacity">
           <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
@@ -96,14 +120,19 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
 
         <!-- Center Capsule Links -->
         <nav class="hidden md:flex items-center gap-0.5 bg-canvas-soft border border-hairline rounded-full p-0.5 shadow-inner">
-          <a href="/#categories-section" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Calculators</a>
-          <a href="/blog" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Blog</a>
-          <a href="/about" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">About</a>
-          <a href="/contact" class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">Contact</a>
+          <a href={translatePath('/#categories-section')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.calculators')}</a>
+          <a href={translatePath('/blog')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.blog')}</a>
+          <a href={translatePath('/about')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.about')}</a>
+          <a href={translatePath('/contact')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.contact')}</a>
         </nav>
 
         <!-- Right side tools -->
         <div class="flex items-center gap-1">
+          <!-- Language Selector -->
+          <div class="hidden sm:flex items-center mr-1">
+            <LanguagePicker id="navbar-language-select" lang={lang} />
+          </div>
+
           <!-- Currency Selector -->
           <div class="relative flex items-center mr-1">
             <select id="currency-select" title="Rates: 1 USD = 0.92 EUR = 0.79 GBP = 83 INR" class="bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none" aria-label="Select currency">
@@ -138,14 +167,18 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       <!-- Mobile Menu overlay (Card style below the navbar) -->
       <div id="mobile-menu" class="hidden md:hidden absolute left-0 right-0 top-14 bg-canvas/95 backdrop-blur-xl border border-hairline rounded-2xl p-4 shadow-xl z-50 animate-fade-in mx-auto w-full">
         <nav class="flex flex-col gap-1">
-          <a href="/#categories-section" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Calculators</a>
-          <a href="/blog" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Blog</a>
-          <a href="/about" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">About</a>
-          <a href="/contact" class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">Contact</a>
+          <a href={translatePath('/#categories-section')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.calculators')}</a>
+          <a href={translatePath('/blog')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.blog')}</a>
+          <a href={translatePath('/about')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.about')}</a>
+          <a href={translatePath('/contact')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.contact')}</a>
           <div class="border-t border-hairline my-2"></div>
-          <a href="/privacy" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Privacy Policy</a>
-          <a href="/terms" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Terms of Service</a>
-          <a href="/disclaimer" class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">Disclaimer</a>
+          <a href={translatePath('/privacy')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.privacy')}</a>
+          <a href={translatePath('/terms')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.terms')}</a>
+          <a href={translatePath('/disclaimer')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.disclaimer')}</a>
+          <div class="pt-2 px-4 border-t border-hairline/60 mt-1">
+            <span class="text-[10px] font-mono text-mute block mb-1.5">{t('lang.select')}:</span>
+            <LanguagePicker id="mobile-language-select" lang={lang} />
+          </div>
         </nav>
       </div>
     </header>
@@ -158,54 +191,59 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
         <!-- Col 1: Brand & Description -->
         <div class="lg:col-span-2 space-y-4">
-          <a href="/" class="flex items-center gap-2 hover:opacity-85 transition-opacity w-fit">
+          <a href={translatePath('/')} class="flex items-center gap-2 hover:opacity-85 transition-opacity w-fit">
             <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <span class="font-bold text-sm tracking-tight text-ink font-mono">FinCompute</span>
           </a>
           <p class="text-xs text-mute leading-relaxed max-w-sm font-sans">
-            A premium suite of interactive financial calculators formulated with precise mathematics and clean, glowing, modern interfaces. Plan your savings, investments, loans, and tax allocations dynamically.
+            {t('footer.brand')}
           </p>
           <p class="text-[10px] text-mute/80 leading-relaxed max-w-sm font-sans border-t border-hairline/60 pt-2.5">
-            <strong>Disclaimer:</strong> FinCompute is a provider of mathematical calculation tools for educational and informational purposes only. None of the calculators or results constitute professional financial advice (NFA), investment recommendations, tax advice, or legal advice. All calculations are theoretical estimations based on user inputs. Please consult a qualified professional before making financial commitments.
+            <strong>{t('nav.disclaimer')}:</strong> {t('footer.disclaimer')}
           </p>
+          <div class="pt-2 flex items-center gap-2">
+            <span class="text-[10px] font-mono text-mute">{t('lang.select')}:</span>
+            <LanguagePicker id="footer-language-select" lang={lang} />
+          </div>
         </div>
 
         <!-- Col 2: Calculators -->
         <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Calculators</h4>
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('nav.calculators')}</h4>
           <ul class="space-y-2 text-xs font-sans text-mute">
-            <li><a href="/finance/compound-interest" class="hover:text-ink transition-colors">Compound Interest</a></li>
-            <li><a href="/finance/paycheck" class="hover:text-ink transition-colors">Paycheck Calculator</a></li>
-            <li><a href="/finance/net-worth" class="hover:text-ink transition-colors">Net Worth Tracker</a></li>
-            <li><a href="/loan/mortgage" class="hover:text-ink transition-colors">Mortgage Calculator</a></li>
-            <li><a href="/finance/college-savings" class="hover:text-ink transition-colors">College Savings (529)</a></li>
+            <li><a href={translatePath('/finance/compound-interest')} class="hover:text-ink transition-colors">{t('calc.compound.name')}</a></li>
+            <li><a href={translatePath('/finance/paycheck')} class="hover:text-ink transition-colors">{t('calc.paycheck.name')}</a></li>
+            <li><a href={translatePath('/finance/net-worth')} class="hover:text-ink transition-colors">Net Worth Tracker</a></li>
+            <li><a href={translatePath('/loan/mortgage')} class="hover:text-ink transition-colors">{t('calc.mortgage.name')}</a></li>
+            <li><a href={translatePath('/finance/college-savings')} class="hover:text-ink transition-colors">College Savings (529)</a></li>
           </ul>
         </div>
 
         <!-- Col 3: Comparisons -->
         <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Comparisons</h4>
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('footer.comparisons')}</h4>
           <ul class="space-y-2 text-xs font-sans text-mute">
-            <li><a href="/compare/snowball-vs-avalanche" class="hover:text-ink transition-colors">Snowball vs Avalanche</a></li>
-            <li><a href="/compare/roth-vs-traditional-ira" class="hover:text-ink transition-colors">Roth vs Traditional IRA</a></li>
-            <li><a href="/compare/apr-vs-nominal" class="hover:text-ink transition-colors">APR vs Nominal Interest</a></li>
-            <li><a href="/loan/rent-vs-buy" class="hover:text-ink transition-colors">Rent vs Buy Decision</a></li>
+            <li><a href={translatePath('/compare/snowball-vs-avalanche')} class="hover:text-ink transition-colors">Snowball vs Avalanche</a></li>
+            <li><a href={translatePath('/compare/roth-vs-traditional-ira')} class="hover:text-ink transition-colors">Roth vs Traditional IRA</a></li>
+            <li><a href={translatePath('/compare/apr-vs-nominal')} class="hover:text-ink transition-colors">APR vs Nominal Interest</a></li>
+            <li><a href={translatePath('/loan/rent-vs-buy')} class="hover:text-ink transition-colors">Rent vs Buy Decision</a></li>
           </ul>
         </div>
 
         <!-- Col 4: Resources & Legal -->
         <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">Resources</h4>
+          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('footer.resources')}</h4>
           <ul class="space-y-2 text-xs font-sans text-mute">
-            <li><a href="/blog" class="hover:text-ink transition-colors">Blog & Insights</a></li>
-            <li><a href="/glossary" class="hover:text-ink transition-colors">Financial Glossary</a></li>
-            <li><a href="/about" class="hover:text-ink transition-colors">About Us</a></li>
-            <li><a href="/contact" class="hover:text-ink transition-colors">Contact Support</a></li>
-            <li><a href="/privacy" class="hover:text-ink transition-colors">Privacy Policy</a></li>
-            <li><a href="/terms" class="hover:text-ink transition-colors">Terms of Service</a></li>
-            <li><a href="/disclaimer" class="hover:text-ink transition-colors">Disclaimer</a></li>
+            <li><a href={translatePath('/blog')} class="hover:text-ink transition-colors">{t('nav.blog')}</a></li>
+            <li><a href={translatePath('/glossary')} class="hover:text-ink transition-colors">Financial Glossary</a></li>
+            <li><a href={translatePath('/about')} class="hover:text-ink transition-colors">{t('nav.about')}</a></li>
+            <li><a href={translatePath('/contact')} class="hover:text-ink transition-colors">{t('nav.contact')}</a></li>
+            <li><a href={translatePath('/privacy')} class="hover:text-ink transition-colors">{t('nav.privacy')}</a></li>
+            <li><a href={translatePath('/terms')} class="hover:text-ink transition-colors">{t('nav.terms')}</a></li>
+            <li><a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors">{t('nav.disclaimer')}</a></li>
+            <li><a href={translatePath('/sitemap.xml')} class="hover:text-ink transition-colors">{t('nav.sitemap')}</a></li>
           </ul>
         </div>
       </div>
@@ -213,17 +251,21 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
       <!-- Footer Bottom -->
       <div class="border-t border-hairline pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-mute font-mono">
         <div>
-          &copy; {new Date().getFullYear()} FinCompute. All rights reserved.
+          &copy; {new Date().getFullYear()} FinCompute. {t('footer.rights')}
         </div>
         <div class="flex items-center gap-2 text-mute/50 font-sans">
-          <span>Simple. Precise. Interactive.</span>
+          <span>{t('footer.tagline')}</span>
         </div>
       </div>
     </footer>
 
-    <!-- Theme Toggle & Mobile Menu logic -->
+    <!-- Theme Toggle, Localization & Mobile Menu logic -->
     <script>
       import { safeGetItem, safeSetItem } from '../lib/storage';
+      import { initClientLocalization } from '../i18n/client-localize';
+
+      initClientLocalization();
+      document.addEventListener('astro:page-load', initClientLocalization);
 
       const themeToggleBtn = document.getElementById('theme-toggle');
       themeToggleBtn?.addEventListener('click', () => {
@@ -308,5 +350,7 @@ const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site
         }
       });
     </script>
+    <Analytics />
   </body>
 </html>
+

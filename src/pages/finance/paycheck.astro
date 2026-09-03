@@ -3,34 +3,17 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "What is FICA tax?",
-    answer: "FICA stands for the Federal Insurance Contributions Act. It consists of Social Security tax (6.2% on income up to the annual wage limit) and Medicare tax (1.45% on all earnings, plus 0.9% additional on earnings above $200,000)."
-  },
-  {
-    question: "What is the difference between pre-tax and post-tax deductions?",
-    answer: "Pre-tax deductions (like traditional 401k or health insurance premiums) are taken out before taxes are calculated, reducing your taxable income. Post-tax deductions (like Roth 401k or Roth IRA contributions) are taken out after taxes and do not reduce taxable income."
-  },
-  {
-    question: "What is the difference between gross pay and net pay?",
-    answer: "Gross pay is the total amount of money you earn before any deductions are made. Net pay (or take-home pay) is the amount you actually receive in your paycheck after taxes, FICA, health insurance, and retirement contributions are deducted."
-  },
-  {
-    question: "How does my W-4 filing status affect my paycheck?",
-    answer: "Your Form W-4 tells your employer how much federal income tax to withhold based on your filing status (Single, Married, Head of Household), dependents, and other income adjustments. Adjusting your W-4 can increase your take-home pay or help you avoid owing a large tax bill at the end of the year."
-  },
-  {
-    question: "Why do state and local taxes vary so much?",
-    answer: "Each state set its own income tax brackets (some states have no income tax at all, like Texas and Florida, while others have progressive tax rates). Local taxes may also apply depending on the specific city or county you work or live in."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('paycheck');
 ---
 
 <CalculatorLayout 
-  title="Paycheck Take-Home Pay Calculator" 
-  description="Estimate your net take-home pay per paycheck and annually by calculating federal, state, and FICA tax withholdings along with pre-tax and post-tax deductions."
+  title="Paycheck Calculator" 
+  description="Estimate your take-home pay after federal taxes, state taxes, FICA, and pre-tax benefit deductions."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -39,9 +22,9 @@ const faqs = [
       <form id="paycheck-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Salary & Pay Schedule</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Salary & Pay Schedule')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="75000" data-freq="biweekly" data-pre="6000" data-post="1200" data-state="4.5">Standard $75k</button>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="150000" data-freq="semimonthly" data-pre="18000" data-post="2400" data-state="6.0">Tech Lead $150k</button>
             </div>
@@ -57,7 +40,7 @@ const faqs = [
             ]} value="biweekly" />
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Taxes & Deductions</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Taxes & Deductions', 'Tax & Benefit Deductions')}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="state-rate" label="State Tax Rate" type="number" suffix="%" value="4.5" placeholder="4.0" tooltip="Estimated flat state income tax rate." />
@@ -71,10 +54,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Net Pay
+            {t('Calculate Net Pay')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

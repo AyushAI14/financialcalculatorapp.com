@@ -5,18 +5,25 @@ import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('savings-goal');
 ---
 
 <CalculatorLayout 
   title="Savings Goal Calculator" 
-  description="Determine how much you need to save monthly to reach a specific financial target, considering your starting balance and compound interest."
+  description="Determine how much money you need to save each month to reach your financial savings target by a specific deadline."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Form Inputs (Left Column) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="savings-goal-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Goal Settings</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Goal Settings', 'Savings Goal Details')}</h3>
           
           <!-- Target Goal -->
           <div class="space-y-2">
@@ -62,10 +69,10 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Goal
+            {t('Calculate Goal')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -274,7 +281,7 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
 </CalculatorLayout>
 
 <script>
-  import { calculateTVM, generateTVMSchedule } from '../../lib/math/finance';
+  import { calculateTVM } from '../../lib/math/finance';
   import { formatCurrency } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 

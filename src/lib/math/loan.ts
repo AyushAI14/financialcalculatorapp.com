@@ -291,12 +291,6 @@ export function simulateRentVsBuy(params: RentVsBuyParams): RentVsBuyYearSimulat
 
   // Initialize mortgage
   const loanAmount = homePrice - downPayment;
-  const mortgagePayment = calculateLoanPMT({
-    principal: loanAmount,
-    rate: mortgageRate,
-    years: mortgageTermYears
-  }) * 12; // annual mortgage P&I
-  
   const mSchedule = generateAmortizationSchedule({
     principal: loanAmount,
     rate: mortgageRate,

@@ -136,7 +136,7 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
           placeholder="Enter passcode..." 
           class="w-full h-10 px-3 bg-canvas text-ink text-sm border border-hairline rounded focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong text-center" 
           required 
-          autoplay
+          autofocus
         />
         {errorMsg && <div class="text-xs text-error font-medium">{errorMsg}</div>}
         <button type="submit" class="w-full py-2 bg-primary text-on-primary rounded font-semibold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-sm">

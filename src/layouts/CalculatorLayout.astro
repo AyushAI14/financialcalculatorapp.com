@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath, getPathWithoutLocale } from '../i18n/utils';
 
 interface FAQItem {
   question: string;
@@ -15,87 +16,98 @@ interface Props {
 
 const { title, description, faqs = [], lastUpdated = 'July 2026' } = Astro.props;
 
-const currentPath = Astro.url.pathname;
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+const cleanPath = getPathWithoutLocale(Astro.url.pathname);
 
 // Expanded calculator routes
 const categories = [
   {
-    name: 'Finance & Investment',
+    name: t('cat.finance', 'Finance & Investment'),
     links: [
-      { name: 'TVM Calculator', url: '/finance/tvm' },
-      { name: 'Compound Interest', url: '/finance/compound-interest' },
-      { name: 'ROI Calculator', url: '/finance/roi' },
-      { name: 'Savings Goal', url: '/finance/savings-goal' },
-      { name: 'Stock Return', url: '/finance/stock-return' },
-      { name: 'CAPM Calculator', url: '/finance/capm' },
-      { name: 'Dividend Calculator', url: '/finance/dividend' },
-      { name: 'Inflation Calculator', url: '/finance/inflation' },
-      { name: 'Paycheck Calculator', url: '/finance/paycheck' },
-      { name: 'Net Worth Tracker', url: '/finance/net-worth' },
-      { name: 'Emergency Fund', url: '/finance/emergency-fund' },
-      { name: 'Investment Fee Impact', url: '/finance/fee-impact' },
-      { name: 'College Savings (529)', url: '/finance/college-savings' },
-      { name: 'Crypto DCA', url: '/finance/crypto-dca' },
+      { name: t('calc.tvm.name', 'TVM Calculator'), url: '/finance/tvm' },
+      { name: t('calc.compound.name', 'Compound Interest Calculator'), url: '/finance/compound-interest' },
+      { name: t('calc.roi.name', 'ROI Calculator'), url: '/finance/roi' },
+      { name: t('calc.savingsgoal.name', 'Savings Goal Calculator'), url: '/finance/savings-goal' },
+      { name: t('calc.stockreturn.name', 'Stock Return Calculator'), url: '/finance/stock-return' },
+      { name: t('calc.capm.name', 'CAPM Calculator'), url: '/finance/capm' },
+      { name: t('calc.dividend.name', 'Dividend Calculator'), url: '/finance/dividend' },
+      { name: t('calc.inflation.name', 'Inflation Calculator'), url: '/finance/inflation' },
+      { name: t('calc.paycheck.name', 'Paycheck Calculator'), url: '/finance/paycheck' },
+      { name: t('calc.networth.name', 'Net Worth Tracker'), url: '/finance/net-worth' },
+      { name: t('calc.emergencyfund.name', 'Emergency Fund Calculator'), url: '/finance/emergency-fund' },
+      { name: t('calc.feeimpact.name', 'Investment Fee Calculator'), url: '/finance/fee-impact' },
+      { name: t('calc.collegesavings.name', 'College Savings (529)'), url: '/finance/college-savings' },
+      { name: t('calc.cryptodca.name', 'Crypto DCA Calculator'), url: '/finance/crypto-dca' },
     ]
   },
   {
-    name: 'Loan & Mortgage',
+    name: t('cat.loan', 'Loan & Mortgage'),
     links: [
-      { name: 'Loan Calculator', url: '/loan/calculator' },
-      { name: 'Mortgage Calculator', url: '/loan/mortgage' },
-      { name: 'Debt Snowball vs Avalanche', url: '/loan/debt-payoff' },
-      { name: 'Loan Refinance', url: '/loan/refinance' },
-      { name: 'Student Loan IDR', url: '/loan/student-loan' },
-      { name: 'Debt-to-Income (DTI)', url: '/loan/dti' },
-      { name: 'APR Calculator', url: '/loan/apr' },
-      { name: 'Rent vs Buy', url: '/loan/rent-vs-buy' },
-      { name: 'Home Affordability', url: '/loan/home-affordability' },
+      { name: t('calc.loan.name', 'Loan Calculator'), url: '/loan/calculator' },
+      { name: t('calc.mortgage.name', 'Mortgage Calculator'), url: '/loan/mortgage' },
+      { name: t('calc.debtsnowball.name', 'Debt Snowball vs Avalanche'), url: '/loan/debt-payoff' },
+      { name: t('calc.loanrefinance.name', 'Loan Refinance Calculator'), url: '/loan/refinance' },
+      { name: t('calc.studentloan.name', 'Student Loan IDR Calculator'), url: '/loan/student-loan' },
+      { name: t('calc.dti.name', 'Debt-to-Income (DTI) Calculator'), url: '/loan/dti' },
+      { name: t('calc.apr.name', 'APR Calculator'), url: '/loan/apr' },
+      { name: t('calc.rentvsbuy.name', 'Rent vs Buy Calculator'), url: '/loan/rent-vs-buy' },
+      { name: t('calc.homeaffordability.name', 'Home Affordability Calculator'), url: '/loan/home-affordability' },
     ]
   },
   {
-    name: 'Retirement',
+    name: t('cat.retirement', 'Retirement'),
     links: [
-      { name: 'Retirement Planner', url: '/retirement/planner' },
-      { name: '401k Calculator', url: '/retirement/401k' },
-      { name: 'Roth vs Trad IRA', url: '/retirement/ira-comparison' },
+      { name: t('calc.retirement.name', 'Retirement Planner'), url: '/retirement/planner' },
+      { name: t('calc.401k.name', '401k Contribution Calculator'), url: '/retirement/401k' },
+      { name: t('calc.iracomparison.name', 'Roth vs Trad IRA'), url: '/retirement/ira-comparison' },
     ]
   },
   {
-    name: 'Credit Card & Auto',
+    name: t('cat.credit', 'Credit Card & Auto'),
     links: [
-      { name: 'Credit Card Payoff', url: '/credit-card/payoff' },
-      { name: 'Auto Loan', url: '/auto/loan' },
+      { name: t('calc.creditcardpayoff.name', 'Credit Card Payoff Calculator'), url: '/credit-card/payoff' },
+      { name: t('calc.autoloan.name', 'Auto Loan Calculator'), url: '/auto/loan' },
     ]
   },
   {
-    name: 'Miscellaneous',
+    name: t('cat.misc', 'Miscellaneous'),
     links: [
-      { name: 'Tip Calculator', url: '/misc/tip' },
-      { name: 'Discount & Tax', url: '/misc/discount' },
+      { name: t('calc.tip.name', 'Tip Calculator'), url: '/misc/tip' },
+      { name: t('calc.discount.name', 'Discount and Tax Calculator'), url: '/misc/discount' },
     ]
   }
 ];
 
 // Determine related calculators in the same category
-const currentCategory = categories.find(cat => cat.links.some(link => link.url === currentPath));
+const currentCategory = categories.find(cat => cat.links.some(link => link.url === cleanPath));
 const relatedLinks = currentCategory 
-  ? currentCategory.links.filter(l => l.url !== currentPath).slice(0, 3)
+  ? currentCategory.links.filter(l => l.url !== cleanPath).slice(0, 3)
   : [];
+
+// Localized values
+const localizedTitle = t(title, title);
+const localizedDescription = description ? t(description, description) : undefined;
+const localizedFaqs = faqs.map(faq => ({
+  question: t(faq.question, faq.question),
+  answer: t(faq.answer, faq.answer)
+}));
 
 // Schema creation
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": title,
-  "description": description,
+  "name": localizedTitle,
+  "description": localizedDescription,
   "applicationCategory": "FinancialApplication",
   "operatingSystem": "All"
 };
 
-const faqSchema = faqs.length > 0 ? {
+const faqSchema = localizedFaqs.length > 0 ? {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": faqs.map(faq => ({
+  "mainEntity": localizedFaqs.map(faq => ({
     "@type": "Question",
     "name": faq.question,
     "acceptedAnswer": {
@@ -105,7 +117,7 @@ const faqSchema = faqs.length > 0 ? {
   }))
 } : null;
 ---
-<Layout title={title} description={description}>
+<Layout title={localizedTitle} description={localizedDescription} lang={lang}>
   <!-- Inject Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(webAppSchema)} />
   {faqSchema && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />}
@@ -119,7 +131,7 @@ const faqSchema = faqs.length > 0 ? {
         <summary class="flex items-center justify-between px-4 py-3 text-sm font-medium text-ink cursor-pointer select-none">
           <span class="flex items-center gap-2">
             <svg class="w-4 h-4 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            Navigate Calculators
+            {t('nav.calculators')}
           </span>
           <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </summary>
@@ -129,11 +141,11 @@ const faqSchema = faqs.length > 0 ? {
               <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2 px-3">{cat.name}</h3>
               <ul class="space-y-1">
                 {cat.links.map(link => {
-                  const isActive = currentPath === link.url || currentPath === `${link.url}/`;
+                  const isActive = cleanPath === link.url || cleanPath === `${link.url}/`;
                   return (
                     <li>
                       <a 
-                        href={link.url} 
+                        href={translatePath(link.url)} 
                         class:list={[
                           "block px-3 py-1.5 text-sm rounded transition-colors",
                           isActive ? "bg-canvas-soft-2 text-ink font-semibold border-l-2 border-primary rounded-l-none" : "text-body hover:text-ink hover:bg-canvas-soft"
@@ -157,11 +169,11 @@ const faqSchema = faqs.length > 0 ? {
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-3 px-3">{cat.name}</h3>
             <ul class="space-y-1">
               {cat.links.map(link => {
-                const isActive = currentPath === link.url || currentPath === `${link.url}/`;
+                const isActive = cleanPath === link.url || cleanPath === `${link.url}/`;
                 return (
                   <li>
                     <a 
-                      href={link.url} 
+                      href={translatePath(link.url)} 
                       class:list={[
                         "block px-3 py-1.5 text-sm rounded transition-colors",
                         isActive ? "bg-canvas-soft-2 text-ink font-semibold border-l-2 border-primary rounded-l-none" : "text-body hover:text-ink hover:bg-canvas-soft"
@@ -179,18 +191,18 @@ const faqSchema = faqs.length > 0 ? {
 
       <!-- Saved Scenarios section in sidebar -->
       <div id="saved-scenarios-sidebar" class="bg-canvas-soft border border-hairline rounded-lg p-4 space-y-3 no-print mt-6 hidden lg:block">
-        <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider">My Saved Scenarios</h3>
+        <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider">{t('scenario.savedTitle', 'My Saved Scenarios')}</h3>
         <div id="scenarios-list" class="space-y-1.5 text-xs text-mute">
-          No saved scenarios yet.
+          {t('scenario.noSaved', 'No saved scenarios yet.')}
         </div>
         <button id="save-scenario-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-2 flex items-center justify-center gap-1.5">
-          <span>💾</span> Save Inputs
+          <span>💾</span> {t('calc.saveInputs', 'Save Inputs')}
         </button>
         <button id="compare-scenarios-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5 hidden">
-          <span>📊</span> Compare (0/2)
+          <span>📊</span> {t('calc.compare', 'Compare (0/2)')}
         </button>
         <button id="share-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5">
-          <span>🔗</span> Copy Share Link
+          <span>🔗</span> {t('calc.share')}
         </button>
       </div>
     </aside>
@@ -199,17 +211,18 @@ const faqSchema = faqs.length > 0 ? {
     <main class="flex-1 bg-canvas border border-hairline rounded-lg p-6 lg:p-10 shadow-sm min-h-[600px] relative">
 
       <div class="mb-10">
-        <h1 class="text-3xl font-semibold tracking-[-1.28px] text-ink mb-3">{title}</h1>
-        {description && <p class="text-body text-base max-w-3xl">{description}</p>}
+        <h1 class="text-3xl font-semibold tracking-[-1.28px] text-ink mb-3">{localizedTitle}</h1>
+        {localizedDescription && <p class="text-body text-base max-w-3xl">{localizedDescription}</p>}
+        {lastUpdated && <p class="text-[11px] text-mute font-mono mt-2">{t('calc.lastUpdated')}: {lastUpdated}</p>}
       </div>
       <slot />
 
       <!-- FAQ Section -->
-      {faqs && faqs.length > 0 && (
+      {localizedFaqs && localizedFaqs.length > 0 && (
         <div class="border-t border-hairline mt-12 pt-12 space-y-6 no-print">
-          <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
+          <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">{t('calc.faqs')}</h2>
           <div class="divide-y divide-hairline">
-            {faqs.map(faq => (
+            {localizedFaqs.map(faq => (
               <details class="group py-4">
                 <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
                   <span>{faq.question}</span>
@@ -230,11 +243,11 @@ const faqSchema = faqs.length > 0 ? {
       <div class="mt-12 p-4 bg-canvas-soft border border-hairline border-dashed rounded-md text-xs text-mute flex flex-col gap-2 no-print">
         <div class="flex items-center gap-2">
           <span>🔒</span>
-          <span><strong>100% Private:</strong> All calculations execute locally in your web browser. We do not store or transmit your financial details.</span>
+          <span><strong>{t('privacy.title', '100% Private:')}</strong> {t('privacy.desc', 'All calculations execute locally in your web browser. We do not store or transmit your financial details.')}</span>
         </div>
         <div class="flex items-center gap-2 border-t border-hairline/60 pt-2 mt-1">
           <span>💱</span>
-          <span><strong>Currency Rates:</strong> Conversions use static rates (1 USD = 0.92 EUR = 0.79 GBP = 83 INR) for convenience.</span>
+          <span><strong>{t('currency.title', 'Currency Rates:')}</strong> {t('currency.desc', 'Conversions use static rates (1 USD = 0.92 EUR = 0.79 GBP = 83 INR) for convenience.')}</span>
         </div>
       </div>
 
@@ -242,7 +255,7 @@ const faqSchema = faqs.length > 0 ? {
       <div id="compare-modal" class="fixed inset-0 bg-ink/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
         <div class="bg-canvas border border-hairline rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in">
           <header class="px-6 py-4 border-b border-hairline flex items-center justify-between bg-canvas-soft">
-            <h3 class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">Scenario Comparison</h3>
+            <h3 class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">{t('modal.comparisonTitle', 'Scenario Comparison')}</h3>
             <button id="close-compare-modal" class="text-mute hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
           </header>
           <div class="p-6 overflow-y-auto space-y-6">
@@ -250,10 +263,10 @@ const faqSchema = faqs.length > 0 ? {
               <table class="w-full border-collapse text-left text-xs">
                 <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
                   <tr>
-                    <th class="px-4 py-3">Metric</th>
-                    <th class="px-4 py-3" id="compare-scen-a-title">Scenario A</th>
-                    <th class="px-4 py-3" id="compare-scen-b-title">Scenario B</th>
-                    <th class="px-4 py-3">Difference</th>
+                    <th class="px-4 py-3">{t('modal.metric', 'Metric')}</th>
+                    <th class="px-4 py-3" id="compare-scen-a-title">{t('modal.scenarioA', 'Scenario A')}</th>
+                    <th class="px-4 py-3" id="compare-scen-b-title">{t('modal.scenarioB', 'Scenario B')}</th>
+                    <th class="px-4 py-3">{t('modal.difference', 'Difference')}</th>
                   </tr>
                 </thead>
                 <tbody id="compare-modal-tbody" class="divide-y divide-hairline text-body text-ink">
@@ -263,7 +276,7 @@ const faqSchema = faqs.length > 0 ? {
             </div>
           </div>
           <footer class="px-6 py-4 border-t border-hairline flex justify-end gap-2 bg-canvas-soft">
-            <button id="close-compare-modal-btn" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">Close</button>
+            <button id="close-compare-modal-btn" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">{t('modal.close', 'Close')}</button>
           </footer>
         </div>
       </div>
@@ -271,10 +284,10 @@ const faqSchema = faqs.length > 0 ? {
       <!-- Related Calculators Section -->
       {relatedLinks.length > 0 && (
         <div class="mt-12 border-t border-hairline pt-8 no-print">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Related Calculators</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('calc.related')}</h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {relatedLinks.map(link => (
-              <a href={link.url} class="p-4 bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-md transition-colors block text-sm font-medium text-ink">
+              <a href={translatePath(link.url)} class="p-4 bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-md transition-colors block text-sm font-medium text-ink">
                 {link.name} →
               </a>
             ))}
@@ -286,22 +299,22 @@ const faqSchema = faqs.length > 0 ? {
       <div class="mt-12 border-t border-hairline pt-6 no-print">
         <div id="feedback-widget-container" class="space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <span class="text-xs text-mute font-mono">Was this calculator helpful?</span>
+            <span class="text-xs text-mute font-mono">{t('feedback.helpful', 'Was this calculator helpful?')}</span>
             <div id="feedback-widget" class="flex items-center gap-2">
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes">👍 Yes</button>
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no">👎 No</button>
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes">{t('feedback.yes', '👍 Yes')}</button>
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no">{t('feedback.no', '👎 No')}</button>
             </div>
           </div>
           <div id="feedback-text-container" class="hidden space-y-2.5 max-w-xl transition-all duration-300">
             <textarea
               id="feedback-comment"
-              placeholder="Any comments or suggestions? (Optional)"
+              placeholder={t('feedback.placeholder', 'Any comments or suggestions? (Optional)')}
               rows="3"
               class="w-full p-3 bg-canvas border border-hairline text-ink text-xs rounded-lg focus:outline-none focus:border-hairline-strong transition-colors resize-none"
             ></textarea>
             <div class="flex justify-end gap-2">
-              <button type="button" id="feedback-skip-btn" class="px-3.5 py-1 bg-canvas hover:bg-canvas-soft text-mute text-xs border border-hairline rounded-full cursor-pointer transition-colors font-medium">Skip</button>
-              <button type="button" id="feedback-submit-btn" class="px-4 py-1.5 bg-primary text-on-primary text-xs rounded-full cursor-pointer hover:opacity-90 transition-opacity font-semibold">Submit Comments</button>
+              <button type="button" id="feedback-skip-btn" class="px-3.5 py-1 bg-canvas hover:bg-canvas-soft text-mute text-xs border border-hairline rounded-full cursor-pointer transition-colors font-medium">{t('feedback.skip', 'Skip')}</button>
+              <button type="button" id="feedback-submit-btn" class="px-4 py-1.5 bg-primary text-on-primary text-xs rounded-full cursor-pointer hover:opacity-90 transition-opacity font-semibold">{t('feedback.submit', 'Submit Comments')}</button>
             </div>
           </div>
         </div>

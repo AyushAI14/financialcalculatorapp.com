@@ -1,13 +1,19 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('rent-vs-buy');
 ---
 
 <CalculatorLayout 
-  title="Rent vs. Buy Calculator" 
-  description="Compare the financial costs and long-term net worth impact of renting a property (and investing cash savings) vs. buying a home."
+  title="Rent vs Buy Calculator" 
+  description="Compare the long-term wealth impact of buying a home versus renting and investing the difference over a 10 to 30 year horizon."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
@@ -15,7 +21,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
       <form id="rent-vs-buy-form" class="space-y-6">
         <!-- Renter Settings -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Renter Parameters</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Renter Parameters', 'Rental Assumptions')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input id="rent" label="Monthly Rent" type="number" prefix="$" value="1800" />
             <Input id="rent-inflation" label="Rent Inflation" type="number" suffix="%" value="3.0" />
@@ -25,7 +31,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <!-- Buyer Settings -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Buyer Parameters</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Buyer Parameters', 'Home Purchase Details')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-2">
               <Input id="home-price" label="Home Purchase Price" type="number" prefix="$" value="380000" />
@@ -55,10 +61,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Run Comparison
+            {t('Run Comparison')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

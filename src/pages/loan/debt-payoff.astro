@@ -1,7 +1,10 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 
 const faqs = [
   {
@@ -38,11 +41,11 @@ const faqs = [
       <form id="debt-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Debts</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Your Debts')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="5000" data-r1="19.9" data-m1="150" data-b2="12000" data-r2="6.0" data-m2="280" data-b3="25000" data-r3="4.5" data-m3="260" data-budget="950">Standard</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="1500" data-r1="24.9" data-m1="75" data-b2="8000" data-r2="8.5" data-m2="180" data-b3="15000" data-r3="6.8" data-m3="190" data-budget="600">High Interest CCs</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="5000" data-r1="19.9" data-m1="150" data-b2="12000" data-r2="6.0" data-m2="280" data-b3="25000" data-r3="4.5" data-m3="260" data-budget="950">{t('Standard')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="1500" data-r1="24.9" data-m1="75" data-b2="8000" data-r2="8.5" data-m2="180" data-b3="15000" data-r3="6.8" data-m3="190" data-budget="600">{t('High Interest CCs')}</button>
             </div>
           </div>
 
@@ -85,16 +88,16 @@ const faqs = [
             </div>
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Monthly Budget allocation</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Monthly Budget allocation')}</h3>
           <Input id="total-budget" label="Total Monthly Budget Amount" type="number" prefix="$" value="950" tooltip="The total amount you can pay towards all debts monthly. Must be at least the sum of minimum payments." />
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Compare Strategies
+            {t('Compare Strategies')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

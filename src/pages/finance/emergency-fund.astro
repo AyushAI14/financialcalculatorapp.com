@@ -3,34 +3,17 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import Select from '../../components/ui/Select.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "How much emergency fund is recommended?",
-    answer: "Most financial advisors recommend saving 3 to 6 months of essential living expenses. If your income is highly volatile (e.g. freelancing) or you have dependents, targeting 9 to 12 months is safer."
-  },
-  {
-    question: "What expenses should be included in an emergency fund budget?",
-    answer: "Include only essential living costs: housing (mortgage/rent), utility bills, groceries, mandatory loan repayments, insurance, and medical costs. Exclude discretionary costs like dining out or streaming services."
-  },
-  {
-    question: "Where should I keep my emergency fund?",
-    answer: "Keep your emergency fund in a liquid, safe, and interest-bearing account, such as a High-Yield Savings Account (HYSA) or a Money Market Account. Avoid investing this money in the stock market or locking it in long-term CDs, as you need to access it immediately without penalty when an emergency arises."
-  },
-  {
-    question: "Should I pay off debt or build an emergency fund first?",
-    answer: "Financial experts generally advise building a starter emergency fund of $1,000 to one month of expenses first. Once you have this safety net to avoid taking on new debt for small emergencies, you can focus on aggressively paying down high-interest debt (like credit cards) before completing your full 3-to-6-month fund."
-  },
-  {
-    question: "When is it appropriate to use emergency fund savings?",
-    answer: "Only use it for expenses that are unexpected, urgent, and absolutely necessary (e.g., job loss, emergency medical care, critical car or home repairs). Do not use it for predictable expenses (like holiday gifts or annual insurance premiums) or discretionary purchases."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('emergency-fund');
 ---
 
 <CalculatorLayout 
   title="Emergency Fund Calculator" 
-  description="Estimate how much money you need to cover essential expenses during an unexpected event (like job loss or medical emergencies) and plan your savings timeline."
+  description="Calculate the exact size of your emergency safety cushion based on your essential monthly expenses and job stability."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -39,11 +22,11 @@ const faqs = [
       <form id="emergency-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Expenses & Target</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Expenses & Target', 'Essential Monthly Living Expenses')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="3500" data-sav="5000" data-months="6" data-contrib="250">6-Month Target</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="2500" data-sav="2000" data-months="3" data-contrib="150">3-Month Target</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="3500" data-sav="5000" data-months="6" data-contrib="250">{t('6-Month Target')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="2500" data-sav="2000" data-months="3" data-contrib="150">{t('3-Month Target')}</button>
             </div>
           </div>
 
@@ -65,10 +48,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Goal
+            {t('Calculate Goal')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

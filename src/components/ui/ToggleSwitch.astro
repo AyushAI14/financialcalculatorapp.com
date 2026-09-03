@@ -1,4 +1,6 @@
 ---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
 interface Props {
   id: string;
   label: string;
@@ -7,12 +9,17 @@ interface Props {
   description?: string;
 }
 
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+
 const { id, label, checked = false, value = 'on', description } = Astro.props;
+const localizedLabel = t(label, label);
+const localizedDescription = description ? t(description, description) : undefined;
 ---
 <div class="flex items-center justify-between p-4 bg-canvas border border-hairline rounded-sm shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
   <div class="flex flex-col gap-0.5">
-    <label for={id} class="text-sm font-medium text-ink cursor-pointer">{label}</label>
-    {description && <span class="text-xs text-mute">{description}</span>}
+    <label for={id} class="text-sm font-medium text-ink cursor-pointer">{localizedLabel}</label>
+    {localizedDescription && <span class="text-xs text-mute">{localizedDescription}</span>}
   </div>
   <div class="relative flex items-center">
     <input

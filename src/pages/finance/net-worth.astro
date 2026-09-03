@@ -2,34 +2,17 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
-const faqs = [
-  {
-    question: "What is net worth?",
-    answer: "Net worth is the total value of everything you own (assets) minus everything you owe (liabilities). It is a key metric used to measure your overall financial health."
-  },
-  {
-    question: "How often should I calculate my net worth?",
-    answer: "Most financial planners recommend updating your net worth quarterly or semi-annually. Monthly updates are also common, but can cause unnecessary stress due to minor market fluctuations."
-  },
-  {
-    question: "What counts as an asset vs. a liability?",
-    answer: "Assets are items of economic value that you own (e.g., cash, savings accounts, retirement accounts, brokerage portfolios, real estate, and vehicles). Liabilities are debts or financial obligations that you owe to others (e.g., mortgages, student loans, credit card balances, car loans, and personal loans)."
-  },
-  {
-    question: "Should I include my house and mortgage in my net worth?",
-    answer: "Yes. You should list your home's current market value as an asset and your remaining mortgage balance as a liability. The difference represents your home equity, which is a key component of your total wealth."
-  },
-  {
-    question: "What does it mean to have a negative net worth?",
-    answer: "A negative net worth occurs when your total liabilities exceed your total assets. This is very common for young adults and recent graduates who have accumulated significant student or auto debt but haven't had time to build savings or buy appreciating assets yet."
-  }
-];
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('net-worth');
 ---
 
 <CalculatorLayout 
   title="Net Worth Tracker" 
-  description="Keep track of your financial progress by listing your assets (what you own) and your liabilities (what you owe) to calculate your true net worth."
+  description="Track and calculate your total personal net worth by summing all physical and liquid assets and subtracting outstanding debts and liabilities."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -38,11 +21,11 @@ const faqs = [
       <form id="networth-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Assets (What You Own)</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Your Assets (What You Own)', 'Assets (What You Own)')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="15000" data-inv="85000" data-re="350000" data-veh="20000" data-mort="250000" data-stud="20000" data-cc="3000" data-other="5000">Homeowner</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="8000" data-inv="25000" data-re="0" data-veh="12000" data-mort="0" data-stud="15000" data-cc="1500" data-other="0">Renter / Starter</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="15000" data-inv="85000" data-re="350000" data-veh="20000" data-mort="250000" data-stud="20000" data-cc="3000" data-other="5000">{t('Homeowner')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cash="8000" data-inv="25000" data-re="0" data-veh="12000" data-mort="0" data-stud="15000" data-cc="1500" data-other="0">{t('Renter / Starter')}</button>
             </div>
           </div>
 
@@ -56,7 +39,7 @@ const faqs = [
             <Input id="asset-vehicles" label="Vehicles & Physical Assets" type="number" prefix="$" value="20000" />
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Your Liabilities (What You Owe)</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Your Liabilities (What You Owe)', 'Liabilities (What You Owe)')}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="liability-mortgage" label="Mortgage Balance" type="number" prefix="$" value="250000" />
@@ -71,10 +54,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Net Worth
+            {t('Calculate Net Worth')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

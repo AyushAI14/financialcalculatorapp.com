@@ -1,8 +1,11 @@
 ---
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
-import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 
 const faqs = [
   {
@@ -39,11 +42,11 @@ const faqs = [
       <form id="mortgage-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Property & Loan Details</h3>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Property & Loan Details')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
-              <span class="text-[10px] text-mute font-mono">Presets:</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-price="400000" data-down="80000" data-rate="6.5" data-term="30" data-tax="1.2" data-ins="1500" data-pmi="0.7" data-hoa="150">Starter Home</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-price="800000" data-down="100000" data-rate="6.2" data-term="30" data-tax="1.5" data-ins="2400" data-pmi="0.85" data-hoa="0">Large Family</button>
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-price="400000" data-down="80000" data-rate="6.5" data-term="30" data-tax="1.2" data-ins="1500" data-pmi="0.7" data-hoa="150">{t('Starter Home')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-price="800000" data-down="100000" data-rate="6.2" data-term="30" data-tax="1.5" data-ins="2400" data-pmi="0.85" data-hoa="0">{t('Large Family')}</button>
             </div>
           </div>
 
@@ -57,7 +60,7 @@ const faqs = [
             <Input id="term" label="Loan Term" type="number" suffix="years" value="30" placeholder="30" tooltip="The duration of the mortgage in years (usually 15 or 30)." />
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">Taxes, Fees & Insurance</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Taxes, Fees & Insurance')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="tax-rate" label="Property Tax Rate" type="number" suffix="%" value="1.2" placeholder="1.2" tooltip="The annual property tax percentage of the home value." />
@@ -72,10 +75,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Mortgage
+            {t('Calculate Mortgage')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

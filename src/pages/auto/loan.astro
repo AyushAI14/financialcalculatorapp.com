@@ -3,6 +3,10 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
 <CalculatorLayout 
@@ -15,7 +19,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
       <form id="auto-loan-form" class="space-y-6">
         <!-- Vehicle Pricing -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Vehicle Pricing</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Vehicle Pricing')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="price" label="Vehicle Purchase Price" type="number" prefix="$" value="35000" />
             <Input id="tax-rate" label="Sales Tax Rate" type="number" suffix="%" value="7.0" />
@@ -27,7 +31,7 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <!-- Down Payment & Trade-In -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">Upfront Offsets</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Upfront Offsets')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="downpayment" label="Cash Down Payment" type="number" prefix="$" value="5000" />
             <Input id="trade-in" label="Net Trade-In Value" type="number" prefix="$" value="3000" />
@@ -48,10 +52,10 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Auto Loan
+            {t('Calculate Auto Loan')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>

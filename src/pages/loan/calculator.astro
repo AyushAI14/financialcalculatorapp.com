@@ -4,18 +4,25 @@ import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('loan');
 ---
 
 <CalculatorLayout 
   title="Loan Calculator" 
   description="Calculate monthly repayments, total interest, and compile complete amortization schedules for mortgages, auto loans, or personal loans."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Form Inputs (Left Column) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="loan-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">Loan Parameters</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Loan Parameters')}</h3>
 
           <!-- Loan Amount -->
           <div class="space-y-2">
@@ -48,10 +55,10 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Loan
+            {t('Calculate Loan')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -342,7 +349,6 @@ import RangeSlider from '../../components/ui/RangeSlider.astro';
     const balances = filteredPoints.map(e => e.endingBalance);
     
     // Accumulate total interest paid
-    let cumInterest = 0;
     const interestData = filteredPoints.map(e => {
       // Find index range and sum interest for exact tracking
       // But for simple visualization, we can just track cumulative interest

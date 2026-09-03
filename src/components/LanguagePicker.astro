@@ -1,0 +1,47 @@
+---
+import { getLangFromUrl, getLanguageOptions } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  class?: string;
+  id?: string;
+  lang?: Lang;
+}
+
+const { class: className = '', id = 'language-select' } = Astro.props;
+const currentLang = (Astro.props.lang || Astro.currentLocale || getLangFromUrl(Astro.url)) as Lang;
+const languageOptions = getLanguageOptions(Astro.url, currentLang);
+---
+
+<div class={`relative flex items-center ${className}`}>
+  <label for={id} class="sr-only">Select language</label>
+  <select
+    id={id}
+    class="language-picker bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none"
+    aria-label="Select language"
+    data-current={currentLang}
+  >
+    {languageOptions.map((opt) => (
+      <option value={opt.url} selected={opt.isActive}>
+        {opt.label}
+      </option>
+    ))}
+  </select>
+</div>
+
+<script>
+  function setupLanguagePickers() {
+    const pickers = document.querySelectorAll<HTMLSelectElement>('.language-picker');
+    pickers.forEach((picker) => {
+      picker.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        if (target && target.value) {
+          window.location.href = target.value;
+        }
+      });
+    });
+  }
+
+  setupLanguagePickers();
+  document.addEventListener('astro:page-load', setupLanguagePickers);
+</script>
