@@ -1,6 +1,6 @@
 import type { Lang } from './ui';
 
-export const faqsLoansRetirement: Record<Lang, Record<string, string>> = {
+export const faqsLoansRetirement: Partial<Record<Lang, Record<string, string>>> = {
   en: {},
   es: {
     // Loan Calculator

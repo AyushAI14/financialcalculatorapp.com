@@ -1,0 +1,54 @@
+---
+import { calculatorGuides } from '../../i18n/calculator-guides-data';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  calcKey: string;
+}
+
+const { calcKey } = Astro.props;
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+
+const guide = calculatorGuides[calcKey];
+---
+
+{guide && (
+  <article class="mt-16 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-10 space-y-8 no-print">
+    <div>
+      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">{t(guide.title, guide.title)}</h2>
+      <p class="text-base text-body leading-relaxed">{t(guide.intro, guide.intro)}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Left Column: Core Concepts & Formula Mechanics -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink">{t(guide.section1Title, guide.section1Title)}</h3>
+        <p class="text-sm leading-relaxed">{t(guide.section1Content, guide.section1Content)}</p>
+
+        {guide.formula && (
+          <div class="mt-4 pt-3 border-t border-hairline/70">
+            <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-2">{t(guide.formulaTitle, guide.formulaTitle)}</h4>
+            <div class="bg-canvas-soft border border-hairline p-3 rounded-md font-mono text-xs text-ink overflow-x-auto my-2">
+              {guide.formula}
+            </div>
+            <p class="text-xs text-mute leading-relaxed">{t(guide.formulaExplanation, guide.formulaExplanation)}</p>
+          </div>
+        )}
+      </div>
+
+      <!-- Right Column: Actionable Strategies & Guidelines -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink">{t(guide.section2Title, guide.section2Title)}</h3>
+        <ul class="space-y-3 text-sm list-none p-0 m-0">
+          {guide.tips.map(tip => (
+            <li class="bg-canvas-soft/60 border border-hairline/60 rounded-md p-3">
+              <strong class="text-ink block mb-0.5">{t(tip.title, tip.title)}</strong>
+              <span class="text-xs text-mute leading-relaxed">{t(tip.desc, tip.desc)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </article>
+)}

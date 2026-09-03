@@ -1,5 +1,8 @@
 import type { Lang } from './ui';
 import { titlesAndIntros } from './calculator-content-titles-intros';
+import { calcContentBatch1 } from './calculator-content-batch1';
+import { calcContentBatch2 } from './calculator-content-batch2';
+import { calcContentBatch3 } from './calculator-content-batch3';
 
 export const calculatorContent: Record<Lang, Record<string, string>> = {
   en: {},
@@ -574,13 +577,16 @@ export const calculatorContent: Record<Lang, Record<string, string>> = {
   }
 };
 
-// Merge titles and intros for all 30 calculators
-for (const lang of Object.keys(titlesAndIntros) as Lang[]) {
-  if (!calculatorContent[lang]) {
-    calculatorContent[lang] = {};
-  }
-  if (titlesAndIntros[lang]) {
-    Object.assign(calculatorContent[lang], titlesAndIntros[lang]);
+// Merge batch content and titles/intros for all 30 calculators across all 14 languages
+const batches = [calcContentBatch1, calcContentBatch2, calcContentBatch3, titlesAndIntros];
+for (const batch of batches) {
+  for (const lang of Object.keys(batch) as Lang[]) {
+    if (!calculatorContent[lang]) {
+      calculatorContent[lang] = {};
+    }
+    if (batch[lang]) {
+      Object.assign(calculatorContent[lang], batch[lang]);
+    }
   }
 }
 

@@ -4,14 +4,17 @@ import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('auto-loan');
 ---
 
 <CalculatorLayout 
   title="Auto Loan Calculator" 
   description="Estimate your monthly car payments, financed amounts, and overall cost of purchasing a vehicle. Factor in sales taxes, dealer fees, and trade-in credits."
+  faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
@@ -90,127 +93,6 @@ const t = useTranslations(lang);
       </div>
     </div>
   </div>
-
-  <!-- Educational SEO Section -->
-  <article class="mt-20 max-w-4xl prose prose-sm text-body leading-relaxed border-t border-hairline pt-12 space-y-8">
-    <div>
-      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink mb-3">Tips for Auto Financing.</h2>
-      <p>
-        Buying a vehicle is a major expense. Because automobiles are depreciating assets (losing value over time, unlike homes), structuring your auto loan correctly is vital to maintaining financial flexibility:
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div>
-        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">The 20/4/10 Rule</h3>
-        <p class="text-sm">
-          Financial planners recommend the **20/4/10 guideline** for purchasing cars:
-        </p>
-        <ul class="list-disc pl-5 mt-2 space-y-1.5 text-xs text-mute">
-          <li><strong>20% Down Payment</strong>: Pay at least 20% upfront to prevent going "underwater" (owing more on the loan than the car is worth) the moment you drive off the lot.</li>
-          <li><strong>4 Years (48 Months) Term</strong>: Avoid stretching loans to 72 or 84 months. Longer terms lower monthly payments but increase total interest fees dramatically.</li>
-          <li><strong>10% of Income</strong>: Total monthly transportation costs (loan payment + gas + insurance + maintenance) should not exceed 10% of gross monthly income.</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 class="text-lg font-semibold tracking-[-0.6px] text-ink mb-2">Trade-Ins & Sales Tax</h3>
-        <p class="text-sm">
-          Trading in a vehicle is not just a convenience—it offers tax advantages. In many states, you only pay sales tax on the **net price** of the car (purchase price minus trade-in credit), which can save you hundreds of dollars in tax fees!
-        </p>
-      </div>
-    </div>
-
-    <!-- FAQ Section -->
-    <div class="border-t border-hairline pt-12 space-y-6">
-      <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">Frequently Asked Questions.</h2>
-      <div class="divide-y divide-hairline">
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>What is an auto loan?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              An auto loan is a personal, secured loan used specifically to purchase a vehicle. The vehicle serves as collateral for the debt, meaning that if you fail to make your payments, the lender has the legal right to repossess the car.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How do I get an auto loan?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              You can get an auto loan by applying directly to banks, credit unions, online lenders, or through the financing department at a car dealership. It is highly recommended to get pre-approved by a credit union or bank *before* visiting the dealer to secure the lowest possible rate.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How often are auto loan payments required?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              Auto loan payments are standardly due **once a month** on a set day. Some lenders allow you to set up bi-weekly payments (making a half-payment every two weeks), which can help align with your paychecks and pay down the principal slightly faster.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How do I refinance an auto loan?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              To refinance, apply for a new loan with a different lender to pay off your existing auto loan. If approved, the new lender will pay off your old car loan, and you will begin making payments to the new lender under the new, hopefully cheaper, interest rate or term.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>When should I consider refinancing my auto loan?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              Consider refinancing if market interest rates have dropped since you bought the car, your credit score has improved significantly (qualifying you for better rates), or you need to extend the loan term to reduce your monthly payment obligation due to financial hardship.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>Is auto loan interest tax deductible?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              For personal use vehicles, auto loan interest is **not tax deductible**. However, if you use the car for business purposes (e.g. self-employed contract work), you can deduct a proportional percentage of the interest matching the business use percentage of the vehicle.
-            </p>
-          </div>
-        </details>
-
-        <details class="group py-4">
-          <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
-            <span>How do auto loan rates affect monthly payments?</span>
-            <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
-            <p>
-              Interest rates directly influence your monthly payment and the total cost of ownership. A higher interest rate increases your monthly payment and redirects cash away from paying down the principal toward bank interest fees. Use this calculator to compare rates and see the total cost differences.
-            </p>
-          </div>
-        </details>
-      </div>
-    </div>
-  </article>
 </CalculatorLayout>
 
 <script>

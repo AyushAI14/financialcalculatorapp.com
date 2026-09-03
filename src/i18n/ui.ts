@@ -1,5 +1,6 @@
 import { pagesTranslations } from './pages-data';
 import { calculatorContent } from './calculator-content';
+import { allGuidesTranslations } from './calculator-guides-all';
 
 export const languages = {
   en: "English",
@@ -889,6 +890,16 @@ for (const lang of Object.keys(calculatorContent) as Lang[]) {
   }
   if (calculatorContent[lang]) {
     Object.assign(ui[lang], calculatorContent[lang]);
+  }
+}
+
+// Merge localized calculator guides into UI dictionary
+for (const lang of Object.keys(allGuidesTranslations) as Lang[]) {
+  if (!ui[lang]) {
+    ui[lang] = {};
+  }
+  if (allGuidesTranslations[lang]) {
+    Object.assign(ui[lang], allGuidesTranslations[lang]);
   }
 }
 

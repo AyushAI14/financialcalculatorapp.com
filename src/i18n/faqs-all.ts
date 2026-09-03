@@ -4,6 +4,10 @@ import { faqsLoansRetirement } from './faqs-loans-retirement';
 import { faqsIntlBatch1 } from './faqs-intl-batch1';
 import { faqsIntlBatch2 } from './faqs-intl-batch2';
 import { faqsIntlBatch3 } from './faqs-intl-batch3';
+import { faqsBatchEsZh } from './faqs-batch-es-zh';
+import { faqsBatchEurope } from './faqs-batch-europe';
+import { faqsBatchAsia } from './faqs-batch-asia';
+import { faqsBatchRest } from './faqs-batch-rest';
 
 export const allFaqs: Record<Lang, Record<string, string>> = {
   en: {},
@@ -180,7 +184,17 @@ export const allFaqs: Record<Lang, Record<string, string>> = {
 };
 
 // Merge all FAQ batches
-const faqBatches = [faqsFinance, faqsLoansRetirement, faqsIntlBatch1, faqsIntlBatch2, faqsIntlBatch3];
+const faqBatches = [
+  faqsFinance,
+  faqsLoansRetirement,
+  faqsIntlBatch1,
+  faqsIntlBatch2,
+  faqsIntlBatch3,
+  faqsBatchEsZh,
+  faqsBatchEurope,
+  faqsBatchAsia,
+  faqsBatchRest,
+];
 for (const b of faqBatches) {
   for (const lang of Object.keys(b) as Lang[]) {
     if (!allFaqs[lang]) {

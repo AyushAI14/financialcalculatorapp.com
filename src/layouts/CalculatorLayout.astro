@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import CalculatorGuide from '../components/ui/CalculatorGuide.astro';
 import { getLangFromUrl, useTranslations, useTranslatedPath, getPathWithoutLocale } from '../i18n/utils';
 
 interface FAQItem {
@@ -12,9 +13,10 @@ interface Props {
   description?: string;
   faqs?: FAQItem[];
   lastUpdated?: string;
+  calcKey?: string;
 }
 
-const { title, description, faqs = [], lastUpdated = 'July 2026' } = Astro.props;
+const { title, description, faqs = [], lastUpdated = 'July 2026', calcKey } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
@@ -93,6 +95,41 @@ const localizedFaqs = faqs.map(faq => ({
   question: t(faq.question, faq.question),
   answer: t(faq.answer, faq.answer)
 }));
+
+const pathToCalcKey: Record<string, string> = {
+  '/loan/mortgage': 'mortgage',
+  '/loan/calculator': 'loan',
+  '/loan/debt-payoff': 'debt-payoff',
+  '/loan/refinance': 'refinance',
+  '/loan/student-loan': 'student-loan',
+  '/loan/dti': 'dti',
+  '/loan/apr': 'apr',
+  '/loan/rent-vs-buy': 'rent-vs-buy',
+  '/loan/home-affordability': 'home-affordability',
+  '/auto/loan': 'auto-loan',
+  '/credit-card/payoff': 'credit-card-payoff',
+  '/retirement/planner': 'retirement-planner',
+  '/retirement/401k': '401k',
+  '/retirement/ira-comparison': 'ira-comparison',
+  '/finance/compound-interest': 'compound-interest',
+  '/finance/tvm': 'tvm',
+  '/finance/roi': 'roi',
+  '/finance/savings-goal': 'savings-goal',
+  '/finance/stock-return': 'stock-return',
+  '/finance/capm': 'capm',
+  '/finance/dividend': 'dividend',
+  '/finance/inflation': 'inflation',
+  '/finance/paycheck': 'paycheck',
+  '/finance/net-worth': 'net-worth',
+  '/finance/emergency-fund': 'emergency-fund',
+  '/finance/fee-impact': 'fee-impact',
+  '/finance/college-savings': 'college-savings',
+  '/finance/crypto-dca': 'crypto-dca',
+  '/misc/tip': 'tip',
+  '/misc/discount': 'discount'
+};
+
+const resolvedCalcKey = calcKey || pathToCalcKey[cleanPath] || pathToCalcKey[cleanPath.replace(/\/$/, '')];
 
 // Schema creation
 const webAppSchema = {
@@ -216,6 +253,9 @@ const faqSchema = localizedFaqs.length > 0 ? {
         {lastUpdated && <p class="text-[11px] text-mute font-mono mt-2">{t('calc.lastUpdated')}: {lastUpdated}</p>}
       </div>
       <slot />
+
+      <!-- Educational Guide Section -->
+      {resolvedCalcKey && <CalculatorGuide calcKey={resolvedCalcKey} />}
 
       <!-- FAQ Section -->
       {localizedFaqs && localizedFaqs.length > 0 && (

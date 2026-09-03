@@ -1,6 +1,6 @@
 import type { Lang } from './ui';
 
-export const faqsFinance: Record<Lang, Record<string, string>> = {
+export const faqsFinance: Partial<Record<Lang, Record<string, string>>> = {
   en: {},
   es: {
     // Compound Interest
