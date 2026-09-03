@@ -195,8 +195,12 @@ const faqs = getCalculatorFaqs('refinance');
       closingCosts
     });
 
-    const isBreakEvenFinite = isFinite(result.breakEvenMonths) && result.breakEvenMonths > 0;
-    const breakEvenText = isBreakEvenFinite ? `${result.breakEvenMonths.toFixed(1)} months` : 'Never (No Savings)';
+    let breakEvenText = 'Never (No Savings)';
+    if (result.breakEvenMonths === 0) {
+      breakEvenText = 'Immediate (0 months)';
+    } else if (isFinite(result.breakEvenMonths) && result.breakEvenMonths > 0) {
+      breakEvenText = `${result.breakEvenMonths.toFixed(1)} months`;
+    }
     const formattedSavings = formatCurrency(result.monthlySavings);
     const formattedLifetime = formatCurrency(result.lifetimeSavings);
 
@@ -213,6 +217,7 @@ const faqs = getCalculatorFaqs('refinance');
       stepSavings.innerHTML = `Savings = ${formatCurrency(result.currentPMT)} - ${formatCurrency(result.newPMT)} = <strong>${formattedSavings} / mo</strong>`;
     }
     if (stepBreakeven) {
+      const isBreakEvenFinite = isFinite(result.breakEvenMonths) && result.breakEvenMonths > 0;
       if (isBreakEvenFinite) {
         stepBreakeven.innerHTML = `Break-Even Months = ${formatCurrency(closingCosts)} / ${formattedSavings} = <strong>${result.breakEvenMonths.toFixed(1)} Months</strong>`;
       } else {

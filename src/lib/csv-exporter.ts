@@ -2,6 +2,15 @@
  * Utility to export HTML table elements or raw arrays of data to a CSV file.
  */
 
+function sanitizeCSVCell(val: unknown): string {
+  let text = String(val ?? '').trim().replace(/\s+/g, ' ');
+  // Guard against CSV / spreadsheet formula injection
+  if (/^[=+\-@\t\r]/.test(text)) {
+    text = `'` + text;
+  }
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 /**
  * Downloads an HTML table element as a CSV.
  * 
@@ -23,27 +32,25 @@ export function downloadTableAsCSV(tableId: string, filename = 'schedule.csv') {
   rows.forEach((row) => {
     const cols = row.querySelectorAll('th, td');
     const rowData = Array.from(cols)
-      .map(col => {
-        // Clean text content: remove newlines, double quotes escape, wrap in quotes
-        const text = col.textContent?.trim().replace(/\s+/g, ' ') || '';
-        return `"${text.replace(/"/g, '""')}"`;
-      })
+      .map(col => sanitizeCSVCell(col.textContent))
       .join(',');
     
     csvContent += rowData + "\r\n";
   });
 
+  const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   
   const link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", filename);
+  link.setAttribute("download", safeFilename);
   link.style.visibility = 'hidden';
   
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /**
@@ -56,27 +63,26 @@ export function downloadTableAsCSV(tableId: string, filename = 'schedule.csv') {
 export function downloadDataAsCSV(headers: string[], rows: (string | number)[][], filename = 'data.csv') {
   if (typeof window === 'undefined') return;
 
-  let csvContent = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(',') + "\r\n";
+  let csvContent = headers.map(h => sanitizeCSVCell(h)).join(',') + "\r\n";
 
   rows.forEach((row) => {
     const rowData = row
-      .map(val => {
-        const text = String(val).trim();
-        return `"${text.replace(/"/g, '""')}"`;
-      })
+      .map(val => sanitizeCSVCell(val))
       .join(',');
     csvContent += rowData + "\r\n";
   });
 
+  const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   
   const link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", filename);
+  link.setAttribute("download", safeFilename);
   link.style.visibility = 'hidden';
   
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

@@ -189,16 +189,16 @@ const faqs = getCalculatorFaqs('loan');
 
   // Perform Calculations
   function performCalculation() {
-    const principal = Math.abs(parseFloat(amountInput.value)) || 0;
-    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
-    const years = Math.abs(parseInt(termInput.value)) || 1;
+    const principal = Math.max(0, parseFloat(amountInput.value) || 0);
+    const rate = Math.max(0, (parseFloat(rateInput.value) || 0) / 100);
+    const years = Math.min(50, Math.max(1, parseInt(termInput.value) || 1));
     const frequency = parseInt(frequencySelect.value) || 12;
 
     const pmt = calculateLoanPMT({ principal, rate, years, compoundingFrequency: frequency });
     const schedule = generateAmortizationSchedule({ principal, rate, years, compoundingFrequency: frequency });
 
-    const totalCost = pmt * (years * frequency);
-    const totalInterest = Math.max(0, totalCost - principal);
+    const totalCost = schedule.reduce((sum, p) => sum + p.payment, 0);
+    const totalInterest = schedule.reduce((sum, p) => sum + p.interest, 0);
 
     // Update Result Display
     if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = formatCurrency(pmt);
@@ -209,7 +209,7 @@ const faqs = getCalculatorFaqs('loan');
     // Update Chart
     updateChart(schedule, frequency);
     // Update Schedule Table
-    updateScheduleTable(schedule);
+    updateScheduleTable(schedule, frequency);
   }
 
   function updateChart(schedule: any[], frequency: number) {
@@ -229,12 +229,14 @@ const faqs = getCalculatorFaqs('loan');
     
     const balances = filteredPoints.map(e => e.endingBalance);
     
-    // Accumulate total interest paid
-    const interestData = filteredPoints.map(e => {
-      // Find index range and sum interest for exact tracking
-      // But for simple visualization, we can just track cumulative interest
-      return schedule.slice(0, e.period).reduce((sum, item) => sum + item.interest, 0);
+    // Accumulate total interest paid in a single O(n) pass
+    let runningInterest = 0;
+    const cumulativeMap = new Map<number, number>();
+    schedule.forEach(item => {
+      runningInterest += item.interest;
+      cumulativeMap.set(item.period, runningInterest);
     });
+    const interestData = filteredPoints.map(e => cumulativeMap.get(e.period) || 0);
 
     if (chartInstance) {
       chartInstance.data.labels = labels;
@@ -307,7 +309,7 @@ const faqs = getCalculatorFaqs('loan');
     }
   }
 
-  function updateScheduleTable(schedule: any[]) {
+  function updateScheduleTable(schedule: any[], frequency = 12) {
     if (!scheduleBody) return;
     const viewMode = scheduleViewSelect.value;
     
@@ -315,7 +317,7 @@ const faqs = getCalculatorFaqs('loan');
     
     if (viewMode === 'yearly') {
       if (periodColHeader) periodColHeader.textContent = 'Year';
-      const yearlySummary = compileYearlyAmortization(schedule);
+      const yearlySummary = compileYearlyAmortization(schedule, frequency);
       
       yearlySummary.forEach(e => {
         html += `
@@ -330,15 +332,15 @@ const faqs = getCalculatorFaqs('loan');
         `;
       });
     } else {
-      if (periodColHeader) periodColHeader.textContent = 'Month / Period';
+      if (periodColHeader) periodColHeader.textContent = 'Period';
       
-      // Limit monthly rendering to first 360 periods to avoid DOM slow downs
+      // Limit rendering to first 360 periods to avoid DOM slow downs
       const truncated = schedule.slice(0, 360);
       
       truncated.forEach(e => {
         html += `
           <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-            <td class="px-5 py-3 font-semibold text-body">Month ${e.period}</td>
+            <td class="px-5 py-3 font-semibold text-body">Period ${e.period}</td>
             <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
             <td class="px-5 py-3 text-right">${formatCurrency(e.payment)}</td>
             <td class="px-5 py-3 text-right text-link">${formatCurrency(e.principal)}</td>

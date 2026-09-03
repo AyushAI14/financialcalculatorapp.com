@@ -155,6 +155,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
       buyingFeesRate, sellingFeesRate, simulationYears
     });
 
+    if (!schedule || schedule.length === 0) return;
     const finalYear = schedule[schedule.length - 1];
 
     const buyerNw = finalYear.buyerNetWorth;

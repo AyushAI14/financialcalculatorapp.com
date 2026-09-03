@@ -192,10 +192,10 @@ const faqs = [
 
     // Winner badge logic
     let winnerText = 'Traditional IRA Wins';
-    if (result.rothWins) {
-      winnerText = 'Roth IRA Wins';
-    } else if (result.rothBalance === result.tradBalanceNet) {
+    if (Math.abs(result.rothBalance - result.tradBalanceNet) < 1) {
       winnerText = 'Both Plans Equal';
+    } else if (result.rothWins) {
+      winnerText = 'Roth IRA Wins';
     }
 
     // Update UI

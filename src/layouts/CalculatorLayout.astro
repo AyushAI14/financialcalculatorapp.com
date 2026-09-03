@@ -164,7 +164,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
     <!-- Sidebar / Mobile Navigation -->
     <aside class="w-full lg:w-64 flex-shrink-0">
       <!-- Mobile Collapsible Menu -->
-      <details id="mobile-nav-details" class="lg:hidden mb-4 border border-hairline rounded bg-canvas shadow-sm">
+      <details id="mobile-nav-details" class="group lg:hidden mb-4 border border-hairline rounded bg-canvas shadow-sm">
         <summary class="flex items-center justify-between px-4 py-3 text-sm font-medium text-ink cursor-pointer select-none">
           <span class="flex items-center gap-2">
             <svg class="w-4 h-4 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -199,11 +199,11 @@ const faqSchema = localizedFaqs.length > 0 ? {
         </div>
       </details>
 
-      <!-- Desktop Sticky Navigation -->
-      <nav class="hidden lg:block sticky top-24 space-y-8">
+      <!-- Desktop Sidebar -->
+      <div class="hidden lg:block space-y-6 sticky top-24">
         {categories.map(cat => (
           <div>
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-3 px-3">{cat.name}</h3>
+            <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2 px-3">{cat.name}</h3>
             <ul class="space-y-1">
               {cat.links.map(link => {
                 const isActive = cleanPath === link.url || cleanPath === `${link.url}/`;
@@ -224,19 +224,23 @@ const faqSchema = localizedFaqs.length > 0 ? {
             </ul>
           </div>
         ))}
-      </nav>
 
-      <!-- Saved Scenarios section in sidebar -->
-      <div id="saved-scenarios-sidebar" class="bg-canvas-soft border border-hairline rounded-lg p-4 space-y-3 no-print mt-6 hidden lg:block">
-        <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider">{t('scenario.savedTitle', 'My Saved Scenarios')}</h3>
-        <div id="scenarios-list" class="space-y-1.5 text-xs text-mute">
-          {t('scenario.noSaved', 'No saved scenarios yet.')}
+        <!-- Saved Scenarios Section -->
+        <div class="pt-4 border-t border-hairline">
+          <div class="flex items-center justify-between px-3 mb-2">
+            <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider">{t('calc.savedScenarios', 'Saved Scenarios')}</h3>
+            <button id="save-scenario-btn" class="text-[10px] text-link hover:underline cursor-pointer font-medium" title="Save current inputs">+ {t('calc.save', 'Save')}</button>
+          </div>
+          <div id="scenarios-list" class="space-y-1 text-xs px-3">
+            <span class="text-mute text-[11px] block">No saved scenarios yet.</span>
+          </div>
+          <button id="compare-scenarios-btn" class="hidden w-full mt-2 py-1 bg-canvas-soft-2 hover:bg-canvas-soft text-ink text-[11px] font-medium rounded border border-hairline transition-colors cursor-pointer">
+            {t('calc.compare', 'Compare Selected (2)')}
+          </button>
         </div>
-        <button id="save-scenario-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-2 flex items-center justify-center gap-1.5">
-          <span>💾</span> {t('calc.saveInputs', 'Save Inputs')}
-        </button>
-        <button id="compare-scenarios-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5 hidden">
-          <span>📊</span> {t('calc.compare', 'Compare (0/2)')}
+
+        <button id="print-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-2 flex items-center justify-center gap-1.5">
+          <span>🖨️</span> {t('calc.print')}
         </button>
         <button id="share-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5">
           <span>🔗</span> {t('calc.share')}
@@ -244,8 +248,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 bg-canvas border border-hairline rounded-lg p-6 lg:p-10 shadow-sm min-h-[600px] relative">
+    <!-- Main Calculator Content Section -->
+    <section class="flex-1 bg-canvas border border-hairline rounded-lg p-6 lg:p-10 shadow-sm min-h-[600px] relative">
 
       <div class="mb-10">
         <h1 class="text-3xl font-semibold tracking-[-1.28px] text-ink mb-3">{localizedTitle}</h1>
@@ -264,7 +268,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
           <div class="divide-y divide-hairline">
             {localizedFaqs.map(faq => (
               <details class="group py-4">
-                <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus:outline-none">
+                <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded">
                   <span>{faq.question}</span>
                   <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -292,11 +296,11 @@ const faqSchema = localizedFaqs.length > 0 ? {
       </div>
 
       <!-- Scenario Comparison Modal -->
-      <div id="compare-modal" class="fixed inset-0 bg-ink/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
+      <div id="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-modal-title" class="fixed inset-0 bg-ink/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
         <div class="bg-canvas border border-hairline rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in">
           <header class="px-6 py-4 border-b border-hairline flex items-center justify-between bg-canvas-soft">
-            <h3 class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">{t('modal.comparisonTitle', 'Scenario Comparison')}</h3>
-            <button id="close-compare-modal" class="text-mute hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
+            <h3 id="compare-modal-title" class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">{t('modal.comparisonTitle', 'Scenario Comparison')}</h3>
+            <button id="close-compare-modal" aria-label="Close comparison modal" class="text-mute hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
           </header>
           <div class="p-6 overflow-y-auto space-y-6">
             <div class="overflow-x-auto border border-hairline rounded-lg">
@@ -340,17 +344,18 @@ const faqSchema = localizedFaqs.length > 0 ? {
         <div id="feedback-widget-container" class="space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <span class="text-xs text-mute font-mono">{t('feedback.helpful', 'Was this calculator helpful?')}</span>
-            <div id="feedback-widget" class="flex items-center gap-2">
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes">{t('feedback.yes', '👍 Yes')}</button>
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no">{t('feedback.no', '👎 No')}</button>
+            <div id="feedback-widget" class="flex items-center gap-2" role="group" aria-label="Feedback ratings">
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes" aria-pressed="false">{t('feedback.yes', '👍 Yes')}</button>
+              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no" aria-pressed="false">{t('feedback.no', '👎 No')}</button>
             </div>
           </div>
           <div id="feedback-text-container" class="hidden space-y-2.5 max-w-xl transition-all duration-300">
+            <label for="feedback-comment" class="sr-only">{t('feedback.placeholder', 'Any comments or suggestions? (Optional)')}</label>
             <textarea
               id="feedback-comment"
               placeholder={t('feedback.placeholder', 'Any comments or suggestions? (Optional)')}
               rows="3"
-              class="w-full p-3 bg-canvas border border-hairline text-ink text-xs rounded-lg focus:outline-none focus:border-hairline-strong transition-colors resize-none"
+              class="w-full p-3 bg-canvas border border-hairline text-ink text-xs rounded-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-colors resize-none"
             ></textarea>
             <div class="flex justify-end gap-2">
               <button type="button" id="feedback-skip-btn" class="px-3.5 py-1 bg-canvas hover:bg-canvas-soft text-mute text-xs border border-hairline rounded-full cursor-pointer transition-colors font-medium">{t('feedback.skip', 'Skip')}</button>
@@ -359,12 +364,14 @@ const faqSchema = localizedFaqs.length > 0 ? {
           </div>
         </div>
       </div>
-    </main>
+    </section>
   </div>
 </Layout>
 
 <script>
-  import { safeGetItem, safeSetItem } from '../lib/storage';
+  import { safeGetItem, safeSetItem, safeGetJSON } from '../lib/storage';
+  import { escapeHtml } from '../lib/utils';
+  import { getPathWithoutLocale } from '../i18n/utils';
 
   // Feedback Widget Handlers
   const buttons = document.querySelectorAll('.feedback-btn');
@@ -378,9 +385,13 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
   buttons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      buttons.forEach(b => b.classList.remove('bg-canvas-soft-2', 'border-hairline-strong'));
+      buttons.forEach(b => {
+        b.classList.remove('bg-canvas-soft-2', 'border-hairline-strong');
+        b.setAttribute('aria-pressed', 'false');
+      });
       const target = e.currentTarget as HTMLButtonElement;
       target.classList.add('bg-canvas-soft-2', 'border-hairline-strong');
+      target.setAttribute('aria-pressed', 'true');
 
       selectedRating = target.dataset.val || 'yes';
 
@@ -414,15 +425,14 @@ const faqSchema = localizedFaqs.length > 0 ? {
     });
 
     // 2. Fallback / save to local storage for backward compatibility & local display
-    let feedbackList = [];
-    try {
-      feedbackList = JSON.parse(safeGetItem('feedback_responses', '[]'));
-    } catch (err) {}
+    let feedbackList = safeGetJSON<any[]>('feedback_responses', []);
+    if (!Array.isArray(feedbackList)) feedbackList = [];
 
     feedbackList.push({
       ...payload,
       timestamp: Date.now()
     });
+    if (feedbackList.length > 50) feedbackList = feedbackList.slice(-50);
 
     safeSetItem('feedback_responses', JSON.stringify(feedbackList));
 
@@ -443,13 +453,15 @@ const faqSchema = localizedFaqs.length > 0 ? {
   // 1. Record Visited page inside recent_calculators
   if (typeof window !== 'undefined') {
     const pageName = document.querySelector('h1')?.textContent || document.title.split(' - ')[0];
-    const pageUrl = window.location.pathname;
+    const rawPath = window.location.pathname;
+    const cleanPath = getPathWithoutLocale(rawPath);
 
-    const ignoredPaths = ['/', '/about', '/contact', '/privacy', '/terms', '/disclaimer'];
-    if (!ignoredPaths.includes(pageUrl) && !pageUrl.includes('/blog') && !pageUrl.includes('/compare')) {
-      let recents = JSON.parse(safeGetItem('recent_calculators', '[]'));
-      recents = recents.filter((item: any) => item.url !== pageUrl);
-      recents.unshift({ name: pageName, url: pageUrl });
+    const ignoredPaths = ['/', '/about', '/contact', '/privacy', '/terms', '/disclaimer', '/feedback'];
+    if (!ignoredPaths.includes(cleanPath) && !cleanPath.includes('/blog') && !cleanPath.includes('/compare')) {
+      let recents = safeGetJSON<any[]>('recent_calculators', []);
+      if (!Array.isArray(recents)) recents = [];
+      recents = recents.filter((item: any) => item && item.url !== rawPath);
+      recents.unshift({ name: pageName, url: rawPath });
       if (recents.length > 5) recents.pop();
       safeSetItem('recent_calculators', JSON.stringify(recents));
     }
@@ -459,14 +471,14 @@ const faqSchema = localizedFaqs.length > 0 ? {
   const saveBtn = document.getElementById('save-scenario-btn');
   const scenariosList = document.getElementById('scenarios-list');
   const form = document.querySelector('form');
-  const scenarioKey = `scenarios:${window.location.pathname}`;
+  const scenarioKey = `scenarios:${getPathWithoutLocale(window.location.pathname)}`;
 
     let selectedIndices: number[] = [];
 
     function updateScenariosUI() {
       if (!scenariosList) return;
-      const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
-      if (saved.length === 0) {
+      const saved = safeGetJSON<any[]>(scenarioKey, []);
+      if (!Array.isArray(saved) || saved.length === 0) {
         scenariosList.innerHTML = `<span class="text-mute text-[11px] block">No saved scenarios yet.</span>`;
         selectedIndices = [];
         updateCompareButton();
@@ -477,7 +489,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
         <div class="group flex items-center justify-between gap-2 p-1.5 hover:bg-canvas-soft-2 rounded transition-colors border border-transparent hover:border-hairline">
           <input type="checkbox" class="compare-checkbox w-3.5 h-3.5 rounded border-hairline cursor-pointer text-primary focus:ring-transparent bg-canvas" data-index="${idx}" title="Select for comparison" ${selectedIndices.includes(idx) ? 'checked' : ''} />
           <button class="load-scenario-btn text-left text-ink font-medium truncate flex-1 block" data-index="${idx}" title="Click to load scenario">
-            ${scenario.name}
+            ${escapeHtml(scenario.name)}
           </button>
           <button class="delete-scenario-btn opacity-0 group-hover:opacity-100 text-mute hover:text-error transition-opacity font-bold px-1" data-index="${idx}" title="Delete scenario">
             &times;
@@ -542,9 +554,9 @@ const faqSchema = localizedFaqs.length > 0 ? {
     compareBtn?.addEventListener('click', () => {
       if (selectedIndices.length !== 2) return;
       
-      const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
-      const scA = saved[selectedIndices[0]];
-      const scB = saved[selectedIndices[1]];
+      const saved = safeGetJSON<any[]>(scenarioKey, []);
+      const scA = Array.isArray(saved) ? saved[selectedIndices[0]] : undefined;
+      const scB = Array.isArray(saved) ? saved[selectedIndices[1]] : undefined;
       
       if (!scA || !scB || !form) return;
 
@@ -671,10 +683,10 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
           rowsHtml += `
             <tr class="hover:bg-canvas-soft transition-colors">
-              <td class="px-4 py-2.5 font-semibold text-ink">${itemA.label}</td>
-              <td class="px-4 py-2.5 font-mono">${itemA.value}</td>
-              <td class="px-4 py-2.5 font-mono">${itemB.value}</td>
-              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link' : diff < 0 ? 'text-error' : 'text-mute'}">${diffHtml}</td>
+              <td class="px-4 py-2.5 font-semibold text-ink">${escapeHtml(itemA.label)}</td>
+              <td class="px-4 py-2.5 font-mono">${escapeHtml(itemA.value)}</td>
+              <td class="px-4 py-2.5 font-mono">${escapeHtml(itemB.value)}</td>
+              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link' : diff < 0 ? 'text-error' : 'text-mute'}">${escapeHtml(diffHtml)}</td>
             </tr>
           `;
         });
@@ -706,10 +718,10 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
           rowsHtml += `
             <tr class="hover:bg-canvas-soft transition-colors font-medium">
-              <td class="px-4 py-2.5 text-ink">${itemA.label}</td>
-              <td class="px-4 py-2.5 font-mono text-ink">${itemA.value}</td>
-              <td class="px-4 py-2.5 font-mono text-ink">${itemB.value}</td>
-              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link font-semibold' : diff < 0 ? 'text-error font-semibold' : 'text-mute'}">${diffHtml}</td>
+              <td class="px-4 py-2.5 text-ink">${escapeHtml(itemA.label)}</td>
+              <td class="px-4 py-2.5 font-mono text-ink">${escapeHtml(itemA.value)}</td>
+              <td class="px-4 py-2.5 font-mono text-ink">${escapeHtml(itemB.value)}</td>
+              <td class="px-4 py-2.5 font-mono ${diff > 0 ? 'text-link font-semibold' : diff < 0 ? 'text-error font-semibold' : 'text-mute'}">${escapeHtml(diffHtml)}</td>
             </tr>
           `;
         });
@@ -731,16 +743,32 @@ const faqSchema = localizedFaqs.length > 0 ? {
       });
     });
 
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        compModal?.classList.add('hidden');
+      }
+    });
+
     compModal?.addEventListener('click', (e) => {
       if (e.target === compModal) {
         compModal.classList.add('hidden');
       }
     });
 
+    // Print handler (button exists in sidebar but was previously unwired)
+    document.getElementById('print-calculator-btn')?.addEventListener('click', () => {
+      window.print();
+    });
+
     // Copy Share URL Click Handler
     const shareBtn = document.getElementById('share-calculator-btn');
     shareBtn?.addEventListener('click', () => {
-      const url = window.location.href;
+      const curr = safeGetItem('currency', 'USD');
+      const urlObj = new URL(window.location.href);
+      if (curr && curr !== 'USD') {
+        urlObj.searchParams.set('currency', curr);
+      }
+      const url = urlObj.toString();
       navigator.clipboard.writeText(url).then(() => {
         const originalText = shareBtn.innerHTML;
         shareBtn.innerHTML = '<span>✅</span> Link Copied!';
@@ -764,11 +792,19 @@ const faqSchema = localizedFaqs.length > 0 ? {
           if (!nameOrId || nameOrId === 'currency-select') return;
           
           const value = params.get(nameOrId);
-          if (value !== null) {
+          if (value !== null && value.length <= 100) {
             if (input.type === 'checkbox') {
               (input as HTMLInputElement).checked = value === 'true';
             } else {
-              input.value = value;
+              // Sanitize numeric inputs against extreme scientific notation
+              if (input.type === 'number') {
+                const num = parseFloat(value);
+                if (isFinite(num) && Math.abs(num) <= 1e12) {
+                  input.value = value;
+                }
+              } else {
+                input.value = value;
+              }
             }
           }
         });
@@ -786,6 +822,10 @@ const faqSchema = localizedFaqs.length > 0 ? {
         // 2. Sync to URL on input/change
         const handleGlobalInputSync = () => {
           const newParams = new URLSearchParams();
+          const curr = safeGetItem('currency', 'USD');
+          if (curr && curr !== 'USD') {
+            newParams.set('currency', curr);
+          }
           Array.from(form.elements).forEach((el: any) => {
             const input = el as HTMLInputElement | HTMLSelectElement;
             const nameOrId = input.name || input.id;
@@ -812,8 +852,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
   function loadScenario(idx: number) {
     if (!form) return;
-    const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
-    const scenario = saved[idx];
+    const saved = safeGetJSON<any[]>(scenarioKey, []);
+    const scenario = Array.isArray(saved) ? saved[idx] : null;
     if (!scenario || !scenario.data) return;
 
     Object.entries(scenario.data).forEach(([name, val]: [string, any]) => {
@@ -832,7 +872,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
   }
 
   function deleteScenario(idx: number) {
-    const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
+    const saved = safeGetJSON<any[]>(scenarioKey, []);
+    if (!Array.isArray(saved)) return;
     saved.splice(idx, 1);
     safeSetItem(scenarioKey, JSON.stringify(saved));
     updateScenariosUI();
@@ -854,9 +895,11 @@ const faqSchema = localizedFaqs.length > 0 ? {
       }
     });
 
-    const saved = JSON.parse(safeGetItem(scenarioKey, '[]'));
-    saved.push({ name: name.trim(), data, timestamp: Date.now() });
-    safeSetItem(scenarioKey, JSON.stringify(saved));
+    const saved = safeGetJSON<any[]>(scenarioKey, []);
+    const safeSaved = Array.isArray(saved) ? saved : [];
+    safeSaved.push({ name: name.trim().slice(0, 50), data, timestamp: Date.now() });
+    if (safeSaved.length > 50) safeSaved.shift();
+    safeSetItem(scenarioKey, JSON.stringify(safeSaved));
     updateScenariosUI();
   });
 

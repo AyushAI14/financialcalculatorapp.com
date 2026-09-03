@@ -133,13 +133,13 @@ const faqs = getCalculatorFaqs('roi');
 
   // Perform calculations
   function performCalculation() {
-    const initialInvestment = Math.abs(parseFloat(initialInput.value)) || 0;
-    const finalValue = Math.abs(parseFloat(finalInput.value)) || 0;
-    const length = Math.abs(parseFloat(durationInput.value)) || 0;
+    const initialInvestment = Math.max(0, parseFloat(initialInput.value) || 0);
+    const finalValue = Math.max(0, parseFloat(finalInput.value) || 0);
+    const length = Math.max(0, parseFloat(durationInput.value) || 0);
     const lengthUnit = durationUnitSelect.value as 'years' | 'months' | 'days';
     
-    const additionalExpenses = Math.abs(parseFloat(expensesInput.value)) || 0;
-    const additionalReturns = Math.abs(parseFloat(incomeInput.value)) || 0;
+    const additionalExpenses = Math.max(0, parseFloat(expensesInput.value) || 0);
+    const additionalReturns = Math.max(0, parseFloat(incomeInput.value) || 0);
 
     const results = calculateROI({
       initialInvestment,
@@ -151,8 +151,8 @@ const faqs = getCalculatorFaqs('roi');
     });
 
     const netProfitFormatted = formatCurrency(results.netProfit);
-    const roiFormatted = formatPercentage(results.roi);
-    const annualRoiFormatted = formatPercentage(results.annualizedRoi);
+    const roiFormatted = isNaN(results.roi) ? 'N/A' : formatPercentage(results.roi);
+    const annualRoiFormatted = isNaN(results.annualizedRoi) ? 'N/A' : formatPercentage(results.annualizedRoi);
 
     // Update Result Cards DOM
     if (resRoiContainer) {

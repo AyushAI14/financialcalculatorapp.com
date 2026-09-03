@@ -178,11 +178,25 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
   // Calculate Payoff
   function performCalculation() {
-    const balance = Math.abs(parseFloat(balanceInput.value)) || 0;
-    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
+    const balance = parseFloat(balanceInput.value) || 0;
+    const rate = (parseFloat(rateInput.value) || 0) / 100;
     const paymentType = paymentTypeSelect.value as 'fixed' | 'percent';
-    let paymentValue = Math.abs(parseFloat(paymentValInput.value)) || 0;
-    const minimumPaymentLimit = Math.abs(parseFloat(minLimitInput.value)) || 25;
+    let paymentValue = parseFloat(paymentValInput.value) || 0;
+    const minimumPaymentLimit = parseFloat(minLimitInput.value) || 25;
+
+    if (balance <= 0 || rate < 0 || paymentValue <= 0) {
+      if (resultWrapper) {
+        resultWrapper.innerHTML = `
+          <div class="p-6 rounded-md flex flex-col items-center text-center justify-center min-h-[140px] bg-canvas-soft border border-hairline text-mute">
+            <h4 class="text-sm font-medium mb-1">Enter Valid Details</h4>
+            <p class="text-xs">Please enter a positive balance and monthly payment to calculate payoff.</p>
+          </div>
+        `;
+      }
+      if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      return;
+    }
 
     // Convert percentage rate to decimal
     if (paymentType === 'percent') {
@@ -204,7 +218,7 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
           <div class="p-6 rounded-md flex flex-col items-center text-center justify-center min-h-[140px] bg-error-soft border border-error text-error-deep">
             <h4 class="text-sm font-medium mb-2">Insufficient Payment</h4>
             <div class="text-lg font-semibold leading-tight px-4">Balance Grows Indefinitely</div>
-            <p class="text-xs mt-3 max-w-[80%] mx-auto">Your monthly payment is too small to cover the monthly interest accrued ($${(balance * rate / 12).toFixed(2)}). Please increase your payment amount.</p>
+            <p class="text-xs mt-3 max-w-[80%] mx-auto">Your monthly payment is too small to cover the monthly interest accrued or pay down principal within 50 years. Please increase your payment amount.</p>
           </div>
         `;
       }
@@ -218,8 +232,9 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
     // Standard Render Results
     if (resultWrapper) {
-      const totalPayments = balance + res.totalInterest;
-      const interestPct = totalPayments > 0 ? (res.totalInterest / totalPayments) * 100 : 0;
+      const totalPayments = res.schedule.reduce((acc, p) => acc + p.payment, 0);
+      const exactInterest = res.schedule.reduce((acc, p) => acc + p.interest, 0);
+      const interestPct = totalPayments > 0 ? (exactInterest / totalPayments) * 100 : 0;
       
       let takeawayText = '';
       if (interestPct > 35) {

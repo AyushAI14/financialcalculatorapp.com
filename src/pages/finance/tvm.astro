@@ -302,9 +302,7 @@ const faqs = getCalculatorFaqs('tvm');
       let description = '';
 
       if (solveFor === 'fv') {
-        // FV solved: display as positive absolute
         result = Math.abs(result);
-        fvInput.value = result.toFixed(2);
         displayValue = formatCurrency(result);
         title = 'Future Value (FV)';
         description = scenario === 'savings' 
@@ -313,7 +311,6 @@ const faqs = getCalculatorFaqs('tvm');
         fv = -result; // Set for schedule
       } else if (solveFor === 'pv') {
         result = Math.abs(result);
-        pvInput.value = result.toFixed(2);
         displayValue = formatCurrency(result);
         title = 'Present Value (PV)';
         description = scenario === 'savings'
@@ -322,7 +319,6 @@ const faqs = getCalculatorFaqs('tvm');
         pv = scenario === 'savings' ? -result : result;
       } else if (solveFor === 'pmt') {
         result = Math.abs(result);
-        pmtInput.value = result.toFixed(2);
         displayValue = formatCurrency(result);
         title = 'Periodic Payment (PMT)';
         description = scenario === 'savings'
@@ -330,19 +326,17 @@ const faqs = getCalculatorFaqs('tvm');
           : `Periodic loan repayment amount.`;
         pmt = -result;
       } else if (solveFor === 'rate') {
-        // Result comes back as annual rate decimal
-        const pct = result * 100;
-        rateInput.value = pct.toFixed(3);
         displayValue = formatPercentage(result);
         title = 'Annual Interest Rate';
         description = `Required growth rate per year to hit target values.`;
         rate = result;
       } else if (solveFor === 'periods') {
-        periodsInput.value = Math.ceil(result).toString();
-        displayValue = `${Math.ceil(result)} periods`;
+        const exactPeriods = result;
+        const roundedPeriods = Math.ceil(result);
+        displayValue = `${roundedPeriods} periods`;
         title = 'Number of Periods';
-        description = `Time required to satisfy cash flow criteria.`;
-        periods = Math.ceil(result);
+        description = `Time required to satisfy cash flow criteria (${exactPeriods.toFixed(2)} exact periods, rounded up to ${roundedPeriods} full cycles).`;
+        periods = roundedPeriods;
       }
 
       // Update Result Card

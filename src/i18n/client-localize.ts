@@ -31,9 +31,6 @@ export function initClientLocalization() {
   const dict: Record<string, string> = { ...uiDict, ...jsonDict, ...faqDict };
   if (!dict || Object.keys(dict).length === 0) return;
 
-  // Build sorted keys by length descending to match longer phrases first
-  const sortedKeys = Object.keys(dict).sort((a, b) => b.length - a.length);
-
   function translateValue(val: string): string | null {
     if (!val) return null;
     const trimmed = val.trim();

@@ -209,10 +209,10 @@ const faqs = getCalculatorFaqs('compound-interest');
 
   // Perform Calculation
   function performCalculation() {
-    const principal = Math.abs(parseFloat(principalInput.value)) || 0;
-    const monthlyContribution = Math.abs(parseFloat(contributionInput.value)) || 0;
-    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
-    const years = Math.abs(parseInt(yearsInput.value)) || 1;
+    const principal = Math.max(0, parseFloat(principalInput.value) || 0);
+    const monthlyContribution = Math.max(0, parseFloat(contributionInput.value) || 0);
+    const rate = Math.min(10, Math.max(0, (parseFloat(rateInput.value) || 0) / 100));
+    const years = Math.min(100, Math.max(0, parseInt(yearsInput.value) || 0));
     const compounding = parseInt(compoundingSelect.value) || 12;
     const timing = timingCheckbox.checked ? 'beginning' : 'end';
 
@@ -225,6 +225,7 @@ const faqs = getCalculatorFaqs('compound-interest');
       timing
     });
 
+    if (!schedule || schedule.length === 0) return;
     const finalEntry = schedule[schedule.length - 1];
     
     // Update Result Cards

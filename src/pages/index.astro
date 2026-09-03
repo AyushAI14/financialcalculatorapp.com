@@ -326,7 +326,8 @@ const calculators = [
 </Layout>
 
 <script>
-  import { safeGetItem } from '../lib/storage';
+  import { safeGetJSON } from '../lib/storage';
+  import { escapeHtml } from '../lib/utils';
 
   // Search filtering logic
   const searchInput = document.getElementById('calc-search') as HTMLInputElement | null;
@@ -334,12 +335,12 @@ const calculators = [
 
   searchInput?.addEventListener('input', (e) => {
     const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
-    
-    categoryCards.forEach(card => {
+
+    categoryCards.forEach((card) => {
+      const items = card.querySelectorAll('li');
       let cardHasMatch = false;
-      const links = card.querySelectorAll('ul li');
-      
-      links.forEach(li => {
+
+      items.forEach((li) => {
         const text = li.textContent?.toLowerCase() || '';
         if (text.includes(query)) {
           (li as HTMLElement).style.display = 'block';
@@ -355,16 +356,18 @@ const calculators = [
 
   // Recently Used Listing
   if (typeof window !== 'undefined') {
-    const recents = JSON.parse(safeGetItem('recent_calculators', '[]'));
+    const recents = safeGetJSON<any[]>('recent_calculators', []);
     const recentsSection = document.getElementById('recently-used-section');
     const recentsList = document.getElementById('recently-used-list');
 
-    if (recents.length > 0 && recentsSection && recentsList) {
+    if (Array.isArray(recents) && recents.length > 0 && recentsSection && recentsList) {
       recentsSection.classList.remove('hidden');
-      recentsList.innerHTML = recents.map((item: any) => `
-        <a href="${item.url}" class="px-3 py-1.5 text-xs bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-full text-body hover:text-ink transition-colors flex items-center gap-1.5">
+      recentsList.innerHTML = recents
+        .filter((item: any) => item && typeof item.url === 'string' && item.url.startsWith('/') && !item.url.startsWith('//'))
+        .map((item: any) => `
+        <a href="${encodeURI(item.url)}" class="px-3 py-1.5 text-xs bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-full text-body hover:text-ink transition-colors flex items-center gap-1.5">
           <span>⏱️</span>
-          <span>${item.name}</span>
+          <span>${escapeHtml(item.name || 'Calculator')}</span>
         </a>
       `).join('');
     }

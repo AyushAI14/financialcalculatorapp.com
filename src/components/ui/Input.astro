@@ -26,8 +26,18 @@ const localizedPlaceholder = placeholder ? t(placeholder, placeholder) : placeho
     <label for={id} class="text-sm font-medium text-ink">{localizedLabel}</label>
     {localizedTooltip && (
       <div class="group relative cursor-help select-none">
-        <span class="w-3.5 h-3.5 rounded-full border border-mute/50 text-[10px] text-mute flex items-center justify-center font-mono hover:bg-canvas-soft-2 transition-colors">?</span>
-        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-primary text-on-primary text-[10px] leading-normal rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-normal">
+        <span
+          class="w-3.5 h-3.5 rounded-full border border-mute/50 text-[10px] text-mute flex items-center justify-center font-mono hover:bg-canvas-soft-2 transition-colors"
+          tabindex="0"
+          role="img"
+          aria-label={localizedTooltip}
+          aria-describedby={`${id}-tooltip`}
+        >?</span>
+        <div
+          id={`${id}-tooltip`}
+          role="tooltip"
+          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-primary text-on-primary text-[10px] leading-normal rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-normal"
+        >
           {localizedTooltip}
           <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary"></div>
         </div>

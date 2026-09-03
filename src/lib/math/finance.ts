@@ -72,11 +72,13 @@ function solvePV(fv: number, pmt: number, r: number, n: number, timing: number):
 }
 
 function solvePMT(pv: number, fv: number, r: number, n: number, timing: number): number {
+  if (n <= 0) return NaN;
   if (r === 0) {
     return -(pv + fv) / n;
   }
   const compound = Math.pow(1 + r, n);
   const annuityFactor = ((compound - 1) / r) * (1 + r * timing);
+  if (annuityFactor === 0) return NaN;
   return -(pv * compound + fv) / annuityFactor;
 }
 
@@ -90,17 +92,16 @@ function solvePeriods(pv: number, fv: number, pmt: number, r: number, timing: nu
   const numerator = tFactor - fv;
   const denominator = pv + tFactor;
   
-  if (numerator <= 0 && denominator <= 0) return NaN;
-  if (numerator >= 0 && denominator <= 0) return NaN;
-  if (numerator <= 0 && denominator >= 0) return NaN;
-  
+  if (denominator === 0) return NaN;
   const val = numerator / denominator;
-  if (val <= 0) return NaN;
+  if (val <= 0 || isNaN(val) || !isFinite(val)) return NaN;
+  if (1 + r <= 0) return NaN;
   
   return Math.log(val) / Math.log(1 + r);
 }
 
 function solveRate(pv: number, fv: number, pmt: number, n: number, timing: number): number {
+  if (n <= 0) return NaN;
   let r0 = 0.05;
   let r1 = 0.08;
   
@@ -153,7 +154,7 @@ function solveRate(pv: number, fv: number, pmt: number, n: number, timing: numbe
       }
     }
   }
-  return r1;
+  return Math.abs(f(r1)) < 1e-4 ? r1 : NaN;
 }
 
 export interface ScheduleEntry {
@@ -165,11 +166,17 @@ export interface ScheduleEntry {
   endingBalance: number;
 }
 
+/**
+ * Generates period-by-period TVM schedule.
+ * NOTE: `principal` is the raw cash-flow contribution for the period
+ * (equal to `payment`), while `interest` is reported separately.
+ * `endingBalance = beginningBalance + interest + payment`.
+ */
 export function generateTVMSchedule(params: Required<TVMParams>): ScheduleEntry[] {
   const schedule: ScheduleEntry[] = [];
   const timing = params.timing === 'beginning' ? 1 : 0;
-  const cFreq = params.compoundingFrequency;
-  const pFreq = params.paymentFrequency;
+  const cFreq = Math.max(1, params.compoundingFrequency || 12);
+  const pFreq = Math.max(1, params.paymentFrequency || 12);
   
   let r = 0;
   if (params.rate !== 0) {
@@ -178,8 +185,9 @@ export function generateTVMSchedule(params: Required<TVMParams>): ScheduleEntry[
   
   let balance = params.pv;
   const pmt = params.pmt;
+  const maxPeriods = Math.min(Math.max(1, Math.floor(params.periods || 0)), 2400);
   
-  for (let i = 1; i <= params.periods; i++) {
+  for (let i = 1; i <= maxPeriods; i++) {
     const beginningBalance = balance;
     let interest = 0;
     let payment = pmt;
@@ -268,7 +276,7 @@ export function generateCompoundInterestSchedule(params: CompoundInterestParams)
   
   const schedule: CompoundInterestEntry[] = [];
   const pFreq = 12;
-  const cFreq = compoundingFrequency;
+  const cFreq = Math.max(1, compoundingFrequency || 12);
   
   let rPmt = 0;
   if (rate !== 0) {
@@ -279,7 +287,20 @@ export function generateCompoundInterestSchedule(params: CompoundInterestParams)
   let cumContributions = principal;
   let cumInterest = 0;
   
-  for (let y = 1; y <= years; y++) {
+  const safeYears = Math.min(Math.max(0, Math.floor(years || 0)), 100);
+  if (safeYears === 0) {
+    return [{
+      year: 0,
+      startingBalance: principal,
+      contributions: 0,
+      interest: 0,
+      endingBalance: principal,
+      totalContributions: principal,
+      totalInterest: 0
+    }];
+  }
+
+  for (let y = 1; y <= safeYears; y++) {
     const startingBalance = currentBalance;
     let yearContributions = 0;
     let yearInterest = 0;
@@ -332,7 +353,7 @@ export function calculateROI(params: ROIParams) {
   const totalReturns = params.finalValue + (params.additionalReturns ?? 0);
   
   const netProfit = totalReturns - initialCost;
-  const roi = initialCost === 0 ? 0 : (netProfit / initialCost);
+  const roi = initialCost === 0 ? NaN : (netProfit / initialCost);
   
   let years = params.length;
   if (params.lengthUnit === 'months') {
@@ -341,9 +362,15 @@ export function calculateROI(params: ROIParams) {
     years = params.length / 365;
   }
   
-  let annualizedRoi = 0;
-  if (years > 0 && initialCost > 0 && totalReturns > 0) {
-    annualizedRoi = Math.pow(totalReturns / initialCost, 1 / years) - 1;
+  let annualizedRoi = NaN;
+  if (years > 0 && initialCost > 0) {
+    if (totalReturns === 0) {
+      annualizedRoi = -1.0; // -100% total loss
+    } else if (totalReturns > 0) {
+      annualizedRoi = Math.pow(totalReturns / initialCost, 1 / years) - 1;
+    }
+  } else if (years === 0 && !isNaN(roi)) {
+    annualizedRoi = roi;
   }
   
   return {
@@ -395,17 +422,18 @@ export function calculatePaycheck(params: PaycheckParams): PaycheckResult {
 
   const annualPreTax = Math.max(0, grossPay - preTaxDeductions);
   
-  // Federal standard deduction for single taxpayer (estimated $15,000 for 2026)
+  // Federal standard deduction, single filer. 2025 IRS: $15,000.
+  // Brackets below are 2025 single-filer federal brackets (IRS Rev. Proc. 2024-40).
   const standardDeduction = 15000;
   const taxableFederal = Math.max(0, annualPreTax - standardDeduction);
 
   const brackets = [
-    { limit: 11600, rate: 0.10 },
-    { limit: 47150, rate: 0.12 },
-    { limit: 100525, rate: 0.22 },
-    { limit: 191950, rate: 0.24 },
-    { limit: 243725, rate: 0.32 },
-    { limit: 609350, rate: 0.35 },
+    { limit: 11925, rate: 0.10 },
+    { limit: 48475, rate: 0.12 },
+    { limit: 103350, rate: 0.22 },
+    { limit: 197300, rate: 0.24 },
+    { limit: 250525, rate: 0.32 },
+    { limit: 626350, rate: 0.35 },
     { limit: Infinity, rate: 0.37 }
   ];
 
@@ -422,8 +450,8 @@ export function calculatePaycheck(params: PaycheckParams): PaycheckResult {
     if (remainingTaxable <= 0) break;
   }
 
-  // FICA: Social Security (6.2% up to $176k cap) + Medicare (1.45% base, +0.9% > $200k)
-  const ssTax = Math.min(grossPay, 176000) * 0.062;
+  // FICA: Social Security (6.2% up to wage-base cap, 2025: $176,100) + Medicare (1.45% base, +0.9% > $200k)
+  const ssTax = Math.min(grossPay, 176100) * 0.062;
   const medBase = grossPay * 0.0145;
   const medAdditional = Math.max(0, grossPay - 200000) * 0.009;
   const medicareTax = medBase + medAdditional;
@@ -502,6 +530,10 @@ export interface FeeImpactResult {
   totalContributions: number;
 }
 
+/**
+ * Fee impact assumes beginning-of-month contributions: (balance + monthly) * (1 + r).
+ * This is consistent across fee/college/crypto calculators; 401k uses monthly averaging.
+ */
 export function calculateFeeImpact(
   initial: number,
   monthly: number,
@@ -510,7 +542,8 @@ export function calculateFeeImpact(
   feeB: number,
   years: number
 ): FeeImpactResult {
-  const periods = years * 12;
+  const safeYears = Math.min(Math.max(1, Math.floor(years || 0)), 100);
+  const periods = safeYears * 12;
   const rA = (returnRate - feeA) / 12;
   const rB = (returnRate - feeB) / 12;
   const rNoFee = returnRate / 12;
@@ -560,20 +593,28 @@ export function compareIRA(
   currentTaxRate: number,
   retirementTaxRate: number
 ): CompareIRAResult {
-  const years = retirementAge - currentAge;
+  const years = Math.min(Math.max(0, retirementAge - currentAge), 100);
   if (years <= 0) return { rothBalance: 0, tradBalanceGross: 0, tradBalanceNet: 0, totalTaxSavings: 0, rothWins: true };
 
   let rothBalance = 0;
   let tradBalanceGross = 0;
+  let taxSavingsBalance = 0;
+  const annualTaxSavings = annualContribution * currentTaxRate;
   
   for (let y = 1; y <= years; y++) {
     rothBalance = (rothBalance + annualContribution) * (1 + rateOfReturn);
     tradBalanceGross = (tradBalanceGross + annualContribution) * (1 + rateOfReturn);
+    taxSavingsBalance = (taxSavingsBalance + annualTaxSavings) * (1 + rateOfReturn);
   }
 
-  const tradBalanceNet = tradBalanceGross * (1 - retirementTaxRate);
-  const taxSavingsAnnual = annualContribution * currentTaxRate;
-  const totalTaxSavings = taxSavingsAnnual * years;
+  // Net value of invested annual tax savings after capital gains tax (estimated 15% long-term capital gains tax)
+  const totalTaxSavedContributed = annualTaxSavings * years;
+  const taxSavingsGains = Math.max(0, taxSavingsBalance - totalTaxSavedContributed);
+  const netInvestedTaxSavings = taxSavingsBalance - (taxSavingsGains * 0.15);
+
+  // Traditional total net value combines post-tax IRA distributions + after-tax proceeds of invested tax deductions
+  const tradBalanceNet = (tradBalanceGross * (1 - retirementTaxRate)) + netInvestedTaxSavings;
+  const totalTaxSavings = annualTaxSavings * years;
 
   return {
     rothBalance,
@@ -602,7 +643,7 @@ export function calculateCollegeSavings(
   monthlyContribution: number,
   returnRate: number
 ): CollegeSavingsResult {
-  const yearsToSave = enrollmentAge - currentAge;
+  const yearsToSave = Math.min(Math.max(0, enrollmentAge - currentAge), 50);
   if (yearsToSave <= 0) return { total4YearCost: currentAnnualCost * 4, endingBalance: currentSaved, shortfall: 0, pmtNeeded: 0 };
 
   let total4YearCost = 0;
@@ -653,10 +694,11 @@ export function calculateCryptoDCA(
   years: number,
   projectedAnnualGrowth: number
 ): CryptoDCAResult {
-  let periods = years * 12;
+  const safeYears = Math.min(Math.max(1, years || 1), 50);
+  let periods = safeYears * 12;
   let rate = projectedAnnualGrowth / 12;
   if (frequency === 'weekly') {
-    periods = years * 52;
+    periods = safeYears * 52;
     rate = projectedAnnualGrowth / 52;
   }
 

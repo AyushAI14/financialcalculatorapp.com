@@ -2,10 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
-const t = useTranslations(lang);
 ---
 
 <Layout 
@@ -248,10 +247,10 @@ const t = useTranslations(lang);
     const result = compareIRA(cage, rage, contrib, rate, curTax, retTax);
 
     let winnerText = 'Traditional IRA Wins';
-    if (result.rothWins) {
-      winnerText = 'Roth IRA Wins';
-    } else if (result.rothBalance === result.tradBalanceNet) {
+    if (Math.abs(result.rothBalance - result.tradBalanceNet) < 1) {
       winnerText = 'Both Plans Equal';
+    } else if (result.rothWins) {
+      winnerText = 'Roth IRA Wins';
     }
 
     if (resWinner) {

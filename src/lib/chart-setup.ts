@@ -15,7 +15,7 @@ try {
   const tooltipPlugin = Chart.registry.getPlugin('tooltip') as any;
   if (tooltipPlugin && tooltipPlugin.positioners) {
     tooltipPlugin.positioners.fixedTop = function(elements: any) {
-      if (!elements || !elements.length) return false;
+      if (!elements || !elements.length) return undefined;
       const activePoint = elements[0];
       const x = activePoint.element.x;
       const chart = this.chart;

@@ -22,32 +22,47 @@ export interface AmortizationPeriod {
 
 export function calculateLoanPMT(params: LoanParams): number {
   const { principal, rate, years, compoundingFrequency = 12 } = params;
+  if (years <= 0 || compoundingFrequency <= 0) return 0;
   const r = rate / compoundingFrequency;
   const n = years * compoundingFrequency;
 
+  if (n <= 0) return 0;
   if (r === 0) return principal / n;
-  return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  const denom = Math.pow(1 + r, n) - 1;
+  if (denom === 0) return principal / n;
+  return principal * (r * Math.pow(1 + r, n)) / denom;
 }
 
 export function generateAmortizationSchedule(params: LoanParams): AmortizationPeriod[] {
   const { principal, rate, years, compoundingFrequency = 12 } = params;
   const schedule: AmortizationPeriod[] = [];
+  if (years <= 0 || compoundingFrequency <= 0 || principal <= 0) return schedule;
   
   const pmt = calculateLoanPMT(params);
   const r = rate / compoundingFrequency;
-  const totalPeriods = years * compoundingFrequency;
+  const totalPeriods = Math.min(years * compoundingFrequency, 2400);
   
   let balance = principal;
   for (let i = 1; i <= totalPeriods; i++) {
     const startingBalance = balance;
     let interest = balance * r;
     let principalPaid = pmt - interest;
-    
-    // Boundary check for last period
+
+    // Boundary check for last period — settle exact remaining balance
     if (balance - principalPaid < 0.01 || i === totalPeriods) {
       principalPaid = balance;
-      interest = pmt - principalPaid;
+      interest = r === 0 ? 0 : startingBalance * r;
+      const payment = principalPaid + interest;
       balance = 0;
+      schedule.push({
+        period: i,
+        startingBalance,
+        payment,
+        principal: principalPaid,
+        interest,
+        endingBalance: balance
+      });
+      continue;
     } else {
       balance = balance - principalPaid;
     }
@@ -55,13 +70,11 @@ export function generateAmortizationSchedule(params: LoanParams): AmortizationPe
     schedule.push({
       period: i,
       startingBalance,
-      payment: pmt,
+      payment: principalPaid + interest,
       principal: principalPaid,
       interest,
       endingBalance: balance
     });
-    
-    if (balance <= 0) break;
   }
   return schedule;
 }
@@ -76,15 +89,17 @@ export interface YearlyAmortizationSummary {
   endingBalance: number;
 }
 
-export function compileYearlyAmortization(monthlySchedule: AmortizationPeriod[]): YearlyAmortizationSummary[] {
+export function compileYearlyAmortization(monthlySchedule: AmortizationPeriod[], periodsPerYear: number = 12): YearlyAmortizationSummary[] {
   const yearly: YearlyAmortizationSummary[] = [];
+  const ppy = Math.max(1, periodsPerYear);
   
-  for (let y = 1; y <= Math.ceil(monthlySchedule.length / 12); y++) {
-    const startIdx = (y - 1) * 12;
-    const endIdx = Math.min(y * 12 - 1, monthlySchedule.length - 1);
+  for (let y = 1; y <= Math.ceil(monthlySchedule.length / ppy); y++) {
+    const startIdx = (y - 1) * ppy;
+    const endIdx = Math.min(y * ppy - 1, monthlySchedule.length - 1);
     
     const yearStart = monthlySchedule[startIdx];
     const yearEnd = monthlySchedule[endIdx];
+    if (!yearStart || !yearEnd) continue;
     
     let totalPayments = 0;
     let principal = 0;
@@ -119,8 +134,17 @@ export interface APRParams {
 
 export function calculateAPR(params: APRParams): number {
   const { loanAmount, interestRate, termYears, extraFees } = params;
+  if (termYears <= 0 || loanAmount <= 0) return 0;
   
-  // Calculate standard monthly payment based on full loan amount
+  if (extraFees === 0) {
+    return interestRate;
+  }
+  
+  const netProceeds = loanAmount - extraFees;
+  const n = termYears * 12;
+  
+  if (netProceeds <= 0) return NaN; // Fees equal or exceed loan amount
+  
   const pmt = calculateLoanPMT({
     principal: loanAmount,
     rate: interestRate,
@@ -128,40 +152,35 @@ export function calculateAPR(params: APRParams): number {
     compoundingFrequency: 12
   });
   
-  // The borrower actually receives loanAmount - extraFees
-  const netProceeds = loanAmount - extraFees;
-  const n = termYears * 12;
-  
-  if (netProceeds <= 0 || pmt <= 0) return 0;
-  
-  // Solve for monthly APR rate 'i' numerically:
-  // netProceeds = pmt * [1 - (1+i)^-n] / i
-  // f(i) = netProceeds * i - pmt * (1 - (1+i)^-n) = 0
-  let low = 0.00001;
-  let high = 0.5; // Up to 50% monthly
-  let iRate = 0.05;
-  const tolerance = 1e-10;
+  if (pmt <= 0) return 0;
   
   const f = (i: number) => {
+    if (i === 0) return netProceeds - pmt * n;
     return netProceeds * i - pmt * (1 - Math.pow(1 + i, -n));
   };
   
-  // Bisection method for robust convergence
-  for (let iter = 0; iter < 100; iter++) {
-    iRate = (low + high) / 2;
-    const val = f(iRate);
-    
-    if (Math.abs(val) < tolerance) {
-      break;
-    }
-    if (val > 0) {
-      high = iRate;
-    } else {
-      low = iRate;
+  let low = 0.0;
+  let high = Math.max(0.5, (pmt * n / netProceeds) / n);
+  while (f(high) < 0 && high < 10.0) {
+    high *= 2;
+  }
+  
+  let iRate = interestRate / 12;
+  const tolerance = 1e-10;
+  
+  if (f(low) * f(high) <= 0) {
+    for (let iter = 0; iter < 100; iter++) {
+      iRate = (low + high) / 2;
+      const val = f(iRate);
+      if (Math.abs(val) < tolerance) break;
+      if (val > 0) {
+        high = iRate;
+      } else {
+        low = iRate;
+      }
     }
   }
   
-  // Annual APR = monthly APR * 12
   return iRate * 12;
 }
 
@@ -221,6 +240,15 @@ export function calculateHomeAffordability(params: AffordabilityParams) {
   // a = [r(1+r)^n] / [(1+r)^n - 1]
   const r = interestRate / 12;
   const n = termYears * 12;
+  if (n <= 0) {
+    return {
+      affordableHomePrice: 0,
+      affordableLoanAmount: 0,
+      monthlyPaymentLimit: Math.round(maxHousingPayment),
+      frontEndLimit: Math.round(maxFrontEnd),
+      backEndLimit: Math.round(maxBackEnd)
+    };
+  }
   const a = r === 0 ? (1 / n) : (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   
   // Tax factor per dollar of home price:
@@ -307,7 +335,9 @@ export function simulateRentVsBuy(params: RentVsBuyParams): RentVsBuyYearSimulat
   let currentRent = monthlyRent;
   let currentInsurance = insuranceAnnual;
 
-  for (let y = 1; y <= simulationYears; y++) {
+  const safeSimulationYears = Math.min(Math.max(1, Math.floor(simulationYears || 0)), 100);
+
+  for (let y = 1; y <= safeSimulationYears; y++) {
     // 1. Rent cash flows
     const annualRentPaid = currentRent * 12;
     
@@ -393,6 +423,7 @@ export interface DebtSimResult {
   months: number;
   totalInterest: number;
   history: DebtSimPeriod[];
+  isNegativeAmortization?: boolean;
 }
 
 export function simulateDebtPayoff(
@@ -406,8 +437,20 @@ export function simulateDebtPayoff(
   const history: DebtSimPeriod[] = [];
 
   const maxMonths = 600; // 50 years cap
+  const initialMonthlyInterest = activeDebts.reduce((sum, d) => sum + d.balance * (d.rate / 12), 0);
+  const minPaymentsSum = activeDebts.reduce((sum, d) => sum + d.minPayment, 0);
+  const isNegativeAmortization = totalMonthlyPayment < initialMonthlyInterest || totalMonthlyPayment < minPaymentsSum;
 
-  while (activeDebts.some(d => d.balance > 0) && months < maxMonths) {
+  if (isNegativeAmortization) {
+    return {
+      months: Infinity,
+      totalInterest: Infinity,
+      history: [],
+      isNegativeAmortization: true
+    };
+  }
+
+  while (activeDebts.some(d => d.balance > 0.01) && months < maxMonths) {
     months++;
     let monthlyInterest = 0;
     
@@ -451,20 +494,23 @@ export function simulateDebtPayoff(
       }
     }
 
-    const currentTotalBalance = activeDebts.reduce((acc, d) => acc + d.balance, 0);
+    const currentTotalBalance = activeDebts.reduce((acc, d) => acc + Math.max(0, d.balance), 0);
     history.push({
       month: months,
       balance: currentTotalBalance,
       interest: monthlyInterest
     });
 
-    if (currentTotalBalance <= 0) break;
+    if (currentTotalBalance <= 0.01) break;
   }
 
+  const stillUnpaid = activeDebts.some(d => d.balance > 0.01);
+
   return {
-    months,
+    months: (stillUnpaid && months >= maxMonths) ? Infinity : months,
     totalInterest,
-    history
+    history,
+    isNegativeAmortization: isNegativeAmortization || (stillUnpaid && months >= maxMonths)
   };
 }
 
@@ -507,7 +553,7 @@ export function calculateRefinance(params: RefinanceParams): RefinanceResult {
   });
 
   const monthlySavings = currentPMT - newPMT;
-  const breakEvenMonths = monthlySavings > 0 ? closingCosts / monthlySavings : Infinity;
+  const breakEvenMonths = closingCosts <= 0 ? 0 : (monthlySavings > 0 ? closingCosts / monthlySavings : Infinity);
 
   // Total costs over remaining life of current loan
   const currentTotalRemaining = currentPMT * (currentTermRemaining * 12);
@@ -612,8 +658,19 @@ export function calculateDTI(params: DTIParams): DTIResult {
   const totalOtherDebt = carLoans + studentLoans + creditCards + otherDebts;
   const totalDebt = monthlyHousing + totalOtherDebt;
 
-  const frontEndDTI = grossMonthlyIncome > 0 ? (monthlyHousing / grossMonthlyIncome) : 0;
-  const backEndDTI = grossMonthlyIncome > 0 ? (totalDebt / grossMonthlyIncome) : 0;
+  if (grossMonthlyIncome <= 0) {
+    return {
+      frontEndDTI: totalDebt > 0 ? Infinity : 0,
+      backEndDTI: totalDebt > 0 ? Infinity : 0,
+      totalDebt,
+      totalOtherDebt,
+      frontEndSafe: false,
+      backEndSafe: false
+    };
+  }
+
+  const frontEndDTI = monthlyHousing / grossMonthlyIncome;
+  const backEndDTI = totalDebt / grossMonthlyIncome;
 
   const frontEndSafe = frontEndDTI <= 0.28;
   const backEndSafe = backEndDTI <= 0.36;

@@ -1,5 +1,4 @@
 import type { Lang } from './ui';
-import { guidesBatch1 } from './calculator-guides-batch1.ts';
 import { guidesFr } from './calculator-guides-fr.ts';
 import { guidesIt } from './calculator-guides-it.ts';
 import { guidesPt } from './calculator-guides-pt.ts';

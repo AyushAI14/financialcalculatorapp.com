@@ -2,10 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
-const t = useTranslations(lang);
 ---
 
 <Layout 
@@ -209,7 +208,7 @@ const t = useTranslations(lang);
     const apr = calculateAPR({ loanAmount, interestRate, termYears, extraFees });
     const pmt = calculateLoanPMT({ principal: loanAmount, rate: interestRate, years: termYears });
 
-    if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = formatPercentage(apr);
+    if (resAprCard) resAprCard.querySelector('.font-mono')!.textContent = isNaN(apr) ? 'Invalid' : formatPercentage(apr);
     if (resNominalCard) resNominalCard.querySelector('.font-mono')!.textContent = formatPercentage(interestRate);
     if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = formatCurrency(pmt);
     if (resFeesCard) resFeesCard.querySelector('.font-mono')!.textContent = formatCurrency(extraFees);
@@ -326,7 +325,7 @@ const t = useTranslations(lang);
       ['True Effective APR', formatPercentage(apr)]
     ];
 
-    downloadDataAsCSV(headers, rows, `apr-calculation-${loanAmount}.csv`);
+    downloadDataAsCSV(headers, rows, 'apr-calculation.csv');
   });
 
   form.addEventListener('submit', (e) => {

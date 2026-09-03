@@ -50,3 +50,16 @@ export function safeParseFloat(value: string | undefined | null, defaultValue = 
   const parsed = parseFloat(value.toString().replace(/,/g, ''));
   return isNaN(parsed) ? defaultValue : parsed;
 }
+
+/**
+ * Escapes special HTML characters to prevent XSS attacks when interpolating into innerHTML.
+ */
+export function escapeHtml(str: unknown): string {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

@@ -44,9 +44,25 @@ export function simulateRetirementPath(params: RetirementParams): {
   let balance = currentSavings;
   let currentMonthlyContribution = monthlyContribution;
   
-  // Calculate pre-retirement phase
-  const yearsToRetire = retirementAge - currentAge;
-  const yearsInRetirement = lifeExpectancy - retirementAge;
+  // Calculate pre-retirement phase with safe upper bounds
+  const yearsToRetire = Math.min(Math.max(0, retirementAge - currentAge), 100);
+  const yearsInRetirement = Math.min(Math.max(0, lifeExpectancy - retirementAge), 100);
+
+  if (yearsToRetire <= 0 || yearsInRetirement <= 0) {
+    return {
+      schedule: [{
+        age: currentAge,
+        startingBalance: currentSavings,
+        contributions: 0,
+        withdrawals: 0,
+        interest: 0,
+        endingBalance: currentSavings
+      }],
+      actualNestEgg: currentSavings,
+      targetNestEgg: 0,
+      isFundingSufficient: false
+    };
+  }
 
   // Simulate pre-retirement years (accumulation)
   for (let y = 1; y <= yearsToRetire; y++) {
@@ -183,7 +199,22 @@ export function simulate401KPath(params: FourOhOneKParams): FourOhOneKYearSimula
   let balance = current401kBalance;
   let salary = annualSalary;
 
-  for (let y = 1; y <= yearsToRetire; y++) {
+  const safeYearsToRetire = Math.min(Math.max(0, Math.floor(yearsToRetire || 0)), 100);
+
+  if (safeYearsToRetire <= 0) {
+    return [{
+      year: 0,
+      salary: annualSalary,
+      startingBalance: current401kBalance,
+      employeeContributions: 0,
+      employerMatch: 0,
+      interest: 0,
+      endingBalance: current401kBalance,
+      taxSavings: 0
+    }];
+  }
+
+  for (let y = 1; y <= safeYearsToRetire; y++) {
     const startingBalance = balance;
     
     // Calculate employee annual contribution
@@ -260,12 +291,13 @@ export function simulateDividends(params: DividendParams): DividendYearSimulatio
   } = params;
 
   const schedule: DividendYearSimulation[] = [];
+  const safeYears = Math.min(Math.max(1, Math.floor(years || 0)), 100);
   
   let balance = initialInvestment;
   let currentYield = dividendYield;
   let cumDividends = 0;
 
-  for (let y = 1; y <= years; y++) {
+  for (let y = 1; y <= safeYears; y++) {
     const startingBalance = balance;
     
     // Add annual contribution at beginning of year
@@ -299,8 +331,9 @@ export function simulateDividends(params: DividendParams): DividendYearSimulatio
       totalDividendsCum: cumDividends
     });
 
-    // Grow the dividend yield rate for the next year
-    currentYield = currentYield * (1 + dividendGrowthRate);
+    // Adjust dividend yield based on payout growth relative to share price growth
+    const growthFactor = (1 + dividendGrowthRate) / (1 + sharePriceGrowthRate);
+    currentYield = Math.max(0, Math.min(currentYield * growthFactor, 1.0));
   }
 
   return schedule;

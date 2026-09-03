@@ -78,6 +78,10 @@ export function simulateCreditCardPayoff(params: CreditCardPayoffParams): {
     });
   }
 
+  if (currentBalance > 0.01 && month >= maxMonths) {
+    isStuck = true;
+  }
+
   return {
     schedule,
     totalInterest,
@@ -123,13 +127,16 @@ export function calculateAutoLoan(params: AutoLoanParams) {
   
   const totalCost = monthlyPayment * n;
   const totalInterest = Math.max(0, totalCost - principal);
+  // Total out-of-pocket cost of ownership including cash paid upfront
+  const totalOutOfPocket = principal + downPayment + tradeInValue + totalInterest;
 
   return {
     financedAmount: principal,
     salesTax,
     monthlyPayment,
     totalInterest,
-    totalCost: (financedAmount: number) => financedAmount + downPayment + tradeInValue + totalInterest // total cost of ownership including cash paid
+    totalCost: totalOutOfPocket,
+    totalOutOfPocket
   };
 }
 

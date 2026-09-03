@@ -260,10 +260,10 @@ const faqs = [
     const avalanche = simulateDebtPayoff(debts, budget, 'avalanche');
 
     // Update UI
-    if (sbTime) sbTime.textContent = `${snowball.months} mo`;
-    if (sbInterest) sbInterest.textContent = formatCurrency(snowball.totalInterest);
-    if (avTime) avTime.textContent = `${avalanche.months} mo`;
-    if (avInterest) avInterest.textContent = formatCurrency(avalanche.totalInterest);
+    if (sbTime) sbTime.textContent = (snowball.isNegativeAmortization || !isFinite(snowball.months)) ? 'Never (>50 yrs)' : `${snowball.months} mo`;
+    if (sbInterest) sbInterest.textContent = snowball.isNegativeAmortization ? 'Unbounded' : formatCurrency(snowball.totalInterest);
+    if (avTime) avTime.textContent = (avalanche.isNegativeAmortization || !isFinite(avalanche.months)) ? 'Never (>50 yrs)' : `${avalanche.months} mo`;
+    if (avInterest) avInterest.textContent = avalanche.isNegativeAmortization ? 'Unbounded' : formatCurrency(avalanche.totalInterest);
 
     // Update Chart
     updateChart(snowball.history, avalanche.history);

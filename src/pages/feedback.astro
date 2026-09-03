@@ -2,41 +2,148 @@
 import Layout from '../layouts/Layout.astro';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 export const prerender = false;
 
-const CORRECT_PASSCODE = process.env.ADMIN_PASSCODE || 'admin123';
+const configuredPasscode = process.env.ADMIN_PASSCODE;
+// Fail closed in production if ADMIN_PASSCODE is unset
+const CORRECT_PASSCODE = configuredPasscode || (import.meta.env.DEV ? 'admin123' : null);
+
+const sessionSecret = CORRECT_PASSCODE || (import.meta.env.DEV ? 'dev-fallback-secret' : '');
+const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+
+// Stateless session: token = randHex.expiryHex.hmac(secret, randHex.expiryHex)
+// Random per login, expires after 24h, verifiable without server-side storage.
+function issueSessionToken(): string {
+  if (!sessionSecret) return '';
+  const rand = crypto.randomBytes(32).toString('hex');
+  const expiry = (Date.now() + SESSION_TTL_MS).toString(16);
+  const sig = crypto.createHmac('sha256', sessionSecret).update(`${rand}.${expiry}`).digest('hex');
+  return `${rand}.${expiry}.${sig}`;
+}
+
+function verifySessionToken(token: string): boolean {
+  if (!sessionSecret || !token) return false;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    const [rand, expiryHex, sig] = parts;
+    if (!/^[0-9a-f]{64}$/.test(rand) || !/^[0-9a-f]+$/.test(expiryHex) || !/^[0-9a-f]{64}$/.test(sig)) return false;
+    const expiry = parseInt(expiryHex, 16);
+    if (!Number.isFinite(expiry) || Date.now() > expiry) return false;
+    const expected = crypto.createHmac('sha256', sessionSecret).update(`${rand}.${expiryHex}`).digest('hex');
+    const a = Buffer.from(sig, 'hex');
+    const b = Buffer.from(expected, 'hex');
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
+// Login brute-force guard: max 5 attempts per IP per 5 minutes (per-instance best effort)
+const loginAttemptMap = new Map<string, { count: number; resetTime: number }>();
+function isLoginRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = loginAttemptMap.get(ip);
+  if (!entry || now > entry.resetTime) {
+    loginAttemptMap.set(ip, { count: 1, resetTime: now + 5 * 60 * 1000 });
+    if (loginAttemptMap.size > 1000) {
+      for (const [k, v] of loginAttemptMap) {
+        if (now > v.resetTime) loginAttemptMap.delete(k);
+        if (loginAttemptMap.size <= 500) break;
+      }
+    }
+    return false;
+  }
+  if (entry.count >= 5) return true;
+  entry.count++;
+  return false;
+}
+
+function isValidRelativeUrl(url: unknown): boolean {
+  if (typeof url !== 'string') return false;
+  const clean = url.trim();
+  if (!clean.startsWith('/') || clean.startsWith('//') || clean.startsWith('/\\') || clean.includes('\\')) return false;
+  return /^\/[a-zA-Z0-9_\-\/.]*(\?[a-zA-Z0-9_=&.\-%]*)?$/.test(clean);
+}
+
 let authenticated = false;
 let errorMsg = '';
 let feedbacks: any[] = [];
 
-// 1. Get cookies from request headers
+// 1. Get cookies from request headers and verify HMAC signature
 const cookies = Astro.request.headers.get('cookie') || '';
 const sessionCookie = cookies
   .split(';')
   .map(c => c.trim())
   .find(c => c.startsWith('admin_session='));
 
-if (sessionCookie && sessionCookie.split('=')[1] === 'authenticated') {
-  authenticated = true;
+if (sessionCookie) {
+  const token = sessionCookie.split('=')[1];
+  if (token && verifySessionToken(token)) {
+    authenticated = true;
+  }
 }
 
-// 2. Handle POST Actions (Login, Clear, Logout)
+// 2. Handle POST Actions (Login, Clear, Logout) with CSRF validation
 if (Astro.request.method === 'POST') {
   try {
+    // CSRF Check: Verify Origin / Referer host against request host
+    const origin = Astro.request.headers.get('origin');
+    const host = Astro.request.headers.get('host');
+    if (origin) {
+      try {
+        const originHost = new URL(origin).host;
+        if (originHost !== host) {
+          throw new Error('CSRF origin mismatch');
+        }
+      } catch {
+        throw new Error('Invalid origin header');
+      }
+    } else {
+      const referer = Astro.request.headers.get('referer');
+      if (referer) {
+        try {
+          const refererHost = new URL(referer).host;
+          if (refererHost !== host) {
+            throw new Error('CSRF referer mismatch');
+          }
+        } catch {
+          throw new Error('Invalid referer header');
+        }
+      }
+    }
+
     const formData = await Astro.request.formData();
     const action = formData.get('action');
 
     if (action === 'login') {
-      const passcode = formData.get('passcode');
-      if (passcode === CORRECT_PASSCODE) {
-        authenticated = true;
-        Astro.response.headers.set(
-          'Set-Cookie',
-          'admin_session=authenticated; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'
-        );
+      const clientIp = Astro.clientAddress || Astro.request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown-ip';
+      if (isLoginRateLimited(clientIp)) {
+        errorMsg = 'Too many attempts. Please try again in a few minutes.';
       } else {
-        errorMsg = 'Incorrect passcode. Please try again.';
+        const passcode = formData.get('passcode');
+        let isPasscodeCorrect = false;
+        if (CORRECT_PASSCODE && typeof passcode === 'string') {
+          const a = Buffer.from(passcode);
+          const b = Buffer.from(CORRECT_PASSCODE);
+          isPasscodeCorrect = a.length === b.length && crypto.timingSafeEqual(a, b);
+        }
+
+        if (!CORRECT_PASSCODE) {
+          errorMsg = 'Admin authentication is not configured. Set ADMIN_PASSCODE.';
+        } else if (isPasscodeCorrect) {
+          authenticated = true;
+          const token = issueSessionToken();
+          const isSecure = !import.meta.env.DEV;
+          Astro.response.headers.set(
+            'Set-Cookie',
+            `admin_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400${isSecure ? '; Secure' : ''}`
+          );
+        } else {
+          errorMsg = 'Incorrect passcode. Please try again.';
+        }
       }
     } else if (action === 'clear' && authenticated) {
       // Clear local JSON
@@ -119,63 +226,79 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
 <Layout 
   title="Feedback Dashboard - FinCompute.com" 
   description="View user helpfulness feedback ratings and submissions collected across all calculators."
+  noindex={true}
 >
   { !authenticated ? (
     /* Passcode Unlock Overlay (Server Rendered) */
-    <div id="unlock-overlay" class="min-h-[70vh] flex items-center justify-center p-4">
-      <form method="POST" class="max-w-sm w-full bg-canvas border border-hairline p-6 rounded-lg shadow-lg space-y-4 text-center">
-        <input type="hidden" name="action" value="login" />
-        <div class="w-12 h-12 rounded-full bg-canvas-soft border border-hairline flex items-center justify-center text-lg mx-auto">🔒</div>
-        <div>
-          <h3 class="text-sm font-semibold text-ink">Authorization Required</h3>
-          <p class="text-[11px] text-body mt-1">Please enter the admin passcode to view dashboard metrics.</p>
+    <div class="max-w-md mx-auto py-16 px-4">
+      <div class="bg-canvas border border-hairline rounded-xl p-8 shadow-md">
+        <div class="w-12 h-12 rounded-full bg-canvas-soft border border-hairline flex items-center justify-center text-xl mb-4 mx-auto">
+          🔒
         </div>
-        <input 
-          type="password" 
-          name="passcode" 
-          placeholder="Enter passcode..." 
-          class="w-full h-10 px-3 bg-canvas text-ink text-sm border border-hairline rounded focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong text-center" 
-          required 
-          autofocus
-        />
-        {errorMsg && <div class="text-xs text-error font-medium">{errorMsg}</div>}
-        <button type="submit" class="w-full py-2 bg-primary text-on-primary rounded font-semibold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
-          Unlock Dashboard
-        </button>
-      </form>
+        <h2 class="text-xl font-semibold text-center text-ink tracking-tight mb-2">Admin Dashboard</h2>
+        <p class="text-xs text-mute text-center mb-6">Enter the master administrative passcode to view feedback submissions.</p>
+
+        {errorMsg && (
+          <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-md text-center font-medium">
+            {errorMsg}
+          </div>
+        )}
+
+        <form method="POST" class="space-y-4">
+          <input type="hidden" name="action" value="login" />
+          <div>
+            <label for="passcode" class="sr-only">Passcode</label>
+            <input 
+              type="password" 
+              name="passcode" 
+              id="passcode" 
+              placeholder="Enter passcode..." 
+              required
+              class="w-full px-3.5 py-2.5 bg-canvas-soft border border-hairline rounded-lg text-sm text-ink focus:outline-none focus:border-hairline-strong transition-colors"
+            />
+          </div>
+          <button 
+            type="submit" 
+            class="w-full py-2.5 bg-primary text-on-primary font-medium text-xs rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
+          >
+            Authenticate
+          </button>
+        </form>
+      </div>
     </div>
   ) : (
-    /* Dashboard Content */
-    <div id="dashboard-content" class="max-w-4xl mx-auto py-8 px-4 space-y-8 animate-fade-in">
-      <header class="border-b border-hairline pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    /* Feedback Table & Insights (Authenticated) */
+    <div class="max-w-5xl mx-auto py-8 space-y-8">
+      {/* Top Header & Actions */}
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-hairline pb-6">
         <div>
-          <h1 class="text-3xl font-extrabold tracking-tight text-ink">Feedback Submissions</h1>
-          <p class="text-xs text-body mt-1">Review helpfulness ratings left by users across FinCompute calculators.</p>
+          <h1 class="text-2xl font-bold tracking-tight text-ink">User Feedback & Helpfulness</h1>
+          <p class="text-xs text-mute mt-1">Live aggregated feedback logs from users across all calculators.</p>
         </div>
-        <div class="flex items-center gap-2 no-print">
-          <form method="POST" onsubmit="return confirm('Are you sure you want to clear all feedback logs?');">
+        <div class="flex items-center gap-3">
+          <form method="POST" onsubmit="return confirm('Are you sure you want to permanently clear all feedback submissions?');">
             <input type="hidden" name="action" value="clear" />
-            <button type="submit" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline hover:border-error hover:text-error text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">
-              Clear All Feedback
+            <button type="submit" class="px-3.5 py-1.5 bg-canvas border border-hairline hover:border-red-300 hover:text-red-600 text-mute text-xs rounded-lg transition-colors cursor-pointer font-medium">
+              Clear All Data
             </button>
           </form>
           <form method="POST">
             <input type="hidden" name="action" value="logout" />
-            <button type="submit" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">
-              Log Out
+            <button type="submit" class="px-3.5 py-1.5 bg-canvas-soft border border-hairline hover:bg-canvas-soft-2 text-ink text-xs rounded-lg transition-colors cursor-pointer font-medium">
+              Sign Out
             </button>
           </form>
         </div>
-      </header>
+      </div>
 
-      {/* Metrics Cards */}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      {/* Summary Cards */}
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
-          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Total Ratings</h4>
+          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Total Submissions</h4>
           <p class="text-3xl font-bold text-ink mt-1 font-mono">{totalRatings}</p>
         </div>
         <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
-          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Helpful (👍 Yes)</h4>
+          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Found Helpful 👍</h4>
           <p class="text-3xl font-bold text-green-700 dark:text-green-400 mt-1 font-mono">{yesCount}</p>
         </div>
         <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
@@ -206,10 +329,11 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
               ) : (
                 feedbacks.map((item) => {
                   const dateStr = new Date(item.timestamp).toLocaleString();
+                  const isSafeUrl = isValidRelativeUrl(item.url);
                   return (
                     <tr class="hover:bg-canvas-soft transition-colors text-ink">
                       <td class="px-5 py-3 font-semibold text-body">
-                        <a href={item.url} class="hover:underline text-link">{item.name}</a>
+                        <a href={isSafeUrl ? item.url : '#'} rel="noopener noreferrer" class="hover:underline text-link">{item.name}</a>
                         <span class="text-[10px] font-mono text-mute block mt-0.5">{item.url}</span>
                         {item.message && (
                           <div class="mt-2 text-xs font-normal text-body bg-canvas-soft-2 p-2.5 rounded border border-hairline max-w-xl whitespace-pre-wrap">

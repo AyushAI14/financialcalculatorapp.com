@@ -356,7 +356,7 @@ const faqs = getCalculatorFaqs('apr');
       ['True Effective APR', formatPercentage(apr)]
     ];
 
-    downloadDataAsCSV(headers, rows, `apr-calculation-${loanAmount}.csv`);
+    downloadDataAsCSV(headers, rows, 'apr-calculation.csv');
   });
 
   form.addEventListener('submit', (e) => {

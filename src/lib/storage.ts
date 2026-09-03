@@ -29,3 +29,17 @@ export function safeSetItem(key: string, value: string): void {
   }
   memoryStorage[key] = value;
 }
+
+/**
+ * Safely parses JSON from localStorage without throwing exceptions on corrupted or poisoned data.
+ */
+export function safeGetJSON<T>(key: string, defaultValue: T): T {
+  try {
+    const raw = safeGetItem(key);
+    if (!raw) return defaultValue;
+    const parsed = JSON.parse(raw);
+    return parsed !== null && parsed !== undefined ? (parsed as T) : defaultValue;
+  } catch (e) {
+    return defaultValue;
+  }
+}

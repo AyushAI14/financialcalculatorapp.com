@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 import { languages, hreflangMap, defaultLang, showDefaultLang, type Lang } from '../i18n/ui';
 
 export async function GET(context: any) {
-  const siteUrl = (context.site ? context.site.toString() : 'https://fincompute.vercel.app').replace(/\/+$/, '');
+  const siteUrl = (context.site ? context.site.toString() : 'https://fincompute.com').replace(/\/+$/, '');
   
   // Get all static pages from src/pages/ using import.meta.glob
   const pages = import.meta.glob('./**/*.astro');
@@ -10,8 +10,8 @@ export async function GET(context: any) {
   
   // Add static page paths
   for (const path in pages) {
-    // Skip 404, dynamic routes with brackets, or components/layouts (starting with underscore)
-    if (path.includes('404') || path.includes('[') || path.includes('_')) continue;
+    // Skip 404, dynamic routes with brackets, private admin pages, or components/layouts
+    if (path.includes('404') || path.includes('[') || path.includes('_') || path.includes('feedback') || path.includes('api')) continue;
     
     let cleanPath = path
       .replace(/^\.\//, '')
@@ -100,10 +100,12 @@ export async function GET(context: any) {
   // Sort by location
   entries.sort((a, b) => a.loc.localeCompare(b.loc));
 
+  const lastmod = new Date().toISOString().split('T')[0];
   const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${entries.map(entry => `  <url>
     <loc>${entry.loc}</loc>
+    <lastmod>${lastmod}</lastmod>
 ${entry.alternates.map(alt => `    <xhtml:link rel="alternate" hreflang="${alt.hreflang}" href="${alt.href}" />`).join('\n')}
   </url>`).join('\n')}
 </urlset>`;

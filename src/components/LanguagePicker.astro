@@ -33,6 +33,8 @@ const languageOptions = getLanguageOptions(Astro.url, currentLang);
   function setupLanguagePickers() {
     const pickers = document.querySelectorAll<HTMLSelectElement>('.language-picker');
     pickers.forEach((picker) => {
+      if (picker.dataset.bound === 'true') return;
+      picker.dataset.bound = 'true';
       picker.addEventListener('change', (e) => {
         const target = e.target as HTMLSelectElement;
         if (target && target.value) {

@@ -10,6 +10,7 @@ interface Props {
   description?: string;
   canonicalUrl?: string;
   lang?: Lang;
+  noindex?: boolean;
 }
 
 const detectedLang = getLangFromUrl(Astro.url, Astro.currentLocale);
@@ -21,17 +22,20 @@ const translatePath = useTranslatedPath(lang);
 const { 
   title, 
   description = t("site.description"),
-  canonicalUrl
+  canonicalUrl,
+  noindex = false
 } = Astro.props;
 
 const localizedPageTitle = t(title, title);
 const localizedPageDescription = description ? t(description, description) : t("site.description");
 
-const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://fincompute.vercel.app').replace(/\/+$/, '');
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://fincompute.com').replace(/\/+$/, '');
 const localizedPath = translatePath(Astro.url.pathname, lang);
 const formattedPath = localizedPath === '/' ? '/' : (localizedPath.endsWith('/') ? localizedPath : `${localizedPath}/`);
 const resolvedCanonical = canonicalUrl || `${siteOrigin}${formattedPath}`;
 const hreflangList = getHreflangList(Astro.url, siteOrigin);
+// og:locale requires BCP47 with underscore (e.g. en_US, zh_CN)
+const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.replace('-', '_');
 ---
 
 <!doctype html>
@@ -39,11 +43,14 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={localizedPageDescription} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={resolvedCanonical} />
     <link rel="manifest" href="/manifest.json" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{localizedPageTitle}</title>
 
     <!-- Hreflang markup for each supported language -->
@@ -56,15 +63,16 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
     <meta property="og:url" content={resolvedCanonical} />
     <meta property="og:title" content={localizedPageTitle} />
     <meta property="og:description" content={localizedPageDescription} />
-    <meta property="og:locale" content={lang} />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content="FinCompute" />
+    <meta property="og:image" content={`${siteOrigin}/og-image.png`} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={resolvedCanonical} />
     <meta name="twitter:title" content={localizedPageTitle} />
     <meta name="twitter:description" content={localizedPageDescription} />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="twitter:image" content={`${siteOrigin}/og-image.png`} />
     
     <!-- Preconnect to jsDelivr for faster font delivery -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -243,7 +251,7 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
             <li><a href={translatePath('/privacy')} class="hover:text-ink transition-colors">{t('nav.privacy')}</a></li>
             <li><a href={translatePath('/terms')} class="hover:text-ink transition-colors">{t('nav.terms')}</a></li>
             <li><a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors">{t('nav.disclaimer')}</a></li>
-            <li><a href={translatePath('/sitemap.xml')} class="hover:text-ink transition-colors">{t('nav.sitemap')}</a></li>
+            <li><a href="/sitemap.xml" class="hover:text-ink transition-colors">{t('nav.sitemap')}</a></li>
           </ul>
         </div>
       </div>
@@ -286,6 +294,12 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
       // Currency Selection logic
       const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
       if (currencySelect) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlCurrency = urlParams.get('currency');
+        const allowedCurrencies = ['USD', 'EUR', 'GBP', 'INR'];
+        if (urlCurrency && allowedCurrencies.includes(urlCurrency)) {
+          safeSetItem('currency', urlCurrency);
+        }
         let previousCurrency = safeGetItem('currency', 'USD');
         currencySelect.value = previousCurrency;
         currencySelect.addEventListener('change', () => {
@@ -300,21 +314,23 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
           const newRate = rates[newCurrency] || 1.0;
           const ratio = newRate / oldRate;
 
-          // Convert values on all inputs associated with currency
-          document.querySelectorAll('[data-currency-prefix]').forEach(span => {
-            const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
-            if (input && input.value) {
-              const val = parseFloat(input.value.replace(/,/g, ''));
-              if (!isNaN(val)) {
-                const converted = val * ratio;
-                const hasDecimals = input.step === 'any' || input.value.includes('.') || input.getAttribute('data-decimals') === 'true';
-                input.value = Number(converted.toFixed(hasDecimals ? 2 : 0)).toString();
-                // Dispatch events to let individual calculator script recalculate
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
+          // Convert values on all inputs associated with currency.
+          // Keep full 2-decimal precision to avoid repeated-toggle drift.
+          if (ratio !== 1) {
+            document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+              const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+              if (input && input.value) {
+                const val = parseFloat(input.value.replace(/,/g, ''));
+                if (!isNaN(val) && isFinite(val) && Math.abs(val) <= 1e12) {
+                  const converted = val * ratio;
+                  input.value = Number(converted.toFixed(2)).toString();
+                  // Dispatch events to let individual calculator script recalculate
+                  input.dispatchEvent(new Event('input', { bubbles: true }));
+                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
               }
-            }
-          });
+            });
+          }
 
           safeSetItem('currency', newCurrency);
           previousCurrency = newCurrency;
@@ -326,28 +342,34 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
       const mobileMenu = document.getElementById('mobile-menu');
       let menuOpen = false;
 
-      mobileMenuBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuOpen = !menuOpen;
+      function setMenuOpen(open: boolean) {
+        menuOpen = open;
         mobileMenu?.classList.toggle('hidden', !menuOpen);
         document.body.style.overflow = menuOpen ? 'hidden' : '';
+        mobileMenuBtn?.setAttribute('aria-expanded', String(menuOpen));
+      }
+
+      mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+      mobileMenuBtn?.setAttribute('aria-controls', 'mobile-menu');
+      mobileMenuBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setMenuOpen(!menuOpen);
       });
 
       mobileMenu?.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
-          menuOpen = false;
-          mobileMenu?.classList.add('hidden');
-          document.body.style.overflow = '';
+          setMenuOpen(false);
         });
       });
 
-      // Close mobile menu when clicking outside
+      // Close mobile menu when clicking outside or pressing Escape
       document.addEventListener('click', (e) => {
         if (menuOpen && mobileMenu && !mobileMenu.contains(e.target as Node) && mobileMenuBtn && !mobileMenuBtn.contains(e.target as Node)) {
-          menuOpen = false;
-          mobileMenu.classList.add('hidden');
-          document.body.style.overflow = '';
+          setMenuOpen(false);
         }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menuOpen) setMenuOpen(false);
       });
     </script>
     <Analytics />

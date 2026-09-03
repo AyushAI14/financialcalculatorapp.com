@@ -19,11 +19,18 @@ export function syncInputsWithURL(formId: string, onUpdate: () => void) {
     if (!input.name) return;
     
     const value = params.get(input.name);
-    if (value !== null) {
+    if (value !== null && value.length <= 100) {
       if (input.type === 'checkbox') {
         (input as HTMLInputElement).checked = value === 'true';
       } else {
-        input.value = value;
+        if (input.type === 'number') {
+          const num = parseFloat(value);
+          if (isFinite(num) && Math.abs(num) <= 1e12) {
+            input.value = value;
+          }
+        } else {
+          input.value = value;
+        }
       }
     }
   });

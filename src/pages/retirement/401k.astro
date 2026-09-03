@@ -164,16 +164,16 @@ const faqs = getCalculatorFaqs('401k');
 
   // Run simulation
   function performCalculation() {
-    const annualSalary = parseFloat(salaryInput.value) || 0;
-    const salaryIncreaseRate = (parseFloat(salaryGrowthInput.value) || 0) / 100;
-    const contributionPct = (parseFloat(contributionPctInput.value) || 0) / 100;
-    const taxRate = (parseFloat(taxRateInput.value) || 0) / 100;
+    const annualSalary = Math.max(0, parseFloat(salaryInput.value) || 0);
+    const salaryIncreaseRate = Math.max(0, (parseFloat(salaryGrowthInput.value) || 0) / 100);
+    const contributionPct = Math.min(1, Math.max(0, (parseFloat(contributionPctInput.value) || 0) / 100));
+    const taxRate = Math.min(1, Math.max(0, (parseFloat(taxRateInput.value) || 0) / 100));
     
-    const employerMatchPct = (parseFloat(matchPctInput.value) || 0) / 100;
-    const employerMaxMatchPct = (parseFloat(maxMatchPctInput.value) || 0) / 100;
+    const employerMatchPct = Math.max(0, (parseFloat(matchPctInput.value) || 0) / 100);
+    const employerMaxMatchPct = Math.min(1, Math.max(0, (parseFloat(maxMatchPctInput.value) || 0) / 100));
     
-    const current401kBalance = parseFloat(currentBalanceInput.value) || 0;
-    const yearsToRetire = parseInt(yearsInput.value) || 10;
+    const current401kBalance = Math.max(0, parseFloat(currentBalanceInput.value) || 0);
+    const yearsToRetire = Math.min(100, Math.max(0, parseInt(yearsInput.value) || 0));
     const annualReturn = (parseFloat(returnRateInput.value) || 0) / 100;
 
     const schedule = simulate401KPath({
@@ -188,6 +188,7 @@ const faqs = getCalculatorFaqs('401k');
       yearsToRetire
     });
 
+    if (!schedule || schedule.length === 0) return;
     const finalYear = schedule[schedule.length - 1];
 
     // Summarize cumulative matching and tax savings

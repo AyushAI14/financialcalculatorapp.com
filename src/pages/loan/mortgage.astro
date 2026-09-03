@@ -227,7 +227,7 @@ const faqs = [
     // Insurance
     const insuranceMonthly = insuranceAnnual / 12;
     // PMI: conventionally required if downpayment is less than 20% of home price
-    const pmiRequired = down < (price * 0.20);
+    const pmiRequired = down < (price * 0.20 - 1e-6);
     const pmiMonthly = pmiRequired ? (loanAmount * pmiRate) / 12 : 0;
     
     const totalMonthly = pmtPI + taxMonthly + insuranceMonthly + pmiMonthly + hoaMonthly;
@@ -254,7 +254,11 @@ const faqs = [
 
     // Formulas
     if (stepPIFormula) {
-      stepPIFormula.innerHTML = `P&I = ${formatCurrency(loanAmount)} × [${(rate/12).toFixed(6)} × (1 + ${(rate/12).toFixed(6)})^${termYears*12}] / [(1 + ${(rate/12).toFixed(6)})^${termYears*12} - 1]<br/><strong>P&I = ${formattedPI} / mo</strong>`;
+      if (rate === 0) {
+        stepPIFormula.innerHTML = `P&I = ${formatCurrency(loanAmount)} / ${termYears * 12} periods<br/><strong>P&I = ${formattedPI} / mo</strong>`;
+      } else {
+        stepPIFormula.innerHTML = `P&I = ${formatCurrency(loanAmount)} × [${(rate/12).toFixed(6)} × (1 + ${(rate/12).toFixed(6)})^${termYears*12}] / [(1 + ${(rate/12).toFixed(6)})^${termYears*12} - 1]<br/><strong>P&I = ${formattedPI} / mo</strong>`;
+      }
     }
     if (stepTaxIns) {
       stepTaxIns.innerHTML = `Tax = (${formatCurrency(price)} × ${formatPercentage(taxRate)}) / 12 = <strong>${formatCurrency(taxMonthly)} / mo</strong><br/>Insurance = ${formatCurrency(insuranceAnnual)} / 12 = <strong>${formatCurrency(insuranceMonthly)} / mo</strong>`;
@@ -374,7 +378,7 @@ const faqs = [
       ['TOTAL MONTHLY PAYMENT', formatCurrency(totalMonthly)]
     ];
 
-    downloadDataAsCSV(headers, rows, `mortgage-calculation-${price}.csv`);
+    downloadDataAsCSV(headers, rows, 'mortgage-calculation.csv');
   });
 
   form.addEventListener('submit', (e) => {
