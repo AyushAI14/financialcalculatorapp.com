@@ -9,7 +9,9 @@ export type CurrencyCode =
   | 'CAD'
   | 'AUD'
   | 'CHF'
-  | 'BRL';
+  | 'BRL'
+  | 'INR'
+  | 'MXN';
 
 export interface CurrencyMeta {
   code: CurrencyCode;
@@ -36,6 +38,8 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyMeta> = {
   AUD: { code: 'AUD', symbol: 'A$', name: 'AUD (A$)', decimals: 2, rate: 1.52, locale: 'en-AU' },
   CHF: { code: 'CHF', symbol: 'CHF', name: 'CHF (CHF)', decimals: 2, rate: 0.9, locale: 'de-CH' },
   BRL: { code: 'BRL', symbol: 'R$', name: 'BRL (R$)', decimals: 2, rate: 5.6, locale: 'pt-BR' },
+  INR: { code: 'INR', symbol: '₹', name: 'INR (₹)', decimals: 2, rate: 83.5, locale: 'en-IN' },
+  MXN: { code: 'MXN', symbol: 'Mex$', name: 'MXN (Mex$)', decimals: 2, rate: 18.2, locale: 'es-MX' },
 };
 
 /**
@@ -194,3 +198,16 @@ export function toggleConversionMode(): ConversionMode {
   setConversionMode(nextMode);
   return nextMode;
 }
+
+/**
+ * Formats a numeric value with the current active currency symbol for chart tick axes.
+ */
+export function formatCurrencyTick(value: number | string): string {
+  const currentLang = typeof document !== 'undefined' ? document.documentElement.lang : undefined;
+  const activeCurrency = getEffectiveCurrency(currentLang);
+  const meta = getCurrencyInfo(activeCurrency);
+  const num = typeof value === 'number' ? value : parseFloat(value);
+  if (isNaN(num)) return String(value);
+  return `${meta.symbol}${num.toLocaleString(meta.locale, { maximumFractionDigits: 0 })}`;
+}
+

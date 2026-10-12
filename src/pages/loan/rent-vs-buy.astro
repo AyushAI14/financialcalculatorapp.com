@@ -98,7 +98,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
 
 <script>
   import { simulateRentVsBuy } from '../../lib/math/loan';
-  import { formatCurrency } from '../../lib/utils';
+  import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 
   // DOM Elements
@@ -253,7 +253,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
-                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                  return formatCurrencyTick(value);
                 }
               }
             }

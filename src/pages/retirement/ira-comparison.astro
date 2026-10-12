@@ -128,7 +128,7 @@ const faqs = [
 
 <script>
   import { compareIRA } from '../../lib/math/finance';
-  import { formatCurrency } from '../../lib/utils';
+  import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
@@ -277,7 +277,7 @@ const faqs = [
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
-                  return '$' + value.toLocaleString();
+                  return formatCurrencyTick(value);
                 }
               }
             }

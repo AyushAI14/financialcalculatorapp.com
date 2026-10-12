@@ -1,4 +1,5 @@
-import { getEffectiveCurrency, getCurrencyInfo, isSupportedCurrency } from './currency';
+import { getEffectiveCurrency, getCurrencyInfo, isSupportedCurrency, formatCurrencyTick } from './currency';
+export { formatCurrencyTick };
 
 export function formatCurrency(value: number, locale?: string, currency?: string): string {
   const currentLang = typeof document !== 'undefined' ? document.documentElement.lang : undefined;

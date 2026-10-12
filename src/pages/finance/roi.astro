@@ -111,7 +111,7 @@ const faqs = getCalculatorFaqs('roi');
 
 <script>
   import { calculateROI } from '../../lib/math/finance';
-  import { formatCurrency, formatPercentage } from '../../lib/utils';
+  import { formatCurrency, formatPercentage, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 
   // DOM Elements
@@ -218,7 +218,7 @@ const faqs = getCalculatorFaqs('roi');
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
-                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                  return formatCurrencyTick(value);
                 }
               }
             }

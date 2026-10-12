@@ -121,7 +121,7 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
 <script>
   import { simulateCreditCardPayoff } from '../../lib/math/misc';
-  import { formatCurrency } from '../../lib/utils';
+  import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 
   // DOM Elements
@@ -342,7 +342,7 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
-                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                  return formatCurrencyTick(value);
                 }
               }
             }

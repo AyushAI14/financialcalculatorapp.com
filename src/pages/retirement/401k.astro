@@ -134,7 +134,7 @@ const faqs = getCalculatorFaqs('401k');
 
 <script>
   import { simulate401KPath } from '../../lib/math/retirement';
-  import { formatCurrency } from '../../lib/utils';
+  import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
 
   // DOM Elements
@@ -310,7 +310,7 @@ const faqs = getCalculatorFaqs('401k');
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
-                  return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 0 });
+                  return formatCurrencyTick(value);
                 }
               }
             }
