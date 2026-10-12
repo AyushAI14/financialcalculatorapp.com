@@ -6,13 +6,13 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 ---
 
-<Layout title={`${t('nav.privacy', 'Privacy Policy')} - FinCompute`} lang={lang}>
+<Layout title={`${t('nav.privacy', 'Privacy Policy')} - financialcalculatorapp.com`} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('nav.privacy', 'Privacy Policy')}.</h1>
     <p class="text-xs text-mute font-mono uppercase tracking-wider">{t('calc.lastUpdated', 'Last updated')}: July 10, 2026</p>
     
     <p>
-      At FinCompute, we value your privacy. This Privacy Policy describes how we collect, use, and process your information when you use our suite of web-based financial calculators.
+      At financialcalculatorapp.com, we value your privacy. This Privacy Policy describes how we collect, use, and process your information when you use our suite of web-based financial calculators.
     </p>
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">1. Information We Collect</h2>
@@ -37,7 +37,7 @@ const t = useTranslations(lang);
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">5. Contact Us</h2>
     <p>
-      If you have questions about this privacy statement, you can reach us at privacy@fincompute.com.
+      If you have questions about this privacy statement, you can reach us at privacy@financialcalculatorapp.com.
     </p>
   </article>
 </Layout>

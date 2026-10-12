@@ -59,25 +59,25 @@ const faqs = getCalculatorFaqs('stock-return');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-return-pct">
-          <ResultCard title="Total Return" value="32.78%" highlight={true} description="Total rate of return on invested capital." />
+          <ResultCard title="Total Return" value="--" highlight={true} description="Total rate of return on invested capital." />
         </div>
         <div id="res-return-annual">
-          <ResultCard title="Annualized Return" value="12.01%" description="Annualized CAGR rate of return." />
+          <ResultCard title="Annualized Return" value="--" description="Annualized CAGR rate of return." />
         </div>
         <div id="res-net-gain">
-          <ResultCard title="Net Gain" value="$3,950.00" description="Total profit earned from capital gains & dividends." />
+          <ResultCard title="Net Gain" value="--" description="Total profit earned from capital gains & dividends." />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div id="res-cost">
-          <ResultCard title="Initial Cost" value="$12,050.00" />
+          <ResultCard title="Initial Cost" value="--" />
         </div>
         <div id="res-proceeds">
-          <ResultCard title="Sale Proceeds" value="$15,520.00" />
+          <ResultCard title="Sale Proceeds" value="--" />
         </div>
         <div id="res-div-total">
-          <ResultCard title="Total Dividends" value="$480.00" />
+          <ResultCard title="Total Dividends" value="--" />
         </div>
       </div>
 
@@ -188,7 +188,7 @@ const faqs = getCalculatorFaqs('stock-return');
           datasets: [
             {
               data: values,
-              backgroundColor: ['#171717', '#0070f3', '#7928ca'],
+              backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
               borderWidth: 1
             }
           ]
@@ -224,32 +224,34 @@ const faqs = getCalculatorFaqs('stock-return');
       sharesInput.value = target.dataset.shares || '';
       holdingInput.value = target.dataset.holding || '';
       dividendsInput.value = target.dataset.div || '';
-      performReturnCalc();
-      
-      // Sync URL params
-      buyPriceInput.dispatchEvent(new Event('input', { bubbles: true }));
-      sellPriceInput.dispatchEvent(new Event('input', { bubbles: true }));
-      sharesInput.dispatchEvent(new Event('input', { bubbles: true }));
-      holdingInput.dispatchEvent(new Event('input', { bubbles: true }));
-      dividendsInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
   // Listeners
-  [buyPriceInput, sellPriceInput, sharesInput, holdingInput, dividendsInput].forEach(el => {
-    el.addEventListener('input', performReturnCalc);
-  });
   returnForm.addEventListener('submit', (e) => {
     e.preventDefault();
     performReturnCalc();
   });
   returnForm.addEventListener('reset', () => {
-    setTimeout(performReturnCalc, 0);
+    setTimeout(() => {
+      if (resPctCard) resPctCard.querySelector('.font-mono')!.textContent = '--';
+      if (resAnnualCard) resAnnualCard.querySelector('.font-mono')!.textContent = '--';
+      if (resNetCard) resNetCard.querySelector('.font-mono')!.textContent = '--';
+      if (resCostCard) resCostCard.querySelector('.font-mono')!.textContent = '--';
+      if (resProceedsCard) resProceedsCard.querySelector('.font-mono')!.textContent = '--';
+      if (resDivCard) resDivCard.querySelector('.font-mono')!.textContent = '--';
+      if (takeawayContainer) takeawayContainer.classList.add('hidden');
+      if (returnChartInstance) {
+        returnChartInstance.destroy();
+        returnChartInstance = null;
+      }
+    }, 0);
   });
 
-  // Init
-  performReturnCalc();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performReturnCalc);
+  window.addEventListener('currency-change', () => {
+    if (resPctCard && resPctCard.querySelector('.font-mono')?.textContent !== '--') {
+      performReturnCalc();
+    }
+  });
 </script>

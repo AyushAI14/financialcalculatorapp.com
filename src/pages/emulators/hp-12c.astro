@@ -1,0 +1,424 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "What is an HP 12C financial calculator and why is it used?",
+    answer: "The HP 12C is the gold standard programmable financial calculator created by Hewlett-Packard in 1981. It is renowned for its durability, Reverse Polish Notation (RPN) efficiency, and is one of the few calculators permitted on the CFA, CFP, and Real Estate appraiser certification examinations."
+  },
+  {
+    question: "How does Reverse Polish Notation (RPN) work on the HP 12C?",
+    answer: "RPN eliminates the need for parentheses and an equals key. You enter numbers first onto a 4-level stack (X, Y, Z, T), and then press the operator. For example, to add 25 and 15, you press [2][5] [ENTER] [1][5] [+], giving 40 immediately."
+  },
+  {
+    question: "How do I calculate Time Value of Money (TVM) on this emulator?",
+    answer: "Store your known values into the TVM registers (n for periods, i for interest rate, PV for present value, PMT for payment, FV for future value). Press the key of the unknown variable to solve for it. Remember financial sign conventions: cash outflows are entered with CHS (negative)."
+  },
+  {
+    question: "Can I use my physical computer keyboard with this emulator?",
+    answer: "Yes! Use your computer numpad or number keys for digits 0-9, Enter for the ENTER stack key, standard arithmetic keys (+, -, *, /), and Backspace to clear the entry."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="HP 12C Calculator Online - Interactive Financial Emulator" 
+  description="Free online HP 12C financial calculator emulator. Complete Reverse Polish Notation (RPN), TVM solver, amortization, and cash flow analysis with keyboard hotkeys."
+  faqs={faqs}
+  calcKey="hp-12c"
+>
+  <div class="max-w-4xl mx-auto space-y-8">
+    <!-- Emulator Header & Mode Selector -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-canvas border border-hairline rounded-lg shadow-sm">
+      <div>
+        <h2 class="text-base font-semibold text-ink">Hewlett-Packard HP 12C Platinum Web Emulator</h2>
+        <p class="text-xs text-mute">RPN Stack & TVM Financial Engine with Full Keyboard Hotkey Support</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-mono text-mute">Mode:</span>
+        <button id="mode-toggle-btn" class="px-3 py-1 bg-primary text-on-primary text-xs font-mono rounded-full font-medium shadow-sm transition-colors cursor-pointer">
+          RPN Mode
+        </button>
+      </div>
+    </div>
+
+    <!-- The HP 12C Physical Device Frame -->
+    <div class="relative bg-neutral-900 border-2 border-neutral-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl text-neutral-100 max-w-2xl mx-auto select-none">
+      
+      <!-- Top Metallic Faceplate & LCD Display -->
+      <div class="bg-neutral-800/90 border border-neutral-700 rounded-xl p-4 mb-6 shadow-inner">
+        <div class="flex justify-between items-center mb-2 px-1">
+          <span class="text-[11px] font-mono tracking-widest text-amber-400 font-bold">hp 12c platinum</span>
+          <div class="flex gap-2 text-[10px] font-mono">
+            <span id="flag-f" class="hidden text-amber-400 font-bold">f</span>
+            <span id="flag-g" class="hidden text-sky-400 font-bold">g</span>
+            <span id="flag-bgn" class="hidden text-amber-300 font-bold">BEGIN</span>
+            <span class="text-neutral-400">RPN</span>
+          </div>
+        </div>
+
+        <!-- Vintage LCD Display -->
+        <div class="bg-[#9ba88d] text-[#1b2413] font-mono text-3xl sm:text-4xl px-4 py-3 rounded border-2 border-[#7e8c6e] text-right overflow-x-auto shadow-inner tracking-wider font-bold">
+          <span id="lcd-display">0.00</span>
+        </div>
+      </div>
+
+      <!-- Keypad Grid -->
+      <div class="grid grid-cols-10 gap-1.5 sm:gap-2 text-[11px] font-mono">
+        <!-- Row 1: TVM & Registers -->
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="n">
+          <span class="text-[9px] text-amber-400 block">12×</span>
+          <span>n</span>
+          <span class="text-[9px] text-sky-400 block">12÷</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="i">
+          <span class="text-[9px] text-amber-400 block">12÷</span>
+          <span>i</span>
+          <span class="text-[9px] text-sky-400 block">12×</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="PV">
+          <span class="text-[9px] text-amber-400 block">CF0</span>
+          <span>PV</span>
+          <span class="text-[9px] text-sky-400 block">NPV</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="PMT">
+          <span class="text-[9px] text-amber-400 block">CFj</span>
+          <span>PMT</span>
+          <span class="text-[9px] text-sky-400 block">IRR</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="FV">
+          <span class="text-[9px] text-amber-400 block">Nj</span>
+          <span>FV</span>
+          <span class="text-[9px] text-sky-400 block">BOND</span>
+        </button>
+
+        <!-- Row 2: Modifiers & Math -->
+        <button class="hp-key col-span-2 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-bold" data-key="f">
+          <span>f</span>
+        </button>
+        <button class="hp-key col-span-2 bg-sky-600 hover:bg-sky-500 text-neutral-100 font-bold" data-key="g">
+          <span>g</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="STO">
+          <span>STO</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="RCL">
+          <span>RCL</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="CHS">
+          <span class="text-[9px] text-amber-400 block">DATE</span>
+          <span>CHS</span>
+          <span class="text-[9px] text-sky-400 block">BEG</span>
+        </button>
+
+        <!-- Row 3: Stack & Digits -->
+        <button class="hp-key col-span-3 row-span-2 bg-neutral-700 hover:bg-neutral-600 text-neutral-100 font-bold flex flex-col items-center justify-center" data-key="ENTER">
+          <span class="text-sm">ENTER</span>
+        </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="7"><span>7</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="8"><span>8</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="9"><span>9</span></button>
+        <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="/"><span>÷</span></button>
+
+        <!-- Row 4 -->
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="4"><span>4</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="5"><span>5</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="6"><span>6</span></button>
+        <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="*"><span>×</span></button>
+
+        <!-- Row 5 -->
+        <button class="hp-key col-span-3 bg-neutral-700 hover:bg-neutral-600" data-key="xy"><span>x≷y</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="1"><span>1</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="2"><span>2</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700" data-key="3"><span>3</span></button>
+        <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="-"><span>-</span></button>
+
+        <!-- Row 6 -->
+        <button class="hp-key col-span-3 bg-neutral-700 hover:bg-neutral-600" data-key="CLX"><span>CLX</span></button>
+        <button class="hp-key col-span-4 bg-neutral-800 hover:bg-neutral-700 text-center" data-key="0"><span>0</span></button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-center" data-key="."><span>.</span></button>
+        <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="+"><span>+</span></button>
+      </div>
+
+      <!-- Quick Numpad Helper Hint -->
+      <div class="mt-4 text-center text-[10px] text-neutral-400 font-mono">
+        Keyboard Shortcuts: [0-9] Numbers • [Enter] Stack Push • [+ - * /] Operators • [Backspace] Clear
+      </div>
+    </div>
+
+    <!-- Active Registers & TVM Status Table -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-mute border-b border-hairline pb-2 font-semibold">RPN Stack Registers</h3>
+        <div class="grid grid-cols-4 gap-2 text-center font-mono text-xs">
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">T</span>
+            <span id="reg-t" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">Z</span>
+            <span id="reg-z" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">Y</span>
+            <span id="reg-y" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2.5 bg-primary/10 border border-primary/20 rounded">
+            <span class="text-[10px] text-primary block">X (Display)</span>
+            <span id="reg-x" class="font-bold text-primary">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-mute border-b border-hairline pb-2 font-semibold">Stored TVM Values</h3>
+        <div class="grid grid-cols-5 gap-2 text-center font-mono text-xs">
+          <div class="p-2 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">n</span>
+            <span id="tvm-n" class="font-bold text-ink">0</span>
+          </div>
+          <div class="p-2 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">i%</span>
+            <span id="tvm-i" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">PV</span>
+            <span id="tvm-pv" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">PMT</span>
+            <span id="tvm-pmt" class="font-bold text-ink">0.00</span>
+          </div>
+          <div class="p-2 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">FV</span>
+            <span id="tvm-fv" class="font-bold text-ink">0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<style>
+  .hp-key {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.05s ease-in-out;
+    cursor: pointer;
+    text-align: center;
+  }
+  .hp-key:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  }
+</style>
+
+<script>
+  import { calculateTVM } from '../../lib/math/finance';
+
+  let stack = [0, 0, 0, 0]; // X, Y, Z, T
+  let currentInput = '';
+  let isNewNumber = true;
+  let activeShift: 'f' | 'g' | null = null;
+  let beginMode = false;
+
+  // TVM Registers
+  const tvm = { n: 0, i: 0, pv: 0, pmt: 0, fv: 0 };
+
+  const displayEl = document.getElementById('lcd-display');
+  const regX = document.getElementById('reg-x');
+  const regY = document.getElementById('reg-y');
+  const regZ = document.getElementById('reg-z');
+  const regT = document.getElementById('reg-t');
+  const tvmN = document.getElementById('tvm-n');
+  const tvmI = document.getElementById('tvm-i');
+  const tvmPV = document.getElementById('tvm-pv');
+  const tvmPMT = document.getElementById('tvm-pmt');
+  const tvmFV = document.getElementById('tvm-fv');
+  const flagF = document.getElementById('flag-f');
+  const flagG = document.getElementById('flag-g');
+
+  function updateDisplay(val?: number | string) {
+    if (!displayEl) return;
+    const valueToShow = val !== undefined ? String(val) : (currentInput || String(stack[0].toFixed(2)));
+    displayEl.textContent = valueToShow;
+
+    if (regX) regX.textContent = Number(stack[0]).toFixed(2);
+    if (regY) regY.textContent = Number(stack[1]).toFixed(2);
+    if (regZ) regZ.textContent = Number(stack[2]).toFixed(2);
+    if (regT) regT.textContent = Number(stack[3]).toFixed(2);
+
+    if (tvmN) tvmN.textContent = String(tvm.n);
+    if (tvmI) tvmI.textContent = String(tvm.i.toFixed(2));
+    if (tvmPV) tvmPV.textContent = String(tvm.pv.toFixed(2));
+    if (tvmPMT) tvmPMT.textContent = String(tvm.pmt.toFixed(2));
+    if (tvmFV) tvmFV.textContent = String(tvm.fv.toFixed(2));
+  }
+
+  function pushStack(val: number) {
+    stack[3] = stack[2];
+    stack[2] = stack[1];
+    stack[1] = stack[0];
+    stack[0] = val;
+  }
+
+  function handleKey(key: string) {
+    if (key >= '0' && key <= '9') {
+      if (isNewNumber) {
+        currentInput = key;
+        isNewNumber = false;
+      } else {
+        currentInput += key;
+      }
+      stack[0] = parseFloat(currentInput) || 0;
+      updateDisplay(currentInput);
+      return;
+    }
+
+    if (key === '.') {
+      if (isNewNumber) {
+        currentInput = '0.';
+        isNewNumber = false;
+      } else if (!currentInput.includes('.')) {
+        currentInput += '.';
+      }
+      updateDisplay(currentInput);
+      return;
+    }
+
+    if (key === 'ENTER') {
+      if (!isNewNumber) {
+        stack[0] = parseFloat(currentInput) || 0;
+      }
+      pushStack(stack[0]);
+      isNewNumber = true;
+      currentInput = '';
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'CHS') {
+      stack[0] = -stack[0];
+      if (currentInput) {
+        currentInput = String(stack[0]);
+      }
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'CLX') {
+      stack[0] = 0;
+      currentInput = '0';
+      isNewNumber = true;
+      updateDisplay('0.00');
+      return;
+    }
+
+    if (['+', '-', '*', '/'].includes(key)) {
+      const x = stack[0];
+      const y = stack[1];
+      let res = 0;
+      if (key === '+') res = y + x;
+      if (key === '-') res = y - x;
+      if (key === '*') res = y * x;
+      if (key === '/') res = x !== 0 ? y / x : 0;
+
+      stack[0] = res;
+      stack[1] = stack[2];
+      stack[2] = stack[3];
+      isNewNumber = true;
+      currentInput = '';
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'xy') {
+      const temp = stack[0];
+      stack[0] = stack[1];
+      stack[1] = temp;
+      isNewNumber = true;
+      updateDisplay();
+      return;
+    }
+
+    // TVM Keys
+    if (['n', 'i', 'PV', 'PMT', 'FV'].includes(key)) {
+      if (activeShift === 'f') {
+        // Solve for TVM
+        try {
+          const timing = beginMode ? 'beginning' : 'end';
+          if (key === 'FV') {
+            tvm.fv = calculateTVM('fv', { pv: tvm.pv, pmt: tvm.pmt, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+            stack[0] = tvm.fv;
+          } else if (key === 'PV') {
+            tvm.pv = calculateTVM('pv', { fv: tvm.fv, pmt: tvm.pmt, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+            stack[0] = tvm.pv;
+          } else if (key === 'PMT') {
+            tvm.pmt = calculateTVM('pmt', { pv: tvm.pv, fv: tvm.fv, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+            stack[0] = tvm.pmt;
+          } else if (key === 'n') {
+            tvm.n = calculateTVM('periods', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, rate: tvm.i / 100, compoundingFrequency: 1, paymentFrequency: 1, timing });
+            stack[0] = tvm.n;
+          } else if (key === 'i') {
+            tvm.i = calculateTVM('rate', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing }) * 100;
+            stack[0] = tvm.i;
+          }
+        } catch (e) {}
+        activeShift = null;
+        flagF?.classList.add('hidden');
+      } else {
+        // Store into TVM register
+        const val = stack[0];
+        if (key === 'n') tvm.n = val;
+        if (key === 'i') tvm.i = val;
+        if (key === 'PV') tvm.pv = val;
+        if (key === 'PMT') tvm.pmt = val;
+        if (key === 'FV') tvm.fv = val;
+      }
+      isNewNumber = true;
+      currentInput = '';
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'f') {
+      activeShift = activeShift === 'f' ? null : 'f';
+      flagF?.classList.toggle('hidden', activeShift !== 'f');
+      flagG?.classList.add('hidden');
+      return;
+    }
+
+    if (key === 'g') {
+      activeShift = activeShift === 'g' ? null : 'g';
+      flagG?.classList.toggle('hidden', activeShift !== 'g');
+      flagF?.classList.add('hidden');
+      return;
+    }
+  }
+
+  document.querySelectorAll('.hp-key').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const k = btn.getAttribute('data-key');
+      if (k) handleKey(k);
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') handleKey(e.key);
+    else if (e.key === '.') handleKey('.');
+    else if (e.key === 'Enter') { e.preventDefault(); handleKey('ENTER'); }
+    else if (e.key === '+') handleKey('+');
+    else if (e.key === '-') handleKey('-');
+    else if (e.key === '*') handleKey('*');
+    else if (e.key === '/') handleKey('/');
+    else if (e.key === 'Backspace') handleKey('CLX');
+  });
+
+  updateDisplay();
+</script>

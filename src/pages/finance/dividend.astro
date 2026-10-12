@@ -68,13 +68,13 @@ const faqs = getCalculatorFaqs('dividend');
       <!-- 3-up Result Cards Grid -->
       <div class="flex flex-col gap-3">
         <div id="res-ending">
-          <ResultCard title="Projected Value" value="$257,808.20" highlight={true} description="Estimated stock portfolio value at end of term." />
+          <ResultCard title="Projected Value" value="--" highlight={true} description="Estimated stock portfolio value at end of term." />
         </div>
         <div id="res-total-div">
-          <ResultCard title="Total Dividends" value="$58,000.00" description="Cumulative gross dividends earned over time." />
+          <ResultCard title="Total Dividends" value="--" description="Cumulative gross dividends earned over time." />
         </div>
         <div id="res-annual-income">
-          <ResultCard title="Annual Income" value="$7,808.20" description="Estimated annual dividend payouts in the final year." />
+          <ResultCard title="Annual Income" value="--" description="Estimated annual dividend payouts in the final year." />
         </div>
       </div>
 
@@ -241,8 +241,8 @@ const faqs = getCalculatorFaqs('dividend');
       {
         label: 'Out-Of-Pocket Deposits',
         data: depositsData,
-        backgroundColor: '#171717',
-        borderColor: '#171717',
+        backgroundColor: '#3b82f6',
+        borderColor: '#3b82f6',
         borderWidth: 1,
         stack: 'stack0'
       }
@@ -252,8 +252,8 @@ const faqs = getCalculatorFaqs('dividend');
       datasets.push({
         label: 'Reinvested Dividends (DRIP)',
         data: dividendsReinvestedData,
-        backgroundColor: '#7928ca',
-        borderColor: '#7928ca',
+        backgroundColor: '#8b5cf6',
+        borderColor: '#8b5cf6',
         borderWidth: 1,
         stack: 'stack0'
       });
@@ -262,8 +262,8 @@ const faqs = getCalculatorFaqs('dividend');
     datasets.push({
       label: 'Capital Gains Appreciation',
       data: appreciationCumData,
-      backgroundColor: '#0070f3',
-      borderColor: '#0070f3',
+      backgroundColor: '#10b981',
+      borderColor: '#10b981',
       borderWidth: 1,
       stack: 'stack0'
     });
@@ -304,7 +304,6 @@ const faqs = getCalculatorFaqs('dividend');
               ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               stacked: true,
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
@@ -341,22 +340,22 @@ const faqs = getCalculatorFaqs('dividend');
   }
 
   // Listeners
-  const inputs = [
-    initialInput, contributionInput, yieldInput, yearsInput,
-    divGrowthInput, priceGrowthInput, taxRateInput, dripCheckbox
-  ];
-
-  inputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resEndingCard) resEndingCard.querySelector('.font-mono')!.textContent = '--';
+      if (resTotalDivCard) resTotalDivCard.querySelector('.font-mono')!.textContent = '--';
+      if (resAnnualIncomeCard) resAnnualIncomeCard.querySelector('.font-mono')!.textContent = '--';
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
   // Table toggle
@@ -373,9 +372,10 @@ const faqs = getCalculatorFaqs('dividend');
     });
   }
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resEndingCard && resEndingCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

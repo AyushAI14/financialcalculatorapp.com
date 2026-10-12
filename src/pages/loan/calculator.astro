@@ -13,8 +13,8 @@ const faqs = getCalculatorFaqs('loan');
 ---
 
 <CalculatorLayout 
-  title="Loan Calculator" 
-  description="Calculate monthly repayments, total interest, and compile complete amortization schedules for mortgages, auto loans, or personal loans."
+  title="Loan Calculator & Payment Schedule" 
+  description="Calculate monthly loan payments, total interest charges, and comprehensive amortization schedules for personal, auto, or home loans with extra payment options."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -69,16 +69,16 @@ const faqs = getCalculatorFaqs('loan');
       <!-- 4-up Result Cards Grid -->
       <div class="flex flex-col gap-3">
         <div id="res-payment">
-          <ResultCard title="Periodic Payment" value="$1,466.13" highlight={true} />
+          <ResultCard title="Periodic Payment" value="--" highlight={true} />
         </div>
         <div id="res-interest">
-          <ResultCard title="Total Interest" value="$277,808.20" />
+          <ResultCard title="Total Interest" value="--" />
         </div>
         <div id="res-principal">
-          <ResultCard title="Total Principal" value="$250,000.00" />
+          <ResultCard title="Total Principal" value="--" />
         </div>
         <div id="res-cost">
-          <ResultCard title="Total Cost" value="$527,808.20" />
+          <ResultCard title="Total Cost" value="--" />
         </div>
       </div>
 
@@ -172,14 +172,14 @@ const faqs = getCalculatorFaqs('loan');
   function setupSyncedInputs(inp: HTMLInputElement, sli: HTMLInputElement) {
     sli.addEventListener('input', (e: any) => {
       inp.value = e.target.value;
-      performCalculation();
+      const displayVal = document.getElementById(`${sli.id}-val`);
+      if (displayVal) displayVal.textContent = sli.value;
     });
     inp.addEventListener('input', () => {
       const val = parseFloat(inp.value) || 0;
       sli.value = Math.min(Math.max(val, parseFloat(sli.min)), parseFloat(sli.max)).toString();
       const displayVal = document.getElementById(`${sli.id}-val`);
       if (displayVal) displayVal.textContent = sli.value;
-      performCalculation();
     });
   }
 
@@ -252,8 +252,7 @@ const faqs = getCalculatorFaqs('loan');
             {
               label: 'Remaining Principal',
               data: balances,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#3b82f6',
               fill: true,
               tension: 0.1,
               borderWidth: 2,
@@ -262,8 +261,7 @@ const faqs = getCalculatorFaqs('loan');
             {
               label: 'Cumulative Interest Paid',
               data: interestData,
-              borderColor: '#0070f3',
-              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              borderColor: '#f59e0b',
               fill: true,
               tension: 0.1,
               borderWidth: 1.5,
@@ -295,7 +293,6 @@ const faqs = getCalculatorFaqs('loan');
               ticks: { maxTicksLimit: 10, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -365,9 +362,10 @@ const faqs = getCalculatorFaqs('loan');
   }
 
   // Listeners
-  frequencySelect.addEventListener('change', performCalculation);
   scheduleViewSelect.addEventListener('change', () => {
-    performCalculation();
+    if (resPaymentCard && resPaymentCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
   });
 
   form.addEventListener('submit', (e) => {
@@ -376,7 +374,17 @@ const faqs = getCalculatorFaqs('loan');
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = '--';
+      if (resInterestCard) resInterestCard.querySelector('.font-mono')!.textContent = '--';
+      if (resPrincipalCard) resPrincipalCard.querySelector('.font-mono')!.textContent = '--';
+      if (resCostCard) resCostCard.querySelector('.font-mono')!.textContent = '--';
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
   if (toggleScheduleBtn && scheduleWrapper) {
@@ -392,9 +400,10 @@ const faqs = getCalculatorFaqs('loan');
     });
   }
 
-  // Initial Calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resPaymentCard && resPaymentCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

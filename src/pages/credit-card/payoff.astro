@@ -61,13 +61,13 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
       <div id="result-wrapper">
         <div class="flex flex-col gap-3">
           <div id="res-time">
-            <ResultCard title="Time to Payoff" value="47 months" highlight={true} description="Total duration required to pay down the balance." />
+            <ResultCard title="Time to Payoff" value="--" highlight={true} description="Total duration required to pay down the balance." />
           </div>
           <div id="res-interest">
-            <ResultCard title="Total Interest" value="$2,176.43" />
+            <ResultCard title="Total Interest" value="--" />
           </div>
           <div id="res-total">
-            <ResultCard title="Total Payments" value="$7,176.43" />
+            <ResultCard title="Total Payments" value="--" />
           </div>
         </div>
       </div>
@@ -173,7 +173,6 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
       paymentValInput.value = '150';
       minLimitContainer?.classList.add('hidden');
     }
-    performCalculation();
   });
 
   // Calculate Payoff
@@ -316,8 +315,7 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
             {
               label: 'Remaining Balance',
               data: balances,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#f43f5e',
               fill: true,
               tension: 0.15,
               borderWidth: 2,
@@ -341,7 +339,6 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
               ticks: { maxTicksLimit: 10, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -389,17 +386,52 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
   }
 
   // Listeners
-  [balanceInput, rateInput, paymentValInput, minLimitInput].forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resultWrapper) {
+        resultWrapper.innerHTML = `
+          <div class="flex flex-col gap-3">
+            <div id="res-time" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+              <div class="flex-1 min-w-0 text-left pr-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
+                <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">Total duration required to pay down the balance.</p>
+              </div>
+              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+                --
+              </div>
+            </div>
+
+            <div id="res-interest" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+              <div class="flex-1 min-w-0 text-left pr-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
+              </div>
+              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+                --
+              </div>
+            </div>
+
+            <div id="res-total" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+              <div class="flex-1 min-w-0 text-left pr-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
+              </div>
+              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+                --
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
   // Table toggle
@@ -416,9 +448,10 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
     });
   }
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (document.getElementById('res-total')?.querySelector('.font-mono')?.textContent?.trim() !== '--') {
+      performCalculation();
+    }
+  });
 </script>

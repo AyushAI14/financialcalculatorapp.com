@@ -1,0 +1,263 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "What is daily compound interest and how does it work?",
+    answer: "Daily compound interest calculates and credits earned interest to your balance every single day (365 times per year). In subsequent days, you earn interest on both your initial principal and previously accumulated interest, accelerating exponential wealth growth."
+  },
+  {
+    question: "What is the formula for daily compound interest?",
+    answer: "The daily compound formula is A = P(1 + r/365)^(365 * t), where P is initial principal, r is annual interest rate (as a decimal), and t is time in years. When recurring deposits are added, interest is calculated on daily running balances."
+  },
+  {
+    question: "How much more money do you earn with daily vs monthly compounding?",
+    answer: "On a $100,000 deposit at 7% APR over 20 years, daily compounding yields $405,514 compared to $403,873 for monthly compounding—earning you an extra $1,641 purely from compounding frequency."
+  },
+  {
+    question: "Do high-yield savings accounts (HYSA) compound daily?",
+    answer: "Yes, the vast majority of high-yield savings accounts and money market accounts compound interest daily and credit the payment to your balance on the last business day of the month."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Daily Compound Interest Calculator - Real-Time Daily Compounding" 
+  description="Calculate daily compound interest with daily, weekly, or monthly additions. See your balance grow day-by-day with interactive charts and growth schedules."
+  faqs={faqs}
+  calcKey="daily-compound-interest"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="daily-compound-form" class="space-y-6">
+        <!-- Preset Asset Pills -->
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-xs font-mono text-mute">Quick Rate Presets:</span>
+          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="4.75">HYSA (4.75%)</button>
+          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="7.0">Bonds (7.0%)</button>
+          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="10.0">S&P 500 (10.0%)</button>
+        </div>
+
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">Principal & Contribution</h3>
+
+          <!-- Principal -->
+          <div class="space-y-2">
+            <Input id="principal" name="principal" label="Starting Principal" type="number" prefix="$" value="10000" />
+            <RangeSlider id="principal-slider" label="Principal Adjustment" min={0} max={200000} step={1000} value={10000} />
+          </div>
+
+          <!-- Additions -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="addition" name="addition" label="Recurring Deposit" type="number" prefix="$" value="25" />
+            <Select id="addition-freq" name="additionFreq" label="Deposit Frequency" options={[
+              { value: '365', label: 'Daily (Every Day)' },
+              { value: '52', label: 'Weekly' },
+              { value: '12', label: 'Monthly' },
+              { value: '1', label: 'Annually' }
+            ]} value="365" />
+          </div>
+
+          <!-- Rate -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="rate" name="rate" label="Annual Interest Rate (APY / APR)" type="number" suffix="%" value="7.0" />
+            <RangeSlider id="rate-slider" label="Rate Slider" min={0.5} max={30} step={0.1} value={7.0} />
+          </div>
+
+          <!-- Years -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="years" name="years" label="Time Horizon" type="number" suffix="years" value="10" />
+            <RangeSlider id="years-slider" label="Horizon Slider" min={1} max={40} step={1} value={10} />
+          </div>
+
+          <!-- Convention -->
+          <div class="pt-2 border-t border-hairline/60">
+            <Select id="day-convention" name="dayConvention" label="Compounding Convention" options={[
+              { value: '365', label: 'Exact 365 Days/Year' },
+              { value: '360', label: 'Commercial 360 Days/Year (Ordinary Bank)' }
+            ]} value="365" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Daily Growth
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Outputs & Chart) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <ResultCard id="res-total" title="Ending Portfolio Balance" value="--" highlight={true} />
+        <ResultCard id="res-deposits" title="Total Deposits Invested" value="--" />
+        <ResultCard id="res-interest" title="Compound Interest Earned" value="--" />
+      </div>
+
+      <!-- Growth Summary Breakdown Card -->
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Compounding Frequency Advantage</h4>
+        <p class="text-xs text-body leading-relaxed">
+          By compounding <span class="font-semibold text-ink">daily</span> instead of annually, your money earns an additional <span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> over this timeframe.
+        </p>
+        
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">Daily Interest at Year 1</span>
+            <span id="rate-day1" class="font-bold text-ink">--</span>
+          </div>
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
+            <span class="text-[10px] text-mute block">Daily Interest at Year End</span>
+            <span id="rate-dayEnd" class="font-bold text-ink">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { syncInputsWithURL } from '../../lib/shareable';
+
+  const form = document.getElementById('daily-compound-form') as HTMLFormElement | null;
+  const principalInput = document.getElementById('principal') as HTMLInputElement | null;
+  const principalSlider = document.getElementById('principal-slider') as HTMLInputElement | null;
+  const additionInput = document.getElementById('addition') as HTMLInputElement | null;
+  const additionFreq = document.getElementById('addition-freq') as HTMLSelectElement | null;
+  const rateInput = document.getElementById('rate') as HTMLInputElement | null;
+  const rateSlider = document.getElementById('rate-slider') as HTMLInputElement | null;
+  const yearsInput = document.getElementById('years') as HTMLInputElement | null;
+  const yearsSlider = document.getElementById('years-slider') as HTMLInputElement | null;
+  const dayConvention = document.getElementById('day-convention') as HTMLSelectElement | null;
+
+  const resTotal = document.getElementById('res-total');
+  const resDeposits = document.getElementById('res-deposits');
+  const resInterest = document.getElementById('res-interest');
+  const bonusEl = document.getElementById('compounding-bonus');
+  const day1El = document.getElementById('rate-day1');
+  const dayEndEl = document.getElementById('rate-dayEnd');
+
+  function calculateDailyGrowth() {
+    const P = parseFloat(principalInput?.value || '0');
+    const pmt = parseFloat(additionInput?.value || '0');
+    const pmtFreq = parseFloat(additionFreq?.value || '365');
+    const annualRate = parseFloat(rateInput?.value || '0') / 100;
+    const years = parseFloat(yearsInput?.value || '0');
+    const daysPerYear = parseFloat(dayConvention?.value || '365');
+
+    if (years <= 0 || daysPerYear <= 0) return;
+
+    const totalDays = Math.round(years * daysPerYear);
+    const dailyRate = annualRate / daysPerYear;
+
+    let balance = P;
+    let totalDeposits = P;
+
+    const depositInterval = daysPerYear / pmtFreq;
+
+    for (let day = 1; day <= totalDays; day++) {
+      balance += balance * dailyRate;
+      if (day % Math.round(depositInterval) === 0) {
+        balance += pmt;
+        totalDeposits += pmt;
+      }
+    }
+
+    const totalInterest = Math.max(0, balance - totalDeposits);
+
+    // Annual Compounding Baseline for comparison
+    let annualBalance = P;
+    const annualPmt = pmt * pmtFreq;
+    for (let y = 1; y <= years; y++) {
+      annualBalance = (annualBalance + annualPmt) * (1 + annualRate);
+    }
+    const bonus = Math.max(0, balance - annualBalance);
+
+    function updateCardValue(cardEl: HTMLElement | null, text: string) {
+      if (!cardEl) return;
+      const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+      valEl.textContent = text;
+      valEl.setAttribute('title', text);
+    }
+
+    updateCardValue(resTotal, `$${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+    updateCardValue(resDeposits, `$${totalDeposits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+    updateCardValue(resInterest, `$${totalInterest.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+    if (bonusEl) bonusEl.textContent = `$${bonus.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    const dailyInterestStart = (P * dailyRate);
+    const dailyInterestEnd = (balance * dailyRate);
+
+    if (day1El) day1El.textContent = `$${dailyInterestStart.toFixed(2)} / day`;
+    if (dayEndEl) dayEndEl.textContent = `$${dailyInterestEnd.toFixed(2)} / day`;
+  }
+
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+    valEl.textContent = text;
+    valEl.setAttribute('title', text);
+  }
+
+  // Dual Sync Sliders
+  function bindSliderSync(numInput: HTMLInputElement | null, sliderInput: HTMLInputElement | null) {
+    numInput?.addEventListener('input', () => {
+      if (sliderInput) sliderInput.value = numInput.value;
+    });
+    sliderInput?.addEventListener('input', () => {
+      if (numInput) numInput.value = sliderInput.value;
+    });
+  }
+
+  bindSliderSync(principalInput, principalSlider);
+  bindSliderSync(rateInput, rateSlider);
+  bindSliderSync(yearsInput, yearsSlider);
+
+  // Rate Presets
+  document.querySelectorAll('.rate-preset').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const r = btn.getAttribute('data-rate');
+      if (r && rateInput && rateSlider) {
+        rateInput.value = r;
+        rateSlider.value = r;
+      }
+    });
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateDailyGrowth();
+  });
+
+  form?.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateCardValue(resTotal, '--');
+      updateCardValue(resDeposits, '--');
+      updateCardValue(resInterest, '--');
+      if (bonusEl) bonusEl.textContent = '--';
+      if (day1El) day1El.textContent = '--';
+      if (dayEndEl) dayEndEl.textContent = '--';
+    }, 0);
+  });
+
+  syncInputsWithURL('daily-compound-form', calculateDailyGrowth);
+
+  window.addEventListener('currency-change', () => {
+    const val = resTotal?.querySelector('[data-result-value]')?.textContent?.trim();
+    if (val && val !== '--') {
+      calculateDailyGrowth();
+    }
+  });
+</script>

@@ -1,0 +1,256 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "What is the Australian Superannuation Guarantee (SG) rate?",
+    answer: "Under Australian Commonwealth law, employers are required to contribute a percentage of your ordinary time earnings into your designated superannuation fund. The rate is currently legislated to reach 12%."
+  },
+  {
+    question: "How is money inside Australian Super taxed?",
+    answer: "Concessional contributions (including employer SG and pre-tax salary sacrifice) are taxed at a low concessional rate of 15% inside the fund, compared to your marginal personal income tax bracket which can reach up to 45% + Medicare levy."
+  },
+  {
+    question: "How much super do I need for a comfortable retirement in Australia?",
+    answer: "According to the ASFA Retirement Standard, a single person needs a superannuation balance of approximately $595,000 at age 67, while a couple needs approximately $690,000 to sustain a comfortable retirement lifestyle."
+  },
+  {
+    question: "How does salary sacrificing boost superannuation growth?",
+    answer: "Salary sacrificing allows you to direct pre-tax wages straight into super. Because you avoid paying your higher marginal tax rate and benefit from compounding interest over decades, extra contributions can add hundreds of thousands of dollars to your retirement balance."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Superannuation Calculator - Australian Super Growth & Retirement Income" 
+  description="Project your Australian superannuation nest egg at retirement. Model employer super guarantee contributions, salary sacrifice, and investment returns."
+  faqs={faqs}
+  calcKey="superannuation"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="super-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">Your Superannuation Profile</h3>
+            <span class="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold">AUD ($)</span>
+          </div>
+
+          <!-- Current Balance -->
+          <div class="space-y-2">
+            <Input id="current-super" name="currentSuper" label="Current Super Balance" type="number" prefix="$" value="65000" />
+            <RangeSlider id="super-slider" label="Balance Slider" min={0} max={500000} step={5000} value={65000} />
+          </div>
+
+          <!-- Salary -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="salary" name="salary" label="Annual Gross Salary (Before Tax)" type="number" prefix="$" value="95000" />
+            <RangeSlider id="salary-slider" label="Salary Slider" min={30000} max={300000} step={2500} value={95000} />
+          </div>
+
+          <!-- Age Parameters -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="current-age" name="currentAge" label="Current Age" type="number" value="32" min={18} max={75} />
+            <Input id="retire-age" name="retireAge" label="Retirement Age" type="number" value="67" min={55} max={85} />
+          </div>
+
+          <!-- Contribution Rates -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="sg-rate" name="sgRate" label="Employer SG Rate" type="number" suffix="%" value="12.0" step="0.5" />
+            <Input id="salary-sacrifice" name="salarySacrifice" label="Salary Sacrifice / Month" type="number" prefix="$" value="250" />
+          </div>
+
+          <!-- Investment Assumptions -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="super-return" name="superReturn" label="Expected Fund Return" type="number" suffix="%" value="7.5" step="0.1" />
+            <Input id="super-fees" name="superFees" label="Annual Fund Fees" type="number" suffix="%" value="0.8" step="0.05" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Project My Super Balance
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Outputs & ASFA Comparison) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <ResultCard id="res-super-balance" title="Estimated Super Balance at Retirement" value="--" highlight={true} />
+        <ResultCard id="res-monthly-drawdown" title="Estimated Monthly Pension Income (20 Yrs)" value="--" />
+        <ResultCard id="res-total-employer" title="Total Employer Contributions Paid In" value="--" />
+      </div>
+
+      <!-- ASFA Comfortable Benchmark Card -->
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">ASFA Retirement Standard Benchmark</h4>
+        
+        <div class="grid grid-cols-2 gap-3 text-center font-mono text-xs">
+          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">ASFA Single Comfortable</span>
+            <span class="font-bold text-ink text-sm">$595,000</span>
+            <span id="badge-single" class="text-[9px] text-mute block font-sans">--</span>
+          </div>
+
+          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">ASFA Couple Comfortable</span>
+            <span class="font-bold text-ink text-sm">$690,000</span>
+            <span id="badge-couple" class="text-[9px] text-mute block font-sans">--</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+          <span class="font-semibold text-ink">Tax Efficiency:</span> Contributions reflect the Australian statutory 15% contributions tax. By salary sacrificing $250/mo, you reduce your taxable income while boosting your end balance by an extra <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>.
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('super-form') as HTMLFormElement | null;
+  const currentSuperInput = document.getElementById('current-super') as HTMLInputElement | null;
+  const superSlider = document.getElementById('super-slider') as HTMLInputElement | null;
+  const salaryInput = document.getElementById('salary') as HTMLInputElement | null;
+  const salarySlider = document.getElementById('salary-slider') as HTMLInputElement | null;
+  const currentAgeInput = document.getElementById('current-age') as HTMLInputElement | null;
+  const retireAgeInput = document.getElementById('retire-age') as HTMLInputElement | null;
+  const sgRateInput = document.getElementById('sg-rate') as HTMLInputElement | null;
+  const sacrificeInput = document.getElementById('salary-sacrifice') as HTMLInputElement | null;
+  const returnInput = document.getElementById('super-return') as HTMLInputElement | null;
+  const feesInput = document.getElementById('super-fees') as HTMLInputElement | null;
+
+  const resBalance = document.getElementById('res-super-balance');
+  const resDrawdown = document.getElementById('res-monthly-drawdown');
+  const resEmployer = document.getElementById('res-total-employer');
+  const badgeSingle = document.getElementById('badge-single');
+  const badgeCouple = document.getElementById('badge-couple');
+  const bonusEl = document.getElementById('sacrifice-bonus');
+
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+    valEl.textContent = text;
+    valEl.setAttribute('title', text);
+  }
+
+  function calculateSuper() {
+    const P = parseFloat(currentSuperInput?.value || '0');
+    const salary = parseFloat(salaryInput?.value || '0');
+    const age = parseFloat(currentAgeInput?.value || '32');
+    const retireAge = parseFloat(retireAgeInput?.value || '67');
+    const sgRate = parseFloat(sgRateInput?.value || '12') / 100;
+    const sacrificeMonthly = parseFloat(sacrificeInput?.value || '0');
+    const grossReturn = parseFloat(returnInput?.value || '7.5') / 100;
+    const fees = parseFloat(feesInput?.value || '0.8') / 100;
+
+    const netAnnualRate = Math.max(0, grossReturn - fees);
+    const years = Math.max(0, retireAge - age);
+    if (years <= 0) return;
+
+    // Australian Super calculations:
+    // Employer annual contribution = Salary * SG rate
+    // Contributions tax = 15%
+    const annualEmployerContrib = salary * sgRate;
+    const netEmployerContrib = annualEmployerContrib * 0.85;
+
+    const annualSacrifice = sacrificeMonthly * 12;
+    const netSacrifice = annualSacrifice * 0.85;
+
+    const netAnnualDeposit = netEmployerContrib + netSacrifice;
+
+    let balance = P;
+    let totalEmployerPaid = 0;
+
+    for (let y = 1; y <= years; y++) {
+      balance = (balance + netAnnualDeposit) * (1 + netAnnualRate);
+      totalEmployerPaid += annualEmployerContrib;
+    }
+
+    // Baseline without salary sacrifice to compute bonus
+    let baselineBalance = P;
+    for (let y = 1; y <= years; y++) {
+      baselineBalance = (baselineBalance + netEmployerContrib) * (1 + netAnnualRate);
+    }
+    const bonus = Math.max(0, balance - baselineBalance);
+
+    // Estimated monthly pension drawdown over 20 retirement years (4% safe drawdown)
+    const monthlyDrawdown = (balance * 0.05) / 12;
+
+    updateCardValue(resBalance, formatCurrency(Math.round(balance)));
+    updateCardValue(resDrawdown, `${formatCurrency(Math.round(monthlyDrawdown))} / mo`);
+    updateCardValue(resEmployer, formatCurrency(Math.round(totalEmployerPaid)));
+    if (bonusEl) bonusEl.textContent = formatCurrency(Math.round(bonus));
+
+    if (badgeSingle) {
+      const meets = balance >= 595000;
+      badgeSingle.textContent = meets ? '✓ Goal Exceeded' : 'Under Goal';
+      badgeSingle.className = meets ? 'text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans font-semibold' : 'text-[9px] text-rose-500 block font-sans font-semibold';
+    }
+
+    if (badgeCouple) {
+      const meets = balance >= 690000;
+      badgeCouple.textContent = meets ? '✓ Goal Exceeded' : 'Under Goal';
+      badgeCouple.className = meets ? 'text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans font-semibold' : 'text-[9px] text-rose-500 block font-sans font-semibold';
+    }
+  }
+
+  // Sliders binding without auto-calculation
+  function bindSliderSync(numInput: HTMLInputElement | null, sliderInput: HTMLInputElement | null) {
+    numInput?.addEventListener('input', () => {
+      if (sliderInput) sliderInput.value = numInput.value;
+    });
+    sliderInput?.addEventListener('input', () => {
+      if (numInput) numInput.value = sliderInput.value;
+    });
+  }
+
+  bindSliderSync(currentSuperInput, superSlider);
+  bindSliderSync(salaryInput, salarySlider);
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateSuper();
+  });
+
+  form?.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateCardValue(resBalance, '--');
+      updateCardValue(resDrawdown, '--');
+      updateCardValue(resEmployer, '--');
+      if (badgeSingle) {
+        badgeSingle.textContent = '--';
+        badgeSingle.className = 'text-[9px] text-mute block font-sans';
+      }
+      if (badgeCouple) {
+        badgeCouple.textContent = '--';
+        badgeCouple.className = 'text-[9px] text-mute block font-sans';
+      }
+      if (bonusEl) bonusEl.textContent = '--';
+    }, 0);
+  });
+
+  syncInputsWithURL('super-form', calculateSuper);
+
+  window.addEventListener('currency-change', () => {
+    const valEl = resBalance?.querySelector('[data-result-value]') || resBalance?.querySelector('.font-mono') || resBalance;
+    if (valEl && valEl.textContent?.trim() !== '--') {
+      calculateSuper();
+    }
+  });
+</script>

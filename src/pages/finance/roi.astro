@@ -77,7 +77,7 @@ const faqs = getCalculatorFaqs('roi');
         <div id="res-roi-container">
           <ResultCard 
             title="Return on Investment" 
-            value="25.49%" 
+            value="--" 
             description="Total rate of return on invested capital."
             highlight={true}
           />
@@ -85,14 +85,14 @@ const faqs = getCalculatorFaqs('roi');
         <div id="res-annual-container">
           <ResultCard 
             title="Annualized ROI (CAGR)" 
-            value="6.73%" 
+            value="--" 
             description="Annualized compound rate of return." 
           />
         </div>
         <div id="res-profit-container">
           <ResultCard 
             title="Net Profit" 
-            value="$13,000.00" 
+            value="--" 
             description="Final profit after adjusting expenses and dividends." 
           />
         </div>
@@ -190,8 +190,8 @@ const faqs = getCalculatorFaqs('roi');
             {
               label: 'Amount ($)',
               data: [cost, returns],
-              backgroundColor: ['#171717', '#0070f3'],
-              borderColor: ['#171717', '#0070f3'],
+              backgroundColor: ['#6366f1', '#10b981'],
+              borderColor: ['#6366f1', '#10b981'],
               borderWidth: 1
             }
           ]
@@ -215,7 +215,6 @@ const faqs = getCalculatorFaqs('roi');
               ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -236,16 +235,21 @@ const faqs = getCalculatorFaqs('roi');
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resRoiContainer) resRoiContainer.querySelector('.font-mono')!.textContent = '--';
+      if (resAnnualContainer) resAnnualContainer.querySelector('.font-mono')!.textContent = '--';
+      if (resProfitContainer) resProfitContainer.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
-
-  [initialInput, finalInput, durationInput, durationUnitSelect, expensesInput, incomeInput].forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
-  // Initial Calculation
-  performCalculation();
 
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resRoiContainer && resRoiContainer.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

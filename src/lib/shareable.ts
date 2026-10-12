@@ -35,8 +35,8 @@ export function syncInputsWithURL(formId: string, onUpdate: () => void) {
     }
   });
 
-  // 2. Add change/input listener to push updates to the URL
-  const handleInput = () => {
+  // 2. Add submit listener to push updates to the URL when calculating
+  const handleUpdateUrl = () => {
     const newParams = new URLSearchParams();
     
     Array.from(form.elements).forEach((el) => {
@@ -56,9 +56,7 @@ export function syncInputsWithURL(formId: string, onUpdate: () => void) {
     const newUrl = `${window.location.pathname}${newQueryString ? '?' + newQueryString : ''}`;
     
     window.history.replaceState(null, '', newUrl);
-    onUpdate();
   };
 
-  form.addEventListener('input', handleInput);
-  form.addEventListener('change', handleInput);
+  form.addEventListener('submit', handleUpdateUrl);
 }

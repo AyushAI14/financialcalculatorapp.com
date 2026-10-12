@@ -1,4 +1,4 @@
-# FinCompute: Calculator Implementation Plan
+# FinancialCalculatorApp: Calculator Implementation Plan
 
 This document outlines the strategic plan to build out all ~40 individual financial calculators, ensuring mathematical accuracy and a premium Vercel-inspired design aesthetic.
 
@@ -96,15 +96,15 @@ If you approve this plan, we will immediately begin **Phase 1**, setting up the 
 
 ---
 
-# (NEW) Implementation Plan: FinCompute Feature Enhancements & New Calculators
+# (NEW) Implementation Plan: FinancialCalculatorApp Feature Enhancements & New Calculators
 
-This document details the step-by-step technical plan to implement the requested features, improvements, and new calculators on FinCompute.com. The changes are grouped by priority and feature area.
+This document details the step-by-step technical plan to implement the requested features, improvements, and new calculators on financialcalculatorapp.com. The changes are grouped by priority and feature area.
 
 ---
 
 ## 1. Goal Description
 
-Enhance FinCompute.com from a basic set of financial calculators into a professional, highly discoverable, and highly engaging financial tool suite.
+Enhance financialcalculatorapp.com from a basic set of financial calculators into a professional, highly discoverable, and highly engaging financial tool suite.
 This will be achieved by:
 1. **SEO Enhancements**: Structured data (JSON-LD), customized meta tags per page, Open Graph/Twitter tags, related calculators suggestions, and homepage filtering.
 2. **New Calculators**: 13 brand new calculators covering mortgages, debt payoff, inflation, tax paychecks, refinancing, net worth, emergency funds, investment fee impacts, student loans, IRA choices, college savings, debt ratios, and crypto DCA.
@@ -149,7 +149,7 @@ const {
   canonicalUrl 
 } = Astro.props;
 
-const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://fincompute.com').href;
+const resolvedCanonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || 'https://financialcalculatorapp.com').href;
 ---
 <!doctype html>
 <html lang="en">

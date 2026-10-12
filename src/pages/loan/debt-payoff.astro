@@ -110,11 +110,11 @@ const faqs = [
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
           <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Snowball Strategy</h4>
           <div class="space-y-1">
-            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">0 mo</span>
+            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">--</span>
             <span class="text-[10px] text-mute block">Payoff Timeline</span>
           </div>
           <div class="space-y-0.5">
-            <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">$0.00</span>
+            <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">--</span>
             <span class="text-[9px] text-mute block">Total Interest Paid</span>
           </div>
         </div>
@@ -123,11 +123,11 @@ const faqs = [
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3 border-link/30">
           <h4 class="text-xs font-mono text-link uppercase tracking-wider">Avalanche Strategy</h4>
           <div class="space-y-1">
-            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">0 mo</span>
+            <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">--</span>
             <span class="text-[10px] text-mute block">Payoff Timeline</span>
           </div>
           <div class="space-y-0.5">
-            <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">$0.00</span>
+            <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">--</span>
             <span class="text-[9px] text-mute block">Total Interest Paid</span>
           </div>
         </div>
@@ -295,7 +295,7 @@ const faqs = [
             {
               label: 'Debt Snowball',
               data: sbData,
-              borderColor: '#7928ca',
+              borderColor: '#8b5cf6',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -303,7 +303,7 @@ const faqs = [
             {
               label: 'Debt Avalanche',
               data: avData,
-              borderColor: '#0070f3',
+              borderColor: '#10b981',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -320,11 +320,9 @@ const faqs = [
           },
           scales: {
             x: {
-              grid: { color: '#ebebeb' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -342,7 +340,6 @@ const faqs = [
   [b1, r1, m1, b2, r2, m2, b3, r3, m3, budgetInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -369,9 +366,6 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      b1.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -415,7 +409,14 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (sbTime) sbTime.textContent = '--';
+      if (sbInterest) sbInterest.textContent = '--';
+      if (avTime) avTime.textContent = '--';
+      if (avInterest) avInterest.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -423,8 +424,9 @@ const faqs = [
   syncInputsWithURL('debt-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (sbTime && sbTime.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -66,16 +66,16 @@ const faqs = getCalculatorFaqs('college-savings');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-total-cost">
-          <ResultCard title="Future 4-Year College Cost" value="$187,005.12" highlight={true} description="Total estimated tuition, room, and board costs for 4 years of college (accounting for inflation)." />
+          <ResultCard title="Future 4-Year College Cost" value="--" highlight={true} description="Total estimated tuition, room, and board costs for 4 years of college (accounting for inflation)." />
         </div>
         <div id="res-balance">
-          <ResultCard title="Projected 529 Balance" value="$64,302.21" />
+          <ResultCard title="Projected 529 Balance" value="--" />
         </div>
         <div id="res-shortfall">
-          <ResultCard title="Remaining Shortfall" value="$122,702.91" />
+          <ResultCard title="Remaining Shortfall" value="--" />
         </div>
         <div id="res-contrib-needed">
-          <ResultCard title="Recommended Monthly Payment" value="$581.12" description="Monthly contribution required to completely fund the target college costs." />
+          <ResultCard title="Recommended Monthly Payment" value="--" description="Monthly contribution required to completely fund the target college costs." />
         </div>
       </div>
 
@@ -168,7 +168,6 @@ const faqs = getCalculatorFaqs('college-savings');
   [currentAgeInput, enrollmentAgeInput, costInput, inflationInput, savedInput, contributionInput, returnInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -189,9 +188,6 @@ const faqs = getCalculatorFaqs('college-savings');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      currentAgeInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -247,7 +243,10 @@ const faqs = getCalculatorFaqs('college-savings');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resCost) resCost.querySelector('.font-mono')!.textContent = '--';
+      if (resBalance) resBalance.querySelector('.font-mono')!.textContent = '--';
+      if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = '--';
+      if (resContribNeeded) resContribNeeded.querySelector('.font-mono')!.textContent = '--';
     }, 0);
   });
 
@@ -255,8 +254,9 @@ const faqs = getCalculatorFaqs('college-savings');
   syncInputsWithURL('college-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resCost && resCost.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

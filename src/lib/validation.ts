@@ -1,5 +1,5 @@
 /**
- * Client-side validation utility for FinCompute forms.
+ * Client-side validation utility for financialcalculatorapp.com forms.
  */
 
 export interface ValidationRules {

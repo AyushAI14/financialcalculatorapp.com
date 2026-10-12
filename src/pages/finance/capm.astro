@@ -66,7 +66,7 @@ const faqs = getCalculatorFaqs('capm');
       <div id="res-capm">
         <ResultCard 
           title="Expected Rate of Return (CAPM)" 
-          value="9.72%" 
+          value="--" 
           highlight={true} 
           description="The minimum expected rate of return required by investors given the asset's risk profile."
         />
@@ -163,7 +163,8 @@ const faqs = getCalculatorFaqs('capm');
           datasets: [
             {
               data: dataset,
-              backgroundColor: ['#4d4d4d', '#7928ca'],
+              backgroundColor: ['#3b82f6', '#10b981'],
+              borderColor: ['#3b82f6', '#10b981'],
               borderWidth: 1,
               barThickness: 40
             }
@@ -188,7 +189,6 @@ const faqs = getCalculatorFaqs('capm');
               ticks: { font: { family: 'Geist, sans-serif', size: 10 } }
             },
             y: {
-              grid: { color: 'rgba(128, 128, 128, 0.08)' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -209,30 +209,31 @@ const faqs = getCalculatorFaqs('capm');
       riskFreeInput.value = target.dataset.rf || '';
       betaInput.value = target.dataset.beta || '';
       marketInput.value = target.dataset.rm || '';
-      performCAPMCalc();
-      
-      // Dispatch events to sync URL
-      riskFreeInput.dispatchEvent(new Event('input', { bubbles: true }));
-      betaInput.dispatchEvent(new Event('input', { bubbles: true }));
-      marketInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
   // Listeners
-  [riskFreeInput, betaInput, marketInput].forEach(el => {
-    el.addEventListener('input', performCAPMCalc);
-  });
   capmForm.addEventListener('submit', (e) => {
     e.preventDefault();
     performCAPMCalc();
   });
   capmForm.addEventListener('reset', () => {
-    setTimeout(performCAPMCalc, 0);
+    setTimeout(() => {
+      if (resCapmCard) {
+        resCapmCard.querySelector('.font-mono')!.textContent = '--';
+      }
+      if (formulaValues) formulaValues.innerHTML = '';
+      if (capmChartInstance) {
+        capmChartInstance.destroy();
+        capmChartInstance = null;
+      }
+    }, 0);
   });
 
-  // Init
-  performCAPMCalc();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCAPMCalc);
+  window.addEventListener('currency-change', () => {
+    if (resCapmCard && resCapmCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCAPMCalc();
+    }
+  });
 </script>

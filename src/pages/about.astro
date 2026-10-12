@@ -6,17 +6,17 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 ---
 
-<Layout title={t('about.title', 'About Us - FinCompute')} description={t('about.intro')} lang={lang}>
+<Layout title={t('about.title', 'About Us - financialcalculatorapp.com')} description={t('about.intro')} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('about.heading', 'About Us.')}</h1>
 
     <p>
-      {t('about.intro', 'FinCompute is a free suite of web-based financial calculators designed to help individuals make informed decisions about their money. From loan amortization to retirement planning, our tools provide fast, transparent computations without requiring an account or sharing personal data.')}
+      {t('about.intro', 'financialcalculatorapp.com is a free suite of web-based financial calculators designed to help individuals make informed decisions about their money. From loan amortization to retirement planning, our tools provide fast, transparent computations without requiring an account or sharing personal data.')}
     </p>
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('about.mission.heading', 'Our Mission')}</h2>
     <p>
-      {t('about.mission.text', 'Financial literacy and planning shouldn\'t be locked behind paywalls or complicated software. FinCompute exists to give everyone instant access to reliable calculators that run entirely in the browser. No sign-ups, no tracking, no hidden fees.')}
+      {t('about.mission.text', 'Financial literacy and planning shouldn\'t be locked behind paywalls or complicated software. financialcalculatorapp.com exists to give everyone instant access to reliable calculators that run entirely in the browser. No sign-ups, no tracking, no hidden fees.')}
     </p>
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('about.how.heading', 'How It Works')}</h2>
@@ -26,7 +26,7 @@ const t = useTranslations(lang);
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('about.disclaimer.heading', 'Disclaimer')}</h2>
     <p>
-      {t('about.disclaimer.text', 'FinCompute is built for educational and informational purposes. While we strive for mathematical accuracy, our results should not be taken as professional financial advice. Always consult a qualified advisor before making financial decisions.')}
+      {t('about.disclaimer.text', 'financialcalculatorapp.com is built for educational and informational purposes. While we strive for mathematical accuracy, our results should not be taken as professional financial advice. Always consult a qualified advisor before making financial decisions.')}
     </p>
   </article>
 </Layout>

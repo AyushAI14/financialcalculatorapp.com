@@ -79,13 +79,13 @@ const faqs = getCalculatorFaqs('home-affordability');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-price">
-          <ResultCard title="Affordable Price" value="$384,100" highlight={true} description="Maximum home purchase price budget." />
+          <ResultCard title="Affordable Price" value="--" highlight={true} description="Maximum home purchase price budget." />
         </div>
         <div id="res-loan">
-          <ResultCard title="Affordable Loan" value="$344,100" description="Maximum loan mortgage size." />
+          <ResultCard title="Affordable Loan" value="--" description="Maximum loan mortgage size." />
         </div>
         <div id="res-payment">
-          <ResultCard title="Monthly Budget" value="$2,800" description="Maximum monthly housing budget (PITI)." />
+          <ResultCard title="Monthly Budget" value="--" description="Maximum monthly housing budget (PITI)." />
         </div>
       </div>
 
@@ -204,7 +204,7 @@ const faqs = getCalculatorFaqs('home-affordability');
           datasets: [
             {
               data: dataVals,
-              backgroundColor: ['#171717', '#4d4d4d', '#0070f3', '#a1a1a1'],
+              backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#8b5cf6'],
               borderWidth: 1
             }
           ]
@@ -235,27 +235,27 @@ const faqs = getCalculatorFaqs('home-affordability');
   }
 
   // Listeners
-  const allInputs = [
-    incomeInput, debtsInput, downpaymentInput, termInput, rateInput,
-    taxRateInput, insuranceInput, hoaInput, frontDtiInput, backDtiInput
-  ];
-
-  allInputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resPriceCard) resPriceCard.querySelector('.font-mono')!.textContent = '--';
+      if (resLoanCard) resLoanCard.querySelector('.font-mono')!.textContent = '--';
+      if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resPriceCard && resPriceCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

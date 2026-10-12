@@ -2,7 +2,7 @@
 title: "What is PMI? How to Avoid Private Mortgage Insurance"
 description: "Confused by Private Mortgage Insurance (PMI)? Learn what PMI is, how much it costs, and the exact steps you can take to cancel or avoid it entirely."
 pubDate: 2026-07-11
-author: "FinCompute Team"
+author: "financialcalculatorapp.com Team"
 tags: ["mortgage", "housing", "PMI"]
 ---
 

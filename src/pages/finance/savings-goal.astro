@@ -84,20 +84,20 @@ const faqs = getCalculatorFaqs('savings-goal');
         <div id="res-monthly">
           <ResultCard 
             title="Monthly Deposit" 
-            value="$271.74" 
+            value="--" 
             highlight={true} 
           />
         </div>
         <div id="res-total-dep">
           <ResultCard 
             title="Total Deposits" 
-            value="$37,608.80" 
+            value="--" 
           />
         </div>
         <div id="res-interest">
           <ResultCard 
             title="Interest Earned" 
-            value="$12,391.20" 
+            value="--" 
           />
         </div>
       </div>
@@ -189,14 +189,14 @@ const faqs = getCalculatorFaqs('savings-goal');
   function setupSyncedInputs(inp: HTMLInputElement, sli: HTMLInputElement) {
     sli.addEventListener('input', (e: any) => {
       inp.value = e.target.value;
-      performCalculation();
+      const displayVal = document.getElementById(`${sli.id}-val`);
+      if (displayVal) displayVal.textContent = sli.value;
     });
     inp.addEventListener('input', () => {
       const val = parseFloat(inp.value) || 0;
       sli.value = Math.min(Math.max(val, parseFloat(sli.min)), parseFloat(sli.max)).toString();
       const displayVal = document.getElementById(`${sli.id}-val`);
       if (displayVal) displayVal.textContent = sli.value;
-      performCalculation();
     });
   }
 
@@ -375,8 +375,7 @@ const faqs = getCalculatorFaqs('savings-goal');
             {
               label: 'Total Accumulation',
               data: balances,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#10b981',
               fill: true,
               tension: 0.15,
               borderWidth: 2,
@@ -385,8 +384,7 @@ const faqs = getCalculatorFaqs('savings-goal');
             {
               label: 'Total Out-Of-Pocket Deposits',
               data: deposits,
-              borderColor: '#0070f3',
-              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              borderColor: '#6366f1',
               fill: true,
               tension: 0.15,
               borderWidth: 1.5,
@@ -418,7 +416,6 @@ const faqs = getCalculatorFaqs('savings-goal');
               ticks: { maxTicksLimit: 10, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -453,15 +450,24 @@ const faqs = getCalculatorFaqs('savings-goal');
   }
 
   // Listeners
-  compoundingSelect.addEventListener('change', performCalculation);
-  timingCheckbox.addEventListener('change', performCalculation);
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resMonthlyCard) resMonthlyCard.querySelector('.font-mono')!.textContent = '--';
+      if (resTotalDepCard) resTotalDepCard.querySelector('.font-mono')!.textContent = '--';
+      if (resInterestCard) resInterestCard.querySelector('.font-mono')!.textContent = '--';
+      const takeawayEl = document.getElementById('savings-takeaway');
+      if (takeawayEl) takeawayEl.classList.add('hidden');
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
   // Table toggle
@@ -478,9 +484,10 @@ const faqs = getCalculatorFaqs('savings-goal');
     });
   }
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resMonthlyCard && resMonthlyCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -3,7 +3,7 @@ import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 interface Props {
   title: string;
-  value: string | number;
+  value?: string | number;
   description?: string;
   highlight?: boolean;
   id?: string;
@@ -12,20 +12,20 @@ interface Props {
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 
-const { title, value, description, highlight = false, id } = Astro.props;
+const { title, value = "--", description, highlight = false, id } = Astro.props;
 
 const localizedTitle = t(title, title);
 const localizedDescription = description ? t(description, description) : undefined;
 ---
 <div id={id} class:list={[
-  "px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full",
-  highlight ? "bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]" : "bg-canvas border border-hairline shadow-sm"
+  "px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[76px] w-full transition-all",
+  highlight ? "bg-paper border-2 border-input-accent shadow-[var(--control-shadow-hover)]" : "bg-paper border border-ink/40 shadow-[var(--control-shadow)]"
 ]}>
   <div class="flex-1 min-w-0 text-left pr-2">
-    <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">{localizedTitle}</h4>
-    {localizedDescription && <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">{localizedDescription}</p>}
+    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted">{localizedTitle}</h4>
+    {localizedDescription && <p class="text-xs text-muted mt-0.5 leading-normal max-w-md hidden sm:block">{localizedDescription}</p>}
   </div>
-  <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title={String(value)}>
+  <div class="text-xl sm:text-2xl font-mono font-black tracking-tight text-ink whitespace-nowrap text-right shrink-0" data-result-value title={String(value)}>
     {value}
   </div>
 </div>

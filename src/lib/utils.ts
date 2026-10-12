@@ -1,22 +1,39 @@
-import { safeGetItem } from './storage';
+import { getEffectiveCurrency, getCurrencyInfo, isSupportedCurrency } from './currency';
 
 export function formatCurrency(value: number, locale?: string, currency?: string): string {
-  const selectedCurrency = currency || safeGetItem('currency', 'USD');
+  const currentLang = typeof document !== 'undefined' ? document.documentElement.lang : undefined;
+  const selectedCurrency = currency && isSupportedCurrency(currency)
+    ? currency.toUpperCase()
+    : getEffectiveCurrency(currentLang);
   
-  let selectedLocale = locale || 'en-US';
-  if (!locale) {
-    if (selectedCurrency === 'EUR') selectedLocale = 'de-DE';
-    else if (selectedCurrency === 'GBP') selectedLocale = 'en-GB';
-    else if (selectedCurrency === 'INR') selectedLocale = 'en-IN';
-    else selectedLocale = 'en-US';
+  const meta = getCurrencyInfo(selectedCurrency);
+  
+  let selectedLocale = locale;
+  if (!selectedLocale) {
+    if (typeof document !== 'undefined' && document.documentElement.lang) {
+      selectedLocale = document.documentElement.lang;
+    } else {
+      selectedLocale = meta.locale;
+    }
   }
 
-  return new Intl.NumberFormat(selectedLocale, {
-    style: 'currency',
-    currency: selectedCurrency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  const decimals = meta.decimals;
+
+  try {
+    return new Intl.NumberFormat(selectedLocale, {
+      style: 'currency',
+      currency: meta.code,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  } catch (e) {
+    return new Intl.NumberFormat(meta.locale, {
+      style: 'currency',
+      currency: meta.code,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  }
 }
 
 /**

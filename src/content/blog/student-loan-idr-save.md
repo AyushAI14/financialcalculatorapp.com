@@ -2,7 +2,7 @@
 title: "Understanding Student Loan IDR: How SAVE, PAYE, and IBR Work"
 description: "Confused by federal student loan income-driven repayment plans? Learn how discretionary income, poverty guidelines, and plan rules affect your payment."
 pubDate: 2026-07-11
-author: "FinCompute Team"
+author: "financialcalculatorapp.com Team"
 tags: ["student loans", "IDR", "SAVE"]
 ---
 

@@ -2,7 +2,7 @@
 title: "Traditional vs. Roth IRA: Which Saves More on Taxes?"
 description: "Choosing between a Traditional and Roth IRA can make a massive difference in your retirement savings. Learn how tax rates determine the winning strategy."
 pubDate: 2026-07-11
-author: "FinCompute Team"
+author: "financialcalculatorapp.com Team"
 tags: ["retirement", "taxes", "IRA"]
 ---
 

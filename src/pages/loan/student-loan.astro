@@ -71,13 +71,13 @@ const faqs = getCalculatorFaqs('student-loan');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-idr-pmt">
-          <ResultCard title="IDR Monthly Payment" value="$81.25" highlight={true} description="Estimated monthly payment under the selected income-driven plan." />
+          <ResultCard title="IDR Monthly Payment" value="--" highlight={true} description="Estimated monthly payment under the selected income-driven plan." />
         </div>
         <div id="res-discretionary">
-          <ResultCard title="Discretionary Income" value="$19,500.00" description="Annual income above the poverty guideline multiplier." />
+          <ResultCard title="Discretionary Income" value="--" description="Annual income above the poverty guideline multiplier." />
         </div>
         <div id="res-standard-pmt">
-          <ResultCard title="Standard 10-Year Payment" value="$434.11" description="Base payment under the standard amortized 10-year repayment schedule." />
+          <ResultCard title="Standard 10-Year Payment" value="--" description="Base payment under the standard amortized 10-year repayment schedule." />
         </div>
       </div>
 
@@ -87,11 +87,11 @@ const faqs = getCalculatorFaqs('student-loan');
         <div class="grid grid-cols-2 gap-4 divide-x divide-hairline text-left">
           <div>
             <span class="text-xs text-mute font-mono block">{t('Federal Poverty Line')}</span>
-            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-base">$15,800</span>
+            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-base">--</span>
           </div>
           <div class="pl-4">
             <span class="text-xs text-mute font-mono block">{t('Income Shield Limit')}</span>
-            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-shield">$35,550</span>
+            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-shield">--</span>
           </div>
         </div>
       </div>
@@ -235,7 +235,6 @@ const faqs = getCalculatorFaqs('student-loan');
   [balanceInput, rateInput, agiInput, sizeInput, planSelect, typeSelect].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -255,9 +254,6 @@ const faqs = getCalculatorFaqs('student-loan');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      balanceInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -315,7 +311,18 @@ const faqs = getCalculatorFaqs('student-loan');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resIdrPmt) resIdrPmt.querySelector('.font-mono')!.textContent = '--';
+      if (resDiscretionary) resDiscretionary.querySelector('.font-mono')!.textContent = '--';
+      if (resStandardPmt) resStandardPmt.querySelector('.font-mono')!.textContent = '--';
+      if (valPovertyBase) valPovertyBase.textContent = '--';
+      if (valPovertyShield) valPovertyShield.textContent = '--';
+
+      const stepShield = document.getElementById('step-shield');
+      const stepDisc = document.getElementById('step-disc');
+      const stepPayment = document.getElementById('step-payment');
+      if (stepShield) stepShield.innerHTML = 'Threshold = PovertyBase × Multiplier (2.25 for SAVE, 1.50 for others)';
+      if (stepDisc) stepDisc.innerHTML = 'Discretionary = AGI - Threshold';
+      if (stepPayment) stepPayment.innerHTML = 'Payment = (Discretionary × Rate) / 12 (Rate = 5% undergrad, 10% grad/others)';
     }, 0);
   });
 
@@ -323,8 +330,9 @@ const faqs = getCalculatorFaqs('student-loan');
   syncInputsWithURL('student-loan-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resIdrPmt && resIdrPmt.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

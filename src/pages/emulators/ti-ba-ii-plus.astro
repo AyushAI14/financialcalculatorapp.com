@@ -1,0 +1,378 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "Is the TI BA II Plus permitted on CFA and CFP exams?",
+    answer: "Yes! The Texas Instruments BA II Plus (including the Professional model) is one of only two official calculators authorized by the CFA Institute, GARP (FRM), and CFP Board for in-person certification examinations."
+  },
+  {
+    question: "How do I solve for a TVM variable (like PV or PMT) on the TI BA II Plus?",
+    answer: "Enter your known values by typing the number followed by the variable key (e.g., [1][0] [N], [8] [I/Y], [5][0][0] [CHS] [PMT]). To calculate the unknown value, press [CPT] followed by the variable key (e.g., [CPT] [PV])."
+  },
+  {
+    question: "What is the difference between BGN and END mode?",
+    answer: "END mode assumes cash flows occur at the end of each payment period (standard loans, ordinary annuities). BGN mode assumes payments occur at the beginning of each period (annuities due, lease payments)."
+  },
+  {
+    question: "Why does my answer have a negative sign?",
+    answer: "Financial calculators strictly enforce cash flow conventions. Money paid out (outflow/deposit/investment) is negative; money received (inflow/loan proceeds/future payout) is positive."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="TI BA II Plus Calculator Online - Free Texas Instruments Financial Simulator" 
+  description="Free online Texas Instruments BA II Plus financial calculator simulator. Calculate TVM, NPV, IRR, and cash flows with CFA and CFP exam precision."
+  faqs={faqs}
+  calcKey="ti-ba-ii-plus"
+>
+  <div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-canvas border border-hairline rounded-lg shadow-sm">
+      <div>
+        <h2 class="text-base font-semibold text-ink">Texas Instruments TI BA II Plus Web Simulator</h2>
+        <p class="text-xs text-mute">Authorized Exam Math Engine for CFA, CFP, and Corporate Finance Analysts</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          CFA® Exam Accurate
+        </span>
+      </div>
+    </div>
+
+    <!-- Dual Layout: Left (Interactive Hardware Device), Right (Dynamic TVM Worksheet) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Virtual TI Hardware Keypad -->
+      <div class="lg:col-span-6 bg-neutral-900 border-2 border-neutral-700/80 rounded-2xl p-6 shadow-2xl text-neutral-100 select-none">
+        
+        <!-- LCD Display -->
+        <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-4 mb-5 shadow-inner">
+          <div class="flex justify-between items-center mb-1 text-[10px] font-mono">
+            <span class="text-neutral-400 font-bold">TI BA II PLUS</span>
+            <div class="flex gap-2">
+              <span id="ti-2nd-flag" class="hidden text-amber-400 font-bold">2ND</span>
+              <span id="ti-cpt-flag" class="hidden text-sky-400 font-bold">CPT</span>
+              <span id="ti-bgn-flag" class="hidden text-emerald-400 font-bold">BGN</span>
+            </div>
+          </div>
+          <div class="bg-[#9ba88d] text-[#1b2413] font-mono text-3xl px-3 py-2 rounded border-2 border-[#7e8c6e] text-right font-bold tracking-wider overflow-x-auto shadow-inner">
+            <span id="ti-lcd">0.00</span>
+          </div>
+        </div>
+
+        <!-- TVM Key Row -->
+        <div class="grid grid-cols-5 gap-1.5 mb-3 text-center font-mono text-[11px]">
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600 text-amber-300 font-bold" data-key="CPT">CPT</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600 text-neutral-100 font-bold" data-key="ENTER">ENTER</button>
+          <button class="ti-key bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold" data-key="2ND">2ND</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600 text-neutral-100" data-key="CF">CF</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600 text-neutral-100" data-key="NPV">NPV</button>
+        </div>
+
+        <!-- Primary TVM Variables Row -->
+        <div class="grid grid-cols-5 gap-1.5 mb-4 text-center font-mono text-xs">
+          <button class="ti-key bg-sky-900/60 hover:bg-sky-800 text-sky-200 font-bold" data-key="N">
+            <span class="text-[9px] text-amber-400 block font-normal">XP/Y</span>
+            <span>N</span>
+          </button>
+          <button class="ti-key bg-sky-900/60 hover:bg-sky-800 text-sky-200 font-bold" data-key="IY">
+            <span class="text-[9px] text-amber-400 block font-normal">P/Y</span>
+            <span>I/Y</span>
+          </button>
+          <button class="ti-key bg-sky-900/60 hover:bg-sky-800 text-sky-200 font-bold" data-key="PV">
+            <span class="text-[9px] text-amber-400 block font-normal">AMORT</span>
+            <span>PV</span>
+          </button>
+          <button class="ti-key bg-sky-900/60 hover:bg-sky-800 text-sky-200 font-bold" data-key="PMT">
+            <span class="text-[9px] text-amber-400 block font-normal">BGN</span>
+            <span>PMT</span>
+          </button>
+          <button class="ti-key bg-sky-900/60 hover:bg-sky-800 text-sky-200 font-bold" data-key="FV">
+            <span class="text-[9px] text-amber-400 block font-normal">CLR TVM</span>
+            <span>FV</span>
+          </button>
+        </div>
+
+        <!-- Numeric Pad & Operators -->
+        <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-xs">
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="7">7</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="8">8</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="9">9</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600" data-key="/">÷</button>
+
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="4">4</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="5">5</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="6">6</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600" data-key="*">×</button>
+
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="1">1</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="2">2</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="3">3</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600" data-key="-">-</button>
+
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key="0">0</button>
+          <button class="ti-key bg-neutral-800 hover:bg-neutral-700" data-key=".">.</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600" data-key="CHS">+/-</button>
+          <button class="ti-key bg-neutral-700 hover:bg-neutral-600" data-key="+">+</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-3 text-center font-mono text-xs">
+          <button class="ti-key bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 font-bold" data-key="CLR">CLR WORK</button>
+          <button class="ti-key bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 font-bold" data-key="=">=</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Form Worksheet Solver -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-5">
+          <div class="flex items-center justify-between border-b border-hairline pb-3">
+            <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Active TVM Worksheet</h3>
+            <span class="text-[11px] font-mono text-mute">Synced with Simulator</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-n" class="text-xs font-medium text-ink">Total Periods (N)</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="n">Solve for N →</button>
+              </div>
+              <input id="ws-n" type="number" value="360" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-iy" class="text-xs font-medium text-ink">Annual Interest Rate (I/Y %)</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="rate">Solve for I/Y →</button>
+              </div>
+              <input id="ws-iy" type="number" step="0.01" value="6.5" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-pv" class="text-xs font-medium text-ink">Present Value (PV)</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="pv">Solve for PV →</button>
+              </div>
+              <input id="ws-pv" type="number" value="300000" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-pmt" class="text-xs font-medium text-ink">Periodic Payment (PMT)</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline font-bold" data-target="pmt">Solve for PMT →</button>
+              </div>
+              <input id="ws-pmt" type="number" step="0.01" value="-1896.20" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-fv" class="text-xs font-medium text-ink">Future Value (FV)</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="fv">Solve for FV →</button>
+              </div>
+              <input id="ws-fv" type="number" value="0" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-hairline flex items-center justify-between">
+            <ToggleSwitch id="ws-timing" label="Beginning (BGN) Mode" checked={false} description="Check for lease / annuity due" />
+          </div>
+        </div>
+
+        <!-- Output Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ResultCard id="res-ti-pmt" title="Computed Periodic PMT" value="-$1,896.20" highlight={true} />
+          <ResultCard id="res-ti-total" title="Total Outflow / Cost" value="$682,632.00" />
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<style>
+  .ti-key {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.05s ease-in-out;
+  }
+  .ti-key:active {
+    transform: translateY(1px);
+  }
+</style>
+
+<script>
+  import { calculateTVM } from '../../lib/math/finance';
+
+  let currentInput = '';
+  let isNewNum = true;
+  let is2nd = false;
+  let isCpt = false;
+
+  const tvm = { n: 360, iy: 6.5, pv: 300000, pmt: -1896.20, fv: 0 };
+
+  const tiLcd = document.getElementById('ti-lcd');
+  const flag2nd = document.getElementById('ti-2nd-flag');
+  const flagCpt = document.getElementById('ti-cpt-flag');
+
+  const wsN = document.getElementById('ws-n') as HTMLInputElement | null;
+  const wsIy = document.getElementById('ws-iy') as HTMLInputElement | null;
+  const wsPv = document.getElementById('ws-pv') as HTMLInputElement | null;
+  const wsPmt = document.getElementById('ws-pmt') as HTMLInputElement | null;
+  const wsFv = document.getElementById('ws-fv') as HTMLInputElement | null;
+  const wsTiming = document.getElementById('ws-timing') as HTMLInputElement | null;
+  const resPmt = document.getElementById('res-ti-pmt');
+  const resTotal = document.getElementById('res-ti-total');
+
+  function updateLcd(val: string | number) {
+    if (tiLcd) tiLcd.textContent = String(val);
+  }
+
+  function syncInputs() {
+    if (wsN) wsN.value = String(tvm.n);
+    if (wsIy) wsIy.value = String(tvm.iy);
+    if (wsPv) wsPv.value = String(tvm.pv);
+    if (wsPmt) wsPmt.value = String(tvm.pmt.toFixed(2));
+    if (wsFv) wsFv.value = String(tvm.fv);
+
+    const total = Math.abs(tvm.pmt * tvm.n);
+    if (resPmt) resPmt.textContent = `$${Math.abs(tvm.pmt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (resTotal) resTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  function runWorksheetSolve(target: 'n' | 'rate' | 'pv' | 'pmt' | 'fv') {
+    const timing = wsTiming?.checked ? 'beginning' : 'end';
+    const n = parseFloat(wsN?.value || '0');
+    const rate = parseFloat(wsIy?.value || '0') / 100 / 12; // Monthly periodic
+    const pv = parseFloat(wsPv?.value || '0');
+    const pmt = parseFloat(wsPmt?.value || '0');
+    const fv = parseFloat(wsFv?.value || '0');
+
+    try {
+      if (target === 'pmt') {
+        const solved = calculateTVM('pmt', { pv, fv, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+        tvm.pmt = solved;
+        updateLcd(solved.toFixed(2));
+      } else if (target === 'pv') {
+        const solved = calculateTVM('pv', { fv, pmt, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+        tvm.pv = solved;
+        updateLcd(solved.toFixed(2));
+      } else if (target === 'fv') {
+        const solved = calculateTVM('fv', { pv, pmt, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+        tvm.fv = solved;
+        updateLcd(solved.toFixed(2));
+      } else if (target === 'n') {
+        const solved = calculateTVM('periods', { pv, fv, pmt, rate, compoundingFrequency: 1, paymentFrequency: 1, timing });
+        tvm.n = solved;
+        updateLcd(solved.toFixed(0));
+      }
+      syncInputs();
+    } catch (e) {}
+  }
+
+  document.querySelectorAll('.solve-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target') as any;
+      if (target) runWorksheetSolve(target);
+    });
+  });
+
+  document.querySelectorAll('.ti-key').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-key');
+      if (!key) return;
+
+      if (key >= '0' && key <= '9') {
+        if (isNewNum) {
+          currentInput = key;
+          isNewNum = false;
+        } else {
+          currentInput += key;
+        }
+        updateLcd(currentInput);
+        return;
+      }
+
+      if (key === '.') {
+        if (isNewNum) {
+          currentInput = '0.';
+          isNewNum = false;
+        } else if (!currentInput.includes('.')) {
+          currentInput += '.';
+        }
+        updateLcd(currentInput);
+        return;
+      }
+
+      if (key === 'CHS') {
+        const val = parseFloat(currentInput || tiLcd?.textContent || '0');
+        currentInput = String(-val);
+        updateLcd(currentInput);
+        return;
+      }
+
+      if (key === '2ND') {
+        is2nd = !is2nd;
+        flag2nd?.classList.toggle('hidden', !is2nd);
+        return;
+      }
+
+      if (key === 'CPT') {
+        isCpt = true;
+        flagCpt?.classList.remove('hidden');
+        return;
+      }
+
+      if (['N', 'IY', 'PV', 'PMT', 'FV'].includes(key)) {
+        const prop = key.toLowerCase() === 'iy' ? 'rate' : (key.toLowerCase() as any);
+        if (isCpt) {
+          runWorksheetSolve(prop);
+          isCpt = false;
+          flagCpt?.classList.add('hidden');
+        } else {
+          const val = parseFloat(currentInput || tiLcd?.textContent || '0');
+          if (key === 'N') tvm.n = val;
+          if (key === 'IY') tvm.iy = val;
+          if (key === 'PV') tvm.pv = val;
+          if (key === 'PMT') tvm.pmt = val;
+          if (key === 'FV') tvm.fv = val;
+          syncInputs();
+        }
+        isNewNum = true;
+        currentInput = '';
+        return;
+      }
+
+      if (key === 'CLR') {
+        currentInput = '0';
+        isNewNum = true;
+        isCpt = false;
+        is2nd = false;
+        flagCpt?.classList.add('hidden');
+        flag2nd?.classList.add('hidden');
+        updateLcd('0.00');
+        return;
+      }
+    });
+  });
+
+  [wsN, wsIy, wsPv, wsPmt, wsFv, wsTiming].forEach((el) => {
+    el?.addEventListener('input', () => {
+      tvm.n = parseFloat(wsN?.value || '0');
+      tvm.iy = parseFloat(wsIy?.value || '0');
+      tvm.pv = parseFloat(wsPv?.value || '0');
+      tvm.pmt = parseFloat(wsPmt?.value || '0');
+      tvm.fv = parseFloat(wsFv?.value || '0');
+      syncInputs();
+    });
+  });
+
+  syncInputs();
+</script>

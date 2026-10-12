@@ -6,7 +6,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 ---
 
-<Layout title={t('contact.title', 'Contact Us - FinCompute')} description={t('contact.intro')} lang={lang}>
+<Layout title={t('contact.title', 'Contact Us - financialcalculatorapp.com')} description={t('contact.intro')} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('contact.heading', 'Contact Us.')}</h1>
 
@@ -16,7 +16,7 @@ const t = useTranslations(lang);
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.email.heading', 'Email')}</h2>
     <p>
-      {t('contact.email.text', 'You can reach us directly at')} <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>. {t('contact.email.subtext', 'We aim to respond within a few business days.')}
+      {t('contact.email.text', 'You can reach us directly at')} <a href="mailto:hello@financialcalculatorapp.com" class="text-link hover:underline">hello@financialcalculatorapp.com</a>. {t('contact.email.subtext', 'We aim to respond within a few business days.')}
     </p>
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.bugs.heading', 'Bug Reports')}</h2>
@@ -37,7 +37,7 @@ const t = useTranslations(lang);
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('contact.partnerships.heading', 'Partnerships')}</h2>
     <p>
-      {t('contact.partnerships.text', 'For business inquiries or partnership opportunities, reach out to')} <a href="mailto:hello@fincompute.com" class="text-link hover:underline">hello@fincompute.com</a>.
+      {t('contact.partnerships.text', 'For business inquiries or partnership opportunities, reach out to')} <a href="mailto:hello@financialcalculatorapp.com" class="text-link hover:underline">hello@financialcalculatorapp.com</a>.
     </p>
   </article>
 </Layout>

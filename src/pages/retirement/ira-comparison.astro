@@ -83,13 +83,13 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-winner">
-          <ResultCard title="Advantage Winner" value="Roth IRA Wins" highlight={true} description="The plan that provides the highest net wealth at retirement." />
+          <ResultCard title="Advantage Winner" value="--" highlight={true} description="The plan that provides the highest net wealth at retirement." />
         </div>
         <div id="res-roth">
-          <ResultCard title="Roth IRA Net Value" value="$1,037,682.00" />
+          <ResultCard title="Roth IRA Net Value" value="--" />
         </div>
         <div id="res-traditional">
-          <ResultCard title="Traditional Net Value" value="$882,029.70" />
+          <ResultCard title="Traditional Net Value" value="--" />
         </div>
       </div>
 
@@ -107,11 +107,11 @@ const faqs = [
         <div class="text-xs space-y-2">
           <div class="flex justify-between">
             <span class="text-body font-medium">Annual Tax Saved (Traditional)</span>
-            <span class="font-mono text-ink text-right" id="savings-annual">$1,540.00 / yr</span>
+            <span class="font-mono text-ink text-right" id="savings-annual">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
             <span class="text-body font-medium">Cumulative Lifetime Tax Savings</span>
-            <span class="font-mono text-ink text-right" id="savings-cum">$53,900.00</span>
+            <span class="font-mono text-ink text-right" id="savings-cum">--</span>
           </div>
         </div>
       </div>
@@ -246,7 +246,7 @@ const faqs = [
             {
               label: 'Roth IRA (Tax-Free Net)',
               data: roth,
-              borderColor: '#0070f3',
+              borderColor: '#10b981',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -254,7 +254,7 @@ const faqs = [
             {
               label: 'Traditional IRA (Post-Tax Net)',
               data: trad,
-              borderColor: '#7928ca',
+              borderColor: '#6366f1',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -271,11 +271,9 @@ const faqs = [
           },
           scales: {
             x: {
-              grid: { color: '#ebebeb' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -293,7 +291,6 @@ const faqs = [
   [currentAgeInput, retirementAgeInput, contributionInput, rateInput, currentTaxInput, retirementTaxInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -313,9 +310,6 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      currentAgeInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -353,7 +347,15 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resWinner) resWinner.querySelector('.font-mono')!.textContent = '--';
+      if (resRoth) resRoth.querySelector('.font-mono')!.textContent = '--';
+      if (resTrad) resTrad.querySelector('.font-mono')!.textContent = '--';
+      if (savingsAnnual) savingsAnnual.textContent = '--';
+      if (savingsCum) savingsCum.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -361,8 +363,9 @@ const faqs = [
   syncInputsWithURL('ira-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resRoth && resRoth.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -11,12 +11,6 @@ export function getLangFromUrl(url: URL, currentLocale?: string): Lang {
       return currentLocale as Lang;
     }
     const lower = currentLocale.toLowerCase();
-    if (lower === 'zh-hans' || lower === 'zh-cn' || lower === 'zh' || lower.startsWith('zh-hans') || lower.startsWith('zh-cn')) {
-      return 'zh-cn';
-    }
-    if (lower === 'zh-hant' || lower === 'zh-tw' || lower.startsWith('zh-hant') || lower.startsWith('zh-tw')) {
-      return 'zh-tw';
-    }
     for (const key of Object.keys(languages)) {
       if (lower.startsWith(key)) return key as Lang;
     }
@@ -38,7 +32,6 @@ export function isRtl(lang: Lang | string): boolean {
 /**
  * Strips any locale prefix from the pathname.
  * e.g. /es/loan/mortgage -> /loan/mortgage
- * e.g. /zh-cn -> /
  */
 export function getPathWithoutLocale(pathname: string): string {
   const segments = pathname.split('/').filter(Boolean);
@@ -114,7 +107,7 @@ export interface HreflangItem {
 /**
  * Computes all hreflang markup links for SEO / Google search ranking.
  */
-export function getHreflangList(currentUrl: URL, siteUrl = 'https://fincompute.vercel.app'): HreflangItem[] {
+export function getHreflangList(currentUrl: URL, siteUrl = 'https://financialcalculatorapp.com'): HreflangItem[] {
   const baseUrl = siteUrl.replace(/\/+$/, '');
   const cleanPath = getPathWithoutLocale(currentUrl.pathname);
   const pathSuffix = cleanPath === '/' ? '' : (cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`);

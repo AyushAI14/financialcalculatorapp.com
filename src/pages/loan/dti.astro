@@ -83,13 +83,13 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-backend">
-          <ResultCard title="Back-End DTI (Total Debt)" value="30.0%" highlight={true} description="Total monthly debts divided by gross income. Target: Under 36%." />
+          <ResultCard title="Back-End DTI (Total Debt)" value="--" highlight={true} description="Total monthly debts divided by gross income. Target: Under 36%." />
         </div>
         <div id="res-frontend">
-          <ResultCard title="Front-End DTI (Housing)" value="22.5%" description="Housing expenses divided by gross income. Target: Under 28%." />
+          <ResultCard title="Front-End DTI (Housing)" value="--" description="Housing expenses divided by gross income. Target: Under 28%." />
         </div>
         <div id="res-total-debt">
-          <ResultCard title="Total Monthly Debts" value="$2,400.00" description="Sum of housing and all other recurring monthly debt payments." />
+          <ResultCard title="Total Monthly Debts" value="--" description="Sum of housing and all other recurring monthly debt payments." />
         </div>
       </div>
 
@@ -260,7 +260,6 @@ const faqs = [
   [incomeInput, housingInput, carInput, studentInput, creditInput, otherInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -280,9 +279,6 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      incomeInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -337,7 +333,23 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resBackend) resBackend.querySelector('.font-mono')!.textContent = '--';
+      if (resFrontend) resFrontend.querySelector('.font-mono')!.textContent = '--';
+      if (resTotalDebt) resTotalDebt.querySelector('.font-mono')!.textContent = '--';
+      const badgeFront = document.getElementById('badge-frontend');
+      const badgeBack = document.getElementById('badge-backend');
+      if (badgeFront) {
+        badgeFront.textContent = '--';
+        badgeFront.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full';
+      }
+      if (badgeBack) {
+        badgeBack.textContent = '--';
+        badgeBack.className = 'px-3 py-1 text-xs font-mono font-medium rounded-full';
+      }
+      const stepFront = document.getElementById('step-front');
+      const stepBack = document.getElementById('step-back');
+      if (stepFront) stepFront.innerHTML = 'Front-End Ratio = Monthly Housing Costs / Gross Monthly Income';
+      if (stepBack) stepBack.innerHTML = 'Back-End Ratio = (Monthly Housing + Other Debts) / Gross Monthly Income';
     }, 0);
   });
 
@@ -345,8 +357,9 @@ const faqs = [
   syncInputsWithURL('dti-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resBackend && resBackend.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

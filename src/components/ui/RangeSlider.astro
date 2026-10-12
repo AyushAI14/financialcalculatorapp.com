@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLanguageDefaultCurrency, getCurrencySymbol } from '../../lib/currency';
 
 interface Props {
   id: string;
@@ -10,19 +11,28 @@ interface Props {
   value: number;
   prefix?: string;
   suffix?: string;
+  name?: string;
 }
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 
-const { id, label, min, max, step = 1, value, prefix, suffix } = Astro.props;
+const { id, label, min, max, step = 1, value, prefix, suffix, name } = Astro.props;
 const localizedLabel = t(label, label);
+
+const defaultCurrency = getLanguageDefaultCurrency(lang);
+const defaultCurrencySymbol = getCurrencySymbol(defaultCurrency);
+const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
 ---
 <div class="flex flex-col gap-2">
   <div class="flex items-center justify-between">
-    <label for={id} class="text-sm font-medium text-ink">{localizedLabel}</label>
-    <div class="flex items-center gap-0.5 bg-canvas-soft-2 px-2 py-0.5 rounded border border-hairline text-xs font-mono font-medium text-ink shadow-[0_1px_2px_rgba(0,0,0,0.01)]">
-      {prefix && <span>{prefix}</span>}
+    <label for={id} class="text-xs font-mono font-bold uppercase tracking-wider text-muted">{localizedLabel}</label>
+    <div class="flex items-center gap-1 bg-soft px-2.5 py-0.5 rounded-full border border-ink text-xs font-mono font-bold text-ink shadow-[var(--control-shadow)]">
+      {prefix && (
+        <span data-currency-prefix={prefix === '$' ? "true" : undefined}>
+          {displayPrefix}
+        </span>
+      )}
       <span id={`${id}-val`}>{value}</span>
       {suffix && <span>{suffix}</span>}
     </div>
@@ -30,7 +40,7 @@ const localizedLabel = t(label, label);
   <div class="relative flex items-center gap-3 group">
     <button 
       type="button" 
-      class="slider-control-btn minus bg-canvas hover:bg-canvas-soft border border-hairline w-8 h-8 rounded-full flex items-center justify-center text-body hover:text-ink font-semibold select-none cursor-pointer transition-colors shadow-sm shrink-0" 
+      class="slider-control-btn minus bg-paper hover:bg-soft border border-ink w-8 h-8 rounded-full flex items-center justify-center text-ink font-bold select-none cursor-pointer transition-all shadow-[var(--control-shadow)] hover:shadow-[var(--control-shadow-hover)] shrink-0 active:scale-95" 
       data-target={id}
       aria-label="Decrease value"
     >
@@ -39,15 +49,20 @@ const localizedLabel = t(label, label);
     <input
       type="range"
       id={id}
+      name={name || id}
       min={min}
       max={max}
       step={step}
       value={value}
-      class="flex-1 h-1.5 bg-hairline rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none transition-colors group-hover:bg-hairline-strong [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:hover:scale-105 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:hover:scale-105 [&::-moz-range-thumb]:transition-transform"
+      data-base-min={min}
+      data-base-max={max}
+      data-base-step={step}
+      data-currency-slider={prefix === '$' ? "true" : undefined}
+      class="flex-1 h-2 bg-soft border border-ink/30 rounded-lg appearance-none cursor-pointer accent-input-accent focus:outline-none transition-colors group-hover:border-ink [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-input-accent [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-[var(--control-shadow)] [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-input-accent [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-ink [&::-moz-range-thumb]:shadow-[var(--control-shadow)] [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:transition-transform"
     />
     <button 
       type="button" 
-      class="slider-control-btn plus bg-canvas hover:bg-canvas-soft border border-hairline w-8 h-8 rounded-full flex items-center justify-center text-body hover:text-ink font-semibold select-none cursor-pointer transition-colors shadow-sm shrink-0" 
+      class="slider-control-btn plus bg-paper hover:bg-soft border border-ink w-8 h-8 rounded-full flex items-center justify-center text-ink font-bold select-none cursor-pointer transition-all shadow-[var(--control-shadow)] hover:shadow-[var(--control-shadow-hover)] shrink-0 active:scale-95" 
       data-target={id}
       aria-label="Increase value"
     >

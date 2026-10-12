@@ -87,18 +87,18 @@ const faqs = getCalculatorFaqs('compound-interest');
         <ResultCard 
           id="res-total"
           title="Ending Balance" 
-          value="$113,323.01" 
+          value="--" 
           highlight={true} 
         />
         <ResultCard 
           id="res-principal"
           title="Total Principal" 
-          value="$58,000.00" 
+          value="--" 
         />
         <ResultCard 
           id="res-interest"
           title="Interest Earned" 
-          value="$55,323.01" 
+          value="--" 
         />
       </div>
 
@@ -186,7 +186,8 @@ const faqs = getCalculatorFaqs('compound-interest');
     // Sync slider -> input
     sli.addEventListener('input', (e: any) => {
       inp.value = e.target.value;
-      performCalculation();
+      const displayVal = document.getElementById(`${sli.id}-val`);
+      if (displayVal) displayVal.textContent = sli.value;
     });
 
     // Sync input -> slider
@@ -197,8 +198,6 @@ const faqs = getCalculatorFaqs('compound-interest');
       // Update RangeSlider's label value directly
       const displayVal = document.getElementById(`${sli.id}-val`);
       if (displayVal) displayVal.textContent = sli.value;
-      
-      performCalculation();
     });
   }
 
@@ -298,16 +297,16 @@ const faqs = getCalculatorFaqs('compound-interest');
             {
               label: 'Total Deposits',
               data: principalData,
-              backgroundColor: '#171717',
-              borderColor: '#171717',
+              backgroundColor: '#3b82f6',
+              borderColor: '#3b82f6',
               borderWidth: 1,
               stack: 'stack0'
             },
             {
               label: 'Accrued Interest',
               data: interestData,
-              backgroundColor: '#0070f3',
-              borderColor: '#0070f3',
+              backgroundColor: '#10b981',
+              borderColor: '#10b981',
               borderWidth: 1,
               stack: 'stack0'
             }
@@ -346,7 +345,6 @@ const faqs = getCalculatorFaqs('compound-interest');
               }
             },
             y: {
-              grid: { color: '#ebebeb' },
               stacked: true,
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
@@ -382,16 +380,27 @@ const faqs = getCalculatorFaqs('compound-interest');
   }
 
   // Listeners
-  compoundingSelect.addEventListener('change', performCalculation);
-  timingCheckbox.addEventListener('change', performCalculation);
-  
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      const rootTotal = document.getElementById('res-total');
+      const rootPrincipal = document.getElementById('res-principal');
+      const rootInterest = document.getElementById('res-interest');
+      if (rootTotal) rootTotal.querySelector('.font-mono')!.textContent = '--';
+      if (rootPrincipal) rootPrincipal.querySelector('.font-mono')!.textContent = '--';
+      if (rootInterest) rootInterest.querySelector('.font-mono')!.textContent = '--';
+      const takeawayEl = document.getElementById('compound-takeaway');
+      if (takeawayEl) takeawayEl.classList.add('hidden');
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
   // Table toggle logic
@@ -408,9 +417,11 @@ const faqs = getCalculatorFaqs('compound-interest');
     });
   }
 
-  // Initial Calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    const rootTotal = document.getElementById('res-total');
+    if (rootTotal && rootTotal.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

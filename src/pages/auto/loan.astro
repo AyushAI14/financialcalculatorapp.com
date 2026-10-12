@@ -12,8 +12,8 @@ const faqs = getCalculatorFaqs('auto-loan');
 ---
 
 <CalculatorLayout 
-  title="Auto Loan Calculator" 
-  description="Estimate your monthly car payments, financed amounts, and overall cost of purchasing a vehicle. Factor in sales taxes, dealer fees, and trade-in credits."
+  title="Car Finance & Auto Loan Calculator" 
+  description="Estimate your monthly car finance repayments, auto loan interest rates, and overall purchase costs. Factor in sales taxes, dealer documentation fees, and trade-in credits."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -68,16 +68,16 @@ const faqs = getCalculatorFaqs('auto-loan');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-payment">
-          <ResultCard title="Monthly Payment" value="$594.32" highlight={true} />
+          <ResultCard title="Monthly Payment" value="--" highlight={true} />
         </div>
         <div id="res-financed">
-          <ResultCard title="Financed Amount" value="$30,650.00" />
+          <ResultCard title="Financed Amount" value="--" />
         </div>
         <div id="res-interest">
-          <ResultCard title="Total Interest" value="$5,009.20" />
+          <ResultCard title="Total Interest" value="--" />
         </div>
         <div id="res-cost">
-          <ResultCard title="Total Out-of-Pocket" value="$43,659.20" />
+          <ResultCard title="Total Out-of-Pocket" value="--" />
         </div>
       </div>
 
@@ -188,7 +188,7 @@ const faqs = getCalculatorFaqs('auto-loan');
           datasets: [
             {
               data: dataset,
-              backgroundColor: ['#171717', '#4d4d4d', '#0070f3'],
+              backgroundColor: ['#3b82f6', '#f59e0b', '#f43f5e'],
               borderWidth: 1
             }
           ]
@@ -219,23 +219,30 @@ const faqs = getCalculatorFaqs('auto-loan');
   }
 
   // Listeners
-  const allInputs = [priceInput, taxRateInput, feesInput, downpaymentInput, tradeinInput, rateInput, termSelect];
-  allInputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resPaymentCard) resPaymentCard.querySelector('.font-mono')!.textContent = '--';
+      if (resFinancedCard) resFinancedCard.querySelector('.font-mono')!.textContent = '--';
+      if (resInterestCard) resInterestCard.querySelector('.font-mono')!.textContent = '--';
+      if (resCostCard) resCostCard.querySelector('.font-mono')!.textContent = '--';
+      const takeawayEl = document.getElementById('auto-takeaway');
+      if (takeawayEl) takeawayEl.classList.add('hidden');
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resPaymentCard && resPaymentCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -61,13 +61,13 @@ const faqs = getCalculatorFaqs('emergency-fund');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-target-amount">
-          <ResultCard title="Target Fund Goal" value="$21,000.00" highlight={true} description="Total savings required to cover essential monthly expenses for the target duration." />
+          <ResultCard title="Target Fund Goal" value="--" highlight={true} description="Total savings required to cover essential monthly expenses for the target duration." />
         </div>
         <div id="res-shortfall">
-          <ResultCard title="Remaining Shortfall" value="$16,000.00" />
+          <ResultCard title="Remaining Shortfall" value="--" />
         </div>
         <div id="res-months-to-goal">
-          <ResultCard title="Months to Goal" value="64.0 months" />
+          <ResultCard title="Months to Goal" value="--" />
         </div>
       </div>
 
@@ -75,10 +75,10 @@ const faqs = getCalculatorFaqs('emergency-fund');
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
         <div class="flex justify-between text-xs font-mono text-mute uppercase tracking-wider">
           <span>Goal Progress</span>
-          <span id="progress-text">23.8%</span>
+          <span id="progress-text">--%</span>
         </div>
         <div class="w-full bg-canvas-soft border border-hairline rounded-full h-3.5 overflow-hidden">
-          <div id="progress-bar" class="bg-primary h-full rounded-full transition-all duration-500" style="width: 23.8%;"></div>
+          <div id="progress-bar" class="bg-primary h-full rounded-full transition-all duration-500" style="width: 0%;"></div>
         </div>
       </div>
 
@@ -157,7 +157,6 @@ const faqs = getCalculatorFaqs('emergency-fund');
   [expInput, savInput, monthsSelect, contribInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -175,9 +174,6 @@ const faqs = getCalculatorFaqs('emergency-fund');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      expInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -219,7 +215,11 @@ const faqs = getCalculatorFaqs('emergency-fund');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resTarget) resTarget.querySelector('.font-mono')!.textContent = '--';
+      if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = '--';
+      if (resMonths) resMonths.querySelector('.font-mono')!.textContent = '--';
+      if (progressText) progressText.textContent = '--%';
+      if (progressBar) progressBar.style.width = '0%';
     }, 0);
   });
 
@@ -227,8 +227,9 @@ const faqs = getCalculatorFaqs('emergency-fund');
   syncInputsWithURL('emergency-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resTarget && resTarget.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

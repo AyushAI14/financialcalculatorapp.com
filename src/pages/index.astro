@@ -6,322 +6,245 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-const calculators = [
-  {
-    category: t('cat.finance', 'Finance & Investment'),
-    links: [
-      { name: t('calc.tvm.name', 'TVM Calculator'), url: '/finance/tvm', badge: 'Popular' },
-      { name: t('calc.compound.name', 'Compound Interest Calculator'), url: '/finance/compound-interest' },
-      { name: t('calc.roi.name', 'ROI Calculator'), url: '/finance/roi' },
-      { name: t('calc.savingsgoal.name', 'Savings Goal Calculator'), url: '/finance/savings-goal' },
-      { name: t('calc.stockreturn.name', 'Stock Return Calculator'), url: '/finance/stock-return' },
-      { name: t('calc.capm.name', 'CAPM Calculator'), url: '/finance/capm' },
-      { name: t('calc.dividend.name', 'Dividend Calculator'), url: '/finance/dividend' },
-      { name: t('calc.inflation.name', 'Inflation Calculator'), url: '/finance/inflation', badge: 'New' },
-      { name: t('calc.paycheck.name', 'Paycheck Calculator'), url: '/finance/paycheck', badge: 'New' },
-      { name: t('calc.networth.name', 'Net Worth Tracker'), url: '/finance/net-worth', badge: 'New' },
-      { name: t('calc.emergencyfund.name', 'Emergency Fund Calculator'), url: '/finance/emergency-fund', badge: 'New' },
-      { name: t('calc.feeimpact.name', 'Investment Fee Calculator'), url: '/finance/fee-impact', badge: 'New' },
-      { name: t('calc.collegesavings.name', 'College Savings (529)'), url: '/finance/college-savings', badge: 'New' },
-      { name: t('calc.cryptodca.name', 'Crypto DCA Calculator'), url: '/finance/crypto-dca', badge: 'New' },
-    ]
-  },
-  {
-    category: t('cat.loan', 'Loan & Mortgage'),
-    links: [
-      { name: t('calc.loan.name', 'Loan Calculator'), url: '/loan/calculator', badge: 'Updated' },
-      { name: t('calc.mortgage.name', 'Mortgage Calculator'), url: '/loan/mortgage', badge: 'New' },
-      { name: t('calc.debtsnowball.name', 'Debt Snowball vs Avalanche'), url: '/loan/debt-payoff', badge: 'New' },
-      { name: t('calc.loanrefinance.name', 'Loan Refinance Calculator'), url: '/loan/refinance', badge: 'New' },
-      { name: t('calc.studentloan.name', 'Student Loan IDR Calculator'), url: '/loan/student-loan', badge: 'New' },
-      { name: t('calc.dti.name', 'Debt-to-Income (DTI) Calculator'), url: '/loan/dti', badge: 'New' },
-      { name: t('calc.apr.name', 'APR Calculator'), url: '/loan/apr' },
-      { name: t('calc.rentvsbuy.name', 'Rent vs Buy Calculator'), url: '/loan/rent-vs-buy' },
-      { name: t('calc.homeaffordability.name', 'Home Affordability Calculator'), url: '/loan/home-affordability' },
-    ]
-  },
-  {
-    category: t('cat.retirement', 'Retirement'),
-    links: [
-      { name: t('calc.retirement.name', 'Retirement Planner'), url: '/retirement/planner' },
-      { name: t('calc.401k.name', '401k Contribution Calculator'), url: '/retirement/401k' },
-      { name: t('calc.iracomparison.name', 'Roth vs Trad IRA'), url: '/retirement/ira-comparison', badge: 'New' },
-    ]
-  },
-  {
-    category: t('cat.credit', 'Credit Card & Auto'),
-    links: [
-      { name: t('calc.creditcardpayoff.name', 'Credit Card Payoff Calculator'), url: '/credit-card/payoff' },
-      { name: t('calc.autoloan.name', 'Auto Loan Calculator'), url: '/auto/loan' },
-    ]
-  },
-  {
-    category: t('cat.misc', 'Miscellaneous'),
-    links: [
-      { name: t('calc.tip.name', 'Tip Calculator'), url: '/misc/tip' },
-      { name: t('calc.discount.name', 'Discount and Tax Calculator'), url: '/misc/discount' },
-    ]
-  }
-];
+import { getLocalizedCategories, getAllCalculatorsFlat } from '../lib/calculators';
+
+const categories = getLocalizedCategories(t);
+const allCalculatorsFlat = getAllCalculatorsFlat(t);
 ---
 
 <Layout title={t('site.title')} description={t('site.description')} lang={lang}>
-  <!-- Interactive Math Watermark Background (Full Page Dense Pattern) -->
-  <svg class="absolute inset-x-0 top-16 bottom-0 w-full h-full pointer-events-none select-none z-0 text-ink/[0.22] dark:text-ink/[0.10]" fill="none" stroke="currentColor" stroke-width="1">
-    <defs>
-      <pattern id="math-pattern" width="240" height="240" patternUnits="userSpaceOnUse">
-        <!-- Faint Graph Paper Grid Lines -->
-        <path d="M 0 120 L 240 120 M 120 0 L 120 240" stroke="currentColor" stroke-opacity="0.1" stroke-dasharray="1 4" />
-
-        <!-- Right Triangle -->
-        <path d="M 10 30 L 40 30 L 40 10 Z" />
-        <path d="M 35 30 L 35 25 L 40 25" />
-        <text x="10" y="38" font-family="monospace" font-size="7" fill="currentColor">a²+b²=c²</text>
-
-        <!-- FV Formula -->
-        <text x="60" y="15" font-family="monospace" font-size="10" font-weight="bold" fill="currentColor">FV=PV(1+r)ⁿ</text>
-        
-        <!-- % sign -->
-        <text x="10" y="58" font-family="monospace" font-size="11" fill="currentColor">%</text>
-
-        <!-- Derivative -->
-        <text x="160" y="20" font-family="monospace" font-size="9" fill="currentColor">dy/dx=f'(x)</text>
-        <text x="160" y="35" font-family="monospace" font-size="9" fill="currentColor">∫x²dx=x³/3</text>
-
-        <!-- Sine Wave Graph -->
-        <path d="M 10 120 Q 25 100 40 120 T 70 120" stroke-width="1.2" />
-        <text x="15" y="132" font-family="monospace" font-size="7" fill="currentColor">y=sin(x)</text>
-
-        <!-- ROI Formula -->
-        <text x="10" y="80" font-family="monospace" font-size="10" font-weight="bold" fill="currentColor">ROI=(G-C)/C</text>
-
-        <!-- Limit formula -->
-        <text x="90" y="50" font-family="monospace" font-size="9" fill="currentColor">lim(1+1/n)ⁿ=e</text>
-
-        <!-- Normal Bell Curve -->
-        <path d="M 130 110 C 150 110 155 110 162 90 C 169 70 174 70 181 90 C 188 110 193 110 213 110" stroke-width="1.2" />
-        <text x="150" y="120" font-family="monospace" font-size="7" fill="currentColor">N(μ,σ²)</text>
-
-        <!-- Venn Diagram -->
-        <circle cx="105" cy="95" r="10" />
-        <circle cx="115" cy="95" r="10" />
-        <text x="106" y="97" font-family="monospace" font-size="6" fill="currentColor">A∩B</text>
-
-        <!-- Sigma Summation -->
-        <text x="100" y="160" font-family="monospace" font-size="10" fill="currentColor">Σ x_i = N*μ</text>
-
-        <!-- CAGR Bar Chart -->
-        <path d="M 10 205 L 55 205" />
-        <rect x="15" y="190" width="6" height="15" />
-        <rect x="25" y="180" width="6" height="25" />
-        <rect x="35" y="170" width="6" height="35" />
-        <text x="15" y="215" font-family="monospace" font-size="7" fill="currentColor">CAGR</text>
-
-        <!-- Matrix -->
-        <path d="M 125 180 L 120 180 L 120 210 L 125 210 M 150 180 L 155 180 L 155 210 L 150 210" />
-        <text x="126" y="192" font-family="monospace" font-size="8" fill="currentColor">a b</text>
-        <text x="126" y="204" font-family="monospace" font-size="8" fill="currentColor">c d</text>
-
-        <!-- CAPM formula -->
-        <text x="80" y="180" font-family="monospace" font-size="9" fill="currentColor">E(Ri)=Rf+β(Rm-Rf)</text>
-
-        <!-- Pie Chart -->
-        <circle cx="190" cy="180" r="15" />
-        <path d="M 190 180 L 190 165 M 190 180 L 202 190" />
-        <text x="210" y="183" font-family="monospace" font-size="7" fill="currentColor">π=3.14</text>
-
-        <!-- Simple Interest -->
-        <text x="120" y="230" font-family="monospace" font-size="10" fill="currentColor">I = P*r*t</text>
-
-        <!-- Integral -->
-        <text x="15" y="230" font-family="monospace" font-size="10" fill="currentColor">∫ e^x dx = e^x</text>
-
-        <!-- Scattered Symbols & Variables (Denser Filler) -->
-        <text x="120" y="30" font-family="monospace" font-size="10" fill="currentColor">Σ</text>
-        <text x="220" y="60" font-family="monospace" font-size="12" fill="currentColor">$</text>
-        <text x="225" y="145" font-family="monospace" font-size="10" fill="currentColor">θ</text>
-        <text x="80" y="100" font-family="monospace" font-size="10" fill="currentColor">λ</text>
-        <text x="135" y="140" font-family="monospace" font-size="12" fill="currentColor">√</text>
-        <text x="60" y="235" font-family="monospace" font-size="9" fill="currentColor">dx</text>
-        <text x="170" y="225" font-family="monospace" font-size="10" fill="currentColor">β</text>
-        <text x="100" y="220" font-family="monospace" font-size="12" fill="currentColor">α</text>
-        <text x="220" y="215" font-family="monospace" font-size="10" fill="currentColor">Δ</text>
-        <text x="10" y="150" font-family="monospace" font-size="11" fill="currentColor">x</text>
-        <text x="145" y="70" font-family="monospace" font-size="9" fill="currentColor">y</text>
-        <text x="50" y="115" font-family="monospace" font-size="10" fill="currentColor">z</text>
-        <text x="80" y="70" font-family="monospace" font-size="12" fill="currentColor">π</text>
-        <text x="180" y="75" font-family="monospace" font-size="9" fill="currentColor">e</text>
-        <text x="110" y="130" font-family="monospace" font-size="10" fill="currentColor">∑</text>
-        <text x="150" y="160" font-family="monospace" font-size="10" fill="currentColor">≈</text>
-        <text x="190" y="230" font-family="monospace" font-size="12" fill="currentColor">∞</text>
-        <text x="215" y="20" font-family="monospace" font-size="9" fill="currentColor">t</text>
-        <text x="50" y="230" font-family="monospace" font-size="10" fill="currentColor">P</text>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#math-pattern)" />
-  </svg>
-
   <!-- Hero Section -->
-  <section class="relative py-24 text-center max-w-4xl mx-auto space-y-6 overflow-visible">
-    <!-- Mesh Gradient Backdrop -->
-    <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-[140%] aspect-[2/1] max-w-[1200px] pointer-events-none opacity-[0.15] z-0" style="background: radial-gradient(circle at 50% 10%, #0070f3 0%, transparent 60%), radial-gradient(circle at 25% 20%, #7928ca 0%, transparent 50%), radial-gradient(circle at 75% 15%, #50e3c2 0%, transparent 50%), radial-gradient(circle at 50% 35%, #ff0080 0%, transparent 55%); filter: blur(70px);"></div>
-    
-    <div class="relative z-10 flex flex-col items-center space-y-6">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-canvas border border-hairline shadow-sm text-mute">
-        {t('hero.badge')}
-      </span>
-      <h1 class="text-5xl md:text-6xl font-semibold tracking-[-2.4px] text-ink leading-tight">
-        {t('hero.title')}
+  <section class="text-center pt-8 pb-6 max-w-3xl mx-auto space-y-3">
+    <div class="space-y-3">
+      <h1 class="font-display font-black text-4xl sm:text-5xl md:text-6xl tracking-tight text-ink leading-tight">
+        <span class="text-input-accent">Financial</span> calculators
       </h1>
-      <p class="text-lg text-body max-w-2xl mx-auto">
-        {t('hero.subtitle')}
+      <p class="text-sm sm:text-base text-muted font-sans max-w-xl mx-auto">
+        Fast, accurate financial calculators that run 100% in your browser. Private, free, and zero sign-up required.
       </p>
-      <div class="pt-8 flex items-center justify-center gap-4">
-        <a href="#categories-section" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary text-on-primary font-medium hover:bg-ink/90 transition-colors shadow-md animate-fade-in">
-          {t('hero.browse')}
-        </a>
-      </div>
     </div>
   </section>
 
-  <!-- Search & Recently Used Tray -->
-  <div class="max-w-2xl mx-auto mb-16 space-y-6 relative z-10 no-print">
-    <div class="relative flex items-center">
-      <svg class="absolute left-4 w-4 h-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-      <input 
-        type="text" 
-        id="calc-search" 
-        placeholder={t('hero.searchPlaceholder')} 
-        class="w-full h-12 bg-canvas text-ink text-sm border border-hairline rounded-lg pl-11 pr-4 focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-sm transition-colors"
-      />
+  <!-- Search Composer -->
+  <section class="max-w-2xl mx-auto mb-6" aria-label="Calculator search">
+    <div class="composer">
+      <label for="calc-search" class="block font-mono text-[11px] font-bold uppercase tracking-wider text-muted mb-2">
+        Find a calculator
+      </label>
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          id="calc-search"
+          placeholder="Type to search (e.g. mortgage, 401k, compound interest, loan)..."
+          autocomplete="off"
+          spellcheck="false"
+          class="w-full h-16 sm:h-20 bg-canvas text-ink text-lg sm:text-2xl font-display font-extrabold border-[1.5px] border-input-accent rounded-lg pl-5 pr-24 focus:outline-none focus:ring-2 focus:ring-input-accent transition-all placeholder:text-muted/50"
+        />
+        <button
+          id="clear-search-btn"
+          type="button"
+          class="card-action absolute right-3 px-3.5 py-1.5 text-xs font-mono font-bold uppercase"
+          aria-label="Clear search"
+        >
+          Clear
+        </button>
+      </div>
+      <div class="flex items-center justify-between mt-2.5 px-1 font-mono text-xs text-muted">
+        <span>🔒 100% private in browser</span>
+        <span id="result-count-label" class="font-bold text-ink">{allCalculatorsFlat.length} calculators</span>
+      </div>
     </div>
 
     <!-- Recently Used tray -->
-    <div id="recently-used-section" class="hidden p-4 bg-canvas border border-hairline rounded-lg text-left transition-all">
-      <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2.5">{t('recent.title')}</h3>
+    <div id="recently-used-section" class="hidden p-3.5 bg-paper border border-ink rounded-lg text-left transition-all mt-4">
+      <h3 class="text-[10px] font-mono text-muted uppercase font-bold tracking-wider mb-2">{t('recent.title')}</h3>
       <div id="recently-used-list" class="flex flex-wrap gap-2"></div>
-    </div>
-  </div>
-
-  <!-- "Identify Your Problem" Scenario Finder Section -->
-  <section class="max-w-6xl mx-auto py-12 border-b border-hairline relative z-10 no-print">
-    <div class="text-center max-w-xl mx-auto mb-10 space-y-2">
-      <span class="px-2.5 py-0.5 bg-link/10 border border-link/25 text-link font-mono text-[10px] rounded-full uppercase font-semibold">{t('scenario.badge', 'Real-World Answers')}</span>
-      <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-ink">{t('scenario.heading', 'What financial question are you trying to answer?')}</h2>
-      <p class="text-xs text-mute">{t('scenario.subheading', 'Select your current financial crossroad to get immediate math-backed insights.')}</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      
-      <!-- Card 1: Debt Payoff -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-violet-50 dark:bg-violet-950/40 border border-violet-100 dark:border-violet-900 flex items-center justify-center text-lg">⚡</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.1.title', '"I have multiple debts. How do I pay them off fastest?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.1.desc', 'Simulate and compare the Debt Snowball vs. Debt Avalanche strategies using your own numbers. Calculate exactly how many months and how much interest you will save.')}</p>
-        </div>
-        <a href={translatePath('/compare/snowball-vs-avalanche')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.1.cta', 'Compare Payoff Strategies →')}
-        </a>
-      </div>
-
-      <!-- Card 2: Retirement IRA -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 flex items-center justify-center text-lg">📈</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.2.title', '"Should I put my savings in a Roth or Traditional IRA?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.2.desc', 'Model your ending portfolio values by comparing pre-tax versus post-tax compounding growth based on your current marginal tax bracket and expected retirement tax rate.')}</p>
-        </div>
-        <a href={translatePath('/compare/roth-vs-traditional-ira')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.2.cta', 'Run IRA Tax Comparison →')}
-        </a>
-      </div>
-
-      <!-- Card 3: Home Buying -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 flex items-center justify-center text-lg">🏠</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.3.title', '"How much house can I actually afford to purchase?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.3.desc', 'Avoid the standard online traps. Determine your safe purchasing budget based on the 28/36 rule, incorporating down payments, local taxes, insurance, and HOA fees.')}</p>
-        </div>
-        <a href={translatePath('/loan/home-affordability')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.3.cta', 'Calculate Home Affordability →')}
-        </a>
-      </div>
-
-      <!-- Card 4: Loan fees (APR vs Nominal) -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 flex items-center justify-center text-lg">🏷️</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.4.title', '"How much do closing costs and fees increase my rate?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.4.desc', 'Lenders advertise low nominal interest rates, but closing fees raise your actual cost. Factor in all fees to calculate your true Annual Percentage Rate (APR).')}</p>
-        </div>
-        <a href={translatePath('/compare/apr-vs-nominal')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.4.cta', 'Calculate True Loan APR →')}
-        </a>
-      </div>
-
-      <!-- Card 5: Auto Financing -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-100 dark:border-cyan-900 flex items-center justify-center text-lg">🚗</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.5.title', '"Will sales tax and auto fees exceed my down payment?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.5.desc', 'Calculate out-of-pocket costs for a car loan. Grade your loan structure against the 20/4/10 rule of thumb to see if you risk going underwater on the vehicle.')}</p>
-        </div>
-        <a href={translatePath('/auto/loan')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.5.cta', 'Analyze Auto Financing →')}
-        </a>
-      </div>
-
-      <!-- Card 6: Credit Card Payoff -->
-      <div class="border border-hairline hover:border-link/40 bg-canvas p-6 rounded-lg shadow-sm hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between space-y-4 group">
-        <div class="space-y-3">
-          <div class="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900 flex items-center justify-center text-lg">💳</div>
-          <h3 class="text-sm font-semibold text-ink leading-tight">{t('scenario.6.title', '"How much interest will I pay if I only pay minimums?"')}</h3>
-          <p class="text-xs text-body leading-relaxed">{t('scenario.6.desc', 'Avoid the credit card minimum payment trap. Discover how many years it will take to be debt-free and calculate the massive interest savings from paying even $50 more.')}</p>
-        </div>
-        <a href={translatePath('/credit-card/payoff')} class="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:translate-x-1 transition-transform">
-          {t('scenario.6.cta', 'Simulate Credit Payoff →')}
-        </a>
-      </div>
-
     </div>
   </section>
 
-  <!-- Categories Grid -->
-  <section id="categories-section" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pt-12">
-    {calculators.map(cat => (
-      <div class="bg-canvas border border-hairline rounded-lg p-6 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col h-full group relative overflow-hidden">
-        
-        <!-- Subtle Top Gradient Decoration -->
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-canvas to-canvas group-hover:from-canvas-soft group-hover:to-canvas-soft transition-colors"></div>
+  <!-- Filter Bar -->
+  <div class="filter-bar max-w-4xl mx-auto mb-8 overflow-x-auto pb-2" aria-label="Filter calculator categories">
+    <div class="filter-list flex items-center gap-2 justify-center flex-wrap" role="group">
+      <button class="filter-button is-active" type="button" data-filter="all">
+        <span class="font-mono text-xs">✦</span>
+        <span>All</span>
+        <span class="filter-count">{allCalculatorsFlat.length}</span>
+      </button>
+      {categories.map(cat => (
+        <button class="filter-button" type="button" data-filter={cat.key}>
+          <span>{cat.icon}</span>
+          <span>{cat.name}</span>
+          <span class="filter-count">{cat.count}</span>
+        </button>
+      ))}
+    </div>
+  </div>
 
-        <h2 class="text-lg font-semibold tracking-[-0.6px] mb-4 flex items-center justify-between">
-          {cat.category}
-          <svg class="w-4 h-4 text-mute opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </h2>
-        
-        <ul class="space-y-3 flex-1">
-          {cat.links.map(link => (
-            <li>
-              <a href={translatePath(link.url)} class="group/link flex items-start gap-2.5 text-sm text-body hover:text-ink transition-colors py-1">
-                <span class="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 transition-colors bg-link group-hover/link:bg-link"></span>
-                <span class="flex-1 min-w-0 leading-normal font-medium text-ink/90 group-hover/link:text-link">
-                  {link.name}
-                </span>
-                {link.badge && (
-                  <span class="ml-auto flex-shrink-0 text-[10px] uppercase font-mono tracking-wider px-1.5 py-0.5 rounded-full bg-canvas-soft border border-hairline text-mute">
-                    {link.badge}
-                  </span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+  <!-- Results Section Heading -->
+  <div class="max-w-6xl mx-auto flex items-end justify-between gap-4 mb-4">
+    <div>
+      <h2 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-ink" id="results-heading-title">
+        Instant calculations
+      </h2>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono text-muted whitespace-nowrap">
+      <span><span id="visible-cards-count">{allCalculatorsFlat.length}</span> calculators</span>
+      <span>·</span>
+      <a href={translatePath('/calculators')} class="font-bold text-ink hover:underline">Full Directory →</a>
+    </div>
+  </div>
+
+  <!-- Style Grid -->
+  <section id="categories-section" class="max-w-6xl mx-auto style-grid mb-16" aria-label="Calculators list">
+    {allCalculatorsFlat.map(calc => (
+      <a
+        href={translatePath(calc.url)}
+        class="style-card group cursor-pointer transition-all no-underline text-inherit"
+        data-category={calc.categoryKey}
+        data-name={calc.name.toLowerCase()}
+        data-category-name={calc.categoryName.toLowerCase()}
+        data-snippet={calc.snippet.toLowerCase()}
+        data-calc-id={calc.id}
+      >
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="font-display font-bold text-base sm:text-lg tracking-tight text-ink group-hover:text-input-accent transition-colors leading-snug">
+            {calc.name}
+          </h3>
+          {calc.badge && (
+            <span class="text-[9px] font-mono uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-soft text-ink border border-line shrink-0">
+              {calc.badge}
+            </span>
+          )}
+        </div>
+
+        <div class="py-2 text-xs text-muted font-sans leading-relaxed group-hover:text-ink transition-colors flex items-start min-h-[44px]">
+          <span class="line-clamp-2">{calc.snippet}</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-2.5 border-t border-line/15 mt-auto">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-muted truncate max-w-[170px] flex items-center gap-1">
+            <span>{calc.icon}</span>
+            <span>{calc.categoryName}</span>
+          </span>
+          <span
+            class="card-action px-3 py-1.5 text-[11px] font-mono font-bold text-ink rounded-full"
+          >
+            Open →
+          </span>
+        </div>
+      </a>
     ))}
+  </section>
+
+  <!-- Empty Search Results State -->
+  <div id="no-results-state" class="hidden max-w-md mx-auto text-center py-16 px-4 border border-ink rounded-lg bg-paper mb-16">
+    <div class="text-3xl mb-3">🔍</div>
+    <h3 class="font-display font-bold text-lg text-ink mb-1">No calculators found</h3>
+    <p class="text-xs text-muted mb-4">Try searching for other terms like mortgage, 401k, or compound interest.</p>
+    <button id="reset-filter-btn" type="button" class="card-action px-4 py-2 text-xs font-mono font-bold text-ink hover:bg-soft">
+      Show All Calculators
+    </button>
+  </div>
+
+  <!-- "Identify Your Problem" Scenario Finder Section (fontsby editorial style) -->
+  <section class="max-w-6xl mx-auto py-12 border-t-2 border-line relative z-10 no-print">
+    <div class="text-center max-w-xl mx-auto mb-10 space-y-2">
+      <span class="px-3 py-1 bg-soft border border-line text-[10px] font-mono font-bold uppercase tracking-wider text-muted rounded-full inline-flex mb-2">{t('scenario.badge', 'Real-World Answers')}</span>
+      <h2 class="font-display font-black text-2xl sm:text-3xl tracking-tight text-ink">{t('scenario.heading', 'What financial question are you trying to answer?')}</h2>
+      <p class="text-xs text-muted font-sans">{t('scenario.subheading', 'Select your current financial crossroad to get immediate math-backed insights.')}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Card 1: Debt Payoff -->
+      <a href={translatePath('/compare/snowball-vs-avalanche')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">⚡</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.1.title', '"I have multiple debts. How do I pay them off fastest?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.1.desc', 'Simulate and compare the Debt Snowball vs. Debt Avalanche strategies using your own numbers. Calculate exactly how many months and how much interest you will save.')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Comparison</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.1.cta', 'Compare Payoff Strategies →')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Card 2: Retirement IRA -->
+      <a href={translatePath('/compare/roth-vs-traditional-ira')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">📈</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.2.title', '"Should I put my savings in a Roth or Traditional IRA?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.2.desc', 'Model your ending portfolio values by comparing pre-tax versus post-tax compounding growth based on your current marginal tax bracket and expected retirement tax rate.')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Tax Strategy</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.2.cta', 'Run IRA Tax Comparison →')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Card 3: Home Buying -->
+      <a href={translatePath('/loan/home-affordability')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">🏠</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.3.title', '"How much house can I actually afford to purchase?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.3.desc', 'Avoid the standard online traps. Determine your safe purchasing budget based on the 28/36 rule, incorporating down payments, local taxes, insurance, and HOA fees.')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Mortgage Math</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.3.cta', 'Calculate Home Affordability →')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Card 4: Loan fees (APR vs Nominal) -->
+      <a href={translatePath('/compare/apr-vs-nominal')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">🏷️</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.4.title', '"How much do closing costs and fees increase my rate?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.4.desc', 'Lenders advertise low nominal interest rates, but closing fees raise your actual cost. Factor in all fees to calculate your true Annual Percentage Rate (APR).')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Hidden Fees</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.4.cta', 'Calculate True Loan APR →')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Card 5: Auto Financing -->
+      <a href={translatePath('/auto/loan')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">🚗</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.5.title', '"Will sales tax and auto fees exceed my down payment?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.5.desc', 'Calculate out-of-pocket costs for a car loan. Grade your loan structure against the 20/4/10 rule of thumb to see if you risk going underwater on the vehicle.')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Car Loan</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.5.cta', 'Analyze Auto Financing →')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Card 6: Credit Card Payoff -->
+      <a href={translatePath('/credit-card/payoff')} class="style-card p-6 flex flex-col justify-between space-y-4 group cursor-pointer no-underline text-inherit">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-full border border-ink bg-soft flex items-center justify-center text-lg shadow-[var(--control-shadow)]">💳</div>
+          <h3 class="font-display font-bold text-base text-ink group-hover:text-input-accent transition-colors leading-snug">{t('scenario.6.title', '"How much interest will I pay if I only pay minimums?"')}</h3>
+          <p class="text-xs text-muted leading-relaxed font-sans">{t('scenario.6.desc', 'Avoid the credit card minimum payment trap. Discover how many years it will take to be debt-free and calculate the massive interest savings from paying even $50 more.')}</p>
+        </div>
+        <div class="pt-2 border-t border-line/15 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-muted uppercase font-bold">Debt Free</span>
+          <span class="card-action px-3.5 py-2 text-[11px] font-mono font-bold text-ink rounded-full">
+            {t('scenario.6.cta', 'Simulate Credit Payoff →')}
+          </span>
+        </div>
+      </a>
+    </div>
   </section>
 </Layout>
 
@@ -329,29 +252,81 @@ const calculators = [
   import { safeGetJSON } from '../lib/storage';
   import { escapeHtml } from '../lib/utils';
 
-  // Search filtering logic
   const searchInput = document.getElementById('calc-search') as HTMLInputElement | null;
-  const categoryCards = document.querySelectorAll('#categories-section > div');
+  const clearBtn = document.getElementById('clear-search-btn');
+  const resultCountLabel = document.getElementById('result-count-label');
+  const visibleCardsCount = document.getElementById('visible-cards-count');
+  const noResultsState = document.getElementById('no-results-state');
+  const resetFilterBtn = document.getElementById('reset-filter-btn');
+  const filterButtons = document.querySelectorAll('.filter-button');
+  const cards = document.querySelectorAll<HTMLElement>('.style-card[data-calc-id]');
 
-  searchInput?.addEventListener('input', (e) => {
-    const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+  let activeFilter = 'all';
 
-    categoryCards.forEach((card) => {
-      const items = card.querySelectorAll('li');
-      let cardHasMatch = false;
+  // Filter and search executor
+  function applyFilters() {
+    const query = searchInput?.value.toLowerCase().trim() || '';
+    let visibleCount = 0;
 
-      items.forEach((li) => {
-        const text = li.textContent?.toLowerCase() || '';
-        if (text.includes(query)) {
-          (li as HTMLElement).style.display = 'block';
-          cardHasMatch = true;
-        } else {
-          (li as HTMLElement).style.display = 'none';
-        }
-      });
-      
-      (card as HTMLElement).style.display = cardHasMatch ? 'flex' : 'none';
+    cards.forEach((card) => {
+      const name = card.dataset.name || '';
+      const category = card.dataset.category || '';
+      const categoryName = card.dataset.categoryName || '';
+      const snippet = card.dataset.snippet || '';
+
+      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query);
+      const matchesCategory = activeFilter === 'all' || category === activeFilter;
+
+      if (matchesQuery && matchesCategory) {
+        card.style.display = 'grid';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
     });
+
+    if (resultCountLabel) {
+      resultCountLabel.textContent = `${visibleCount} calculator${visibleCount === 1 ? '' : 's'}`;
+    }
+    if (visibleCardsCount) {
+      visibleCardsCount.textContent = String(visibleCount);
+    }
+    if (noResultsState) {
+      noResultsState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  // Search input events
+  searchInput?.addEventListener('input', applyFilters);
+  clearBtn?.addEventListener('click', () => {
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
+      applyFilters();
+    }
+  });
+
+  // Filter button clicks
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      activeFilter = (btn as HTMLElement).dataset.filter || 'all';
+      applyFilters();
+    });
+  });
+
+  resetFilterBtn?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    activeFilter = 'all';
+    filterButtons.forEach((b) => {
+      if ((b as HTMLElement).dataset.filter === 'all') {
+        b.classList.add('is-active');
+      } else {
+        b.classList.remove('is-active');
+      }
+    });
+    applyFilters();
   });
 
   // Recently Used Listing
@@ -365,7 +340,7 @@ const calculators = [
       recentsList.innerHTML = recents
         .filter((item: any) => item && typeof item.url === 'string' && item.url.startsWith('/') && !item.url.startsWith('//'))
         .map((item: any) => `
-        <a href="${encodeURI(item.url)}" class="px-3 py-1.5 text-xs bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-full text-body hover:text-ink transition-colors flex items-center gap-1.5">
+        <a href="${encodeURI(item.url)}" class="px-3 py-1.5 text-xs bg-canvas hover:bg-soft border border-ink rounded-full text-ink font-mono font-bold transition-colors flex items-center gap-1.5 shadow-[var(--control-shadow)]">
           <span>⏱️</span>
           <span>${escapeHtml(item.name || 'Calculator')}</span>
         </a>

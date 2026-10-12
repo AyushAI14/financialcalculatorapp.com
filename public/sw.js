@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fincompute-cache-v3';
+const CACHE_NAME = 'financialcalculatorapp-cache-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/favicon.svg',

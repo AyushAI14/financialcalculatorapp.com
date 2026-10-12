@@ -2,7 +2,7 @@
 title: "Understanding APR: Nominal vs. Effective Interest Rates"
 description: "Learn how the Annual Percentage Rate (APR) differs from your base interest rate, and why closing costs and fees make APR a truer measure of loan cost."
 pubDate: 2026-07-11
-author: "FinCompute Team"
+author: "financialcalculatorapp.com Team"
 tags: ["loans", "APR", "mortgages"]
 ---
 

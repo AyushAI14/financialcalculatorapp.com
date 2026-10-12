@@ -8,7 +8,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 ---
 
 <Layout 
-  title="Roth IRA vs. Traditional IRA: Which is Better? - FinCompute.com" 
+  title="Roth IRA vs. Traditional IRA: Which is Better? - financialcalculatorapp.com" 
   description="Compare Roth and Traditional IRAs side-by-side to understand tax brackets, income limits, deductions, and tax-free retirement growth rules."
   lang={lang}
 >
@@ -140,13 +140,13 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         <div class="lg:col-span-6 space-y-6">
           <div class="flex flex-col gap-3">
             <div id="res-winner">
-              <ResultCard title="Advantage Winner" value="Roth IRA Wins" highlight={true} description="The plan that provides the highest net wealth at retirement." />
+              <ResultCard title="Advantage Winner" value="--" highlight={true} description="The plan that provides the highest net wealth at retirement." />
             </div>
             <div id="res-roth">
-              <ResultCard title="Roth IRA Net Value" value="$1,037,682.00" />
+              <ResultCard title="Roth IRA Net Value" value="--" />
             </div>
             <div id="res-traditional">
-              <ResultCard title="Traditional Net Value" value="$882,029.70" />
+              <ResultCard title="Traditional Net Value" value="--" />
             </div>
           </div>
 
@@ -164,11 +164,11 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             <div class="text-xs space-y-2">
               <div class="flex justify-between">
                 <span class="text-body font-medium">Annual Tax Saved (Traditional)</span>
-                <span class="font-mono text-ink text-right" id="savings-annual">$1,540.00 / yr</span>
+                <span class="font-mono text-ink text-right" id="savings-annual">--</span>
               </div>
               <div class="flex justify-between border-t border-hairline/60 pt-2">
                 <span class="text-body font-medium">Cumulative Lifetime Tax Savings</span>
-                <span class="font-mono text-ink text-right" id="savings-cum">$53,900.00</span>
+                <span class="font-mono text-ink text-right" id="savings-cum">--</span>
               </div>
             </div>
           </div>
@@ -299,7 +299,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             {
               label: 'Roth IRA (Tax-Free Net)',
               data: roth,
-              borderColor: '#0070f3',
+              borderColor: '#10b981',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -307,7 +307,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             {
               label: 'Traditional IRA (Post-Tax Net)',
               data: trad,
-              borderColor: '#7928ca',
+              borderColor: '#6366f1',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -324,11 +324,9 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
           },
           scales: {
             x: {
-              grid: { color: 'rgba(128, 128, 128, 0.08)' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: 'rgba(128, 128, 128, 0.08)' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -346,7 +344,6 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
   [currentAgeInput, retirementAgeInput, contributionInput, rateInput, currentTaxInput, retirementTaxInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -366,9 +363,6 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      currentAgeInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -406,13 +400,22 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resWinner) resWinner.querySelector('.font-mono')!.textContent = '--';
+      if (resRoth) resRoth.querySelector('.font-mono')!.textContent = '--';
+      if (resTrad) resTrad.querySelector('.font-mono')!.textContent = '--';
+      if (savingsAnnual) savingsAnnual.textContent = '--';
+      if (savingsCum) savingsCum.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
-  // Initial Calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resRoth && resRoth.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -62,13 +62,13 @@ const faqs = getCalculatorFaqs('fee-impact');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-difference">
-          <ResultCard title="Total Savings (Fee Difference)" value="$125,482.01" highlight={true} description="The extra money in your pocket by choosing Option A over Option B." />
+          <ResultCard title="Total Savings (Fee Difference)" value="--" highlight={true} description="The extra money in your pocket by choosing Option A over Option B." />
         </div>
         <div id="res-val-a">
-          <ResultCard title="Option A Final Value" value="$780,112.55" />
+          <ResultCard title="Option A Final Value" value="--" />
         </div>
         <div id="res-val-b">
-          <ResultCard title="Option B Final Value" value="$654,630.54" />
+          <ResultCard title="Option B Final Value" value="--" />
         </div>
       </div>
 
@@ -86,11 +86,11 @@ const faqs = getCalculatorFaqs('fee-impact');
         <div class="text-xs space-y-2">
           <div class="flex justify-between">
             <span class="text-body font-medium">Lost to Fees under Option A</span>
-            <span class="font-mono text-ink text-right" id="lost-a">$12,305.50</span>
+            <span class="font-mono text-ink text-right" id="lost-a">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
             <span class="text-body font-medium">Lost to Fees under Option B</span>
-            <span class="font-mono text-ink text-right" id="lost-b">$137,787.51</span>
+            <span class="font-mono text-ink text-right" id="lost-b">--</span>
           </div>
         </div>
       </div>
@@ -207,7 +207,7 @@ const faqs = getCalculatorFaqs('fee-impact');
             {
               label: 'Option A (Low Fee)',
               data: dataA,
-              borderColor: '#0070f3',
+              borderColor: '#10b981',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -215,7 +215,7 @@ const faqs = getCalculatorFaqs('fee-impact');
             {
               label: 'Option B (High Fee)',
               data: dataB,
-              borderColor: '#ff0080',
+              borderColor: '#f43f5e',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -223,7 +223,7 @@ const faqs = getCalculatorFaqs('fee-impact');
             {
               label: 'Gross (No Fees)',
               data: dataNoFee,
-              borderColor: '#ebebeb',
+              borderColor: '#8b5cf6',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderDash: [5, 5],
@@ -241,11 +241,9 @@ const faqs = getCalculatorFaqs('fee-impact');
           },
           scales: {
             x: {
-              grid: { color: '#ebebeb' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -263,7 +261,6 @@ const faqs = getCalculatorFaqs('fee-impact');
   [initialInput, monthlyInput, rateInput, yearsInput, feeAInput, feeBInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -283,9 +280,6 @@ const faqs = getCalculatorFaqs('fee-impact');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      initialInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -322,7 +316,15 @@ const faqs = getCalculatorFaqs('fee-impact');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resDiff) resDiff.querySelector('.font-mono')!.textContent = '--';
+      if (resValA) resValA.querySelector('.font-mono')!.textContent = '--';
+      if (resValB) resValB.querySelector('.font-mono')!.textContent = '--';
+      if (lostA) lostA.textContent = '--';
+      if (lostB) lostB.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -330,8 +332,9 @@ const faqs = getCalculatorFaqs('fee-impact');
   syncInputsWithURL('fee-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resDiff && resDiff.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

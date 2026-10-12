@@ -1,6 +1,5 @@
 import type { Lang } from './ui';
 import { guidesFr } from './calculator-guides-fr.ts';
-import { guidesIt } from './calculator-guides-it.ts';
 import { guidesPt } from './calculator-guides-pt.ts';
 
 export const guidesBatchEurope: Partial<Record<Lang, Record<string, string>>> = {
@@ -487,9 +486,6 @@ export const guidesBatchEurope: Partial<Record<Lang, Record<string, string>>> = 
 
   // French (fr)
   fr: guidesFr,
-
-  // Italian (it)
-  it: guidesIt,
 
   // Portuguese (pt)
   pt: guidesPt,

@@ -62,13 +62,13 @@ const faqs = getCalculatorFaqs('refinance');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-break-even">
-          <ResultCard title="Break-Even Point" value="62.4 months" highlight={true} description="The time required for your monthly interest savings to offset your closing costs." />
+          <ResultCard title="Break-Even Point" value="--" highlight={true} description="The time required for your monthly interest savings to offset your closing costs." />
         </div>
         <div id="res-monthly-savings">
-          <ResultCard title="Monthly Payment Savings" value="$80.12" description="Current monthly payment minus your new monthly payment." />
+          <ResultCard title="Monthly Payment Savings" value="--" description="Current monthly payment minus your new monthly payment." />
         </div>
         <div id="res-lifetime-savings">
-          <ResultCard title="Net Lifetime Savings" value="$23,836.00" description="Total remaining cost of current loan minus total cost of the new loan." />
+          <ResultCard title="Net Lifetime Savings" value="--" description="Total remaining cost of current loan minus total cost of the new loan." />
         </div>
       </div>
 
@@ -78,11 +78,11 @@ const faqs = getCalculatorFaqs('refinance');
         <div class="grid grid-cols-2 gap-4 divide-x divide-hairline">
           <div class="space-y-1">
             <span class="text-xs text-mute font-mono block">Current Loan P&I</span>
-            <span class="text-xl font-semibold text-ink font-mono" id="comp-current-pmt">$2,082.72</span>
+            <span class="text-xl font-semibold text-ink font-mono" id="comp-current-pmt">--</span>
           </div>
           <div class="pl-4 space-y-1">
             <span class="text-xs text-mute font-mono block">New Refinanced P&I</span>
-            <span class="text-xl font-semibold text-ink font-mono" id="comp-new-pmt">$1,647.33</span>
+            <span class="text-xl font-semibold text-ink font-mono" id="comp-new-pmt">--</span>
           </div>
         </div>
       </div>
@@ -233,7 +233,6 @@ const faqs = getCalculatorFaqs('refinance');
   [currentBal, currentRate, currentTerm, closingCostsInput, newRate, newTerm].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -253,9 +252,6 @@ const faqs = getCalculatorFaqs('refinance');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      currentBal.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -311,7 +307,18 @@ const faqs = getCalculatorFaqs('refinance');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resBreakEven) resBreakEven.querySelector('.font-mono')!.textContent = '--';
+      if (resSavings) resSavings.querySelector('.font-mono')!.textContent = '--';
+      if (resLifetime) resLifetime.querySelector('.font-mono')!.textContent = '--';
+      if (compCurrent) compCurrent.textContent = '--';
+      if (compNew) compNew.textContent = '--';
+
+      const stepSavings = document.getElementById('step-savings');
+      const stepBreakeven = document.getElementById('step-breakeven');
+      const stepLifetime = document.getElementById('step-lifetime');
+      if (stepSavings) stepSavings.innerHTML = 'Savings = CurrentPMT - NewPMT';
+      if (stepBreakeven) stepBreakeven.innerHTML = 'Break-Even Months = ClosingCosts / MonthlySavings';
+      if (stepLifetime) stepLifetime.innerHTML = 'Net Savings = (CurrentPMT × RemainingMonths) - (NewPMT × NewMonths + ClosingCosts)';
     }, 0);
   });
 
@@ -319,8 +326,9 @@ const faqs = getCalculatorFaqs('refinance');
   syncInputsWithURL('refinance-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resSavings && resSavings.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -7,7 +7,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 ---
 
 <Layout 
-  title="Debt Snowball vs. Debt Avalanche: Which is Better? - FinCompute.com" 
+  title="Debt Snowball vs. Debt Avalanche: Which is Better? - financialcalculatorapp.com" 
   description="Compare the Debt Snowball (smallest balance first) and Debt Avalanche (highest interest first) payoff strategies to decide which is best for your debt-free journey."
   lang={lang}
 >
@@ -171,11 +171,11 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             <div class="bg-canvas border border-hairline p-4 rounded-lg shadow-sm space-y-2">
               <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider">Snowball Strategy</h4>
               <div class="space-y-1">
-                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">0 mo</span>
+                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">--</span>
                 <span class="text-[9px] text-mute block">Payoff Timeline</span>
               </div>
               <div class="space-y-0.5">
-                <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">$0.00</span>
+                <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">--</span>
                 <span class="text-[9px] text-mute block">Total Interest Paid</span>
               </div>
             </div>
@@ -184,11 +184,11 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             <div class="bg-canvas border border-hairline p-4 rounded-lg shadow-sm space-y-2 border-link/30">
               <h4 class="text-[10px] font-mono text-link uppercase tracking-wider">Avalanche Strategy</h4>
               <div class="space-y-1">
-                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">0 mo</span>
+                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">--</span>
                 <span class="text-[9px] text-mute block">Payoff Timeline</span>
               </div>
               <div class="space-y-0.5">
-                <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">$0.00</span>
+                <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">--</span>
                 <span class="text-[9px] text-mute block">Total Interest Paid</span>
               </div>
             </div>
@@ -329,7 +329,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             {
               label: 'Debt Snowball',
               data: sbData,
-              borderColor: '#7928ca',
+              borderColor: '#8b5cf6',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -337,7 +337,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
             {
               label: 'Debt Avalanche',
               data: avData,
-              borderColor: '#0070f3',
+              borderColor: '#10b981',
               backgroundColor: 'transparent',
               tension: 0.1,
               borderWidth: 2
@@ -354,11 +354,9 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
           },
           scales: {
             x: {
-              grid: { color: 'rgba(128, 128, 128, 0.08)' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: 'rgba(128, 128, 128, 0.08)' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -376,7 +374,6 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
   [b1, r1, m1, b2, r2, m2, b3, r3, m3, budgetInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -403,9 +400,6 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      b1.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -449,13 +443,21 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (sbTime) sbTime.textContent = '--';
+      if (sbInterest) sbInterest.textContent = '--';
+      if (avTime) avTime.textContent = '--';
+      if (avInterest) avInterest.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
-  // Initial Calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (sbTime && sbTime.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

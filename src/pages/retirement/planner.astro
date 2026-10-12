@@ -64,13 +64,13 @@ const faqs = getCalculatorFaqs('retirement-planner');
       <!-- Results Grid -->
       <div class="flex flex-col gap-3">
         <div id="res-status">
-          <ResultCard title="Funding Status" value="Sufficient" highlight={true} description="Your plan will successfully fund your retirement." />
+          <ResultCard title="Funding Status" value="--" highlight={true} description="Submit form to run retirement forecast." />
         </div>
         <div id="res-actual">
-          <ResultCard title="Projected Nest Egg" value="$1,234,567" />
+          <ResultCard title="Projected Nest Egg" value="--" />
         </div>
         <div id="res-target">
-          <ResultCard title="Required Nest Egg" value="$987,654" />
+          <ResultCard title="Required Nest Egg" value="--" />
         </div>
       </div>
 
@@ -243,8 +243,7 @@ const faqs = getCalculatorFaqs('retirement-planner');
             {
               label: 'Nest Egg Balance',
               data: balances,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#10b981',
               fill: true,
               tension: 0.15,
               borderWidth: 2,
@@ -268,7 +267,6 @@ const faqs = getCalculatorFaqs('retirement-planner');
               ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -303,24 +301,27 @@ const faqs = getCalculatorFaqs('retirement-planner');
     scheduleBody.innerHTML = html;
   }
 
-  // Listeners
-  const allInputs = [
-    currentAgeInput, retireAgeInput, lifeExpInput,
-    currentSavingsInput, contributionInput, incomeNeededInput,
-    inflationInput, returnPreInput, returnPostInput
-  ];
-
-  allInputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resStatusCard) {
+        resStatusCard.querySelector('.font-mono')!.textContent = '--';
+        resStatusCard.querySelector('p')!.textContent = 'Submit form to run retirement forecast.';
+        resStatusCard.querySelector('.p-6')?.classList.remove('bg-error-soft', 'text-error-deep', 'border-error');
+        resStatusCard.querySelector('.p-6')?.classList.add('bg-canvas-soft', 'border-hairline-strong');
+      }
+      if (resActualCard) resActualCard.querySelector('.font-mono')!.textContent = '--';
+      if (resTargetCard) resTargetCard.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+    }, 0);
   });
 
   // Table toggle
@@ -337,9 +338,10 @@ const faqs = getCalculatorFaqs('retirement-planner');
     });
   }
 
-  // Initial Calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resActualCard && resActualCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

@@ -8,8 +8,6 @@ export function initClientLocalization() {
   const getTargetLang = (): string => {
     const htmlLang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
     if (htmlLang && htmlLang !== 'en') {
-      if (htmlLang.startsWith('zh-cn') || htmlLang.startsWith('zh-hans') || htmlLang === 'zh') return 'zh-cn';
-      if (htmlLang.startsWith('zh-tw') || htmlLang.startsWith('zh-hant')) return 'zh-tw';
       return htmlLang.split('-')[0];
     }
     const pathParts = window.location.pathname.split('/').filter(Boolean);
@@ -95,7 +93,7 @@ export function initClientLocalization() {
         if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
           const raw = node.nodeValue;
           // Avoid translating pure numbers or currencies
-          if (/^[\s0-9.,$%€£₹+\-/()]+$/.test(raw)) return;
+          if (/^[\s0-9.,$%€£₹¥₩₽﷼RpNT+\-/()]+$/i.test(raw)) return;
 
           const translated = translateValue(raw);
           if (translated && translated !== raw) {

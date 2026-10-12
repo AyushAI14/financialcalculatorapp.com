@@ -54,10 +54,10 @@ const faqs = getCalculatorFaqs('inflation');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-purchasing-power">
-          <ResultCard title="Future Purchasing Power" value="$7,298.81" highlight={true} description="What today's cash amount will be worth in terms of buying power in the future." />
+          <ResultCard title="Future Purchasing Power" value="--" highlight={true} description="What today's cash amount will be worth in terms of buying power in the future." />
         </div>
         <div id="res-future-price">
-          <ResultCard title="Future Cost of Goods" value="$13,702.41" description="What costs $10,000 today will cost in the future under this inflation rate." />
+          <ResultCard title="Future Cost of Goods" value="--" description="What costs $10,000 today will cost in the future under this inflation rate." />
         </div>
       </div>
 
@@ -197,8 +197,7 @@ const faqs = getCalculatorFaqs('inflation');
             {
               label: 'Purchasing Power ($)',
               data,
-              borderColor: '#ff0080',
-              backgroundColor: 'rgba(255, 0, 128, 0.05)',
+              borderColor: '#f43f5e',
               tension: 0.1,
               fill: true,
               borderWidth: 2
@@ -213,11 +212,9 @@ const faqs = getCalculatorFaqs('inflation');
           },
           scales: {
             x: {
-              grid: { color: '#ebebeb' },
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -235,7 +232,6 @@ const faqs = getCalculatorFaqs('inflation');
   [amountInput, rateInput, yearsInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -252,9 +248,6 @@ const faqs = getCalculatorFaqs('inflation');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      amountInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -289,7 +282,16 @@ const faqs = getCalculatorFaqs('inflation');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resPower) resPower.querySelector('.font-mono')!.textContent = '--';
+      if (resPrice) resPrice.querySelector('.font-mono')!.textContent = '--';
+      const stepPrice = document.getElementById('step-future-price');
+      const stepPower = document.getElementById('step-purchasing-power');
+      if (stepPrice) stepPrice.innerHTML = 'FV = Amount × (1 + Rate)ⁿ';
+      if (stepPower) stepPower.innerHTML = 'Purchasing Power = Amount / (1 + Rate)ⁿ';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -297,8 +299,9 @@ const faqs = getCalculatorFaqs('inflation');
   syncInputsWithURL('inflation-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resPower && resPower.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

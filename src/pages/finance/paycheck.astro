@@ -67,10 +67,10 @@ const faqs = getCalculatorFaqs('paycheck');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-period-net">
-          <ResultCard title="Take-Home Pay per Paycheck" value="$2,034.62" highlight={true} description="Estimated net deposit amount in your bank account per pay period." />
+          <ResultCard title="Take-Home Pay per Paycheck" value="--" highlight={true} description="Estimated net deposit amount in your bank account per pay period." />
         </div>
         <div id="res-annual-net">
-          <ResultCard title="Annual Net Income" value="$52,900.00" description="Total take-home pay across the entire year." />
+          <ResultCard title="Annual Net Income" value="--" description="Total take-home pay across the entire year." />
         </div>
       </div>
 
@@ -90,15 +90,15 @@ const faqs = getCalculatorFaqs('paycheck');
         <div class="text-xs space-y-2">
           <div class="flex justify-between">
             <span class="text-body font-medium">Federal Income Tax</span>
-            <span class="font-mono text-ink" id="withhold-fed">$6,250.00 / yr</span>
+            <span class="font-mono text-ink" id="withhold-fed">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
             <span class="text-body font-medium">FICA Tax (SS + Medicare)</span>
-            <span class="font-mono text-ink" id="withhold-fica">$5,737.50 / yr</span>
+            <span class="font-mono text-ink" id="withhold-fica">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
             <span class="text-body font-medium">State Income Tax</span>
-            <span class="font-mono text-ink" id="withhold-state">$3,105.00 / yr</span>
+            <span class="font-mono text-ink" id="withhold-state">--</span>
           </div>
         </div>
       </div>
@@ -209,7 +209,7 @@ const faqs = getCalculatorFaqs('paycheck');
           datasets: [
             {
               data: [net, fed, fica, state, pre, post],
-              backgroundColor: ['#0070f3', '#7928ca', '#f5a623', '#ff0080', '#3291ff', '#50e3c2'],
+              backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'],
               borderWidth: 1
             }
           ]
@@ -232,7 +232,6 @@ const faqs = getCalculatorFaqs('paycheck');
   [grossInput, freqSelect, stateInput, preInput, postInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -251,9 +250,6 @@ const faqs = getCalculatorFaqs('paycheck');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      grossInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -301,7 +297,15 @@ const faqs = getCalculatorFaqs('paycheck');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resPeriodNet) resPeriodNet.querySelector('.font-mono')!.textContent = '--';
+      if (resAnnualNet) resAnnualNet.querySelector('.font-mono')!.textContent = '--';
+      if (withholdFed) withholdFed.textContent = '--';
+      if (withholdFica) withholdFica.textContent = '--';
+      if (withholdState) withholdState.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -309,8 +313,9 @@ const faqs = getCalculatorFaqs('paycheck');
   syncInputsWithURL('paycheck-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resPeriodNet && resPeriodNet.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

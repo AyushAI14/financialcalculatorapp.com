@@ -2,8 +2,15 @@
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
-import { getLangFromUrl, useTranslations, useTranslatedPath, getHreflangList, isRtl } from '../i18n/utils';
+import { getLangFromUrl, useTranslations, useTranslatedPath, getHreflangList, isRtl, getPathWithoutLocale } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import { getAllCurrencies, getLanguageDefaultCurrency } from '../lib/currency';
+
+const currentPath = getPathWithoutLocale(Astro.url.pathname);
+const isCalculatorsActive = currentPath === '/calculators' || currentPath.startsWith('/calculators/') || currentPath.startsWith('/finance/') || currentPath.startsWith('/loan/') || currentPath.startsWith('/emulators/') || currentPath.startsWith('/credit-card/') || currentPath.startsWith('/auto/') || currentPath.startsWith('/tax/') || currentPath.startsWith('/investing/') || currentPath.startsWith('/crypto/') || currentPath.startsWith('/mortgage/');
+const isBlogActive = currentPath === '/blog' || currentPath.startsWith('/blog/');
+const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
+const isContactActive = currentPath === '/contact' || currentPath.startsWith('/contact/');
 
 interface Props {
   title: string;
@@ -19,6 +26,9 @@ const rtl = isRtl(lang);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
+const defaultCurrency = getLanguageDefaultCurrency(lang);
+const allCurrencies = getAllCurrencies();
+
 const { 
   title, 
   description = t("site.description"),
@@ -29,13 +39,13 @@ const {
 const localizedPageTitle = t(title, title);
 const localizedPageDescription = description ? t(description, description) : t("site.description");
 
-const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://fincompute.com').replace(/\/+$/, '');
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
 const localizedPath = translatePath(Astro.url.pathname, lang);
 const formattedPath = localizedPath === '/' ? '/' : (localizedPath.endsWith('/') ? localizedPath : `${localizedPath}/`);
 const resolvedCanonical = canonicalUrl || `${siteOrigin}${formattedPath}`;
 const hreflangList = getHreflangList(Astro.url, siteOrigin);
-// og:locale requires BCP47 with underscore (e.g. en_US, zh_CN)
-const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.replace('-', '_');
+// og:locale requires BCP47 with underscore (e.g. en_US)
+const ogLocale = (lang as string).replace('-', '_');
 ---
 
 <!doctype html>
@@ -64,7 +74,7 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
     <meta property="og:title" content={localizedPageTitle} />
     <meta property="og:description" content={localizedPageDescription} />
     <meta property="og:locale" content={ogLocale} />
-    <meta property="og:site_name" content="FinCompute" />
+    <meta property="og:site_name" content="financialcalculatorapp.com" />
     <meta property="og:image" content={`${siteOrigin}/og-image.png`} />
 
     <!-- Twitter -->
@@ -74,15 +84,15 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
     <meta name="twitter:description" content={localizedPageDescription} />
     <meta name="twitter:image" content={`${siteOrigin}/og-image.png`} />
     
-    <!-- Preconnect to jsDelivr for faster font delivery -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <!-- Preconnect to Google Fonts for Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
-    <!-- Add Geist Font from Vercel -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css" />
+    <!-- Add Geist Mono Font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
     
-    <!-- Dark Mode Blocker Script -->
+    <!-- Dark Mode Blocker Script (dataset.theme sync) -->
     <script is:inline>
       const theme = (() => {
         try {
@@ -96,6 +106,7 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
         return 'light';
       })();
     
+      document.documentElement.dataset.theme = theme;
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
@@ -114,125 +125,298 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
       }
     </script>
   </head>
-  <body class="bg-canvas-soft text-ink font-sans antialiased selection:bg-primary selection:text-on-primary pb-24">
-    <!-- Navbar (Floating Pill) -->
-    <header class="sticky top-4 z-50 max-w-[950px] w-[92%] mx-auto bg-canvas/75 backdrop-blur-md border border-hairline rounded-full h-12 flex items-center px-4 sm:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] mt-4">
-      <div class="w-full flex items-center justify-between">
-        <!-- Logo -->
-        <a href={translatePath('/')} class="flex items-center gap-2 hover:opacity-85 transition-opacity">
-          <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <span class="font-bold text-xs tracking-tight text-ink font-mono">FinCompute</span>
-        </a>
+  <body class="bg-canvas text-ink font-sans antialiased selection:bg-ink selection:text-canvas min-h-screen flex flex-col">
+    <!-- Skip link for keyboard accessibility -->
+    <a class="skip-link fixed top-3 left-3 z-[100] -translate-y-24 focus:translate-y-0 px-4 py-2 bg-paper text-ink border-2 border-ink font-mono font-bold text-xs uppercase rounded transition-transform" href="#main-content">
+      Skip to content
+    </a>
+    <!-- Header (Site Header & Responsive Navigation) -->
+    <header class="site-header sticky top-0 z-50 w-full border-b-2 border-line bg-canvas/95 backdrop-blur-md">
+      <div class="page-shell min-h-[58px] sm:min-h-[66px] flex items-center justify-between gap-2 sm:gap-4 py-2 sm:py-2.5">
+        <div class="flex items-center gap-3 lg:gap-6 min-w-0">
+          <!-- Logo -->
+          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity flex items-center gap-2 shrink-0 select-none" aria-label="financialcalculatorapp.com home">
+            <span class="brand-mark shrink-0 w-8 h-8 text-xs sm:w-9 sm:h-9 sm:text-sm" aria-hidden="true">✦</span>
+            <span class="brand-name tracking-tight font-extrabold text-ink font-display text-sm sm:text-base lg:text-lg whitespace-nowrap">
+              <span class="inline sm:hidden">financialcalc</span>
+              <span class="hidden sm:inline">financialcalculatorapp</span>
+              <span class="text-input-accent">.com</span>
+            </span>
+          </a>
 
-        <!-- Center Capsule Links -->
-        <nav class="hidden md:flex items-center gap-0.5 bg-canvas-soft border border-hairline rounded-full p-0.5 shadow-inner">
-          <a href={translatePath('/#categories-section')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.calculators')}</a>
-          <a href={translatePath('/blog')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.blog')}</a>
-          <a href={translatePath('/about')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.about')}</a>
-          <a href={translatePath('/contact')} class="text-body text-[11px] font-mono font-medium hover:text-ink transition-colors px-3.5 py-1 rounded-full hover:bg-canvas">{t('nav.contact')}</a>
-        </nav>
+          <!-- Desktop Center Nav Links -->
+          <nav class="hidden lg:flex items-center gap-1" aria-label="Primary navigation">
+            <a
+              href={translatePath('/calculators')}
+              class:list={[
+                "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
+                isCalculatorsActive
+                  ? "bg-ink text-canvas font-bold shadow-xs"
+                  : "text-ink/80 hover:text-ink hover:bg-soft font-semibold"
+              ]}
+            >
+              {t('nav.calculators')}
+            </a>
+            <a
+              href={translatePath('/blog')}
+              class:list={[
+                "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
+                isBlogActive
+                  ? "bg-ink text-canvas font-bold shadow-xs"
+                  : "text-ink/80 hover:text-ink hover:bg-soft font-semibold"
+              ]}
+            >
+              {t('nav.blog')}
+            </a>
+            <a
+              href={translatePath('/about')}
+              class:list={[
+                "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
+                isAboutActive
+                  ? "bg-ink text-canvas font-bold shadow-xs"
+                  : "text-ink/80 hover:text-ink hover:bg-soft font-semibold"
+              ]}
+            >
+              {t('nav.about')}
+            </a>
+            <a
+              href={translatePath('/contact')}
+              class:list={[
+                "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
+                isContactActive
+                  ? "bg-ink text-canvas font-bold shadow-xs"
+                  : "text-ink/80 hover:text-ink hover:bg-soft font-semibold"
+              ]}
+            >
+              {t('nav.contact')}
+            </a>
+          </nav>
+        </div>
 
         <!-- Right side tools -->
-        <div class="flex items-center gap-1">
-          <!-- Language Selector -->
-          <div class="hidden sm:flex items-center mr-1">
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <!-- Language Selector (Tablet & Desktop) -->
+          <div class="hidden sm:flex items-center">
             <LanguagePicker id="navbar-language-select" lang={lang} />
           </div>
 
           <!-- Currency Selector -->
-          <div class="relative flex items-center mr-1">
-            <select id="currency-select" title="Rates: 1 USD = 0.92 EUR = 0.79 GBP = 83 INR" class="bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none" aria-label="Select currency">
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-              <option value="GBP">GBP (£)</option>
-              <option value="INR">INR (₹)</option>
+          <div class="relative flex items-center">
+            <select
+              id="currency-select"
+              title="Select display currency"
+              class="bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-2 sm:px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] max-w-[88px] xs:max-w-[115px] sm:max-w-none truncate"
+              aria-label="Select currency"
+              data-default-currency={defaultCurrency}
+            >
+              <option value="auto">✨ Auto ({defaultCurrency})</option>
+              {allCurrencies.map((c) => (
+                <option value={c.code}>
+                  {c.name}
+                </option>
+              ))}
             </select>
           </div>
 
+          <!-- Currency Mode Toggle (Tablet & Desktop) -->
+          <button
+            id="currency-mode-toggle"
+            type="button"
+            title="Toggle between FX rate conversion and 1:1 nominal units"
+            class="hidden sm:inline-flex items-center gap-1 bg-paper text-ink text-[10px] font-mono font-bold border border-ink rounded-full px-2.5 py-1 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
+            aria-label="Toggle currency conversion mode"
+          >
+            <span id="currency-mode-icon">💱</span>
+            <span id="currency-mode-text">FX</span>
+          </button>
+
           <!-- Theme Toggle -->
-          <button id="theme-toggle" class="p-1.5 rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors cursor-pointer border border-transparent hover:border-hairline" aria-label="Toggle dark mode">
-            <!-- Sun Icon (visible in dark mode) -->
-            <svg id="sun-icon" class="w-3.5 h-3.5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
-            </svg>
-            <!-- Moon Icon (visible in light mode) -->
-            <svg id="moon-icon" class="w-3.5 h-3.5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
+          <button
+            id="theme-toggle"
+            class="theme-toggle shrink-0"
+            type="button"
+            aria-label="Switch theme"
+            aria-pressed="false"
+          >
+            <span class="theme-toggle__thumb" aria-hidden="true">
+              <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="2.5"></circle>
+                <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.4 1.4M11.55 11.55l1.4 1.4M12.95 3.05l-1.4 1.4M4.45 11.55l-1.4 1.4"></path>
+              </svg>
+              <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 16 16">
+                <path d="M12.8 10.35A5.5 5.5 0 0 1 5.65 3.2 5.5 5.5 0 1 0 12.8 10.35Z"></path>
+              </svg>
+            </span>
           </button>
 
           <!-- Mobile Menu Button -->
-          <button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors cursor-pointer border border-transparent hover:border-hairline" aria-label="Open menu">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <button
+            id="mobile-menu-btn"
+            class="lg:hidden w-9 h-9 min-w-[36px] sm:w-10 sm:h-10 sm:min-w-[40px] rounded-full border border-ink bg-paper text-ink hover:bg-soft transition-colors cursor-pointer shadow-[var(--control-shadow)] flex items-center justify-center shrink-0"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <svg id="hamburger-icon" class="w-4 h-4 sm:w-5 sm:h-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
               <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 sm:w-5 sm:h-5 hidden transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
         </div>
       </div>
 
-      <!-- Mobile Menu overlay (Card style below the navbar) -->
-      <div id="mobile-menu" class="hidden md:hidden absolute left-0 right-0 top-14 bg-canvas/95 backdrop-blur-xl border border-hairline rounded-2xl p-4 shadow-xl z-50 animate-fade-in mx-auto w-full">
-        <nav class="flex flex-col gap-1">
-          <a href={translatePath('/#categories-section')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.calculators')}</a>
-          <a href={translatePath('/blog')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.blog')}</a>
-          <a href={translatePath('/about')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.about')}</a>
-          <a href={translatePath('/contact')} class="text-body text-xs font-mono font-medium hover:text-ink transition-colors px-4 py-2.5 rounded-xl hover:bg-canvas-soft-2">{t('nav.contact')}</a>
-          <div class="border-t border-hairline my-2"></div>
-          <a href={translatePath('/privacy')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.privacy')}</a>
-          <a href={translatePath('/terms')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.terms')}</a>
-          <a href={translatePath('/disclaimer')} class="text-mute text-[10px] font-mono hover:text-ink transition-colors px-4 py-2 rounded-xl hover:bg-canvas-soft-2">{t('nav.disclaimer')}</a>
-          <div class="pt-2 px-4 border-t border-hairline/60 mt-1">
-            <span class="text-[10px] font-mono text-mute block mb-1.5">{t('lang.select')}:</span>
-            <LanguagePicker id="mobile-language-select" lang={lang} />
+      <!-- Mobile Menu Dropdown Drawer -->
+      <div
+        id="mobile-menu"
+        class="hidden lg:hidden border-t-2 border-line bg-paper text-ink shadow-[var(--control-shadow-hover)] max-h-[calc(100dvh-58px)] sm:max-h-[calc(100dvh-66px)] overflow-y-auto"
+      >
+        <div class="page-shell py-4 sm:py-5 flex flex-col gap-4">
+          <!-- Primary Navigation Links -->
+          <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2" aria-label="Mobile primary navigation">
+            <a
+              href={translatePath('/calculators')}
+              class:list={[
+                "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
+                isCalculatorsActive
+                  ? "bg-ink text-canvas border-ink font-bold shadow-xs"
+                  : "bg-canvas/50 text-ink border-line/20 hover:bg-soft hover:border-ink font-semibold"
+              ]}
+            >
+              <span class="flex items-center gap-2"><span>🧮</span><span>{t('nav.calculators')}</span></span>
+              <span class:list={["text-[10px] px-2 py-0.5 rounded-full font-bold border", isCalculatorsActive ? "bg-canvas text-ink border-canvas" : "bg-soft text-ink border-line/20"]}>38 Tools</span>
+            </a>
+            <a
+              href={translatePath('/blog')}
+              class:list={[
+                "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
+                isBlogActive
+                  ? "bg-ink text-canvas border-ink font-bold shadow-xs"
+                  : "bg-canvas/50 text-ink border-line/20 hover:bg-soft hover:border-ink font-semibold"
+              ]}
+            >
+              <span class="flex items-center gap-2"><span>📝</span><span>{t('nav.blog')}</span></span>
+              <span class="text-[10px] text-muted">→</span>
+            </a>
+            <a
+              href={translatePath('/about')}
+              class:list={[
+                "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
+                isAboutActive
+                  ? "bg-ink text-canvas border-ink font-bold shadow-xs"
+                  : "bg-canvas/50 text-ink border-line/20 hover:bg-soft hover:border-ink font-semibold"
+              ]}
+            >
+              <span class="flex items-center gap-2"><span>✦</span><span>{t('nav.about')}</span></span>
+              <span class="text-[10px] text-muted">→</span>
+            </a>
+            <a
+              href={translatePath('/contact')}
+              class:list={[
+                "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
+                isContactActive
+                  ? "bg-ink text-canvas border-ink font-bold shadow-xs"
+                  : "bg-canvas/50 text-ink border-line/20 hover:bg-soft hover:border-ink font-semibold"
+              ]}
+            >
+              <span class="flex items-center gap-2"><span>✉️</span><span>{t('nav.contact')}</span></span>
+              <span class="text-[10px] text-muted">→</span>
+            </a>
+          </nav>
+
+          <!-- Explore & Comparisons -->
+          <div class="border-t border-line/15 pt-3">
+            <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-wider block mb-2 px-1">Resources</span>
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+              <a href={translatePath('/glossary')} class="px-3 py-2 rounded-lg bg-canvas/40 hover:bg-soft text-ink/90 border border-line/15 flex items-center gap-1.5 transition-colors min-h-[40px]">
+                <span>📖</span><span>Glossary</span>
+              </a>
+              <a href={translatePath('/compare/snowball-vs-avalanche')} class="px-3 py-2 rounded-lg bg-canvas/40 hover:bg-soft text-ink/90 border border-line/15 flex items-center gap-1.5 transition-colors min-h-[40px]">
+                <span>⚖️</span><span>Comparisons</span>
+              </a>
+            </div>
           </div>
-        </nav>
+
+          <!-- Mobile Settings Bar (Language & Conversion mode) -->
+          <div class="border-t border-line/15 pt-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
+              <LanguagePicker id="mobile-language-select" lang={lang} />
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">Conversion:</span>
+              <button
+                id="mobile-currency-mode-toggle"
+                type="button"
+                class="inline-flex items-center gap-1.5 bg-canvas text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-3 py-1.5 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
+              >
+                <span id="mobile-currency-mode-icon">💱</span>
+                <span id="mobile-currency-mode-text">FX Rate</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Legal & Info Footer Links -->
+          <div class="border-t border-line/15 pt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] font-mono text-muted">
+            <a href={translatePath('/privacy')} class="hover:text-ink transition-colors py-1">{t('nav.privacy')}</a>
+            <a href={translatePath('/terms')} class="hover:text-ink transition-colors py-1">{t('nav.terms')}</a>
+            <a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors py-1">{t('nav.disclaimer')}</a>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    <!-- Dimmed backdrop overlay when mobile menu is open -->
+    <div
+      id="mobile-menu-backdrop"
+      class="fixed inset-0 top-[58px] sm:top-[66px] bg-ink/25 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity duration-200"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Main Shell -->
+    <main id="main-content" class="page-shell flex-1 py-8">
       <slot />
     </main>
 
-    <footer class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-32 border-t border-hairline pt-16 pb-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
+    <!-- Footer (Site Footer) -->
+    <footer class="site-footer page-shell mt-24 border-t-2 border-line pt-14 pb-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-14">
         <!-- Col 1: Brand & Description -->
         <div class="lg:col-span-2 space-y-4">
-          <a href={translatePath('/')} class="flex items-center gap-2 hover:opacity-85 transition-opacity w-fit">
-            <div class="w-6 h-6 rounded-md bg-ink flex items-center justify-center text-canvas">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <span class="font-bold text-sm tracking-tight text-ink font-mono">FinCompute</span>
+          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity w-fit flex items-center gap-2" aria-label="financialcalculatorapp.com home">
+            <span class="brand-mark" aria-hidden="true">✦</span>
+            <span class="brand-name tracking-tight font-extrabold text-ink font-display text-base sm:text-lg">financialcalculatorapp<span class="text-input-accent">.com</span></span>
           </a>
-          <p class="text-xs text-mute leading-relaxed max-w-sm font-sans">
+          <p class="text-xs text-muted leading-relaxed max-w-sm font-sans">
             {t('footer.brand')}
           </p>
-          <p class="text-[10px] text-mute/80 leading-relaxed max-w-sm font-sans border-t border-hairline/60 pt-2.5">
+          <p class="text-[11px] text-muted/80 leading-relaxed max-w-sm font-sans border-t border-line/20 pt-2.5">
             <strong>{t('nav.disclaimer')}:</strong> {t('footer.disclaimer')}
           </p>
           <div class="pt-2 flex items-center gap-2">
-            <span class="text-[10px] font-mono text-mute">{t('lang.select')}:</span>
+            <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
             <LanguagePicker id="footer-language-select" lang={lang} />
           </div>
         </div>
 
         <!-- Col 2: Calculators -->
-        <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('nav.calculators')}</h4>
-          <ul class="space-y-2 text-xs font-sans text-mute">
+        <div class="space-y-3">
+          <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('nav.calculators')}</h4>
+          <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/finance/compound-interest')} class="hover:text-ink transition-colors">{t('calc.compound.name')}</a></li>
             <li><a href={translatePath('/finance/paycheck')} class="hover:text-ink transition-colors">{t('calc.paycheck.name')}</a></li>
             <li><a href={translatePath('/finance/net-worth')} class="hover:text-ink transition-colors">Net Worth Tracker</a></li>
             <li><a href={translatePath('/loan/mortgage')} class="hover:text-ink transition-colors">{t('calc.mortgage.name')}</a></li>
             <li><a href={translatePath('/finance/college-savings')} class="hover:text-ink transition-colors">College Savings (529)</a></li>
+            <li><a href={translatePath('/calculators')} class="font-bold text-ink hover:underline transition-colors">All 38 Calculators →</a></li>
           </ul>
         </div>
 
         <!-- Col 3: Comparisons -->
-        <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('footer.comparisons')}</h4>
-          <ul class="space-y-2 text-xs font-sans text-mute">
+        <div class="space-y-3">
+          <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('footer.comparisons')}</h4>
+          <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/compare/snowball-vs-avalanche')} class="hover:text-ink transition-colors">Snowball vs Avalanche</a></li>
             <li><a href={translatePath('/compare/roth-vs-traditional-ira')} class="hover:text-ink transition-colors">Roth vs Traditional IRA</a></li>
             <li><a href={translatePath('/compare/apr-vs-nominal')} class="hover:text-ink transition-colors">APR vs Nominal Interest</a></li>
@@ -241,9 +425,9 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
         </div>
 
         <!-- Col 4: Resources & Legal -->
-        <div class="space-y-4">
-          <h4 class="text-[10px] font-mono text-ink font-semibold uppercase tracking-wider">{t('footer.resources')}</h4>
-          <ul class="space-y-2 text-xs font-sans text-mute">
+        <div class="space-y-3">
+          <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('footer.resources')}</h4>
+          <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/blog')} class="hover:text-ink transition-colors">{t('nav.blog')}</a></li>
             <li><a href={translatePath('/glossary')} class="hover:text-ink transition-colors">Financial Glossary</a></li>
             <li><a href={translatePath('/about')} class="hover:text-ink transition-colors">{t('nav.about')}</a></li>
@@ -257,11 +441,11 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
       </div>
 
       <!-- Footer Bottom -->
-      <div class="border-t border-hairline pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-mute font-mono">
+      <div class="border-t border-line/20 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted font-mono">
         <div>
-          &copy; {new Date().getFullYear()} FinCompute. {t('footer.rights')}
+          &copy; {new Date().getFullYear()} financialcalculatorapp.com. {t('footer.rights')}
         </div>
-        <div class="flex items-center gap-2 text-mute/50 font-sans">
+        <div class="flex items-center gap-2 text-muted/70 font-sans">
           <span>{t('footer.tagline')}</span>
         </div>
       </div>
@@ -269,84 +453,389 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
 
     <!-- Theme Toggle, Localization & Mobile Menu logic -->
     <script>
-      import { safeGetItem, safeSetItem } from '../lib/storage';
+      import { safeSetItem } from '../lib/storage';
       import { initClientLocalization } from '../i18n/client-localize';
+      import {
+        getEffectiveCurrency,
+        isManualCurrencyOverride,
+        setManualCurrency,
+        resetCurrencyToAuto,
+        getCurrencyRate,
+        getCurrencyDecimals,
+        isSupportedCurrency,
+        getConversionMode,
+        toggleConversionMode,
+        type CurrencyCode,
+        type ConversionMode
+      } from '../lib/currency';
 
       initClientLocalization();
       document.addEventListener('astro:page-load', initClientLocalization);
 
       const themeToggleBtn = document.getElementById('theme-toggle');
+      const updateThemeToggleUI = () => {
+        if (!themeToggleBtn) return;
+        const isDark = document.documentElement.dataset.theme === 'dark' || document.documentElement.classList.contains('dark');
+        themeToggleBtn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+        themeToggleBtn.setAttribute('aria-pressed', String(isDark));
+      };
+
+      updateThemeToggleUI();
+
       themeToggleBtn?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.dataset.theme === 'dark' || document.documentElement.classList.contains('dark');
         const newTheme = isDark ? 'light' : 'dark';
-        if (isDark) {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.classList.add('light');
-          safeSetItem('theme', 'light');
-        } else {
+        document.documentElement.dataset.theme = newTheme;
+        if (newTheme === 'dark') {
           document.documentElement.classList.add('dark');
           document.documentElement.classList.remove('light');
-          safeSetItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
         }
+        safeSetItem('theme', newTheme);
+        updateThemeToggleUI();
         window.dispatchEvent(new CustomEvent('theme-change', { detail: newTheme }));
       });
 
-      // Currency Selection logic
-      const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
-      if (currencySelect) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlCurrency = urlParams.get('currency');
-        const allowedCurrencies = ['USD', 'EUR', 'GBP', 'INR'];
-        if (urlCurrency && allowedCurrencies.includes(urlCurrency)) {
-          safeSetItem('currency', urlCurrency);
-        }
-        let previousCurrency = safeGetItem('currency', 'USD');
-        currencySelect.value = previousCurrency;
-        currencySelect.addEventListener('change', () => {
-          const newCurrency = currencySelect.value;
-          const rates: Record<string, number> = {
-            USD: 1.0,
-            EUR: 0.92,
-            GBP: 0.79,
-            INR: 83.0
-          };
-          const oldRate = rates[previousCurrency] || 1.0;
-          const newRate = rates[newCurrency] || 1.0;
-          const ratio = newRate / oldRate;
+      // Currency Selection logic with auto-sync, anchor base USD tracking, preset scaling, and conversion modes
+      let currentActiveCurrency: CurrencyCode = 'USD';
+      let isApplyingPreset = false;
 
-          // Convert values on all inputs associated with currency.
-          // Keep full 2-decimal precision to avoid repeated-toggle drift.
-          if (ratio !== 1) {
-            document.querySelectorAll('[data-currency-prefix]').forEach(span => {
-              const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
-              if (input && input.value) {
-                const val = parseFloat(input.value.replace(/,/g, ''));
-                if (!isNaN(val) && isFinite(val) && Math.abs(val) <= 1e12) {
-                  const converted = val * ratio;
-                  input.value = Number(converted.toFixed(2)).toString();
-                  // Dispatch events to let individual calculator script recalculate
-                  input.dispatchEvent(new Event('input', { bubbles: true }));
-                  input.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-              }
-            });
+      function updateCurrencySliders(targetCurrency: CurrencyCode) {
+        const mode = getConversionMode();
+        const targetRate = mode === 'convert' ? (getCurrencyRate(targetCurrency) || 1.0) : 1.0;
+        const targetDecimals = getCurrencyDecimals(targetCurrency);
+
+        document.querySelectorAll('input[type="range"]').forEach(sliderEl => {
+          const slider = sliderEl as HTMLInputElement;
+          const pairedInputId = slider.id.replace(/-slider$/, '');
+          const pairedInput = document.getElementById(pairedInputId) as HTMLInputElement | null;
+          const isCurrency = pairedInput?.parentElement?.querySelector('[data-currency-prefix]') !== null
+            || slider.dataset.currencySlider === 'true';
+
+          if (!isCurrency) return;
+
+          // Anchor base min, max, step from initial USD attributes
+          if (!slider.dataset.baseMin) slider.dataset.baseMin = slider.min;
+          if (!slider.dataset.baseMax) slider.dataset.baseMax = slider.max;
+          if (!slider.dataset.baseStep) slider.dataset.baseStep = slider.step;
+
+          const baseMin = parseFloat(slider.dataset.baseMin) || 0;
+          const baseMax = parseFloat(slider.dataset.baseMax) || 100;
+          const baseStep = parseFloat(slider.dataset.baseStep) || 1;
+
+          const scaledMin = (mode === 'convert' && targetDecimals === 0)
+            ? Math.round(baseMin * targetRate)
+            : Number((baseMin * targetRate).toFixed(2));
+          const scaledMax = (mode === 'convert' && targetDecimals === 0)
+            ? Math.round(baseMax * targetRate)
+            : Number((baseMax * targetRate).toFixed(2));
+          const scaledStep = (mode === 'convert' && targetDecimals === 0)
+            ? Math.max(1, Math.round(baseStep * targetRate))
+            : Number((baseStep * targetRate).toFixed(2));
+
+          slider.min = scaledMin.toString();
+          slider.max = scaledMax.toString();
+          slider.step = scaledStep.toString();
+
+          // Sync slider value to paired input
+          if (pairedInput && pairedInput.value) {
+            const numVal = parseFloat(pairedInput.value);
+            if (!isNaN(numVal)) {
+              slider.value = numVal.toString();
+              const displayVal = document.getElementById(`${slider.id}-val`);
+              if (displayVal) displayVal.textContent = slider.value;
+            }
           }
-
-          safeSetItem('currency', newCurrency);
-          previousCurrency = newCurrency;
-          window.dispatchEvent(new CustomEvent('currency-change', { detail: newCurrency }));
         });
       }
 
+      function initCurrencyInputsAndSliders(activeCurrency: CurrencyCode) {
+        currentActiveCurrency = activeCurrency;
+        const mode = getConversionMode();
+        const targetRate = mode === 'convert' ? (getCurrencyRate(activeCurrency) || 1.0) : 1.0;
+        const targetDecimals = getCurrencyDecimals(activeCurrency);
+        let hasScaledAny = false;
+
+        // Check URL query parameters to know if user brought their own input values
+        const urlParams = new URLSearchParams(window.location.search);
+
+        document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+          const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+          if (!input) return;
+
+          const nameOrId = input.name || input.id;
+          const hasUrlVal = Boolean(nameOrId && urlParams.has(nameOrId));
+
+          // Anchor base USD value from authored template value or URL value
+          if (!input.dataset.baseUsd && input.value) {
+            const rawVal = parseFloat(input.value.replace(/,/g, ''));
+            if (!isNaN(rawVal)) {
+              if (hasUrlVal) {
+                // Input value was provided explicitly in URL in current currency
+                input.dataset.baseUsd = (mode === 'convert' ? rawVal / targetRate : rawVal).toString();
+              } else {
+                // Template authored default is in USD
+                input.dataset.baseUsd = rawVal.toString();
+                // If in convert mode and not USD, scale initial input value
+                if (mode === 'convert' && activeCurrency !== 'USD') {
+                  const scaled = rawVal * targetRate;
+                  input.value = targetDecimals === 0
+                    ? Math.round(scaled).toString()
+                    : Number(scaled.toFixed(2)).toString();
+                  hasScaledAny = true;
+                }
+              }
+            }
+          }
+
+          // Listen for user edits to update base USD anchor without precision loss
+          if (input.dataset.baseBound !== 'true') {
+            input.dataset.baseBound = 'true';
+            input.addEventListener('input', () => {
+              if (isApplyingPreset) return;
+              const val = parseFloat(input.value.replace(/,/g, ''));
+              if (!isNaN(val) && isFinite(val)) {
+                const currentMode = getConversionMode();
+                const liveRate = currentMode === 'convert' ? (getCurrencyRate(currentActiveCurrency) || 1.0) : 1.0;
+                input.dataset.baseUsd = (val / liveRate).toString();
+              }
+            });
+          }
+        });
+
+        // Initialize sliders
+        updateCurrencySliders(activeCurrency);
+
+        // If initial inputs were scaled on non-USD route, dispatch events so page calculations sync
+        if (hasScaledAny) {
+          document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+            const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+            if (input) {
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          });
+        }
+      }
+
+      function convertCurrencyInputs(targetCurrency: CurrencyCode) {
+        currentActiveCurrency = targetCurrency;
+        const mode = getConversionMode();
+        const targetRate = mode === 'convert' ? (getCurrencyRate(targetCurrency) || 1.0) : 1.0;
+        const targetDecimals = getCurrencyDecimals(targetCurrency);
+
+        document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+          const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+          if (input && input.dataset.baseUsd) {
+            const baseUsd = parseFloat(input.dataset.baseUsd);
+            if (!isNaN(baseUsd) && isFinite(baseUsd) && Math.abs(baseUsd) <= 1e12) {
+              const converted = mode === 'convert' ? baseUsd * targetRate : baseUsd;
+              input.value = (mode === 'convert' && targetDecimals === 0)
+                ? Math.round(converted).toString()
+                : Number(converted.toFixed(2)).toString();
+
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        });
+
+        updateCurrencySliders(targetCurrency);
+      }
+
+      function setupPresetButtonScaling() {
+        if (document.body.dataset.presetScalingBound === 'true') return;
+        document.body.dataset.presetScalingBound = 'true';
+
+        let activePresetBtn: HTMLButtonElement | null = null;
+
+        // Capture phase: intercept before calculator's preset handler runs
+        document.addEventListener('click', (e) => {
+          const btn = (e.target as HTMLElement)?.closest('.preset-btn') as HTMLButtonElement | null;
+          if (!btn) return;
+          isApplyingPreset = true;
+          activePresetBtn = btn;
+
+          // Run immediately after calculator's preset click listener finishes
+          setTimeout(() => {
+            if (!activePresetBtn) return;
+            const targetContainer = activePresetBtn.closest('form') || activePresetBtn.closest('section') || document;
+            const mode = getConversionMode();
+            const targetRate = mode === 'convert' ? (getCurrencyRate(currentActiveCurrency) || 1.0) : 1.0;
+            const targetDecimals = getCurrencyDecimals(currentActiveCurrency);
+
+            const currencyInputs: HTMLInputElement[] = [];
+            targetContainer.querySelectorAll('[data-currency-prefix]').forEach(span => {
+              const input = span.parentElement?.querySelector('input') as HTMLInputElement | null;
+              if (!input || !input.value) return;
+
+              const rawAuthoredUsd = parseFloat(input.value.replace(/,/g, ''));
+              if (isNaN(rawAuthoredUsd) || !isFinite(rawAuthoredUsd)) return;
+
+              // Store authored preset USD value into baseUsd
+              input.dataset.baseUsd = rawAuthoredUsd.toString();
+
+              if (mode === 'convert' && currentActiveCurrency !== 'USD') {
+                const scaled = rawAuthoredUsd * targetRate;
+                input.value = targetDecimals === 0
+                  ? Math.round(scaled).toString()
+                  : Number(scaled.toFixed(2)).toString();
+              }
+              currencyInputs.push(input);
+            });
+
+            updateCurrencySliders(currentActiveCurrency);
+
+            isApplyingPreset = false;
+            activePresetBtn = null;
+
+            // Dispatch input & change on all scaled currency inputs to recalculate cleanly
+            currencyInputs.forEach(input => {
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+          }, 0);
+        }, true);
+      }
+
+      function updateModeToggleUI(mode: ConversionMode) {
+        const isFx = mode === 'convert';
+
+        // Navbar toggle
+        const navBtn = document.getElementById('currency-mode-toggle');
+        const navIcon = document.getElementById('currency-mode-icon');
+        const navText = document.getElementById('currency-mode-text');
+        if (navBtn && navIcon && navText) {
+          navIcon.textContent = isFx ? '💱' : '🏷️';
+          navText.textContent = isFx ? 'FX' : '1:1';
+          navBtn.title = isFx
+            ? 'Currency Mode: FX Rate Conversions (Click to switch to 1:1 Nominal)'
+            : 'Currency Mode: 1:1 Nominal Units (Click to switch to FX Rate Conversions)';
+          navBtn.setAttribute('aria-pressed', isFx ? 'true' : 'false');
+        }
+
+        // Mobile menu toggle
+        const mobBtn = document.getElementById('mobile-currency-mode-toggle');
+        const mobIcon = document.getElementById('mobile-currency-mode-icon');
+        const mobText = document.getElementById('mobile-currency-mode-text');
+        if (mobBtn && mobIcon && mobText) {
+          mobIcon.textContent = isFx ? '💱' : '🏷️';
+          mobText.textContent = isFx ? 'FX Rate' : '1:1 Nominal';
+          mobBtn.title = isFx
+            ? 'Mode: FX Rate Conversions (Click to switch to 1:1 Nominal)'
+            : 'Mode: 1:1 Nominal Units (Click to switch to FX Rate Conversions)';
+        }
+
+        // Calculator notice toggle
+        const noticeToggle = document.getElementById('currency-rate-notice-toggle');
+        if (noticeToggle) {
+          noticeToggle.textContent = isFx ? 'Mode: 💱 FX Rate' : 'Mode: 🏷️ 1:1 Nominal';
+          noticeToggle.title = isFx
+            ? 'Currently converting amounts via exchange rates. Click to switch to 1:1 nominal units.'
+            : 'Currently using nominal units (1:1) without conversion. Click to switch to FX rate conversions.';
+        }
+      }
+
+      function handleModeToggle() {
+        const newMode = toggleConversionMode();
+        updateModeToggleUI(newMode);
+        convertCurrencyInputs(currentActiveCurrency);
+        window.dispatchEvent(new CustomEvent('currency-mode-change', { detail: newMode }));
+      }
+
+      function setupModeToggleButtons() {
+        updateModeToggleUI(getConversionMode());
+
+        const navBtn = document.getElementById('currency-mode-toggle');
+        if (navBtn && navBtn.dataset.bound !== 'true') {
+          navBtn.dataset.bound = 'true';
+          navBtn.addEventListener('click', handleModeToggle);
+        }
+
+        const mobBtn = document.getElementById('mobile-currency-mode-toggle');
+        if (mobBtn && mobBtn.dataset.bound !== 'true') {
+          mobBtn.dataset.bound = 'true';
+          mobBtn.addEventListener('click', handleModeToggle);
+        }
+      }
+
+      // Delegate notice toggle button clicks
+      if (typeof document !== 'undefined') {
+        document.addEventListener('click', (e) => {
+          const noticeToggle = (e.target as HTMLElement)?.closest('#currency-rate-notice-toggle');
+          if (noticeToggle) {
+            handleModeToggle();
+          }
+        });
+      }
+
+      function setupCurrencySelector() {
+        const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
+        if (!currencySelect) return;
+
+        const currentLang = document.documentElement.lang;
+
+        // URL query parameter takes priority if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlCurrency = urlParams.get('currency')?.toUpperCase();
+        if (urlCurrency && isSupportedCurrency(urlCurrency)) {
+          setManualCurrency(urlCurrency);
+        }
+
+        const effectiveCurrency = getEffectiveCurrency(currentLang);
+        const isManual = isManualCurrencyOverride();
+
+        currencySelect.value = isManual ? effectiveCurrency : 'auto';
+
+        // Initialize inputs, sliders, presets, and mode toggles
+        initCurrencyInputsAndSliders(effectiveCurrency);
+        setupPresetButtonScaling();
+        setupModeToggleButtons();
+
+        if (currencySelect.dataset.bound === 'true') return;
+        currencySelect.dataset.bound = 'true';
+
+        currencySelect.addEventListener('change', () => {
+          const selectedVal = currencySelect.value;
+          let targetCurrency: CurrencyCode;
+
+          if (selectedVal === 'auto') {
+            targetCurrency = resetCurrencyToAuto(currentLang);
+          } else if (isSupportedCurrency(selectedVal)) {
+            setManualCurrency(selectedVal);
+            targetCurrency = selectedVal;
+          } else {
+            return;
+          }
+
+          convertCurrencyInputs(targetCurrency);
+          window.dispatchEvent(new CustomEvent('currency-change', { detail: targetCurrency }));
+        });
+      }
+
+      setupCurrencySelector();
+      document.addEventListener('astro:page-load', setupCurrencySelector);
+
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+      const hamburgerIcon = document.getElementById('hamburger-icon');
+      const closeIcon = document.getElementById('close-icon');
       let menuOpen = false;
 
       function setMenuOpen(open: boolean) {
         menuOpen = open;
         mobileMenu?.classList.toggle('hidden', !menuOpen);
+        mobileMenuBackdrop?.classList.toggle('hidden', !menuOpen);
+        if (hamburgerIcon && closeIcon) {
+          hamburgerIcon.classList.toggle('hidden', menuOpen);
+          closeIcon.classList.toggle('hidden', !menuOpen);
+        }
         document.body.style.overflow = menuOpen ? 'hidden' : '';
         mobileMenuBtn?.setAttribute('aria-expanded', String(menuOpen));
+        mobileMenuBtn?.setAttribute('aria-label', menuOpen ? 'Close menu' : 'Open menu');
       }
 
       mobileMenuBtn?.setAttribute('aria-expanded', 'false');
@@ -354,6 +843,10 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
       mobileMenuBtn?.addEventListener('click', (e) => {
         e.stopPropagation();
         setMenuOpen(!menuOpen);
+      });
+
+      mobileMenuBackdrop?.addEventListener('click', () => {
+        setMenuOpen(false);
       });
 
       mobileMenu?.querySelectorAll('a').forEach((link) => {
@@ -368,8 +861,24 @@ const ogLocale = lang === 'zh-cn' ? 'zh_CN' : lang === 'zh-tw' ? 'zh_TW' : lang.
           setMenuOpen(false);
         }
       });
+
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && menuOpen) setMenuOpen(false);
+        if (e.key === 'Escape' && menuOpen) {
+          setMenuOpen(false);
+          mobileMenuBtn?.focus();
+        }
+      });
+
+      // Reset menu and body scroll lock on resize to desktop (>= 1024px)
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+          setMenuOpen(false);
+        }
+      });
+
+      // Reset menu state on view transitions / client routing
+      document.addEventListener('astro:page-load', () => {
+        setMenuOpen(false);
       });
     </script>
     <Analytics />

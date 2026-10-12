@@ -88,13 +88,13 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-total-monthly">
-          <ResultCard title="Total Monthly Payment" value="$2,499.16" highlight={true} description="Total payment including mortgage principal, interest, taxes, insurance, and HOA." />
+          <ResultCard title="Total Monthly Payment" value="--" highlight={true} description="Total payment including mortgage principal, interest, taxes, insurance, and HOA." />
         </div>
         <div id="res-pi">
-          <ResultCard title="Principal & Interest" value="$2,022.62" description="Base monthly loan payment." />
+          <ResultCard title="Principal & Interest" value="--" description="Base monthly loan payment." />
         </div>
         <div id="res-loan-amount">
-          <ResultCard title="Total Loan Amount" value="$320,000.00" description="Home price minus your down payment." />
+          <ResultCard title="Total Loan Amount" value="--" description="Home price minus your down payment." />
         </div>
       </div>
 
@@ -292,7 +292,7 @@ const faqs = [
           datasets: [
             {
               data: [pi, tax, ins, pmi, hoa],
-              backgroundColor: ['#0070f3', '#7928ca', '#f5a623', '#ff0080', '#50e3c2'],
+              backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#f43f5e', '#8b5cf6'],
               borderWidth: 1
             }
           ]
@@ -317,7 +317,6 @@ const faqs = [
   [priceInput, downInput, rateInput, termInput, taxInput, insInput, pmiInput, hoaInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -339,9 +338,6 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      priceInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -393,7 +389,15 @@ const faqs = [
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resTotalMonthly) resTotalMonthly.querySelector('.font-mono')!.textContent = '--';
+      if (resPI) resPI.querySelector('.font-mono')!.textContent = '--';
+      if (resLoanAmount) resLoanAmount.querySelector('.font-mono')!.textContent = '--';
+      const takeawayEl = document.getElementById('mortgage-takeaway');
+      if (takeawayEl) takeawayEl.classList.add('hidden');
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -401,8 +405,9 @@ const faqs = [
   syncInputsWithURL('mortgage-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resTotalMonthly && resTotalMonthly.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

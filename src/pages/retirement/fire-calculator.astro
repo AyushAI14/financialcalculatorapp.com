@@ -1,0 +1,257 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "What is the FIRE movement and what does it mean?",
+    answer: "FIRE stands for Financial Independence, Retire Early. It is a financial framework where individuals maximize their savings rate (often 40%–70% of income) and invest in low-cost index funds until their portfolio generates enough passive income to cover their living expenses forever."
+  },
+  {
+    question: "What is the 4% Safe Withdrawal Rule?",
+    answer: "Originating from the landmark Trinity Study, the 4% rule states that you can withdraw 4% of your starting investment portfolio each year (adjusted annually for inflation) with a 95%+ probability that your portfolio will never run out of money over a 30-year retirement."
+  },
+  {
+    question: "How is your FIRE Number calculated?",
+    answer: "Your FIRE number is your annual living expenses multiplied by 25 (under a 4% rule) or multiplied by 33 (under a conservative 3% rule). For example, if you live comfortably on $60,000 per year, your FIRE number is $1,500,000."
+  },
+  {
+    question: "What is the difference between Lean FIRE, Standard FIRE, and Fat FIRE?",
+    answer: "Lean FIRE focuses on covering strictly essential, minimalist expenses (typically under $40,000/year). Standard FIRE maintains a comfortable middle-class lifestyle ($50,000–$100,000/year). Fat FIRE accounts for abundant luxury spending ($120,000+/year) without financial restraint."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="FIRE Calculator - Financial Independence, Retire Early Planner" 
+  description="Calculate your exact FIRE number and retirement date. Model Lean, Standard, and Fat FIRE milestones with inflation-adjusted safe withdrawal rates."
+  faqs={faqs}
+  calcKey="fire-calculator"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="fire-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">Your Finances & Spending</h3>
+
+          <!-- Annual Expenses -->
+          <div class="space-y-2">
+            <Input id="annual-expenses" name="annualExpenses" label="Expected Annual Living Expenses" type="number" prefix="$" value="50000" />
+            <RangeSlider id="expenses-slider" label="Expenses Slider" min={15000} max={200000} step={2500} value={50000} />
+          </div>
+
+          <!-- Current Net Worth -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="current-net-worth" name="currentNetWorth" label="Current Invested Net Worth" type="number" prefix="$" value="120000" />
+            <RangeSlider id="networth-slider" label="Net Worth Slider" min={0} max={1000000} step={5000} value={120000} />
+          </div>
+
+          <!-- Annual Savings -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="annual-savings" name="annualSavings" label="Annual Savings Added to Portfolio" type="number" prefix="$" value="30000" />
+            <RangeSlider id="savings-slider" label="Annual Savings Slider" min={1000} max={150000} step={1000} value={30000} />
+          </div>
+
+          <!-- Current Age -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="current-age" name="currentAge" label="Your Current Age" type="number" value="30" min={18} max={80} />
+            <Select id="swr-select" name="swr" label="Safe Withdrawal Rate" options={[
+              { value: '0.03', label: '3.0% (Ultra-Conservative / 33.3x)' },
+              { value: '0.035', label: '3.5% (Conservative / 28.5x)' },
+              { value: '0.04', label: '4.0% (Classic Trinity 25x)' },
+              { value: '0.045', label: '4.5% (Aggressive / 22.2x)' }
+            ]} value="0.04" />
+          </div>
+
+          <!-- Real Return -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="real-return" name="realReturn" label="Expected Inflation-Adjusted Return" type="number" suffix="%" value="7.0" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate My FIRE Number
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Outputs & Milestone Breakdown) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <ResultCard id="res-fire-num" title="Target FIRE Number (Portfolio Goal)" value="--" highlight={true} />
+        <ResultCard id="res-years-left" title="Time to Financial Independence" value="--" />
+        <ResultCard id="res-retire-age" title="Projected Early Retirement Age" value="--" />
+      </div>
+
+      <!-- FIRE Milestones Grid -->
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Tiered FIRE Milestones</h4>
+        
+        <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">Lean FIRE (80%)</span>
+            <span id="tier-lean" class="font-bold text-ink text-xs">--</span>
+            <span id="years-lean" class="text-[9px] text-body block font-sans">--</span>
+          </div>
+
+          <div class="p-2.5 bg-primary/10 border border-primary/20 rounded space-y-1">
+            <span class="text-[10px] text-primary block">Standard (100%)</span>
+            <span id="tier-std" class="font-bold text-primary text-xs">--</span>
+            <span id="years-std" class="text-[9px] text-primary block font-sans">--</span>
+          </div>
+
+          <div class="p-2.5 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">Fat FIRE (150%)</span>
+            <span id="tier-fat" class="font-bold text-ink text-xs">--</span>
+            <span id="years-fat" class="text-[9px] text-body block font-sans">--</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+          <span class="font-semibold text-ink">Freedom Metric:</span> Your portfolio currently funds <span id="funded-pct" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> of your total lifetime financial independence goal.
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('fire-form') as HTMLFormElement | null;
+  const expInput = document.getElementById('annual-expenses') as HTMLInputElement | null;
+  const expSlider = document.getElementById('expenses-slider') as HTMLInputElement | null;
+  const nwInput = document.getElementById('current-net-worth') as HTMLInputElement | null;
+  const nwSlider = document.getElementById('networth-slider') as HTMLInputElement | null;
+  const savInput = document.getElementById('annual-savings') as HTMLInputElement | null;
+  const savSlider = document.getElementById('savings-slider') as HTMLInputElement | null;
+  const ageInput = document.getElementById('current-age') as HTMLInputElement | null;
+  const swrSelect = document.getElementById('swr-select') as HTMLSelectElement | null;
+  const returnInput = document.getElementById('real-return') as HTMLInputElement | null;
+
+  const resNum = document.getElementById('res-fire-num');
+  const resYears = document.getElementById('res-years-left');
+  const resAge = document.getElementById('res-retire-age');
+
+  const tierLean = document.getElementById('tier-lean');
+  const tierStd = document.getElementById('tier-std');
+  const tierFat = document.getElementById('tier-fat');
+  const yearsLean = document.getElementById('years-lean');
+  const yearsStd = document.getElementById('years-std');
+  const yearsFat = document.getElementById('years-fat');
+  const fundedPctEl = document.getElementById('funded-pct');
+
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+    valEl.textContent = text;
+    valEl.setAttribute('title', text);
+  }
+
+  function calculateYearsToGoal(currentNW: number, annualContrib: number, rate: number, target: number): number {
+    if (currentNW >= target) return 0;
+    if (rate <= 0 && annualContrib <= 0) return 99;
+
+    let balance = currentNW;
+    let years = 0;
+    const maxYears = 75;
+
+    while (balance < target && years < maxYears) {
+      balance = balance * (1 + rate) + annualContrib;
+      years++;
+    }
+    return years;
+  }
+
+  function calculateFIRE() {
+    const expenses = parseFloat(expInput?.value || '0');
+    const netWorth = parseFloat(nwInput?.value || '0');
+    const savings = parseFloat(savInput?.value || '0');
+    const currentAge = parseFloat(ageInput?.value || '30');
+    const swr = parseFloat(swrSelect?.value || '0.04');
+    const realReturn = parseFloat(returnInput?.value || '0.07') / 100;
+
+    if (swr <= 0 || expenses <= 0) return;
+
+    const fireGoal = expenses / swr;
+    const leanGoal = (expenses * 0.8) / swr;
+    const fatGoal = (expenses * 1.5) / swr;
+
+    const yearsLeft = calculateYearsToGoal(netWorth, savings, realReturn, fireGoal);
+    const leanYears = calculateYearsToGoal(netWorth, savings, realReturn, leanGoal);
+    const fatYears = calculateYearsToGoal(netWorth, savings, realReturn, fatGoal);
+
+    const retireAge = currentAge + yearsLeft;
+    const fundedPct = Math.min(100, (netWorth / fireGoal) * 100);
+
+    updateCardValue(resNum, formatCurrency(Math.round(fireGoal)));
+    updateCardValue(resYears, `${yearsLeft.toFixed(1)} Years`);
+    updateCardValue(resAge, `Age ${retireAge.toFixed(1)}`);
+
+    if (tierLean) tierLean.textContent = formatCurrency(Math.round(leanGoal));
+    if (tierStd) tierStd.textContent = formatCurrency(Math.round(fireGoal));
+    if (tierFat) tierFat.textContent = formatCurrency(Math.round(fatGoal));
+
+    if (yearsLean) yearsLean.textContent = `${leanYears.toFixed(1)} yrs`;
+    if (yearsStd) yearsStd.textContent = `${yearsLeft.toFixed(1)} yrs`;
+    if (yearsFat) yearsFat.textContent = `${fatYears.toFixed(1)} yrs`;
+
+    if (fundedPctEl) fundedPctEl.textContent = `${fundedPct.toFixed(1)}%`;
+  }
+
+  // Sliders binding without auto-calculation
+  function bindSliderSync(numInput: HTMLInputElement | null, sliderInput: HTMLInputElement | null) {
+    numInput?.addEventListener('input', () => {
+      if (sliderInput) sliderInput.value = numInput.value;
+    });
+    sliderInput?.addEventListener('input', () => {
+      if (numInput) numInput.value = sliderInput.value;
+    });
+  }
+
+  bindSliderSync(expInput, expSlider);
+  bindSliderSync(nwInput, nwSlider);
+  bindSliderSync(savInput, savSlider);
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateFIRE();
+  });
+
+  form?.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateCardValue(resNum, '--');
+      updateCardValue(resYears, '--');
+      updateCardValue(resAge, '--');
+      if (tierLean) tierLean.textContent = '--';
+      if (tierStd) tierStd.textContent = '--';
+      if (tierFat) tierFat.textContent = '--';
+      if (yearsLean) yearsLean.textContent = '--';
+      if (yearsStd) yearsStd.textContent = '--';
+      if (yearsFat) yearsFat.textContent = '--';
+      if (fundedPctEl) fundedPctEl.textContent = '--';
+    }, 0);
+  });
+
+  syncInputsWithURL('fire-form', calculateFIRE);
+
+  window.addEventListener('currency-change', () => {
+    const valEl = resNum?.querySelector('[data-result-value]') || resNum?.querySelector('.font-mono') || resNum;
+    if (valEl && valEl.textContent?.trim() !== '--') {
+      calculateFIRE();
+    }
+  });
+</script>

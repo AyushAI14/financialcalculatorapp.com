@@ -8,7 +8,7 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
-    author: z.string().default('FinCompute Team'),
+    author: z.string().default('financialcalculatorapp.com Team'),
     tags: z.array(z.string()).default([])
   })
 });

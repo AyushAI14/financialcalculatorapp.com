@@ -100,7 +100,7 @@ const faqs = getCalculatorFaqs('tvm');
       <div id="result-container">
         <ResultCard 
           title="Future Value (FV)" 
-          value="$22,176.43" 
+          value="--" 
           description="Total balance accumulated over 120 periods." 
           highlight={true} 
         />
@@ -235,7 +235,6 @@ const faqs = getCalculatorFaqs('tvm');
       }
     }
     updateInputAvailability();
-    performCalculation();
   }
 
   // Parse numeric values safely
@@ -416,8 +415,7 @@ const faqs = getCalculatorFaqs('tvm');
             {
               label: mainDatasetLabel,
               data: balances,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#10b981',
               fill: true,
               tension: 0.1,
               borderWidth: 2,
@@ -426,8 +424,7 @@ const faqs = getCalculatorFaqs('tvm');
             {
               label: secondaryDatasetLabel,
               data: paidData,
-              borderColor: '#0070f3',
-              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              borderColor: '#6366f1',
               fill: true,
               tension: 0.1,
               borderWidth: 1.5,
@@ -468,7 +465,6 @@ const faqs = getCalculatorFaqs('tvm');
               }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -519,7 +515,6 @@ const faqs = getCalculatorFaqs('tvm');
   // Listeners
   solveForSelect.addEventListener('change', () => {
     updateInputAvailability();
-    performCalculation();
   });
 
   scenarioSelect.addEventListener('change', handleScenarioChange);
@@ -531,9 +526,16 @@ const faqs = getCalculatorFaqs('tvm');
 
   form.addEventListener('reset', () => {
     setTimeout(() => {
-      // Re-trigger scenario change default UI states
       handleScenarioChange();
-      performCalculation();
+      if (resultContainer) {
+        const fontMono = resultContainer.querySelector('.font-mono');
+        if (fontMono) fontMono.textContent = '--';
+      }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -553,8 +555,11 @@ const faqs = getCalculatorFaqs('tvm');
 
   // Initialize
   updateInputAvailability();
-  performCalculation();
 
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resultContainer?.querySelector('.font-mono')?.textContent?.trim() !== '--') {
+      performCalculation();
+    }
+  });
 </script>

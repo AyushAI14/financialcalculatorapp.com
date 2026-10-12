@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 import { languages, hreflangMap, defaultLang, showDefaultLang, type Lang } from '../i18n/ui';
 
 export async function GET(context: any) {
-  const siteUrl = (context.site ? context.site.toString() : 'https://fincompute.com').replace(/\/+$/, '');
+  const siteUrl = (context.site ? context.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
   
   // Get all static pages from src/pages/ using import.meta.glob
   const pages = import.meta.glob('./**/*.astro');

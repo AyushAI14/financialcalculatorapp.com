@@ -7,10 +7,53 @@ declare module 'chart.js' {
   }
 }
 
+// Standard high-contrast, accessible semantic financial color palette
+export const CHART_PALETTE = {
+  emerald: '#10b981',     // Growth, wealth, accumulation, net worth assets
+  emeraldDark: '#059669',
+  blue: '#3b82f6',        // Contributions, principal, base amounts
+  sky: '#0ea5e9',         // Secondary metrics, balance curves
+  indigo: '#6366f1',      // Out-of-pocket deposits, benchmark comparisons
+  purple: '#8b5cf6',      // Employer match, DRIP, tax-free accounts
+  amber: '#f59e0b',       // Interest accrued, dividend income, taxes
+  rose: '#f43f5e',        // Debts, balances owed, high fees, liabilities
+  cyan: '#06b6d4',        // Pre-tax deductions, supplementary series
+  pink: '#ec4899',        // Post-tax deductions
+} as const;
+
+export function hexToRgba(hexOrRgb: string, alpha = 1): string {
+  if (hexOrRgb.startsWith('#')) {
+    let hex = hexOrRgb.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(2, 4), 16) || 0;
+    const b = parseInt(hex.substring(4, 6), 16) || 0;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  if (hexOrRgb.startsWith('rgb')) {
+    const parts = hexOrRgb
+      .replace(/rgba?\(|\)/g, '')
+      .split(',')
+      .map(p => p.trim());
+    return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+  }
+  return hexOrRgb;
+}
+
+export function isDarkMode(): boolean {
+  if (typeof document === 'undefined') return false;
+  return (
+    document.documentElement.dataset.theme === 'dark' ||
+    document.documentElement.classList.contains('dark')
+  );
+}
+
 // Register all standard Chart.js components (auto registration)
 Chart.register(...registerables);
 
-// Register custom fixedTop tooltip positioner
+// Register custom fixedTop tooltip positioner for mobile-friendly graphs
 try {
   const tooltipPlugin = Chart.registry.getPlugin('tooltip') as any;
   if (tooltipPlugin && tooltipPlugin.positioners) {
@@ -20,7 +63,7 @@ try {
       const x = activePoint.element.x;
       const chart = this.chart;
       
-      // Skip custom tooltip positioning for non-cartesian charts (like doughnut, pie, radar)
+      // Skip custom tooltip positioning for non-cartesian charts
       if (chart.config.type !== 'line' && chart.config.type !== 'bar') {
         return {
           x: activePoint.element.x,
@@ -28,7 +71,7 @@ try {
         };
       }
       
-      // Check screen width dynamically in browser
+      // Fixed top on mobile to avoid thumb occlusion
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
         const { top } = chart.chartArea;
         this.options.yAlign = 'top';
@@ -52,29 +95,29 @@ try {
 
 // Register global plugins and defaults on client side
 if (typeof window !== 'undefined') {
-  // 1. Configure global futuristic and smooth defaults
+  // 1. Configure crisp, high-contrast global defaults
   
   // Line Chart styling
   if (!Chart.defaults.datasets.line) {
     Chart.defaults.datasets.line = {} as any;
   }
-  Chart.defaults.datasets.line.tension = 0.4; // Cubic line smoothing
-  Chart.defaults.datasets.line.borderWidth = 2.5; // Slightly thicker lines for visibility
-  Chart.defaults.datasets.line.fill = true; // Area gradient filling
-  Chart.defaults.datasets.line.pointRadius = 0; // Hide points by default
-  Chart.defaults.datasets.line.pointHoverRadius = 6; // Show hover points
-  Chart.defaults.datasets.line.pointHoverBackgroundColor = '#00f0ff'; // Neon blue active point
+  Chart.defaults.datasets.line.tension = 0.35;
+  Chart.defaults.datasets.line.borderWidth = 2.5;
+  Chart.defaults.datasets.line.fill = true;
+  Chart.defaults.datasets.line.pointRadius = 0;
+  Chart.defaults.datasets.line.pointHoverRadius = 6;
+  Chart.defaults.datasets.line.pointHoverBackgroundColor = '#10b981';
   Chart.defaults.datasets.line.pointHoverBorderColor = '#ffffff';
   Chart.defaults.datasets.line.pointHoverBorderWidth = 2;
   
-  // Dynamic gradient generator based on dataset border color
+  // Dynamic gradient generator with rich, visible fill that does NOT fade away
   Chart.defaults.datasets.line.backgroundColor = (context: any) => {
     const chart = context.chart;
     const { ctx, chartArea } = chart;
-    if (!chartArea) return 'rgba(0, 112, 243, 0.05)';
+    if (!chartArea) return 'rgba(16, 185, 129, 0.12)';
     
-    let borderColor = context.dataset.borderColor || '#0070f3';
-    let baseColor = '#0070f3';
+    let borderColor = context.dataset.borderColor || '#10b981';
+    let baseColor = '#10b981';
     
     if (typeof borderColor === 'string') {
       baseColor = borderColor;
@@ -83,21 +126,11 @@ if (typeof window !== 'undefined') {
     }
     
     const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)'); // Fade to transparent
+    const bottomAlpha = isDarkMode() ? 0.05 : 0.04;
+    const topAlpha = isDarkMode() ? 0.38 : 0.28;
     
-    // Parse color to apply alpha transparency
-    if (baseColor.startsWith('#')) {
-      const hex = baseColor.replace('#', '');
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.2)`);
-    } else if (baseColor.startsWith('rgb')) {
-      const clean = baseColor.replace('rgba(', '').replace('rgb(', '').replace(')', '').split(',');
-      gradient.addColorStop(1, `rgba(${clean[0].trim()}, ${clean[1].trim()}, ${clean[2].trim()}, 0.2)`);
-    } else {
-      gradient.addColorStop(1, 'rgba(0, 112, 243, 0.2)');
-    }
+    gradient.addColorStop(0, hexToRgba(baseColor, bottomAlpha));
+    gradient.addColorStop(1, hexToRgba(baseColor, topAlpha));
     
     return gradient;
   };
@@ -106,42 +139,39 @@ if (typeof window !== 'undefined') {
   if (!Chart.defaults.datasets.bar) {
     Chart.defaults.datasets.bar = {} as any;
   }
-  Chart.defaults.datasets.bar.borderRadius = 6; // Beautiful rounded bars
-  Chart.defaults.datasets.bar.maxBarThickness = 48; // Prevent overly wide bars
+  Chart.defaults.datasets.bar.borderRadius = 6;
+  Chart.defaults.datasets.bar.maxBarThickness = 48;
   
   // Doughnut Chart styling
   if (!Chart.defaults.datasets.doughnut) {
     Chart.defaults.datasets.doughnut = {} as any;
   }
-  Chart.defaults.datasets.doughnut.borderColor = () => {
-    if (typeof document !== 'undefined') {
-      const isDark = document.documentElement.classList.contains('dark');
-      return isDark ? '#171717' : '#ffffff';
-    }
-    return '#171717';
-  };
-  Chart.defaults.datasets.doughnut.borderWidth = 2.5; // Beautiful outline separation gap
+  Chart.defaults.datasets.doughnut.borderColor = () => isDarkMode() ? '#171717' : '#ffffff';
+  Chart.defaults.datasets.doughnut.borderWidth = 2.5;
 
   // Pie Chart styling
   if (!Chart.defaults.datasets.pie) {
     Chart.defaults.datasets.pie = {} as any;
   }
-  Chart.defaults.datasets.pie.borderColor = () => {
-    if (typeof document !== 'undefined') {
-      const isDark = document.documentElement.classList.contains('dark');
-      return isDark ? '#171717' : '#ffffff';
-    }
-    return '#171717';
-  };
+  Chart.defaults.datasets.pie.borderColor = () => isDarkMode() ? '#171717' : '#ffffff';
   Chart.defaults.datasets.pie.borderWidth = 2.5;
 
-  // Faint clean gridlines safely without replacing the defaults.scale object descriptor
+  // Theme-adaptive gridlines and axis labels
   if (Chart.defaults.scale) {
     if (!Chart.defaults.scale.grid) {
       Chart.defaults.scale.grid = {} as any;
     }
-    Chart.defaults.scale.grid.color = 'rgba(128, 128, 128, 0.08)';
-    Chart.defaults.scale.grid.tickColor = 'rgba(128, 128, 128, 0.08)';
+    Chart.defaults.scale.grid.color = () => isDarkMode() ? 'rgba(255, 255, 255, 0.09)' : 'rgba(0, 0, 0, 0.07)';
+    Chart.defaults.scale.grid.tickColor = () => isDarkMode() ? 'rgba(255, 255, 255, 0.09)' : 'rgba(0, 0, 0, 0.07)';
+    
+    if (!Chart.defaults.scale.ticks) {
+      Chart.defaults.scale.ticks = {} as any;
+    }
+    Chart.defaults.scale.ticks.color = () => isDarkMode() ? '#9ca3af' : '#4b5563';
+    Chart.defaults.scale.ticks.font = {
+      family: 'Geist Mono, monospace',
+      size: 10
+    };
   }
 
   // Premium typography & Legend styling
@@ -151,137 +181,209 @@ if (typeof window !== 'undefined') {
   if (!Chart.defaults.plugins.legend.labels) {
     Chart.defaults.plugins.legend.labels = {} as any;
   }
-  Chart.defaults.plugins.legend.labels.usePointStyle = true; // Circular legend bullets
-  Chart.defaults.plugins.legend.labels.pointStyle = 'circle';
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  (Chart.defaults.plugins.legend.labels as any).color = () => isDarkMode() ? '#f2f2ee' : '#151515';
   Chart.defaults.plugins.legend.labels.font = {
     family: 'Geist, sans-serif',
-    size: 10,
+    size: 11,
     weight: 'normal'
   };
 
-  // Premium dark glassmorphism tooltip style
+  // High contrast tooltip style
   if (!Chart.defaults.plugins.tooltip) {
     Chart.defaults.plugins.tooltip = {} as any;
   }
-  Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(23, 23, 23, 0.95)';
+  Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(20, 20, 20, 0.95)';
+  Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
+  Chart.defaults.plugins.tooltip.bodyColor = '#f3f4f6';
   Chart.defaults.plugins.tooltip.titleFont = { family: 'Geist Mono, monospace', size: 11, weight: 'bold' };
   Chart.defaults.plugins.tooltip.bodyFont = { family: 'Geist, sans-serif', size: 11 };
   Chart.defaults.plugins.tooltip.padding = 10;
   Chart.defaults.plugins.tooltip.cornerRadius = 8;
   Chart.defaults.plugins.tooltip.borderWidth = 1;
-  Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.1)';
+  Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.15)';
 
-  // 2. Register the dotted vertical line cursor plugin globally
+  // 2. Configure interaction defaults for smooth horizontal scrubbing
+  Chart.defaults.interaction = {
+    mode: 'index',
+    intersect: false,
+    axis: 'x',
+    includeInvisible: false,
+  };
+  if (Chart.overrides?.line) {
+    Chart.overrides.line.interaction = { mode: 'index', intersect: false, axis: 'x', includeInvisible: false };
+  }
+  if (Chart.overrides?.bar) {
+    Chart.overrides.bar.interaction = { mode: 'index', intersect: false, axis: 'x', includeInvisible: false };
+  }
+  if (Chart.overrides?.doughnut) {
+    Chart.overrides.doughnut.interaction = { mode: 'nearest', intersect: true, axis: 'xy', includeInvisible: false };
+  }
+  if (Chart.overrides?.pie) {
+    Chart.overrides.pie.interaction = { mode: 'nearest', intersect: true, axis: 'xy', includeInvisible: false };
+  }
+
+  // 3. Register responsive vertical line scrubber plugin
   Chart.register({
-    id: 'verticalLine',
-    afterDraw: (chart: any) => {
-      // Skip vertical line drawing for non-cartesian charts (like doughnut, pie, radar)
+    id: 'verticalLineScrubber',
+    beforeInit: (chart: any) => {
+      if (chart.canvas) {
+        chart.canvas.style.touchAction = 'pan-y';
+
+        chart._onTouchStart = () => {
+          chart._isInteracting = true;
+        };
+        chart._onMouseLeave = () => {
+          chart._isInteracting = false;
+          chart.draw();
+        };
+
+        chart.canvas.addEventListener('touchstart', chart._onTouchStart, { passive: true });
+        chart.canvas.addEventListener('mouseleave', chart._onMouseLeave, { passive: true });
+      }
+    },
+    beforeDestroy: (chart: any) => {
+      if (chart.canvas) {
+        if (chart._onTouchStart) {
+          chart.canvas.removeEventListener('touchstart', chart._onTouchStart);
+        }
+        if (chart._onMouseLeave) {
+          chart.canvas.removeEventListener('mouseleave', chart._onMouseLeave);
+        }
+      }
+    },
+    afterDatasetsDraw: (chart: any) => {
       if (chart.config.type !== 'line' && chart.config.type !== 'bar') {
         return;
       }
-      
+
       try {
-        let x = null;
-        
-        // If there is active hovering/touching, use it and update the selected index
-        if (chart.tooltip?.getActiveElements()?.length) {
-          const activePoint = chart.tooltip.getActiveElements()[0];
-          x = activePoint.element.x;
-          chart.selectedIndex = activePoint.index;
-        } else if (chart.selectedIndex !== undefined) {
-          // Otherwise, draw the line at the last selected/tapped position
-          const scaleX = chart.scales.x;
-          if (scaleX && chart.data?.labels) {
-            const label = chart.data.labels[chart.selectedIndex];
-            if (label !== undefined) {
-              x = scaleX.getPixelForValue(label);
-            }
-          }
-        } else {
-          // Default to the last index of the dataset on initial draw
-          const meta = chart.getDatasetMeta(0);
-          if (meta && meta.data && meta.data.length > 0) {
-            chart.selectedIndex = meta.data.length - 1;
-            const lastEl = meta.data[chart.selectedIndex];
-            if (lastEl) {
-              x = lastEl.x;
-            }
-          }
+        const activeElements = chart.getActiveElements();
+        let targetIndex: number | null = null;
+
+        if (activeElements && activeElements.length > 0) {
+          targetIndex = activeElements[0].index;
+          chart._lastActiveIndex = targetIndex;
+          chart._isInteracting = true;
+        } else if (chart._isInteracting && chart._lastActiveIndex !== undefined && chart._lastActiveIndex !== null) {
+          targetIndex = chart._lastActiveIndex;
         }
 
-        if (x !== null && typeof x === 'number' && !isNaN(x)) {
-          const { ctx } = chart;
-          const { top, bottom } = chart.chartArea;
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([4, 4]); // Dotted line pattern
-          ctx.moveTo(x, top);
-          ctx.lineTo(x, bottom);
-          ctx.lineWidth = 1.5;
-          ctx.strokeStyle = 'rgba(128, 128, 128, 0.7)'; // Clear grey dotted line
-          ctx.stroke();
-          ctx.restore();
+        if (targetIndex === null || targetIndex === undefined) {
+          return;
         }
+
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data || !meta.data[targetIndex]) {
+          return;
+        }
+
+        const targetEl = meta.data[targetIndex];
+        const x = targetEl.x;
+        if (typeof x !== 'number' || isNaN(x)) {
+          return;
+        }
+
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return;
+        const { top, bottom, left, right } = chartArea;
+
+        ctx.save();
+        const dark = isDarkMode();
+
+        // 1. Draw vertical scrubber guideline
+        ctx.beginPath();
+        ctx.setLineDash([4, 3]);
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = dark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(15, 23, 42, 0.35)';
+        ctx.stroke();
+
+        // 2. Draw Top Pill Badge with Label (e.g. "Year 15")
+        const label = chart.data?.labels?.[targetIndex];
+        if (label !== undefined && label !== null) {
+          const labelText = String(label);
+          ctx.font = '600 10px "Geist Mono", monospace';
+          const textMetrics = ctx.measureText(labelText);
+          const textWidth = textMetrics.width;
+          const badgeWidth = Math.max(textWidth + 14, 40);
+          const badgeHeight = 18;
+          const badgeY = top - 11;
+
+          // Clamp pill inside chart horizontal bounds
+          const badgeX = Math.max(left, Math.min(right - badgeWidth, x - (badgeWidth / 2)));
+
+          ctx.setLineDash([]);
+          ctx.fillStyle = dark ? '#0f172a' : '#1e293b';
+          ctx.strokeStyle = dark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.15)';
+          ctx.lineWidth = 1;
+
+          if (typeof ctx.roundRect === 'function') {
+            ctx.beginPath();
+            ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 9);
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            ctx.fillRect(badgeX, badgeY, badgeWidth, badgeHeight);
+            ctx.strokeRect(badgeX, badgeY, badgeWidth, badgeHeight);
+          }
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(labelText, badgeX + (badgeWidth / 2), badgeY + (badgeHeight / 2) + 0.5);
+        }
+
+        // 3. Draw Concentric Target Disc Markers on each visible dataset point
+        if (chart.data && chart.data.datasets) {
+          ctx.setLineDash([]);
+          chart.data.datasets.forEach((dataset: any, dsIndex: number) => {
+            const dsMeta = chart.getDatasetMeta(dsIndex);
+            if (!dsMeta || dsMeta.hidden) return;
+            const pt = dsMeta.data[targetIndex];
+            if (!pt) return;
+            const ptY = pt.y;
+            if (typeof ptY !== 'number' || isNaN(ptY)) return;
+
+            const colorRaw = dataset.borderColor || dataset.backgroundColor || '#10b981';
+            const color = typeof colorRaw === 'string' ? colorRaw : (Array.isArray(colorRaw) ? colorRaw[0] : '#10b981');
+
+            // Outer protective halo ring
+            ctx.beginPath();
+            ctx.arc(x, ptY, 6.5, 0, Math.PI * 2);
+            ctx.fillStyle = dark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+            ctx.fill();
+
+            // Dataset primary color disc
+            ctx.beginPath();
+            ctx.arc(x, ptY, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            // Crisp inner white center dot
+            ctx.beginPath();
+            ctx.arc(x, ptY, 1.8, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+          });
+        }
+
+        ctx.restore();
       } catch (err) {
-        console.error("Error in verticalLine plugin afterDraw:", err);
+        console.error("Error in verticalLineScrubber plugin afterDatasetsDraw:", err);
       }
     }
   });
 
-  // 3. Register the neon global shadow/glow plugin for all chart types (line, bar, doughnut, pie)
-  Chart.register({
-    id: 'globalGlow',
-    beforeDatasetsDraw: (chart: any) => {
-      const { ctx } = chart;
-      const originalStroke = ctx.stroke;
-      const originalFill = ctx.fill;
-
-      ctx.stroke = function () {
-        ctx.save();
-        const strokeStyle = ctx.strokeStyle;
-        
-        // Only apply glow to elements that are colored lines (not gridlines or transparent borders)
-        if (
-          typeof strokeStyle === 'string' && 
-          !strokeStyle.includes('rgba(128, 128, 128') && 
-          !strokeStyle.includes('rgba(0, 0, 0, 0')
-        ) {
-          ctx.shadowColor = strokeStyle;
-          ctx.shadowBlur = 10; // Neon glow blur radius
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
+  // 3. Dynamic theme switcher: smoothly update active charts on dark/light mode toggle
+  window.addEventListener('theme-change', () => {
+    if (Chart.instances) {
+      Object.values(Chart.instances).forEach((instance: any) => {
+        if (instance && typeof instance.update === 'function') {
+          instance.update('none');
         }
-        
-        const res = originalStroke.apply(this, arguments);
-        ctx.restore();
-        return res;
-      };
-
-      ctx.fill = function () {
-        ctx.save();
-        const fillStyle = ctx.fillStyle;
-
-        // Apply glow to colored fills (bars, pie/doughnut segments)
-        if (
-          typeof fillStyle === 'string' &&
-          !fillStyle.includes('rgba(128, 128, 128') &&
-          !fillStyle.includes('rgba(0, 0, 0, 0')
-        ) {
-          ctx.shadowColor = fillStyle;
-          ctx.shadowBlur = 12; // High neon glow for fills
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
-        }
-
-        const res = originalFill.apply(this, arguments);
-        ctx.restore();
-        return res;
-      };
-    },
-    afterDatasetsDraw: (chart: any) => {
-      chart.ctx.stroke = CanvasRenderingContext2D.prototype.stroke;
-      chart.ctx.fill = CanvasRenderingContext2D.prototype.fill;
+      });
     }
   });
 

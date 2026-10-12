@@ -17,7 +17,7 @@ const languageOptions = getLanguageOptions(Astro.url, currentLang);
   <label for={id} class="sr-only">Select language</label>
   <select
     id={id}
-    class="language-picker bg-canvas text-ink text-[11px] font-mono font-medium border border-hairline rounded-full px-2.5 py-1 focus:outline-none focus:border-hairline-strong transition-colors cursor-pointer select-none"
+    class="language-picker bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
     aria-label="Select language"
     data-current={currentLang}
   >

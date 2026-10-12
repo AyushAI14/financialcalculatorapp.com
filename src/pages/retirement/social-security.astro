@@ -1,0 +1,244 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "When is the earliest age I can claim Social Security retirement benefits?",
+    answer: "You can start receiving Social Security retirement benefits as early as age 62. However, claiming early permanently reduces your monthly check by up to 30% compared to waiting for your Full Retirement Age (FRA)."
+  },
+  {
+    question: "What is my Full Retirement Age (FRA)?",
+    answer: "For anyone born in 1960 or later, Full Retirement Age is 67. If you claim at FRA, you receive 100% of your Primary Insurance Amount (PIA) without early reduction penalties."
+  },
+  {
+    question: "How much more do I get if I delay claiming Social Security until age 70?",
+    answer: "For every year you delay claiming past your Full Retirement Age (up to age 70), your benefit increases by 8% per year via Delayed Retirement Credits (DRCs). Waiting until 70 gives you roughly 124% of your full benefit permanently for life."
+  },
+  {
+    question: "What is the Social Security break-even age between claiming at 62 vs 70?",
+    answer: "The break-even age is typically between 78 and 81 years old. If you expect to live past age 80, delaying claiming to age 70 almost always yields a higher cumulative lifetime payout."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Social Security Retirement Estimator - Break-Even Age & Benefit Calculator" 
+  description="Estimate your monthly and lifetime Social Security retirement benefits. Compare early claiming at age 62, full retirement age (67), and delayed retirement at 70."
+  faqs={faqs}
+  calcKey="social-security"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="ssa-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">Your Earnings & Timeline</h3>
+
+          <!-- Annual Income -->
+          <div class="space-y-2">
+            <Input id="annual-income" name="annualIncome" label="Average Annual Earned Income" type="number" prefix="$" value="75000" />
+            <RangeSlider id="income-slider" label="Income Slider" min={15000} max={250000} step={2500} value={75000} />
+          </div>
+
+          <!-- Birth Year -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="birth-year" name="birthYear" label="Year of Birth" type="number" value="1975" min={1940} max={2010} />
+          </div>
+
+          <!-- Expected Claim Age -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Select id="claim-age" name="claimAge" label="Target Claiming Age" options={[
+              { value: '62', label: 'Age 62 (Earliest Early Claim - 70% of Benefit)' },
+              { value: '63', label: 'Age 63' },
+              { value: '64', label: 'Age 64' },
+              { value: '65', label: 'Age 65' },
+              { value: '66', label: 'Age 66' },
+              { value: '67', label: 'Age 67 (Full Retirement Age - 100% of Benefit)' },
+              { value: '68', label: 'Age 68 (+8% Delayed Credit)' },
+              { value: '69', label: 'Age 69 (+16% Delayed Credit)' },
+              { value: '70', label: 'Age 70 (Maximum Delay - 124% of Benefit)' }
+            ]} value="67" />
+          </div>
+
+          <!-- Life Expectancy -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="life-expectancy" name="lifeExpectancy" label="Estimated Life Expectancy" type="number" suffix="years old" value="85" min={65} max={105} />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Social Security Benefits
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Outputs & Age Comparison Cards) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <ResultCard id="res-monthly" title="Estimated Monthly Benefit at Target Age" value="--" highlight={true} />
+        <ResultCard id="res-annual" title="Estimated Annual Benefit" value="--" />
+        <ResultCard id="res-lifetime" title="Projected Cumulative Lifetime Payout" value="--" />
+      </div>
+
+      <!-- 3-Way Age Comparison Grid -->
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Claim Age Comparison (Monthly Check)</h4>
+        
+        <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
+          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">Early Age 62</span>
+            <span id="comp-age62" class="font-bold text-ink text-sm">--</span>
+            <span class="text-[9px] text-rose-500 block font-sans">-30% penalty</span>
+          </div>
+
+          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[10px] text-mute block">Full Age 67</span>
+            <span id="comp-age67" class="font-bold text-ink text-sm">--</span>
+            <span class="text-[9px] text-mute block font-sans">100% full</span>
+          </div>
+
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-1">
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block">Delayed Age 70</span>
+            <span id="comp-age70" class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">--</span>
+            <span class="text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans">+24% bonus</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+          <span class="font-semibold text-ink">Lifetime Break-Even Point:</span> If you live past age <span id="breakeven-age" class="font-bold text-ink">--</span>, claiming at age 70 generates more cumulative wealth than claiming early at 62.
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { syncInputsWithURL } from '../../lib/shareable';
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('ssa-form') as HTMLFormElement | null;
+  const incomeInput = document.getElementById('annual-income') as HTMLInputElement | null;
+  const incomeSlider = document.getElementById('income-slider') as HTMLInputElement | null;
+  const claimAgeSelect = document.getElementById('claim-age') as HTMLSelectElement | null;
+  const lifeExpInput = document.getElementById('life-expectancy') as HTMLInputElement | null;
+
+  const resMonthly = document.getElementById('res-monthly');
+  const resAnnual = document.getElementById('res-annual');
+  const resLifetime = document.getElementById('res-lifetime');
+  const comp62 = document.getElementById('comp-age62');
+  const comp67 = document.getElementById('comp-age67');
+  const comp70 = document.getElementById('comp-age70');
+  const breakevenEl = document.getElementById('breakeven-age');
+
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+    valEl.textContent = text;
+    valEl.setAttribute('title', text);
+  }
+
+  function calculateSocialSecurity() {
+    const salary = parseFloat(incomeInput?.value || '0');
+    const claimAge = parseFloat(claimAgeSelect?.value || '67');
+    const lifeExpectancy = parseFloat(lifeExpInput?.value || '85');
+
+    // Social Security Bend Point Formula approximation (PIA estimation)
+    // 2026 approx bend points: 90% up to $1,174/mo, 32% up to $7,078/mo, 15% remainder
+    const aime = Math.min(salary, 168600) / 12; // Capped at wage base
+    let pia = 0;
+
+    if (aime <= 1174) {
+      pia = aime * 0.90;
+    } else if (aime <= 7078) {
+      pia = (1174 * 0.90) + ((aime - 1174) * 0.32);
+    } else {
+      pia = (1174 * 0.90) + ((7078 - 1174) * 0.32) + ((aime - 7078) * 0.15);
+    }
+
+    // Adjustment factors vs FRA (Full Retirement Age 67)
+    const factor62 = 0.70;
+    const factor67 = 1.00;
+    const factor70 = 1.24;
+
+    let targetFactor = 1.0;
+    if (claimAge <= 62) targetFactor = 0.70;
+    else if (claimAge === 63) targetFactor = 0.75;
+    else if (claimAge === 64) targetFactor = 0.80;
+    else if (claimAge === 65) targetFactor = 0.867;
+    else if (claimAge === 66) targetFactor = 0.933;
+    else if (claimAge === 67) targetFactor = 1.00;
+    else if (claimAge === 68) targetFactor = 1.08;
+    else if (claimAge === 69) targetFactor = 1.16;
+    else if (claimAge >= 70) targetFactor = 1.24;
+
+    const monthlyTarget = pia * targetFactor;
+    const annualTarget = monthlyTarget * 12;
+
+    const monthsInRetirement = Math.max(0, (lifeExpectancy - claimAge) * 12);
+    const lifetimePayout = monthlyTarget * monthsInRetirement;
+
+    const check62 = pia * factor62;
+    const check67 = pia * factor67;
+    const check70 = pia * factor70;
+
+    let breakeven = 80.5;
+    if (check70 > check62) {
+      breakeven = (70 * check70 - 62 * check62) / (check70 - check62);
+    }
+
+    updateCardValue(resMonthly, `${formatCurrency(monthlyTarget)} / mo`);
+    updateCardValue(resAnnual, `${formatCurrency(annualTarget)} / yr`);
+    updateCardValue(resLifetime, formatCurrency(lifetimePayout));
+
+    if (comp62) comp62.textContent = formatCurrency(Math.round(check62));
+    if (comp67) comp67.textContent = formatCurrency(Math.round(check67));
+    if (comp70) comp70.textContent = formatCurrency(Math.round(check70));
+    if (breakevenEl) breakevenEl.textContent = breakeven.toFixed(1);
+  }
+
+  // Slider sync without auto-calculation
+  incomeInput?.addEventListener('input', () => {
+    if (incomeSlider) incomeSlider.value = incomeInput.value;
+  });
+  incomeSlider?.addEventListener('input', () => {
+    if (incomeInput) incomeInput.value = incomeSlider.value;
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateSocialSecurity();
+  });
+
+  form?.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateCardValue(resMonthly, '--');
+      updateCardValue(resAnnual, '--');
+      updateCardValue(resLifetime, '--');
+      if (comp62) comp62.textContent = '--';
+      if (comp67) comp67.textContent = '--';
+      if (comp70) comp70.textContent = '--';
+      if (breakevenEl) breakevenEl.textContent = '--';
+    }, 0);
+  });
+
+  syncInputsWithURL('ssa-form', calculateSocialSecurity);
+
+  window.addEventListener('currency-change', () => {
+    const valEl = resMonthly?.querySelector('[data-result-value]') || resMonthly?.querySelector('.font-mono') || resMonthly;
+    if (valEl && valEl.textContent?.trim() !== '--') {
+      calculateSocialSecurity();
+    }
+  });
+</script>

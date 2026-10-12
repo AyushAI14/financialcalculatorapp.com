@@ -1,0 +1,298 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+
+const faqs = [
+  {
+    question: "How does debt consolidation save you money?",
+    answer: "Debt consolidation combines multiple high-interest debts (such as credit cards with 20%–29% APRs) into a single personal loan with a lower fixed interest rate (e.g., 8%–14% APR). This reduces your total monthly payment and cuts thousands of dollars in interest charges."
+  },
+  {
+    question: "Does debt consolidation hurt your credit score?",
+    answer: "Applying for a new loan causes a temporary small dip (5–10 points) due to a hard inquiry. However, using the loan to pay down maxed-out credit cards immediately drops your credit utilization ratio, which typically boosts your credit score significantly within 30 to 60 days."
+  },
+  {
+    question: "What is the difference between debt consolidation and debt settlement?",
+    answer: "Debt consolidation pays off your creditors in full via a new lower-rate loan without damaging your credit history. Debt settlement involves stopping payments, negotiating to pay less than you owe, and incurs severe, long-lasting damage to your credit report."
+  },
+  {
+    question: "What should I look out for before consolidating debt?",
+    answer: "Watch out for origination fees (typically 1% to 6% of the loan amount), make sure the new monthly payment comfortably fits your budget, and avoid running up new balances on the credit cards you just paid off."
+  }
+];
+---
+
+<CalculatorLayout 
+  title="Debt Consolidation Loan Calculator - Compare Interest & Payment Savings" 
+  description="Calculate how much interest and money you can save by consolidating multiple credit cards and personal loans into a single low-interest loan."
+  faqs={faqs}
+  calcKey="debt-consolidation"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Existing Debts & New Loan Offer) -->
+    <div class="lg:col-span-7 space-y-6">
+      <form id="consolidation-form" class="space-y-6">
+        
+        <!-- Existing Debts Card -->
+        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-3">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">Your Current Debts</h3>
+            <span class="text-[11px] font-mono text-mute">Credit Cards, Auto, Personal Loans</span>
+          </div>
+
+          <!-- Debt 1 -->
+          <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+            <div>
+              <label for="d1-bal" class="text-[10px] text-mute block mb-1">Debt 1 Balance ($)</label>
+              <input id="d1-bal" type="number" value="6500" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d1-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <input id="d1-rate" type="number" step="0.1" value="24.5" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d1-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <input id="d1-pmt" type="number" value="220" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+          </div>
+
+          <!-- Debt 2 -->
+          <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+            <div>
+              <label for="d2-bal" class="text-[10px] text-mute block mb-1">Debt 2 Balance ($)</label>
+              <input id="d2-bal" type="number" value="4800" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d2-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <input id="d2-rate" type="number" step="0.1" value="21.0" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d2-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <input id="d2-pmt" type="number" value="160" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+          </div>
+
+          <!-- Debt 3 -->
+          <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+            <div>
+              <label for="d3-bal" class="text-[10px] text-mute block mb-1">Debt 3 Balance ($)</label>
+              <input id="d3-bal" type="number" value="3200" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d3-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <input id="d3-rate" type="number" step="0.1" value="18.5" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+            <div>
+              <label for="d3-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <input id="d3-pmt" type="number" value="110" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Proposed Consolidation Loan Card -->
+        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-3">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">New Consolidation Loan Offer</h3>
+            <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">Target Fixed Rate</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input id="new-rate" name="newRate" label="New Consolidation Loan APR" type="number" suffix="%" value="10.5" />
+            <Select id="new-term" name="newTerm" label="New Loan Term (Payoff Horizon)" options={[
+              { value: '24', label: '2 Years (24 Months)' },
+              { value: '36', label: '3 Years (36 Months)' },
+              { value: '48', label: '4 Years (48 Months)' },
+              { value: '60', label: '5 Years (60 Months)' }
+            ]} value="36" />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Calculate Consolidation Savings
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Outputs & Side-by-Side Comparison) -->
+    <div class="lg:col-span-5 space-y-6">
+      <div class="flex flex-col gap-3">
+        <ResultCard id="res-monthly-savings" title="Monthly Payment Savings" value="--" highlight={true} />
+        <ResultCard id="res-total-interest-saved" title="Total Lifetime Interest Saved" value="--" />
+      </div>
+
+      <!-- Side-by-Side Comparison Matrix -->
+      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Current Debts vs. New Consolidated Loan</h4>
+
+        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+          <!-- Current Column -->
+          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-2">
+            <span class="text-[10px] text-mute block font-bold">STATUS QUO (SEPARATE)</span>
+            <div>
+              <span class="text-[9px] text-mute block">Total Balance</span>
+              <span id="cur-total-bal" class="font-bold text-ink">--</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-mute block">Combined Monthly</span>
+              <span id="cur-total-pmt" class="font-bold text-ink">--</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-mute block">Estimated Interest</span>
+              <span id="cur-total-int" class="font-bold text-rose-500">--</span>
+            </div>
+          </div>
+
+          <!-- Consolidated Column -->
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-2">
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block font-bold">CONSOLIDATED LOAN</span>
+            <div>
+              <span class="text-[9px] text-mute block">Consolidated Amount</span>
+              <span id="new-total-bal" class="font-bold text-ink">--</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-mute block">New Monthly Payment</span>
+              <span id="new-monthly-pmt" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-mute block">Total New Interest</span>
+              <span id="new-total-int" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline">
+          <span class="font-semibold text-ink">Bottom Line:</span> By replacing your blended high-interest rates with a lower-rate consolidation loan, you eliminate interest charges and pay off debt faster.
+        </div>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateLoanPMT } from '../../lib/math/loan';
+  import { syncInputsWithURL } from '../../lib/shareable';
+
+  const form = document.getElementById('consolidation-form') as HTMLFormElement | null;
+  const d1Bal = document.getElementById('d1-bal') as HTMLInputElement | null;
+  const d1Rate = document.getElementById('d1-rate') as HTMLInputElement | null;
+  const d1Pmt = document.getElementById('d1-pmt') as HTMLInputElement | null;
+
+  const d2Bal = document.getElementById('d2-bal') as HTMLInputElement | null;
+  const d2Rate = document.getElementById('d2-rate') as HTMLInputElement | null;
+  const d2Pmt = document.getElementById('d2-pmt') as HTMLInputElement | null;
+
+  const d3Bal = document.getElementById('d3-bal') as HTMLInputElement | null;
+  const d3Rate = document.getElementById('d3-rate') as HTMLInputElement | null;
+  const d3Pmt = document.getElementById('d3-pmt') as HTMLInputElement | null;
+
+  const newRateInput = document.getElementById('new-rate') as HTMLInputElement | null;
+  const newTermSelect = document.getElementById('new-term') as HTMLSelectElement | null;
+
+  const resMonthlySavings = document.getElementById('res-monthly-savings');
+  const resInterestSaved = document.getElementById('res-total-interest-saved');
+
+  const curBalEl = document.getElementById('cur-total-bal');
+  const curPmtEl = document.getElementById('cur-total-pmt');
+  const curIntEl = document.getElementById('cur-total-int');
+
+  const newBalEl = document.getElementById('new-total-bal');
+  const newPmtEl = document.getElementById('new-monthly-pmt');
+  const newIntEl = document.getElementById('new-total-int');
+  const newTermDisp = document.getElementById('new-term-display');
+
+  function calculateConsolidation() {
+    const debts = [
+      { bal: parseFloat(d1Bal?.value || '0'), rate: parseFloat(d1Rate?.value || '0') / 100, pmt: parseFloat(d1Pmt?.value || '0') },
+      { bal: parseFloat(d2Bal?.value || '0'), rate: parseFloat(d2Rate?.value || '0') / 100, pmt: parseFloat(d2Pmt?.value || '0') },
+      { bal: parseFloat(d3Bal?.value || '0'), rate: parseFloat(d3Rate?.value || '0') / 100, pmt: parseFloat(d3Pmt?.value || '0') }
+    ];
+
+    let totalBal = 0;
+    let totalPmt = 0;
+    let currentTotalInterest = 0;
+
+    debts.forEach(d => {
+      totalBal += d.bal;
+      totalPmt += d.pmt;
+      if (d.bal > 0 && d.pmt > 0) {
+        // Approximate interest paid based on current payment
+        const rMonthly = d.rate / 12;
+        if (d.pmt > d.bal * rMonthly) {
+          const months = Math.log(d.pmt / (d.pmt - d.bal * rMonthly)) / Math.log(1 + rMonthly);
+          const totalPaid = d.pmt * months;
+          currentTotalInterest += Math.max(0, totalPaid - d.bal);
+        } else {
+          currentTotalInterest += d.bal * 1.5; // High trap interest
+        }
+      }
+    });
+
+    const newRate = parseFloat(newRateInput?.value || '0') / 100;
+    const newTermMonths = parseFloat(newTermSelect?.value || '36');
+    const newYears = newTermMonths / 12;
+
+    const newMonthlyPmt = calculateLoanPMT({ principal: totalBal, rate: newRate, years: newYears, compoundingFrequency: 12 });
+    const newTotalPaid = newMonthlyPmt * newTermMonths;
+    const newTotalInterest = Math.max(0, newTotalPaid - totalBal);
+
+    const monthlySavings = Math.max(0, totalPmt - newMonthlyPmt);
+    const interestSaved = Math.max(0, currentTotalInterest - newTotalInterest);
+
+    updateCardValue(resMonthlySavings, `$${monthlySavings.toFixed(2)} / mo`);
+    updateCardValue(resInterestSaved, `$${Math.round(interestSaved).toLocaleString('en-US')}`);
+
+    if (curBalEl) curBalEl.textContent = `$${totalBal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    if (curPmtEl) curPmtEl.textContent = `$${totalPmt.toFixed(2)}`;
+    if (curIntEl) curIntEl.textContent = `$${Math.round(currentTotalInterest).toLocaleString('en-US')}`;
+
+    if (newBalEl) newBalEl.textContent = `$${totalBal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    if (newPmtEl) newPmtEl.textContent = `$${newMonthlyPmt.toFixed(2)}`;
+    if (newIntEl) newIntEl.textContent = `$${Math.round(newTotalInterest).toLocaleString('en-US')}`;
+    if (newTermDisp) newTermDisp.textContent = `${newTermMonths} months`;
+  }
+
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value]') || cardEl.querySelector('.font-mono') || cardEl;
+    valEl.textContent = text;
+    valEl.setAttribute('title', text);
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateConsolidation();
+  });
+
+  form?.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateCardValue(resMonthlySavings, '--');
+      updateCardValue(resInterestSaved, '--');
+      if (curBalEl) curBalEl.textContent = '--';
+      if (curPmtEl) curPmtEl.textContent = '--';
+      if (curIntEl) curIntEl.textContent = '--';
+      if (newBalEl) newBalEl.textContent = '--';
+      if (newPmtEl) newPmtEl.textContent = '--';
+      if (newIntEl) newIntEl.textContent = '--';
+      if (newTermDisp) newTermDisp.textContent = '--';
+    }, 0);
+  });
+
+  syncInputsWithURL('consolidation-form', calculateConsolidation);
+
+  window.addEventListener('currency-change', () => {
+    const val = resMonthlySavings?.querySelector('[data-result-value]')?.textContent?.trim();
+    if (val && val !== '--') {
+      calculateConsolidation();
+    }
+  });
+</script>

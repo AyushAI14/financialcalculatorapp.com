@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://fincompute.com',
+  site: 'https://financialcalculatorapp.com',
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'hover'
@@ -28,18 +28,10 @@ export default defineConfig({
     locales: [
       'en',
       'es',
-      { codes: ['zh-Hans', 'zh-CN', 'zh-SG', 'zh'], path: 'zh-cn' },
-      { codes: ['zh-Hant', 'zh-TW', 'zh-HK'], path: 'zh-tw' },
       'de',
       'ja',
       'fr',
-      'ko',
-      'it',
-      'pt',
-      'ar',
-      'hi',
-      'ru',
-      'id'
+      'pt'
     ],
     routing: {
       prefixDefaultLocale: false,
@@ -48,18 +40,10 @@ export default defineConfig({
     },
     fallback: {
       es: 'en',
-      'zh-cn': 'en',
-      'zh-tw': 'en',
       de: 'en',
       ja: 'en',
       fr: 'en',
-      ko: 'en',
-      it: 'en',
-      pt: 'en',
-      ar: 'en',
-      hi: 'en',
-      ru: 'en',
-      id: 'en'
+      pt: 'en'
     }
   }
 });

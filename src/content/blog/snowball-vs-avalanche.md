@@ -2,7 +2,7 @@
 title: "Debt Snowball vs. Avalanche: Which Payoff Strategy Wins?"
 description: "A deep dive comparing the psychological momentum of the Debt Snowball method against the interest-saving math of the Debt Avalanche method."
 pubDate: 2026-07-11
-author: "FinCompute Team"
+author: "financialcalculatorapp.com Team"
 tags: ["debt", "personal finance", "budgeting"]
 ---
 

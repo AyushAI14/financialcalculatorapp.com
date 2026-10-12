@@ -30,6 +30,17 @@ export function safeSetItem(key: string, value: string): void {
   memoryStorage[key] = value;
 }
 
+export function safeRemoveItem(key: string): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(key);
+    }
+  } catch (e) {
+    // localStorage blocked
+  }
+  delete memoryStorage[key];
+}
+
 /**
  * Safely parses JSON from localStorage without throwing exceptions on corrupted or poisoned data.
  */

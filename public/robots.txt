@@ -3,4 +3,4 @@ Allow: /
 Disallow: /feedback
 Disallow: /api/
 
-Sitemap: https://fincompute.com/sitemap.xml
+Sitemap: https://financialcalculatorapp.com/sitemap.xml

@@ -75,13 +75,13 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
       <!-- Result Cards -->
       <div class="flex flex-col gap-3">
         <div id="res-winner">
-          <ResultCard title="Financial Winner" value="Buying" highlight={true} description="Buying yields a higher net worth after 15 years." />
+          <ResultCard title="Financial Winner" value="--" highlight={true} description="Submit form to compare buying vs renting." />
         </div>
         <div id="res-buyer-nw">
-          <ResultCard title="Buyer Net Worth" value="$257,808.20" />
+          <ResultCard title="Buyer Net Worth" value="--" />
         </div>
         <div id="res-renter-nw">
-          <ResultCard title="Renter Net Worth" value="$192,442.10" />
+          <ResultCard title="Renter Net Worth" value="--" />
         </div>
       </div>
 
@@ -210,8 +210,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
             {
               label: 'Buyer Net Worth',
               data: buyerNwData,
-              borderColor: '#171717',
-              backgroundColor: 'rgba(23, 23, 23, 0.05)',
+              borderColor: '#10b981',
               fill: false,
               tension: 0.1,
               borderWidth: 2,
@@ -220,8 +219,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
             {
               label: 'Renter Net Worth',
               data: renterNwData,
-              borderColor: '#0070f3',
-              backgroundColor: 'rgba(0, 112, 243, 0.02)',
+              borderColor: '#3b82f6',
               fill: false,
               tension: 0.1,
               borderWidth: 2,
@@ -252,7 +250,6 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
               ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -266,30 +263,31 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
     }
   }
 
-  // Listeners
-  const inputs = [
-    rentInput, rentInflationInput, portfolioReturnInput,
-    homePriceInput, downpaymentInput, rateInput, termInput, appreciationInput,
-    taxRateInput, insuranceInput, maintenanceInput,
-    durationInput, buyFeesInput, sellFeesInput
-  ];
-
-  inputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resWinnerCard) {
+        resWinnerCard.querySelector('.font-mono')!.textContent = '--';
+        const pEl = resWinnerCard.querySelector('p');
+        if (pEl) pEl.textContent = 'Submit form to compare buying vs renting.';
+      }
+      if (resBuyerCard) resBuyerCard.querySelector('.font-mono')!.textContent = '--';
+      if (resRenterCard) resRenterCard.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    }, 0);
   });
 
-  // Initial simulation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resBuyerCard && resBuyerCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

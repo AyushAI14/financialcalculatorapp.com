@@ -67,7 +67,7 @@ const faqs = getCalculatorFaqs('apr');
         <div id="res-apr">
           <ResultCard 
             title="Effective APR" 
-            value="6.19%" 
+            value="--" 
             highlight={true} 
             description="The real interest rate you pay annually once upfront fees are included."
           />
@@ -75,20 +75,20 @@ const faqs = getCalculatorFaqs('apr');
         <div id="res-nominal">
           <ResultCard 
             title="Interest Rate" 
-            value="6.00%" 
+            value="--" 
             description="The base interest rate stated on your loan note."
           />
         </div>
         <div id="res-payment">
           <ResultCard 
             title="Monthly Payment (P&I)" 
-            value="$1,199.10" 
+            value="--" 
           />
         </div>
         <div id="res-fees">
           <ResultCard 
             title="Total Finance Fees" 
-            value="$4,000.00" 
+            value="--" 
           />
         </div>
       </div>
@@ -261,8 +261,8 @@ const faqs = getCalculatorFaqs('apr');
             {
               label: 'Percentage Rate (%)',
               data: [nominal, apr],
-              backgroundColor: ['#4d4d4d', '#0070f3'],
-              borderColor: ['#4d4d4d', '#0070f3'],
+              backgroundColor: ['#6366f1', '#3b82f6'],
+              borderColor: ['#6366f1', '#3b82f6'],
               borderWidth: 1,
               barThickness: 48
             }
@@ -284,7 +284,6 @@ const faqs = getCalculatorFaqs('apr');
           },
           scales: {
             x: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value: any) {
@@ -307,7 +306,6 @@ const faqs = getCalculatorFaqs('apr');
     el.addEventListener('input', () => {
       // Validate individual field as user types
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -326,11 +324,6 @@ const faqs = getCalculatorFaqs('apr');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      
-      // Trigger input events to sync with URL parameters
-      loanInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -372,7 +365,18 @@ const faqs = getCalculatorFaqs('apr');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      const resApr = document.getElementById('res-apr');
+      const resNominal = document.getElementById('res-nominal');
+      const resPayment = document.getElementById('res-payment');
+      const resFees = document.getElementById('res-fees');
+      if (resApr) resApr.querySelector('.font-mono')!.textContent = '--';
+      if (resNominal) resNominal.querySelector('.font-mono')!.textContent = '--';
+      if (resPayment) resPayment.querySelector('.font-mono')!.textContent = '--';
+      if (resFees) resFees.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -380,8 +384,10 @@ const faqs = getCalculatorFaqs('apr');
   syncInputsWithURL('apr-form', performCalculation);
 
   // Currency change handler
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    const resApr = document.getElementById('res-apr');
+    if (resApr && resApr.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

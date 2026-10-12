@@ -11,8 +11,8 @@ const faqs = getCalculatorFaqs('401k');
 ---
 
 <CalculatorLayout 
-  title="401k Contribution Calculator" 
-  description="Simulate how your 401(k) retirement balance grows with salary deferrals and employer matching contributions."
+  title="401k Calculator & Retirement Planner" 
+  description="Simulate how your 401(k) retirement balance grows over time with employee salary deferrals, employer match formulas, and compound investment returns."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -74,13 +74,13 @@ const faqs = getCalculatorFaqs('401k');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-ending">
-          <ResultCard title="Projected 401k" value="$784,100" highlight={true} description="Estimated balance at the end of the saving period." />
+          <ResultCard title="Projected 401k" value="--" highlight={true} description="Estimated balance at the end of the saving period." />
         </div>
         <div id="res-matching">
-          <ResultCard title="Company Match" value="$114,100" description="Total matching funds paid by your employer." />
+          <ResultCard title="Company Match" value="--" description="Total matching funds paid by your employer." />
         </div>
         <div id="res-tax">
-          <ResultCard title="Pre-tax Tax Savings" value="$45,600" description="Total income tax savings on pre-tax contributions." />
+          <ResultCard title="Pre-tax Tax Savings" value="--" description="Total income tax savings on pre-tax contributions." />
         </div>
       </div>
 
@@ -258,24 +258,24 @@ const faqs = getCalculatorFaqs('401k');
             {
               label: 'Your Contributions',
               data: employeeData,
-              backgroundColor: '#171717',
-              borderColor: '#171717',
+              backgroundColor: '#3b82f6',
+              borderColor: '#3b82f6',
               borderWidth: 1,
               stack: 'stack0'
             },
             {
               label: 'Employer Matching',
               data: employerData,
-              backgroundColor: '#a1a1a1',
-              borderColor: '#a1a1a1',
+              backgroundColor: '#8b5cf6',
+              borderColor: '#8b5cf6',
               borderWidth: 1,
               stack: 'stack0'
             },
             {
               label: 'Investment Growth',
               data: interestCumData,
-              backgroundColor: '#0070f3',
-              borderColor: '#0070f3',
+              backgroundColor: '#10b981',
+              borderColor: '#10b981',
               borderWidth: 1,
               stack: 'stack0'
             }
@@ -306,7 +306,6 @@ const faqs = getCalculatorFaqs('401k');
               ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
             y: {
-              grid: { color: '#ebebeb' },
               stacked: true,
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
@@ -342,23 +341,22 @@ const faqs = getCalculatorFaqs('401k');
     scheduleBody.innerHTML = html;
   }
 
-  // Listeners
-  const inputs = [
-    salaryInput, salaryGrowthInput, contributionPctInput, taxRateInput,
-    matchPctInput, maxMatchPctInput, currentBalanceInput, yearsInput, returnRateInput
-  ];
-
-  inputs.forEach(el => {
-    el.addEventListener('input', performCalculation);
-  });
-
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
   form.addEventListener('reset', () => {
-    setTimeout(performCalculation, 0);
+    setTimeout(() => {
+      if (resEndingCard) resEndingCard.querySelector('.font-mono')!.textContent = '--';
+      if (resMatchingCard) resMatchingCard.querySelector('.font-mono')!.textContent = '--';
+      if (resTaxCard) resTaxCard.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+      if (scheduleBody) scheduleBody.innerHTML = '';
+    }, 0);
   });
 
   // Table toggle
@@ -375,9 +373,10 @@ const faqs = getCalculatorFaqs('401k');
     });
   }
 
-  // Initial calculation
-  performCalculation();
-
   // Listen for currency changes
-  window.addEventListener('currency-change', performCalculation);
+  window.addEventListener('currency-change', () => {
+    if (resEndingCard && resEndingCard.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>

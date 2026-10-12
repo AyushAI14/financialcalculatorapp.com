@@ -2,6 +2,8 @@
 import Layout from './Layout.astro';
 import CalculatorGuide from '../components/ui/CalculatorGuide.astro';
 import { getLangFromUrl, useTranslations, useTranslatedPath, getPathWithoutLocale } from '../i18n/utils';
+import { getLanguageDefaultCurrency, getCurrencyInfo } from '../lib/currency';
+import { getLocalizedCategories, PATH_TO_CALC_KEY } from '../lib/calculators';
 
 interface FAQItem {
   question: string;
@@ -23,64 +25,11 @@ const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 const cleanPath = getPathWithoutLocale(Astro.url.pathname);
 
-// Expanded calculator routes
-const categories = [
-  {
-    name: t('cat.finance', 'Finance & Investment'),
-    links: [
-      { name: t('calc.tvm.name', 'TVM Calculator'), url: '/finance/tvm' },
-      { name: t('calc.compound.name', 'Compound Interest Calculator'), url: '/finance/compound-interest' },
-      { name: t('calc.roi.name', 'ROI Calculator'), url: '/finance/roi' },
-      { name: t('calc.savingsgoal.name', 'Savings Goal Calculator'), url: '/finance/savings-goal' },
-      { name: t('calc.stockreturn.name', 'Stock Return Calculator'), url: '/finance/stock-return' },
-      { name: t('calc.capm.name', 'CAPM Calculator'), url: '/finance/capm' },
-      { name: t('calc.dividend.name', 'Dividend Calculator'), url: '/finance/dividend' },
-      { name: t('calc.inflation.name', 'Inflation Calculator'), url: '/finance/inflation' },
-      { name: t('calc.paycheck.name', 'Paycheck Calculator'), url: '/finance/paycheck' },
-      { name: t('calc.networth.name', 'Net Worth Tracker'), url: '/finance/net-worth' },
-      { name: t('calc.emergencyfund.name', 'Emergency Fund Calculator'), url: '/finance/emergency-fund' },
-      { name: t('calc.feeimpact.name', 'Investment Fee Calculator'), url: '/finance/fee-impact' },
-      { name: t('calc.collegesavings.name', 'College Savings (529)'), url: '/finance/college-savings' },
-      { name: t('calc.cryptodca.name', 'Crypto DCA Calculator'), url: '/finance/crypto-dca' },
-    ]
-  },
-  {
-    name: t('cat.loan', 'Loan & Mortgage'),
-    links: [
-      { name: t('calc.loan.name', 'Loan Calculator'), url: '/loan/calculator' },
-      { name: t('calc.mortgage.name', 'Mortgage Calculator'), url: '/loan/mortgage' },
-      { name: t('calc.debtsnowball.name', 'Debt Snowball vs Avalanche'), url: '/loan/debt-payoff' },
-      { name: t('calc.loanrefinance.name', 'Loan Refinance Calculator'), url: '/loan/refinance' },
-      { name: t('calc.studentloan.name', 'Student Loan IDR Calculator'), url: '/loan/student-loan' },
-      { name: t('calc.dti.name', 'Debt-to-Income (DTI) Calculator'), url: '/loan/dti' },
-      { name: t('calc.apr.name', 'APR Calculator'), url: '/loan/apr' },
-      { name: t('calc.rentvsbuy.name', 'Rent vs Buy Calculator'), url: '/loan/rent-vs-buy' },
-      { name: t('calc.homeaffordability.name', 'Home Affordability Calculator'), url: '/loan/home-affordability' },
-    ]
-  },
-  {
-    name: t('cat.retirement', 'Retirement'),
-    links: [
-      { name: t('calc.retirement.name', 'Retirement Planner'), url: '/retirement/planner' },
-      { name: t('calc.401k.name', '401k Contribution Calculator'), url: '/retirement/401k' },
-      { name: t('calc.iracomparison.name', 'Roth vs Trad IRA'), url: '/retirement/ira-comparison' },
-    ]
-  },
-  {
-    name: t('cat.credit', 'Credit Card & Auto'),
-    links: [
-      { name: t('calc.creditcardpayoff.name', 'Credit Card Payoff Calculator'), url: '/credit-card/payoff' },
-      { name: t('calc.autoloan.name', 'Auto Loan Calculator'), url: '/auto/loan' },
-    ]
-  },
-  {
-    name: t('cat.misc', 'Miscellaneous'),
-    links: [
-      { name: t('calc.tip.name', 'Tip Calculator'), url: '/misc/tip' },
-      { name: t('calc.discount.name', 'Discount and Tax Calculator'), url: '/misc/discount' },
-    ]
-  }
-];
+const defaultCurr = getLanguageDefaultCurrency(lang);
+const defaultMeta = getCurrencyInfo(defaultCurr);
+
+// Synchronized calculator routes & categories
+const categories = getLocalizedCategories(t);
 
 // Determine related calculators in the same category
 const currentCategory = categories.find(cat => cat.links.some(link => link.url === cleanPath));
@@ -96,38 +45,7 @@ const localizedFaqs = faqs.map(faq => ({
   answer: t(faq.answer, faq.answer)
 }));
 
-const pathToCalcKey: Record<string, string> = {
-  '/loan/mortgage': 'mortgage',
-  '/loan/calculator': 'loan',
-  '/loan/debt-payoff': 'debt-payoff',
-  '/loan/refinance': 'refinance',
-  '/loan/student-loan': 'student-loan',
-  '/loan/dti': 'dti',
-  '/loan/apr': 'apr',
-  '/loan/rent-vs-buy': 'rent-vs-buy',
-  '/loan/home-affordability': 'home-affordability',
-  '/auto/loan': 'auto-loan',
-  '/credit-card/payoff': 'credit-card-payoff',
-  '/retirement/planner': 'retirement-planner',
-  '/retirement/401k': '401k',
-  '/retirement/ira-comparison': 'ira-comparison',
-  '/finance/compound-interest': 'compound-interest',
-  '/finance/tvm': 'tvm',
-  '/finance/roi': 'roi',
-  '/finance/savings-goal': 'savings-goal',
-  '/finance/stock-return': 'stock-return',
-  '/finance/capm': 'capm',
-  '/finance/dividend': 'dividend',
-  '/finance/inflation': 'inflation',
-  '/finance/paycheck': 'paycheck',
-  '/finance/net-worth': 'net-worth',
-  '/finance/emergency-fund': 'emergency-fund',
-  '/finance/fee-impact': 'fee-impact',
-  '/finance/college-savings': 'college-savings',
-  '/finance/crypto-dca': 'crypto-dca',
-  '/misc/tip': 'tip',
-  '/misc/discount': 'discount'
-};
+const pathToCalcKey = PATH_TO_CALC_KEY;
 
 const resolvedCalcKey = calcKey || pathToCalcKey[cleanPath] || pathToCalcKey[cleanPath.replace(/\/$/, '')];
 
@@ -138,7 +56,13 @@ const webAppSchema = {
   "name": localizedTitle,
   "description": localizedDescription,
   "applicationCategory": "FinancialApplication",
-  "operatingSystem": "All"
+  "applicationSubCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
 };
 
 const faqSchema = localizedFaqs.length > 0 ? {
@@ -153,29 +77,57 @@ const faqSchema = localizedFaqs.length > 0 ? {
     }
   }))
 } : null;
+
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
+const categoryName = currentCategory ? currentCategory.name : t('nav.calculators');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "financialcalculatorapp.com",
+      "item": `${siteOrigin}${translatePath('/')}`
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": t('nav.calculators', 'Calculators'),
+      "item": `${siteOrigin}${translatePath('/calculators')}`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": localizedTitle,
+      "item": `${siteOrigin}${translatePath(cleanPath)}`
+    }
+  ]
+};
 ---
 <Layout title={localizedTitle} description={localizedDescription} lang={lang}>
   <!-- Inject Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(webAppSchema)} />
   {faqSchema && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />}
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbSchema)} />
   
 
-  <div class="max-w-[1400px] mx-auto py-4 lg:py-8 flex flex-col lg:flex-row gap-8">
-    <!-- Sidebar / Mobile Navigation -->
-    <aside class="w-full lg:w-64 flex-shrink-0">
+  <div class="page-shell py-6 lg:py-8 flex flex-col lg:flex-row gap-8 items-start">
+    <!-- Sidebar / Navigation (fontsby workbench rail) -->
+    <aside class="w-full lg:w-72 flex-shrink-0">
       <!-- Mobile Collapsible Menu -->
-      <details id="mobile-nav-details" class="group lg:hidden mb-4 border border-hairline rounded bg-canvas shadow-sm">
-        <summary class="flex items-center justify-between px-4 py-3 text-sm font-medium text-ink cursor-pointer select-none">
+      <details id="mobile-nav-details" class="group lg:hidden mb-4 border border-ink rounded-lg bg-paper shadow-[var(--control-shadow)]">
+        <summary class="flex items-center justify-between px-4 py-3 text-xs font-mono font-bold uppercase tracking-wider text-ink cursor-pointer select-none">
           <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <span>✦</span>
             {t('nav.calculators')}
           </span>
-          <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          <svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </summary>
-        <div class="p-4 border-t border-hairline bg-canvas-soft space-y-6 max-h-[300px] overflow-y-auto">
+        <div class="p-4 border-t border-line/20 bg-canvas space-y-6 max-h-[340px] overflow-y-auto">
           {categories.map(cat => (
             <div>
-              <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2 px-3">{cat.name}</h3>
+              <h3 class="text-[10px] font-mono text-muted uppercase font-bold tracking-wider mb-2 px-3">{cat.name}</h3>
               <ul class="space-y-1">
                 {cat.links.map(link => {
                   const isActive = cleanPath === link.url || cleanPath === `${link.url}/`;
@@ -184,8 +136,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
                       <a 
                         href={translatePath(link.url)} 
                         class:list={[
-                          "block px-3 py-1.5 text-sm rounded transition-colors",
-                          isActive ? "bg-canvas-soft-2 text-ink font-semibold border-l-2 border-primary rounded-l-none" : "text-body hover:text-ink hover:bg-canvas-soft"
+                          "block px-3 py-1.5 text-xs font-mono font-bold rounded-full transition-colors",
+                          isActive ? "bg-ink text-canvas shadow-[var(--control-shadow)]" : "text-muted hover:text-ink hover:bg-soft"
                         ]}
                       >
                         {link.name}
@@ -200,10 +152,10 @@ const faqSchema = localizedFaqs.length > 0 ? {
       </details>
 
       <!-- Desktop Sidebar -->
-      <div class="hidden lg:block space-y-6 sticky top-24">
+      <div class="hidden lg:block space-y-6 sticky top-24 bg-paper border border-ink/40 rounded-lg p-5 shadow-[var(--control-shadow)]">
         {categories.map(cat => (
           <div>
-            <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2 px-3">{cat.name}</h3>
+            <h3 class="text-[10px] font-mono text-muted uppercase font-bold tracking-wider mb-2.5 px-2">{cat.name}</h3>
             <ul class="space-y-1">
               {cat.links.map(link => {
                 const isActive = cleanPath === link.url || cleanPath === `${link.url}/`;
@@ -212,8 +164,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
                     <a 
                       href={translatePath(link.url)} 
                       class:list={[
-                        "block px-3 py-1.5 text-sm rounded transition-colors",
-                        isActive ? "bg-canvas-soft-2 text-ink font-semibold border-l-2 border-primary rounded-l-none" : "text-body hover:text-ink hover:bg-canvas-soft"
+                        "block px-3 py-1.5 text-xs font-mono font-bold rounded-full transition-colors",
+                        isActive ? "bg-ink text-canvas shadow-[var(--control-shadow)]" : "text-muted hover:text-ink hover:bg-soft"
                       ]}
                     >
                       {link.name}
@@ -226,35 +178,44 @@ const faqSchema = localizedFaqs.length > 0 ? {
         ))}
 
         <!-- Saved Scenarios Section -->
-        <div class="pt-4 border-t border-hairline">
-          <div class="flex items-center justify-between px-3 mb-2">
-            <h3 class="text-[10px] font-mono text-mute uppercase tracking-wider">{t('calc.savedScenarios', 'Saved Scenarios')}</h3>
-            <button id="save-scenario-btn" class="text-[10px] text-link hover:underline cursor-pointer font-medium" title="Save current inputs">+ {t('calc.save', 'Save')}</button>
+        <div class="pt-4 border-t border-line/20">
+          <div class="flex items-center justify-between px-2 mb-2">
+            <h3 class="text-[10px] font-mono text-muted uppercase font-bold tracking-wider">{t('calc.savedScenarios', 'Saved Scenarios')}</h3>
+            <button id="save-scenario-btn" class="text-[10px] text-input-accent hover:underline cursor-pointer font-mono font-bold uppercase" title="Save current inputs">+ {t('calc.save', 'Save')}</button>
           </div>
-          <div id="scenarios-list" class="space-y-1 text-xs px-3">
-            <span class="text-mute text-[11px] block">No saved scenarios yet.</span>
+          <div id="scenarios-list" class="space-y-1 text-xs px-2 font-mono">
+            <span class="text-muted text-[11px] block">No saved scenarios yet.</span>
           </div>
-          <button id="compare-scenarios-btn" class="hidden w-full mt-2 py-1 bg-canvas-soft-2 hover:bg-canvas-soft text-ink text-[11px] font-medium rounded border border-hairline transition-colors cursor-pointer">
+          <button id="compare-scenarios-btn" class="hidden w-full mt-2 py-1.5 card-action text-ink text-[11px] font-mono font-bold rounded-full">
             {t('calc.compare', 'Compare Selected (2)')}
           </button>
         </div>
 
-        <button id="print-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-2 flex items-center justify-center gap-1.5">
+        <button id="print-calculator-btn" class="card-action w-full py-2 text-ink text-xs font-mono font-bold rounded-full mt-3 flex items-center justify-center gap-1.5">
           <span>🖨️</span> {t('calc.print')}
         </button>
-        <button id="share-calculator-btn" class="w-full py-1.5 bg-canvas hover:bg-canvas-soft-2 border border-hairline text-ink text-xs rounded transition-colors cursor-pointer font-medium mt-1 flex items-center justify-center gap-1.5">
+        <button id="share-calculator-btn" class="card-action w-full py-2 text-ink text-xs font-mono font-bold rounded-full mt-2 flex items-center justify-center gap-1.5">
           <span>🔗</span> {t('calc.share')}
         </button>
       </div>
     </aside>
 
     <!-- Main Calculator Content Section -->
-    <section class="flex-1 bg-canvas border border-hairline rounded-lg p-6 lg:p-10 shadow-sm min-h-[600px] relative">
+    <section class="flex-1 bg-paper border border-ink rounded-lg p-6 lg:p-10 shadow-[var(--control-shadow)] min-h-[600px] relative w-full">
 
-      <div class="mb-10">
-        <h1 class="text-3xl font-semibold tracking-[-1.28px] text-ink mb-3">{localizedTitle}</h1>
-        {localizedDescription && <p class="text-body text-base max-w-3xl">{localizedDescription}</p>}
-        {lastUpdated && <p class="text-[11px] text-mute font-mono mt-2">{t('calc.lastUpdated')}: {lastUpdated}</p>}
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-muted mb-4 flex-wrap" aria-label="Breadcrumb">
+        <a href={translatePath('/')} class="hover:text-ink transition-colors">{t('nav.home', 'Home')}</a>
+        <span>/</span>
+        <a href={translatePath('/calculators')} class="hover:text-ink transition-colors font-bold">{t('nav.calculators', 'Calculators')}</a>
+        <span>/</span>
+        <span class="text-ink font-bold truncate max-w-xs">{localizedTitle}</span>
+      </nav>
+
+      <div class="mb-8">
+        <h1 class="font-display font-black text-3xl sm:text-4xl tracking-tight text-ink mb-3">{localizedTitle}</h1>
+        {localizedDescription && <p class="text-sm sm:text-base text-muted max-w-3xl font-sans leading-relaxed">{localizedDescription}</p>}
+        {lastUpdated && <p class="text-[11px] text-muted font-mono font-bold uppercase mt-2.5">{t('calc.lastUpdated')}: {lastUpdated}</p>}
       </div>
       <slot />
 
@@ -263,18 +224,18 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
       <!-- FAQ Section -->
       {localizedFaqs && localizedFaqs.length > 0 && (
-        <div class="border-t border-hairline mt-12 pt-12 space-y-6 no-print">
-          <h2 class="text-2xl font-semibold tracking-[-0.96px] text-ink">{t('calc.faqs')}</h2>
-          <div class="divide-y divide-hairline">
+        <div class="border-t-2 border-line mt-12 pt-12 space-y-6 no-print">
+          <h2 class="font-display font-black text-2xl tracking-tight text-ink">{t('calc.faqs')}</h2>
+          <div class="divide-y divide-line/20">
             {localizedFaqs.map(faq => (
               <details class="group py-4">
-                <summary class="flex items-center justify-between text-base font-medium text-ink cursor-pointer list-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded">
+                <summary class="flex items-center justify-between text-base font-display font-bold text-ink cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-input-accent rounded">
                   <span>{faq.question}</span>
-                  <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div class="mt-3 text-sm text-body leading-relaxed space-y-2">
+                <div class="mt-3 text-sm text-muted font-sans leading-relaxed space-y-2">
                   <p>{faq.answer}</p>
                 </div>
               </details>
@@ -283,29 +244,46 @@ const faqSchema = localizedFaqs.length > 0 ? {
         </div>
       )}
 
-      <!-- Browser Privacy Note -->
-      <div class="mt-12 p-4 bg-canvas-soft border border-hairline border-dashed rounded-md text-xs text-mute flex flex-col gap-2 no-print">
+      <!-- Browser Privacy Note (fontsby note-surface) -->
+      <div class="mt-12 p-4 bg-note-surface border border-note-border rounded-lg text-xs text-ink/80 flex flex-col gap-2 no-print shadow-[var(--control-shadow)]">
         <div class="flex items-center gap-2">
           <span>🔒</span>
           <span><strong>{t('privacy.title', '100% Private:')}</strong> {t('privacy.desc', 'All calculations execute locally in your web browser. We do not store or transmit your financial details.')}</span>
         </div>
-        <div class="flex items-center gap-2 border-t border-hairline/60 pt-2 mt-1">
-          <span>💱</span>
-          <span><strong>{t('currency.title', 'Currency Rates:')}</strong> {t('currency.desc', 'Conversions use static rates (1 USD = 0.92 EUR = 0.79 GBP = 83 INR) for convenience.')}</span>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-note-border/50 pt-2 mt-1">
+          <div class="flex items-center gap-2">
+            <span>💱</span>
+            <span>
+              <strong>{t('currency.title', 'Currency Rates:')}</strong>{' '}
+              <span id="currency-rate-notice-desc">
+                {defaultMeta.code === 'USD'
+                  ? t('currency.desc.usd', 'Conversions use benchmark reference rates for convenience.')
+                  : `${t('currency.desc.ref', 'Conversions use benchmark reference rates')} (1 USD ≈ ${defaultMeta.rate} ${defaultMeta.code}). Values scale dynamically.`}
+              </span>
+            </span>
+          </div>
+          <button
+            id="currency-rate-notice-toggle"
+            type="button"
+            class="card-action self-start sm:self-auto text-[10px] font-mono px-3 py-1 rounded-full text-ink"
+            title="Toggle between dynamic FX conversion and 1:1 nominal units"
+          >
+            Mode: 💱 FX Rate
+          </button>
         </div>
       </div>
 
       <!-- Scenario Comparison Modal -->
-      <div id="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-modal-title" class="fixed inset-0 bg-ink/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
-        <div class="bg-canvas border border-hairline rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in">
-          <header class="px-6 py-4 border-b border-hairline flex items-center justify-between bg-canvas-soft">
-            <h3 id="compare-modal-title" class="text-sm font-semibold text-ink font-mono uppercase tracking-wider">{t('modal.comparisonTitle', 'Scenario Comparison')}</h3>
-            <button id="close-compare-modal" aria-label="Close comparison modal" class="text-mute hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
+      <div id="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-modal-title" class="fixed inset-0 bg-ink/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-paper border-2 border-ink rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-[8px_8px_0_color-mix(in_srgb,var(--ink)_20%,transparent)] overflow-hidden animate-fade-in">
+          <header class="px-6 py-4 border-b border-line/20 flex items-center justify-between bg-soft">
+            <h3 id="compare-modal-title" class="text-sm font-bold text-ink font-mono uppercase tracking-wider">{t('modal.comparisonTitle', 'Scenario Comparison')}</h3>
+            <button id="close-compare-modal" aria-label="Close comparison modal" class="text-muted hover:text-ink text-lg font-bold p-1 cursor-pointer">&times;</button>
           </header>
           <div class="p-6 overflow-y-auto space-y-6">
-            <div class="overflow-x-auto border border-hairline rounded-lg">
+            <div class="overflow-x-auto border border-ink/30 rounded-lg">
               <table class="w-full border-collapse text-left text-xs">
-                <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+                <thead class="bg-soft border-b border-ink/20 font-mono uppercase text-muted font-bold">
                   <tr>
                     <th class="px-4 py-3">{t('modal.metric', 'Metric')}</th>
                     <th class="px-4 py-3" id="compare-scen-a-title">{t('modal.scenarioA', 'Scenario A')}</th>
@@ -313,25 +291,25 @@ const faqSchema = localizedFaqs.length > 0 ? {
                     <th class="px-4 py-3">{t('modal.difference', 'Difference')}</th>
                   </tr>
                 </thead>
-                <tbody id="compare-modal-tbody" class="divide-y divide-hairline text-body text-ink">
+                <tbody id="compare-modal-tbody" class="divide-y divide-line/15 text-ink font-mono">
                   <!-- Generated comparison rows go here -->
                 </tbody>
               </table>
             </div>
           </div>
-          <footer class="px-6 py-4 border-t border-hairline flex justify-end gap-2 bg-canvas-soft">
-            <button id="close-compare-modal-btn" class="px-4 py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink text-xs font-semibold rounded-full cursor-pointer transition-colors shadow-sm">{t('modal.close', 'Close')}</button>
+          <footer class="px-6 py-4 border-t border-line/20 flex justify-end gap-2 bg-soft">
+            <button id="close-compare-modal-btn" class="card-action px-4 py-2 text-ink text-xs font-mono font-bold rounded-full">{t('modal.close', 'Close')}</button>
           </footer>
         </div>
       </div>
 
       <!-- Related Calculators Section -->
       {relatedLinks.length > 0 && (
-        <div class="mt-12 border-t border-hairline pt-8 no-print">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('calc.related')}</h3>
+        <div class="mt-12 border-t-2 border-line pt-8 no-print">
+          <h3 class="text-xs font-mono text-muted uppercase font-bold tracking-wider mb-4">{t('calc.related')}</h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {relatedLinks.map(link => (
-              <a href={translatePath(link.url)} class="p-4 bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline hover:border-hairline-strong rounded-md transition-colors block text-sm font-medium text-ink">
+              <a href={translatePath(link.url)} class="p-4 bg-paper hover:bg-soft border border-ink/40 rounded-lg shadow-[var(--control-shadow)] hover:shadow-[var(--control-shadow-hover)] transition-all block text-sm font-display font-bold text-ink">
                 {link.name} →
               </a>
             ))}
@@ -340,13 +318,13 @@ const faqSchema = localizedFaqs.length > 0 ? {
       )}
 
       <!-- Feedback Widget -->
-      <div class="mt-12 border-t border-hairline pt-6 no-print">
+      <div class="mt-12 border-t border-line/20 pt-6 no-print">
         <div id="feedback-widget-container" class="space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <span class="text-xs text-mute font-mono">{t('feedback.helpful', 'Was this calculator helpful?')}</span>
+            <span class="text-xs text-muted font-mono font-bold uppercase">{t('feedback.helpful', 'Was this calculator helpful?')}</span>
             <div id="feedback-widget" class="flex items-center gap-2" role="group" aria-label="Feedback ratings">
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="yes" aria-pressed="false">{t('feedback.yes', '👍 Yes')}</button>
-              <button class="feedback-btn px-3 py-1 bg-canvas hover:bg-canvas-soft-2 text-xs border border-hairline rounded-full cursor-pointer transition-colors" data-val="no" aria-pressed="false">{t('feedback.no', '👎 No')}</button>
+              <button class="feedback-btn card-action px-3.5 py-1.5 text-xs text-ink font-mono font-bold rounded-full" data-val="yes" aria-pressed="false">{t('feedback.yes', '👍 Yes')}</button>
+              <button class="feedback-btn card-action px-3.5 py-1.5 text-xs text-ink font-mono font-bold rounded-full" data-val="no" aria-pressed="false">{t('feedback.no', '👎 No')}</button>
             </div>
           </div>
           <div id="feedback-text-container" class="hidden space-y-2.5 max-w-xl transition-all duration-300">
@@ -369,9 +347,17 @@ const faqSchema = localizedFaqs.length > 0 ? {
 </Layout>
 
 <script>
-  import { safeGetItem, safeSetItem, safeGetJSON } from '../lib/storage';
+  import { safeSetItem, safeGetJSON } from '../lib/storage';
   import { escapeHtml } from '../lib/utils';
   import { getPathWithoutLocale } from '../i18n/utils';
+  import {
+    getEffectiveCurrency,
+    getCurrencySymbol,
+    getCurrencyInfo,
+    isManualCurrencyOverride,
+    getConversionMode,
+    type ConversionMode
+  } from '../lib/currency';
 
   // Feedback Widget Handlers
   const buttons = document.querySelectorAll('.feedback-btn');
@@ -456,7 +442,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
     const rawPath = window.location.pathname;
     const cleanPath = getPathWithoutLocale(rawPath);
 
-    const ignoredPaths = ['/', '/about', '/contact', '/privacy', '/terms', '/disclaimer', '/feedback'];
+    const ignoredPaths = ['/', '/about', '/contact', '/privacy', '/terms', '/disclaimer', '/feedback', '/calculators'];
     if (!ignoredPaths.includes(cleanPath) && !cleanPath.includes('/blog') && !cleanPath.includes('/compare')) {
       let recents = safeGetJSON<any[]>('recent_calculators', []);
       if (!Array.isArray(recents)) recents = [];
@@ -671,8 +657,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
             
             const diffSymbol = diff >= 0 ? '+' : '';
             if (isCurr) {
-              const symbolMap: Record<string, string> = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
-              const symbol = symbolMap[safeGetItem('currency', 'USD')] || '$';
+              const symbol = getCurrencySymbol(getEffectiveCurrency());
               diffHtml = `${diffSymbol}${symbol}${diff.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             } else if (isPct) {
               diffHtml = `${diffSymbol}${diff.toFixed(2)}%`;
@@ -706,8 +691,7 @@ const faqSchema = localizedFaqs.length > 0 ? {
             const isCurr = itemA.value.includes('$') || itemA.value.includes('€') || itemA.value.includes('£') || itemA.value.includes('₹') || label.toLowerCase().includes('interest') || label.toLowerCase().includes('balance') || label.toLowerCase().includes('amount') || label.toLowerCase().includes('cost') || label.toLowerCase().includes('gain') || label.toLowerCase().includes('payment') || label.toLowerCase().includes('proceeds') || label.toLowerCase().includes('shortfall') || label.toLowerCase().includes('net');
 
             if (isCurr) {
-              const symbolMap: Record<string, string> = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
-              const symbol = symbolMap[safeGetItem('currency', 'USD')] || '$';
+              const symbol = getCurrencySymbol(getEffectiveCurrency());
               diffHtml = `${diffSymbol}${symbol}${diff.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             } else if (isPct) {
               diffHtml = `${diffSymbol}${diff.toFixed(2)}%`;
@@ -763,10 +747,9 @@ const faqSchema = localizedFaqs.length > 0 ? {
     // Copy Share URL Click Handler
     const shareBtn = document.getElementById('share-calculator-btn');
     shareBtn?.addEventListener('click', () => {
-      const curr = safeGetItem('currency', 'USD');
       const urlObj = new URL(window.location.href);
-      if (curr && curr !== 'USD') {
-        urlObj.searchParams.set('currency', curr);
+      if (isManualCurrencyOverride()) {
+        urlObj.searchParams.set('currency', getEffectiveCurrency());
       }
       const url = urlObj.toString();
       navigator.clipboard.writeText(url).then(() => {
@@ -822,9 +805,8 @@ const faqSchema = localizedFaqs.length > 0 ? {
         // 2. Sync to URL on input/change
         const handleGlobalInputSync = () => {
           const newParams = new URLSearchParams();
-          const curr = safeGetItem('currency', 'USD');
-          if (curr && curr !== 'USD') {
-            newParams.set('currency', curr);
+          if (isManualCurrencyOverride()) {
+            newParams.set('currency', getEffectiveCurrency());
           }
           Array.from(form.elements).forEach((el: any) => {
             const input = el as HTMLInputElement | HTMLSelectElement;
@@ -905,6 +887,41 @@ const faqSchema = localizedFaqs.length > 0 ? {
 
   // Run initial UI update for scenarios
   updateScenariosUI();
+
+  // Dynamic currency rate notice update
+  function updateCurrencyNotice(currCode?: string, mode?: ConversionMode) {
+    const activeCode = currCode || getEffectiveCurrency();
+    const currentMode = mode || getConversionMode();
+    const meta = getCurrencyInfo(activeCode);
+    const descEl = document.getElementById('currency-rate-notice-desc');
+    const noticeToggle = document.getElementById('currency-rate-notice-toggle');
+
+    if (noticeToggle) {
+      noticeToggle.textContent = currentMode === 'convert' ? 'Mode: 💱 FX Rate' : 'Mode: 🏷️ 1:1 Nominal';
+      noticeToggle.title = currentMode === 'convert'
+        ? 'Currently converting amounts via exchange rates. Click to switch to 1:1 nominal units.'
+        : 'Currently using nominal units (1:1) without conversion. Click to switch to FX rate conversions.';
+    }
+
+    if (descEl) {
+      if (currentMode === 'symbol_only') {
+        descEl.textContent = 'Nominal Mode: values represent local units directly (1:1) without conversion.';
+      } else if (meta.code === 'USD') {
+        descEl.textContent = 'Conversions use benchmark reference rates for convenience.';
+      } else {
+        descEl.textContent = `Conversions use benchmark reference rates (1 USD ≈ ${meta.rate} ${meta.code}). Values scale dynamically.`;
+      }
+    }
+  }
+
+  updateCurrencyNotice();
+  window.addEventListener('currency-change', (e: any) => {
+    updateCurrencyNotice(e.detail);
+  });
+  window.addEventListener('currency-mode-change', (e: any) => {
+    updateCurrencyNotice(undefined, e.detail);
+  });
+  document.addEventListener('astro:page-load', () => updateCurrencyNotice());
 
   // Close mobile navigation collapsible details menu when clicking outside or on a link
   const mobileNavDetails = document.getElementById('mobile-nav-details') as HTMLDetailsElement | null;

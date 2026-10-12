@@ -1,0 +1,308 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import { getLocalizedCategories, getAllCalculatorsFlat } from '../lib/calculators';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const categories = getLocalizedCategories(t);
+const allCalculatorsFlat = getAllCalculatorsFlat(t);
+
+const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
+  acc[cat.key] = cat.count;
+  return acc;
+}, {} as Record<string, number>);
+---
+
+<Layout
+  title={`${t('nav.calculators', 'Financial Calculators Directory')} - financialcalculatorapp.com`}
+  description={t('calculators.pageDescription', 'Browse our complete suite of 38 free financial calculators, loan planners, retirement estimators, and hardware emulators. 100% private in your browser.')}
+  lang={lang}
+>
+  <!-- Directory Header -->
+  <header class="text-center pt-6 pb-6 max-w-3xl mx-auto space-y-3">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center justify-center gap-2 text-xs font-mono text-muted mb-2" aria-label="Breadcrumb">
+      <a href={translatePath('/')} class="hover:text-ink transition-colors">{t('nav.home', 'Home')}</a>
+      <span>/</span>
+      <span class="text-ink font-bold">{t('nav.calculators', 'Calculators')}</span>
+    </nav>
+
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/40 text-[11px] font-mono font-bold text-ink shadow-[var(--control-shadow)]">
+        <span class="text-input-accent">✦</span>
+        <span>{allCalculatorsFlat.length} Financial Engines · 100% Private</span>
+      </div>
+      <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-ink leading-tight">
+        All <span class="text-input-accent">Financial</span> Calculators
+      </h1>
+      <p class="text-sm sm:text-base text-muted font-sans max-w-xl mx-auto">
+        Complete catalog of professional calculation engines, loan schedules, retirement models, and CFA emulators. Free and computed instantly.
+      </p>
+    </div>
+  </header>
+
+  <!-- Search Composer -->
+  <section class="max-w-2xl mx-auto mb-6" aria-label="Calculator directory search">
+    <div class="composer">
+      <label for="dir-calc-search" class="block font-mono text-[11px] font-bold uppercase tracking-wider text-muted mb-2">
+        Search all {allCalculatorsFlat.length} calculators
+      </label>
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          id="dir-calc-search"
+          placeholder="Search by name, category, or keyword (e.g. mortgage, 401k, crypto, roi)..."
+          autocomplete="off"
+          spellcheck="false"
+          class="w-full h-14 sm:h-16 bg-canvas text-ink text-base sm:text-xl font-display font-extrabold border-[1.5px] border-input-accent rounded-lg pl-4 pr-24 focus:outline-none focus:ring-2 focus:ring-input-accent transition-all placeholder:text-muted/50"
+        />
+        <button
+          id="dir-clear-search-btn"
+          type="button"
+          class="card-action absolute right-3 px-3 py-1.5 text-xs font-mono font-bold uppercase"
+          aria-label="Clear search"
+        >
+          Clear
+        </button>
+      </div>
+      <div class="flex items-center justify-between mt-2.5 px-1 font-mono text-xs text-muted">
+        <span>🔒 Zero server transmission · Browser calculation</span>
+        <span id="dir-result-count-label" class="font-bold text-ink">{allCalculatorsFlat.length} calculators</span>
+      </div>
+    </div>
+
+    <!-- Recently Used tray -->
+    <div id="dir-recently-used-section" class="hidden p-3.5 bg-paper border border-ink rounded-lg text-left transition-all mt-4">
+      <h3 class="text-[10px] font-mono text-muted uppercase font-bold tracking-wider mb-2">{t('recent.title', 'Recently Used Calculators')}</h3>
+      <div id="dir-recently-used-list" class="flex flex-wrap gap-2"></div>
+    </div>
+  </section>
+
+  <!-- Category Filter Bar -->
+  <div class="filter-bar max-w-4xl mx-auto mb-8 overflow-x-auto pb-2" aria-label="Filter calculator categories">
+    <div class="filter-list flex items-center gap-2 justify-center flex-wrap" role="group">
+      <button class="dir-filter-btn filter-button is-active" type="button" data-filter="all">
+        <span class="font-mono text-xs">✦</span>
+        <span>All</span>
+        <span class="filter-count">{allCalculatorsFlat.length}</span>
+      </button>
+      {categories.map(cat => (
+        <button class="dir-filter-btn filter-button" type="button" data-filter={cat.key}>
+          <span>{cat.icon}</span>
+          <span>{cat.name}</span>
+          <span class="filter-count">{cat.count}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Results Section Heading -->
+  <div class="max-w-6xl mx-auto flex items-end justify-between gap-4 mb-4">
+    <h2 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-ink" id="dir-results-heading">
+      Available Calculators
+    </h2>
+    <p class="text-xs font-mono text-muted whitespace-nowrap">
+      <span id="dir-visible-cards-count">{allCalculatorsFlat.length}</span> calculators · click to open
+    </p>
+  </div>
+
+  <!-- Style Grid of Calculators -->
+  <section id="directory-cards-section" class="max-w-6xl mx-auto style-grid mb-16" aria-label="Calculators directory list">
+    {allCalculatorsFlat.map(calc => (
+      <a
+        href={translatePath(calc.url)}
+        class="style-card group cursor-pointer transition-all no-underline text-inherit"
+        data-category={calc.categoryKey}
+        data-name={calc.name.toLowerCase()}
+        data-category-name={calc.categoryName.toLowerCase()}
+        data-snippet={calc.snippet.toLowerCase()}
+        data-calc-id={calc.id}
+      >
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="font-display font-bold text-base sm:text-lg tracking-tight text-ink group-hover:text-input-accent transition-colors leading-snug">
+            {calc.name}
+          </h3>
+          {calc.badge && (
+            <span class="text-[9px] font-mono uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-soft text-ink border border-line shrink-0">
+              {calc.badge}
+            </span>
+          )}
+        </div>
+
+        <div class="py-2 text-xs text-muted font-sans leading-relaxed group-hover:text-ink transition-colors flex items-start min-h-[44px]">
+          <span class="line-clamp-2">{calc.snippet}</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-2.5 border-t border-line/15 mt-auto">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-muted truncate max-w-[170px] flex items-center gap-1">
+            <span>{calc.icon}</span>
+            <span>{calc.categoryName}</span>
+          </span>
+          <span
+            class="card-action px-3 py-1.5 text-[11px] font-mono font-bold text-ink group-hover:text-canvas group-hover:bg-ink transition-colors rounded-full"
+          >
+            Open →
+          </span>
+        </div>
+      </a>
+    ))}
+  </section>
+
+  <!-- Empty state for search filters -->
+  <div id="dir-no-results-state" class="hidden text-center py-16 px-4 max-w-md mx-auto">
+    <div class="w-12 h-12 rounded-full border border-ink flex items-center justify-center mx-auto mb-4 text-xl bg-paper">
+      🔍
+    </div>
+    <h3 class="font-display font-bold text-lg text-ink mb-1">No calculators found</h3>
+    <p class="text-xs text-muted mb-4">No financial tools match your current search criteria.</p>
+    <button
+      id="dir-reset-filter-btn"
+      type="button"
+      class="px-4 py-2 bg-paper border border-ink text-xs font-mono font-bold text-ink rounded-full hover:bg-soft transition-colors cursor-pointer"
+    >
+      Clear Search & Reset Filters
+    </button>
+  </div>
+
+  <!-- Category Breakdown Overview (SEO & Fast Browsing) -->
+  <section class="max-w-6xl mx-auto pt-8 border-t-2 border-line/20 mb-16 space-y-8" aria-label="Calculators by category">
+    <div class="text-left">
+      <h2 class="font-display font-extrabold text-xl sm:text-2xl text-ink tracking-tight mb-2">
+        Browse by Category
+      </h2>
+      <p class="text-xs font-sans text-muted">
+        Comprehensive financial calculation modules organized by financial specialization.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categories.map(cat => (
+        <div class="p-5 bg-paper border border-ink rounded-xl shadow-[var(--control-shadow)] space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-line/20">
+            <h3 class="font-display font-bold text-base text-ink flex items-center gap-2">
+              <span>{cat.icon}</span>
+              <span>{cat.name}</span>
+            </h3>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-soft text-muted">
+              {cat.count} tools
+            </span>
+          </div>
+          <ul class="space-y-1.5 font-mono text-xs">
+            {cat.calculators.map(c => (
+              <li>
+                <a
+                  href={translatePath(c.url)}
+                  class="text-muted hover:text-ink hover:underline transition-colors flex items-center justify-between py-1"
+                >
+                  <span class="truncate mr-2">{c.name}</span>
+                  <span class="text-[10px] text-muted/60 shrink-0">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { safeGetJSON } from '../lib/storage';
+  import { escapeHtml } from '../lib/utils';
+
+  const searchInput = document.getElementById('dir-calc-search') as HTMLInputElement | null;
+  const clearBtn = document.getElementById('dir-clear-search-btn');
+  const resultCountLabel = document.getElementById('dir-result-count-label');
+  const visibleCardsCount = document.getElementById('dir-visible-cards-count');
+  const noResultsState = document.getElementById('dir-no-results-state');
+  const resetFilterBtn = document.getElementById('dir-reset-filter-btn');
+  const filterButtons = document.querySelectorAll('.dir-filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('#directory-cards-section .style-card[data-calc-id]');
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = searchInput?.value.toLowerCase().trim() || '';
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const name = card.dataset.name || '';
+      const category = card.dataset.category || '';
+      const categoryName = card.dataset.categoryName || '';
+      const snippet = card.dataset.snippet || '';
+
+      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query);
+      const matchesCategory = activeFilter === 'all' || category === activeFilter;
+
+      if (matchesQuery && matchesCategory) {
+        card.style.display = 'grid';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (resultCountLabel) {
+      resultCountLabel.textContent = `${visibleCount} calculator${visibleCount === 1 ? '' : 's'}`;
+    }
+    if (visibleCardsCount) {
+      visibleCardsCount.textContent = String(visibleCount);
+    }
+    if (noResultsState) {
+      noResultsState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+  clearBtn?.addEventListener('click', () => {
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
+      applyFilters();
+    }
+  });
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      activeFilter = (btn as HTMLElement).dataset.filter || 'all';
+      applyFilters();
+    });
+  });
+
+  resetFilterBtn?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    activeFilter = 'all';
+    filterButtons.forEach((b) => {
+      if ((b as HTMLElement).dataset.filter === 'all') {
+        b.classList.add('is-active');
+      } else {
+        b.classList.remove('is-active');
+      }
+    });
+    applyFilters();
+  });
+
+  // Recently Used Listing
+  if (typeof window !== 'undefined') {
+    const recents = safeGetJSON<any[]>('recent_calculators', []);
+    const recentsSection = document.getElementById('dir-recently-used-section');
+    const recentsList = document.getElementById('dir-recently-used-list');
+
+    if (Array.isArray(recents) && recents.length > 0 && recentsSection && recentsList) {
+      recentsSection.classList.remove('hidden');
+      recentsList.innerHTML = recents
+        .filter((item: any) => item && typeof item.url === 'string' && item.url.startsWith('/') && !item.url.startsWith('//'))
+        .map((item: any) => `
+        <a href="${encodeURI(item.url)}" class="px-3 py-1.5 text-xs bg-canvas hover:bg-soft border border-ink rounded-full text-ink font-mono font-bold transition-colors flex items-center gap-1.5 shadow-[var(--control-shadow)]">
+          <span>⏱️</span>
+          <span>${escapeHtml(item.name || 'Calculator')}</span>
+        </a>
+      `).join('');
+    }
+  }
+</script>

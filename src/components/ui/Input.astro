@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLanguageDefaultCurrency, getCurrencySymbol } from '../../lib/currency';
 
 interface Props {
   id: string;
@@ -10,24 +11,45 @@ interface Props {
   prefix?: string;
   suffix?: string;
   tooltip?: string;
+  name?: string;
+  min?: number | string;
+  max?: number | string;
+  step?: number | string;
 }
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 
-const { id, label, type = 'text', placeholder = '', value = '', prefix, suffix, tooltip } = Astro.props;
+const { 
+  id, 
+  label, 
+  type = 'text', 
+  placeholder = '', 
+  value = '', 
+  prefix, 
+  suffix, 
+  tooltip,
+  name,
+  min,
+  max,
+  step
+} = Astro.props;
 
 const localizedLabel = t(label, label);
 const localizedTooltip = tooltip ? t(tooltip, tooltip) : undefined;
 const localizedPlaceholder = placeholder ? t(placeholder, placeholder) : placeholder;
+
+const defaultCurrency = getLanguageDefaultCurrency(lang);
+const defaultCurrencySymbol = getCurrencySymbol(defaultCurrency);
+const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
 ---
 <div class="flex flex-col gap-1.5 w-full relative">
   <div class="flex items-center gap-1.5">
-    <label for={id} class="text-sm font-medium text-ink">{localizedLabel}</label>
+    <label for={id} class="text-xs font-mono font-bold uppercase tracking-wider text-ink">{localizedLabel}</label>
     {localizedTooltip && (
       <div class="group relative cursor-help select-none">
         <span
-          class="w-3.5 h-3.5 rounded-full border border-mute/50 text-[10px] text-mute flex items-center justify-center font-mono hover:bg-canvas-soft-2 transition-colors"
+          class="w-3.5 h-3.5 rounded-full border border-ink/50 text-[10px] text-muted flex items-center justify-center font-mono hover:bg-soft transition-colors"
           tabindex="0"
           role="img"
           aria-label={localizedTooltip}
@@ -36,10 +58,10 @@ const localizedPlaceholder = placeholder ? t(placeholder, placeholder) : placeho
         <div
           id={`${id}-tooltip`}
           role="tooltip"
-          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-primary text-on-primary text-[10px] leading-normal rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-normal"
+          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-paper text-ink border border-ink text-[11px] leading-normal rounded-md shadow-[var(--control-shadow-hover)] opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-sans font-normal"
         >
           {localizedTooltip}
-          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary"></div>
+          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"></div>
         </div>
       </div>
     )}
@@ -47,42 +69,40 @@ const localizedPlaceholder = placeholder ? t(placeholder, placeholder) : placeho
   <div class="relative flex items-center">
     {prefix && (
       <span 
-        class="absolute left-3 text-mute text-sm pointer-events-none" 
+        class="absolute left-3 text-muted font-mono font-bold text-sm pointer-events-none" 
         data-currency-prefix={prefix === '$' ? "true" : undefined}
       >
-        {prefix}
+        {displayPrefix}
       </span>
     )}
     <input
       type={type}
       id={id}
-      name={id}
+      name={name || id}
       value={value}
       placeholder={localizedPlaceholder}
+      min={min}
+      max={max}
+      step={step}
       class:list={[
-        "w-full h-10 bg-canvas text-ink text-sm border border-hairline rounded-sm transition-colors focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]",
-        prefix ? "pl-7" : "pl-3",
-        suffix ? (suffix.length > 4 ? "pr-20" : (suffix.length > 2 ? "pr-14" : "pr-8")) : "pr-3"
+        "w-full h-11 bg-canvas text-ink text-sm font-mono font-medium border border-ink/40 rounded-md transition-all focus:outline-none focus:border-input-accent focus:ring-2 focus:ring-input-accent/20 shadow-[var(--control-shadow)]",
+        prefix ? "pl-8" : "pl-3.5",
+        suffix ? (suffix.length > 4 ? "pr-20" : (suffix.length > 2 ? "pr-14" : "pr-8")) : "pr-3.5"
       ]}
     />
-    {suffix && <span class="absolute right-3 text-mute text-sm pointer-events-none">{suffix}</span>}
+    {suffix && <span class="absolute right-3 text-muted font-mono text-xs font-bold pointer-events-none">{suffix}</span>}
   </div>
   <!-- Validation Error Container -->
-  <span id={`${id}-error`} class="text-[10px] text-error font-medium mt-0.5 leading-none hidden"></span>
+  <span id={`${id}-error`} class="text-[11px] text-error font-mono font-bold mt-0.5 leading-none hidden"></span>
 </div>
 
 <script>
-  import { safeGetItem } from '../../lib/storage';
+  import { getEffectiveCurrency, getCurrencySymbol } from '../../lib/currency';
 
   function updateCurrencySymbol() {
-    const symbols: Record<string, string> = {
-      USD: '$',
-      EUR: '€',
-      GBP: '£',
-      INR: '₹'
-    };
-    const currentCurrency = safeGetItem('currency', 'USD');
-    const symbol = symbols[currentCurrency] || '$';
+    const currentLang = document.documentElement.lang;
+    const currentCurrency = getEffectiveCurrency(currentLang);
+    const symbol = getCurrencySymbol(currentCurrency);
     
     document.querySelectorAll('[data-currency-prefix]').forEach(span => {
       span.textContent = symbol;
@@ -94,6 +114,7 @@ const localizedPlaceholder = placeholder ? t(placeholder, placeholder) : placeho
     (window as any).__currency_listener_registered = true;
     window.addEventListener('currency-change', updateCurrencySymbol);
     document.addEventListener('DOMContentLoaded', updateCurrencySymbol);
+    document.addEventListener('astro:page-load', updateCurrencySymbol);
   }
   
   // Run immediately on client load

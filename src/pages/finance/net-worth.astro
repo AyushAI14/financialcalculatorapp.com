@@ -67,13 +67,13 @@ const faqs = getCalculatorFaqs('net-worth');
     <div class="lg:col-span-6 space-y-6">
       <div class="flex flex-col gap-3">
         <div id="res-networth">
-          <ResultCard title="Net Worth" value="$182,000.00" highlight={true} description="Total Assets minus Total Liabilities." />
+          <ResultCard title="Net Worth" value="--" highlight={true} description="Total Assets minus Total Liabilities." />
         </div>
         <div id="res-assets">
-          <ResultCard title="Total Assets" value="$470,000.00" />
+          <ResultCard title="Total Assets" value="--" />
         </div>
         <div id="res-liabilities">
-          <ResultCard title="Total Liabilities" value="$278,000.00" />
+          <ResultCard title="Total Liabilities" value="--" />
         </div>
       </div>
 
@@ -183,7 +183,8 @@ const faqs = getCalculatorFaqs('net-worth');
           datasets: [
             {
               data: [assets, liabilities],
-              backgroundColor: ['#0070f3', '#ff0080'],
+              backgroundColor: ['#10b981', '#f43f5e'],
+              borderColor: ['#10b981', '#f43f5e'],
               borderWidth: 1,
               barThickness: 48
             }
@@ -198,7 +199,6 @@ const faqs = getCalculatorFaqs('net-worth');
           scales: {
             x: { grid: { display: false } },
             y: {
-              grid: { color: '#ebebeb' },
               ticks: {
                 font: { family: 'Geist Mono, monospace', size: 9 },
                 callback: function(value) {
@@ -216,7 +216,6 @@ const faqs = getCalculatorFaqs('net-worth');
   [cashInput, invInput, reInput, vehInput, mortInput, studInput, ccInput, otherInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-      performCalculation();
     });
   });
 
@@ -239,9 +238,6 @@ const faqs = getCalculatorFaqs('net-worth');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-
-      performCalculation();
-      cashInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
@@ -291,7 +287,13 @@ const faqs = getCalculatorFaqs('net-worth');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
-      performCalculation();
+      if (resNet) resNet.querySelector('.font-mono')!.textContent = '--';
+      if (resAss) resAss.querySelector('.font-mono')!.textContent = '--';
+      if (resLia) resLia.querySelector('.font-mono')!.textContent = '--';
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
     }, 0);
   });
 
@@ -299,8 +301,9 @@ const faqs = getCalculatorFaqs('net-worth');
   syncInputsWithURL('networth-form', performCalculation);
 
   // Currency select change listener
-  window.addEventListener('currency-change', performCalculation);
-
-  // Initial Calculation
-  performCalculation();
+  window.addEventListener('currency-change', () => {
+    if (resNet && resNet.querySelector('.font-mono')?.textContent !== '--') {
+      performCalculation();
+    }
+  });
 </script>
