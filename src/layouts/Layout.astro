@@ -53,6 +53,7 @@ const ogLocale = (lang as string).replace('-', '_');
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={localizedPageDescription} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -146,17 +147,15 @@ const ogLocale = (lang as string).replace('-', '_');
           <!-- Logo -->
           <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity flex items-center gap-2 sm:gap-2.5 shrink-0 select-none" aria-label="financialcalculatorapp.com home">
             <img src="/logo.png" alt="financialcalculatorapp.com logo" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-contain shrink-0 shadow-xs" width="36" height="36" />
-            <span class="brand-name inline tracking-tight font-extrabold text-ink font-display text-sm sm:text-base lg:text-lg whitespace-nowrap">
-              <span class="inline min-[400px]:hidden">financialcalc</span>
-              <span class="hidden min-[400px]:inline">financialcalculatorapp</span>
-              <span class="text-input-accent">.com</span>
+            <span class="brand-name tracking-tight font-extrabold text-ink font-display text-xs xs:text-sm sm:text-base lg:text-lg whitespace-nowrap">
+              financialcalculatorapp<span class="text-input-accent">.com</span>
             </span>
           </a>
 
           <!-- Desktop Center Nav Links -->
           <nav class="hidden lg:flex items-center gap-1" aria-label="Primary navigation">
             <a
-              href={translatePath('/finance/compound-interest')}
+              href={translatePath('/calculators')}
               class:list={[
                 "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
                 isCalculatorsActive
@@ -285,7 +284,7 @@ const ogLocale = (lang as string).replace('-', '_');
           <!-- Primary Navigation Links -->
           <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2" aria-label="Mobile primary navigation">
             <a
-              href={translatePath('/finance/compound-interest')}
+              href={translatePath('/calculators')}
               class:list={[
                 "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
                 isCalculatorsActive
@@ -347,14 +346,18 @@ const ogLocale = (lang as string).replace('-', '_');
             </div>
           </div>
 
-          <!-- Mobile Settings Bar (Currency, Conversion mode & Language) -->
-          <div class="border-t border-line/15 pt-3 flex flex-col gap-2.5">
+          <!-- Mobile Settings Bar (Language, Currency & Conversion) -->
+          <div class="border-t border-line/15 pt-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
             <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('currency.select', 'Currency')}:</span>
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
+              <LanguagePicker id="mobile-language-select" lang={lang} />
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">Currency:</span>
               <select
                 id="mobile-currency-select"
                 title="Select display currency"
-                class="bg-paper text-ink text-xs font-mono font-bold border border-ink rounded-full px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] max-w-[190px] truncate"
+                class="bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] max-w-[140px] truncate"
                 aria-label="Select currency"
                 data-default-currency={defaultCurrency}
               >
@@ -367,19 +370,15 @@ const ogLocale = (lang as string).replace('-', '_');
               </select>
             </div>
             <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('currency.conversion', 'Mode')}:</span>
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">Conversion:</span>
               <button
                 id="mobile-currency-mode-toggle"
                 type="button"
-                class="inline-flex items-center gap-1.5 bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-3 py-1.5 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
+                class="inline-flex items-center gap-1.5 bg-canvas text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-3 py-1.5 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
               >
                 <span id="mobile-currency-mode-icon">💱</span>
                 <span id="mobile-currency-mode-text">FX Rate</span>
               </button>
-            </div>
-            <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
-              <LanguagePicker id="mobile-language-select" lang={lang} />
             </div>
           </div>
 
@@ -388,7 +387,6 @@ const ogLocale = (lang as string).replace('-', '_');
             <a href={translatePath('/privacy')} class="hover:text-ink transition-colors py-1">{t('nav.privacy')}</a>
             <a href={translatePath('/terms')} class="hover:text-ink transition-colors py-1">{t('nav.terms')}</a>
             <a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors py-1">{t('nav.disclaimer')}</a>
-            <a href={translatePath('/sitemap')} class="hover:text-ink transition-colors py-1">{t('nav.sitemap', 'Sitemap')}</a>
           </div>
         </div>
       </div>
