@@ -231,9 +231,11 @@ export const calculatorGuides: Record<string, CalculatorGuide> = {
     formulaExplanation: "Combines your starting balance growth with the future value of recurring monthly contributions and employer matches over your career horizon.",
     section2Title: "401(k) Optimization Rules",
     tips: [
-      { title: "Capture the Full Match First", desc: "Never contribute less than the exact threshold required to capture 100% of your company's matching dollars." },
-      { title: "Inspect Investment Options", desc: "Review the internal expense ratios of funds in your 401(k) menu and prioritize low-cost broad-market index funds." },
-      { title: "Utilize Auto-Escalation", desc: "Enable automatic 1% annual contribution increases aligned with annual merit raises to painlessly reach IRS contribution maximums." }
+      { title: "Capture the Full Match First", desc: "Never contribute less than the exact threshold required to capture 100% of your company's matching dollars—it is guaranteed compensation." },
+      { title: "Roth vs. Traditional Selection", desc: "Choose Roth 401(k) if you are currently in a lower tax bracket to lock in tax-free distributions; choose Traditional to maximize immediate tax deductions if you are in your peak earning years." },
+      { title: "Track Milestones by Age", desc: "Aim for 1x your annual salary by age 30, 3x by 40, 6x by 50, and 10x by age 67 to maintain retirement income replacement." },
+      { title: "Plan for 4% Safe Withdrawals", desc: "Use the 4% rule to convert your nest egg into sustainable monthly income: every $1,000,000 provides approximately $3,333/month in retirement." },
+      { title: "Solo 401(k) for Self-Employed", desc: "Entrepreneurs and freelancers can contribute as both employee and employer up to the combined $69,000 limit, far exceeding standard IRA caps." }
     ]
   },
 

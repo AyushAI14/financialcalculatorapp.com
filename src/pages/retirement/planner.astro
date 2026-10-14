@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('retirement-planner');
 
 <CalculatorLayout 
   title="Retirement Planner" 
-  description="Calculate how much you need to save for retirement, forecast your portfolio balance at retirement age, and test sustainable withdrawal rates."
+  seoTitle="Retirement Calculator: Estimate Savings & Safe Withdrawals | financialcalculatorapp.com"
+  description="Calculate how much money you need to retire comfortably. Forecast portfolio balance at retirement age and test 4% safe withdrawal rules."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -76,7 +77,7 @@ const faqs = getCalculatorFaqs('retirement-planner');
 
       <!-- Retirement Hill Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Projection (Retirement Hill)</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Projection (Retirement Hill)')}</h4>
         <div class="h-80 relative">
           <canvas id="retirement-chart"></canvas>
         </div>
@@ -88,14 +89,14 @@ const faqs = getCalculatorFaqs('retirement-planner');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Annual Ledger Projection</h3>
-        <p class="text-sm text-body mt-1">Year-by-year logs tracking accumulation deposits, compounding interest, and retirement drawdowns.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Annual Ledger Projection')}</h3>
+        <p class="text-sm text-body mt-1">{t('Year-by-year logs tracking accumulation deposits, compounding interest, and retirement drawdowns.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Annual Ledger
+        {t('Show Annual Ledger')}
       </button>
     </div>
 
@@ -125,6 +126,8 @@ const faqs = getCalculatorFaqs('retirement-planner');
   import { simulateRetirementPath } from '../../lib/math/retirement';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('retirement-chart');
 
   // DOM Elements
   const form = document.getElementById('retirement-form') as HTMLFormElement;

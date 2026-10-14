@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('fee-impact');
 
 <CalculatorLayout 
   title="Investment Fee Calculator" 
-  description="See how fund expense ratios, management fees, and advisory charges reduce your lifetime investment portfolio returns."
+  seoTitle="Investment Fee Calculator: See Expense Ratio Drag | financialcalculatorapp.com"
+  description="Discover how fund expense ratios, 1% advisor fees, and maintenance charges drain lifetime retirement earnings compared to low-cost index funds."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -24,8 +25,8 @@ const faqs = getCalculatorFaqs('fee-impact');
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Settings')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="10000" data-month="500" data-rate="8.0" data-fa="0.05" data-fb="0.85" data-years="30">Low ETF vs Active MF</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="50000" data-month="1000" data-rate="7.0" data-fa="0.10" data-fb="1.25" data-years="25">Robo Advisor vs Advisor</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="10000" data-month="500" data-rate="8.0" data-fa="0.05" data-fb="0.85" data-years="30">{t('Low ETF vs Active MF')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="50000" data-month="1000" data-rate="7.0" data-fa="0.10" data-fb="1.25" data-years="25">{t('Robo Advisor vs Advisor')}</button>
             </div>
           </div>
 
@@ -74,7 +75,7 @@ const faqs = getCalculatorFaqs('fee-impact');
 
       <!-- Growth Projections Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Portfolio Trajectories Comparison</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Portfolio Trajectories Comparison')}</h4>
         <div class="h-64 relative">
           <canvas id="fee-chart"></canvas>
         </div>
@@ -82,14 +83,14 @@ const faqs = getCalculatorFaqs('fee-impact');
 
       <!-- Opportunity Cost disclosures -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">Opportunity Cost of Fees</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">{t('Opportunity Cost of Fees')}</h4>
         <div class="text-xs space-y-2">
           <div class="flex justify-between">
-            <span class="text-body font-medium">Lost to Fees under Option A</span>
+            <span class="text-body font-medium">{t('Lost to Fees under Option A')}</span>
             <span class="font-mono text-ink text-right" id="lost-a">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
-            <span class="text-body font-medium">Lost to Fees under Option B</span>
+            <span class="text-body font-medium">{t('Lost to Fees under Option B')}</span>
             <span class="font-mono text-ink text-right" id="lost-b">--</span>
           </div>
         </div>
@@ -98,7 +99,7 @@ const faqs = getCalculatorFaqs('fee-impact');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Comparison CSV
+          <span>📊</span> {t('Download Comparison CSV')}
         </button>
       </div>
     </div>
@@ -112,6 +113,8 @@ const faqs = getCalculatorFaqs('fee-impact');
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('fee-chart');
 
   // DOM Elements
   const form = document.getElementById('fee-form') as HTMLFormElement;

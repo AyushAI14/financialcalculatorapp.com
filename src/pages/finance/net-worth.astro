@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('net-worth');
 
 <CalculatorLayout 
   title="Net Worth Tracker" 
-  description="Track and calculate your total personal net worth by summing all physical and liquid assets and subtracting outstanding debts and liabilities."
+  seoTitle="Net Worth Calculator & Tracker: Calculate Your Total Wealth | financialcalculatorapp.com"
+  description="Calculate and track your personal net worth. Add up physical assets, liquid cash, and investments, then subtract debts for an instant financial snapshot."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -79,7 +80,7 @@ const faqs = getCalculatorFaqs('net-worth');
 
       <!-- Asset vs Liability Distribution Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Sheet Structure</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Sheet Structure')}</h4>
         <div class="h-64 relative">
           <canvas id="networth-chart"></canvas>
         </div>
@@ -88,7 +89,7 @@ const faqs = getCalculatorFaqs('net-worth');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Balance Sheet CSV
+          <span>📊</span> {t('Download Balance Sheet CSV')}
         </button>
       </div>
     </div>
@@ -102,6 +103,8 @@ const faqs = getCalculatorFaqs('net-worth');
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('networth-chart');
 
   // DOM Elements
   const form = document.getElementById('networth-form') as HTMLFormElement;

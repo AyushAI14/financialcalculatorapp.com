@@ -18,12 +18,43 @@ const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
 const localizedData = getLocalizedBlogPost(post.id, lang);
-const pageTitle = `${localizedData.title || post.data.title} - financialcalculatorapp.com Blog`;
+const pageTitle = `${localizedData.title || post.data.title} | financialcalculatorapp.com`;
 const pageDesc = localizedData.description || post.data.description;
 const contentHtml = localizedData.content;
+
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
+const postUrl = `${siteOrigin}${translatePath(`/blog/${post.id}`)}`;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": localizedData.title || post.data.title,
+  "description": pageDesc,
+  "datePublished": post.data.pubDate.toISOString(),
+  "url": postUrl,
+  "author": {
+    "@type": "Person",
+    "name": post.data.author
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "financialcalculatorapp.com",
+    "url": siteOrigin,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteOrigin}/logo.png`
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": postUrl
+  }
+};
 ---
 
 <Layout title={pageTitle} description={pageDesc} lang={lang}>
+  <!-- BlogPosting Structured Data for Google Rich Results -->
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(articleSchema)} />
   <article class="max-w-3xl mx-auto py-8 px-4">
     <header class="mb-8 border-b border-hairline pb-6">
       <div class="flex items-center gap-3 text-xs font-mono text-mute mb-2">

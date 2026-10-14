@@ -7,7 +7,7 @@ import type { Lang } from '../i18n/ui';
 import { getAllCurrencies, getLanguageDefaultCurrency } from '../lib/currency';
 
 const currentPath = getPathWithoutLocale(Astro.url.pathname);
-const isCalculatorsActive = currentPath === '/calculators' || currentPath.startsWith('/calculators/') || currentPath.startsWith('/finance/') || currentPath.startsWith('/loan/') || currentPath.startsWith('/emulators/') || currentPath.startsWith('/credit-card/') || currentPath.startsWith('/auto/') || currentPath.startsWith('/tax/') || currentPath.startsWith('/investing/') || currentPath.startsWith('/crypto/') || currentPath.startsWith('/mortgage/');
+const isCalculatorsActive = currentPath === '/calculators' || currentPath.startsWith('/calculators/') || currentPath.startsWith('/finance/') || currentPath.startsWith('/loan/') || currentPath.startsWith('/emulators/') || currentPath.startsWith('/credit-card/') || currentPath.startsWith('/auto/') || currentPath.startsWith('/tax/') || currentPath.startsWith('/investing/') || currentPath.startsWith('/crypto/') || currentPath.startsWith('/mortgage/') || currentPath.startsWith('/retirement/') || currentPath.startsWith('/compare/');
 const isBlogActive = currentPath === '/blog' || currentPath.startsWith('/blog/');
 const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
 const isContactActive = currentPath === '/contact' || currentPath.startsWith('/contact/');
@@ -53,13 +53,15 @@ const ogLocale = (lang as string).replace('-', '_');
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={localizedPageDescription} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="canonical" href={resolvedCanonical} />
     <link rel="manifest" href="/manifest.json" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{localizedPageTitle}</title>
 
@@ -91,6 +93,16 @@ const ogLocale = (lang as string).replace('-', '_');
     
     <!-- Add Geist Mono Font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-Y242ERQRLW"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-Y242ERQRLW');
+    </script>
     
     <!-- Dark Mode Blocker Script (dataset.theme sync) -->
     <script is:inline>
@@ -100,9 +112,6 @@ const ogLocale = (lang as string).replace('-', '_');
             return localStorage.getItem('theme');
           }
         } catch (e) {}
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
         return 'light';
       })();
     
@@ -128,18 +137,18 @@ const ogLocale = (lang as string).replace('-', '_');
   <body class="bg-canvas text-ink font-sans antialiased selection:bg-ink selection:text-canvas min-h-screen flex flex-col">
     <!-- Skip link for keyboard accessibility -->
     <a class="skip-link fixed top-3 left-3 z-[100] -translate-y-24 focus:translate-y-0 px-4 py-2 bg-paper text-ink border-2 border-ink font-mono font-bold text-xs uppercase rounded transition-transform" href="#main-content">
-      Skip to content
+      {t('nav.skipContent', 'Skip to content')}
     </a>
     <!-- Header (Site Header & Responsive Navigation) -->
     <header class="site-header sticky top-0 z-50 w-full border-b-2 border-line bg-canvas/95 backdrop-blur-md">
       <div class="page-shell min-h-[58px] sm:min-h-[66px] flex items-center justify-between gap-2 sm:gap-4 py-2 sm:py-2.5">
         <div class="flex items-center gap-3 lg:gap-6 min-w-0">
           <!-- Logo -->
-          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity flex items-center gap-2 shrink-0 select-none" aria-label="financialcalculatorapp.com home">
-            <span class="brand-mark shrink-0 w-8 h-8 text-xs sm:w-9 sm:h-9 sm:text-sm" aria-hidden="true">✦</span>
-            <span class="brand-name tracking-tight font-extrabold text-ink font-display text-sm sm:text-base lg:text-lg whitespace-nowrap">
-              <span class="inline sm:hidden">financialcalc</span>
-              <span class="hidden sm:inline">financialcalculatorapp</span>
+          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity flex items-center gap-2 sm:gap-2.5 shrink-0 select-none" aria-label="financialcalculatorapp.com home">
+            <img src="/logo.png" alt="financialcalculatorapp.com logo" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-contain shrink-0 shadow-xs" width="36" height="36" />
+            <span class="brand-name inline tracking-tight font-extrabold text-ink font-display text-sm sm:text-base lg:text-lg whitespace-nowrap">
+              <span class="inline min-[400px]:hidden">financialcalc</span>
+              <span class="hidden min-[400px]:inline">financialcalculatorapp</span>
               <span class="text-input-accent">.com</span>
             </span>
           </a>
@@ -147,7 +156,7 @@ const ogLocale = (lang as string).replace('-', '_');
           <!-- Desktop Center Nav Links -->
           <nav class="hidden lg:flex items-center gap-1" aria-label="Primary navigation">
             <a
-              href={translatePath('/calculators')}
+              href={translatePath('/finance/compound-interest')}
               class:list={[
                 "px-3.5 py-1.5 rounded-full text-xs font-mono transition-colors",
                 isCalculatorsActive
@@ -200,12 +209,12 @@ const ogLocale = (lang as string).replace('-', '_');
             <LanguagePicker id="navbar-language-select" lang={lang} />
           </div>
 
-          <!-- Currency Selector -->
-          <div class="relative flex items-center">
+          <!-- Currency Selector (Tablet & Desktop) -->
+          <div class="relative hidden sm:flex items-center">
             <select
               id="currency-select"
               title="Select display currency"
-              class="bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-2 sm:px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] max-w-[88px] xs:max-w-[115px] sm:max-w-none truncate"
+              class="bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-2 sm:px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] truncate"
               aria-label="Select currency"
               data-default-currency={defaultCurrency}
             >
@@ -276,7 +285,7 @@ const ogLocale = (lang as string).replace('-', '_');
           <!-- Primary Navigation Links -->
           <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2" aria-label="Mobile primary navigation">
             <a
-              href={translatePath('/calculators')}
+              href={translatePath('/finance/compound-interest')}
               class:list={[
                 "flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg border font-mono text-xs transition-colors",
                 isCalculatorsActive
@@ -285,7 +294,7 @@ const ogLocale = (lang as string).replace('-', '_');
               ]}
             >
               <span class="flex items-center gap-2"><span>🧮</span><span>{t('nav.calculators')}</span></span>
-              <span class:list={["text-[10px] px-2 py-0.5 rounded-full font-bold border", isCalculatorsActive ? "bg-canvas text-ink border-canvas" : "bg-soft text-ink border-line/20"]}>38 Tools</span>
+              <span class:list={["text-[10px] px-2 py-0.5 rounded-full font-bold border", isCalculatorsActive ? "bg-canvas text-ink border-canvas" : "bg-soft text-ink border-line/20"]}>{t('tools.count', '38 Tools')}</span>
             </a>
             <a
               href={translatePath('/blog')}
@@ -327,33 +336,50 @@ const ogLocale = (lang as string).replace('-', '_');
 
           <!-- Explore & Comparisons -->
           <div class="border-t border-line/15 pt-3">
-            <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-wider block mb-2 px-1">Resources</span>
+            <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-wider block mb-2 px-1">{t('footer.resources', 'Resources')}</span>
             <div class="grid grid-cols-2 gap-2 text-xs font-mono">
               <a href={translatePath('/glossary')} class="px-3 py-2 rounded-lg bg-canvas/40 hover:bg-soft text-ink/90 border border-line/15 flex items-center gap-1.5 transition-colors min-h-[40px]">
-                <span>📖</span><span>Glossary</span>
+                <span>📖</span><span>{t('sitemap.glossary', 'Glossary')}</span>
               </a>
               <a href={translatePath('/compare/snowball-vs-avalanche')} class="px-3 py-2 rounded-lg bg-canvas/40 hover:bg-soft text-ink/90 border border-line/15 flex items-center gap-1.5 transition-colors min-h-[40px]">
-                <span>⚖️</span><span>Comparisons</span>
+                <span>⚖️</span><span>{t('footer.comparisons', 'Comparisons')}</span>
               </a>
             </div>
           </div>
 
-          <!-- Mobile Settings Bar (Language & Conversion mode) -->
-          <div class="border-t border-line/15 pt-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+          <!-- Mobile Settings Bar (Currency, Conversion mode & Language) -->
+          <div class="border-t border-line/15 pt-3 flex flex-col gap-2.5">
             <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
-              <LanguagePicker id="mobile-language-select" lang={lang} />
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('currency.select', 'Currency')}:</span>
+              <select
+                id="mobile-currency-select"
+                title="Select display currency"
+                class="bg-paper text-ink text-xs font-mono font-bold border border-ink rounded-full px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-input-accent transition-colors cursor-pointer select-none shadow-[var(--control-shadow)] max-w-[190px] truncate"
+                aria-label="Select currency"
+                data-default-currency={defaultCurrency}
+              >
+                <option value="auto">✨ Auto ({defaultCurrency})</option>
+                {allCurrencies.map((c) => (
+                  <option value={c.code}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] font-mono text-muted uppercase font-bold">Conversion:</span>
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('currency.conversion', 'Mode')}:</span>
               <button
                 id="mobile-currency-mode-toggle"
                 type="button"
-                class="inline-flex items-center gap-1.5 bg-canvas text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-3 py-1.5 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
+                class="inline-flex items-center gap-1.5 bg-paper text-ink text-[11px] font-mono font-bold border border-ink rounded-full px-3 py-1.5 hover:bg-soft transition-colors cursor-pointer select-none shadow-[var(--control-shadow)]"
               >
                 <span id="mobile-currency-mode-icon">💱</span>
                 <span id="mobile-currency-mode-text">FX Rate</span>
               </button>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-[10px] font-mono text-muted uppercase font-bold">{t('lang.select')}:</span>
+              <LanguagePicker id="mobile-language-select" lang={lang} />
             </div>
           </div>
 
@@ -362,6 +388,7 @@ const ogLocale = (lang as string).replace('-', '_');
             <a href={translatePath('/privacy')} class="hover:text-ink transition-colors py-1">{t('nav.privacy')}</a>
             <a href={translatePath('/terms')} class="hover:text-ink transition-colors py-1">{t('nav.terms')}</a>
             <a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors py-1">{t('nav.disclaimer')}</a>
+            <a href={translatePath('/sitemap')} class="hover:text-ink transition-colors py-1">{t('nav.sitemap', 'Sitemap')}</a>
           </div>
         </div>
       </div>
@@ -384,8 +411,8 @@ const ogLocale = (lang as string).replace('-', '_');
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-14">
         <!-- Col 1: Brand & Description -->
         <div class="lg:col-span-2 space-y-4">
-          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity w-fit flex items-center gap-2" aria-label="financialcalculatorapp.com home">
-            <span class="brand-mark" aria-hidden="true">✦</span>
+          <a href={translatePath('/')} class="brand hover:opacity-85 transition-opacity w-fit flex items-center gap-2.5" aria-label="financialcalculatorapp.com home">
+            <img src="/logo.png" alt="financialcalculatorapp.com logo" class="w-8 h-8 rounded-lg object-contain shrink-0 shadow-xs" width="32" height="32" />
             <span class="brand-name tracking-tight font-extrabold text-ink font-display text-base sm:text-lg">financialcalculatorapp<span class="text-input-accent">.com</span></span>
           </a>
           <p class="text-xs text-muted leading-relaxed max-w-sm font-sans">
@@ -406,10 +433,10 @@ const ogLocale = (lang as string).replace('-', '_');
           <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/finance/compound-interest')} class="hover:text-ink transition-colors">{t('calc.compound.name')}</a></li>
             <li><a href={translatePath('/finance/paycheck')} class="hover:text-ink transition-colors">{t('calc.paycheck.name')}</a></li>
-            <li><a href={translatePath('/finance/net-worth')} class="hover:text-ink transition-colors">Net Worth Tracker</a></li>
+            <li><a href={translatePath('/finance/net-worth')} class="hover:text-ink transition-colors">{t('calc.networth.name', 'Net Worth Tracker')}</a></li>
             <li><a href={translatePath('/loan/mortgage')} class="hover:text-ink transition-colors">{t('calc.mortgage.name')}</a></li>
-            <li><a href={translatePath('/finance/college-savings')} class="hover:text-ink transition-colors">College Savings (529)</a></li>
-            <li><a href={translatePath('/calculators')} class="font-bold text-ink hover:underline transition-colors">All 38 Calculators →</a></li>
+            <li><a href={translatePath('/finance/college-savings')} class="hover:text-ink transition-colors">{t('calc.collegesavings.name', 'College Savings (529)')}</a></li>
+            <li><a href={translatePath('/calculators')} class="font-bold text-ink hover:underline transition-colors">{t('footer.allCalculators', 'All 38 Calculators →')}</a></li>
           </ul>
         </div>
 
@@ -417,10 +444,10 @@ const ogLocale = (lang as string).replace('-', '_');
         <div class="space-y-3">
           <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('footer.comparisons')}</h4>
           <ul class="space-y-2 text-xs font-sans text-muted">
-            <li><a href={translatePath('/compare/snowball-vs-avalanche')} class="hover:text-ink transition-colors">Snowball vs Avalanche</a></li>
-            <li><a href={translatePath('/compare/roth-vs-traditional-ira')} class="hover:text-ink transition-colors">Roth vs Traditional IRA</a></li>
-            <li><a href={translatePath('/compare/apr-vs-nominal')} class="hover:text-ink transition-colors">APR vs Nominal Interest</a></li>
-            <li><a href={translatePath('/loan/rent-vs-buy')} class="hover:text-ink transition-colors">Rent vs Buy Decision</a></li>
+            <li><a href={translatePath('/compare/snowball-vs-avalanche')} class="hover:text-ink transition-colors">{t('compare.snowball.short', 'Snowball vs Avalanche')}</a></li>
+            <li><a href={translatePath('/compare/roth-vs-traditional-ira')} class="hover:text-ink transition-colors">{t('compare.ira.short', 'Roth vs Traditional IRA')}</a></li>
+            <li><a href={translatePath('/compare/apr-vs-nominal')} class="hover:text-ink transition-colors">{t('compare.apr.short', 'APR vs Nominal Interest')}</a></li>
+            <li><a href={translatePath('/loan/rent-vs-buy')} class="hover:text-ink transition-colors">{t('calc.rentvsbuy.name', 'Rent vs Buy Decision')}</a></li>
           </ul>
         </div>
 
@@ -429,13 +456,14 @@ const ogLocale = (lang as string).replace('-', '_');
           <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('footer.resources')}</h4>
           <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/blog')} class="hover:text-ink transition-colors">{t('nav.blog')}</a></li>
-            <li><a href={translatePath('/glossary')} class="hover:text-ink transition-colors">Financial Glossary</a></li>
+            <li><a href={translatePath('/glossary')} class="hover:text-ink transition-colors">{t('sitemap.glossary', 'Financial Glossary')}</a></li>
             <li><a href={translatePath('/about')} class="hover:text-ink transition-colors">{t('nav.about')}</a></li>
             <li><a href={translatePath('/contact')} class="hover:text-ink transition-colors">{t('nav.contact')}</a></li>
             <li><a href={translatePath('/privacy')} class="hover:text-ink transition-colors">{t('nav.privacy')}</a></li>
             <li><a href={translatePath('/terms')} class="hover:text-ink transition-colors">{t('nav.terms')}</a></li>
             <li><a href={translatePath('/disclaimer')} class="hover:text-ink transition-colors">{t('nav.disclaimer')}</a></li>
-            <li><a href="/sitemap.xml" class="hover:text-ink transition-colors">{t('nav.sitemap')}</a></li>
+            <li><a href={translatePath('/sitemap')} class="hover:text-ink transition-colors">{t('nav.sitemap', 'Sitemap')}</a></li>
+            <li><a href="/sitemap.xml" class="hover:text-ink transition-colors text-muted/70">XML Feed</a></li>
           </ul>
         </div>
       </div>
@@ -773,7 +801,8 @@ const ogLocale = (lang as string).replace('-', '_');
 
       function setupCurrencySelector() {
         const currencySelect = document.getElementById('currency-select') as HTMLSelectElement | null;
-        if (!currencySelect) return;
+        const mobileCurrencySelect = document.getElementById('mobile-currency-select') as HTMLSelectElement | null;
+        if (!currencySelect && !mobileCurrencySelect) return;
 
         const currentLang = document.documentElement.lang;
 
@@ -786,19 +815,18 @@ const ogLocale = (lang as string).replace('-', '_');
 
         const effectiveCurrency = getEffectiveCurrency(currentLang);
         const isManual = isManualCurrencyOverride();
+        const initialVal = isManual ? effectiveCurrency : 'auto';
 
-        currencySelect.value = isManual ? effectiveCurrency : 'auto';
+        if (currencySelect) currencySelect.value = initialVal;
+        if (mobileCurrencySelect) mobileCurrencySelect.value = initialVal;
 
         // Initialize inputs, sliders, presets, and mode toggles
         initCurrencyInputsAndSliders(effectiveCurrency);
         setupPresetButtonScaling();
         setupModeToggleButtons();
 
-        if (currencySelect.dataset.bound === 'true') return;
-        currencySelect.dataset.bound = 'true';
-
-        currencySelect.addEventListener('change', () => {
-          const selectedVal = currencySelect.value;
+        const handleSelectChange = (sourceEl: HTMLSelectElement, targetEl: HTMLSelectElement | null) => {
+          const selectedVal = sourceEl.value;
           let targetCurrency: CurrencyCode;
 
           if (selectedVal === 'auto') {
@@ -810,9 +838,21 @@ const ogLocale = (lang as string).replace('-', '_');
             return;
           }
 
+          if (targetEl) targetEl.value = selectedVal;
+
           convertCurrencyInputs(targetCurrency);
           window.dispatchEvent(new CustomEvent('currency-change', { detail: targetCurrency }));
-        });
+        };
+
+        if (currencySelect && currencySelect.dataset.bound !== 'true') {
+          currencySelect.dataset.bound = 'true';
+          currencySelect.addEventListener('change', () => handleSelectChange(currencySelect, mobileCurrencySelect));
+        }
+
+        if (mobileCurrencySelect && mobileCurrencySelect.dataset.bound !== 'true') {
+          mobileCurrencySelect.dataset.bound = 'true';
+          mobileCurrencySelect.addEventListener('change', () => handleSelectChange(mobileCurrencySelect, currencySelect));
+        }
       }
 
       setupCurrencySelector();

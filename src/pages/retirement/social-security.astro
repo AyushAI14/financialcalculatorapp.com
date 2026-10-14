@@ -4,9 +4,10 @@ import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
-import { getLangFromUrl } from '../../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 
 const faqs = [
   {
@@ -30,7 +31,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Social Security Retirement Estimator - Break-Even Age & Benefit Calculator" 
-  description="Estimate your monthly and lifetime Social Security retirement benefits. Compare early claiming at age 62, full retirement age (67), and delayed retirement at 70."
+  seoTitle="Social Security Calculator: Break-Even Age & Benefits | financialcalculatorapp.com"
+  description="Estimate monthly and lifetime Social Security benefits. Compare claiming early at age 62 versus waiting until age 70 to find your break-even age."
   faqs={faqs}
   calcKey="social-security"
 >
@@ -39,7 +41,7 @@ const faqs = [
     <div class="lg:col-span-6 space-y-6">
       <form id="ssa-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">Your Earnings & Timeline</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">{t('Your Earnings & Timeline')}</h3>
 
           <!-- Annual Income -->
           <div class="space-y-2">
@@ -55,15 +57,15 @@ const faqs = [
           <!-- Expected Claim Age -->
           <div class="space-y-2 pt-2 border-t border-hairline/60">
             <Select id="claim-age" name="claimAge" label="Target Claiming Age" options={[
-              { value: '62', label: 'Age 62 (Earliest Early Claim - 70% of Benefit)' },
-              { value: '63', label: 'Age 63' },
-              { value: '64', label: 'Age 64' },
-              { value: '65', label: 'Age 65' },
-              { value: '66', label: 'Age 66' },
-              { value: '67', label: 'Age 67 (Full Retirement Age - 100% of Benefit)' },
-              { value: '68', label: 'Age 68 (+8% Delayed Credit)' },
-              { value: '69', label: 'Age 69 (+16% Delayed Credit)' },
-              { value: '70', label: 'Age 70 (Maximum Delay - 124% of Benefit)' }
+              { value: '62', label: t('Age 62 (Earliest Early Claim - 70% of Benefit)') },
+              { value: '63', label: t('Age 63') },
+              { value: '64', label: t('Age 64') },
+              { value: '65', label: t('Age 65') },
+              { value: '66', label: t('Age 66') },
+              { value: '67', label: t('Age 67 (Full Retirement Age - 100% of Benefit)') },
+              { value: '68', label: t('Age 68 (+8% Delayed Credit)') },
+              { value: '69', label: t('Age 69 (+16% Delayed Credit)') },
+              { value: '70', label: t('Age 70 (Maximum Delay - 124% of Benefit)') }
             ]} value="67" />
           </div>
 
@@ -75,10 +77,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Social Security Benefits
+            {t('Calculate Social Security Benefits')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -94,30 +96,40 @@ const faqs = [
 
       <!-- 3-Way Age Comparison Grid -->
       <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Claim Age Comparison (Monthly Check)</h4>
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Claim Age Comparison (Monthly Check)')}</h4>
         
         <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">Early Age 62</span>
+            <span class="text-[10px] text-mute block">{t('Early Age 62')}</span>
             <span id="comp-age62" class="font-bold text-ink text-sm">--</span>
-            <span class="text-[9px] text-rose-500 block font-sans">-30% penalty</span>
+            <span class="text-[9px] text-rose-500 block font-sans">{lang === 'es' ? '-30% de penalización' : (lang === 'de' ? '-30 % Abschlag' : (lang === 'ja' ? '-30% 減額' : (lang === 'pt' ? '-30% de penalidade' : '-30% penalty')))}</span>
           </div>
 
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">Full Age 67</span>
+            <span class="text-[10px] text-mute block">{t('Full Age 67')}</span>
             <span id="comp-age67" class="font-bold text-ink text-sm">--</span>
-            <span class="text-[9px] text-mute block font-sans">100% full</span>
+            <span class="text-[9px] text-mute block font-sans">{lang === 'es' ? '100% íntegro' : (lang === 'de' ? '100 % regulär' : (lang === 'ja' ? '100% 基本額' : (lang === 'pt' ? '100% integral' : '100% full')))}</span>
           </div>
 
           <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-1">
-            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block">Delayed Age 70</span>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block">{t('Delayed Age 70')}</span>
             <span id="comp-age70" class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">--</span>
-            <span class="text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans">+24% bonus</span>
+            <span class="text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans">{lang === 'es' ? '+24% de bonificación' : (lang === 'de' ? '+24 % Zuschlag' : (lang === 'ja' ? '+24% 増額' : (lang === 'pt' ? '+24% de bônus' : '+24% bonus')))}</span>
           </div>
         </div>
 
         <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
-          <span class="font-semibold text-ink">Lifetime Break-Even Point:</span> If you live past age <span id="breakeven-age" class="font-bold text-ink">--</span>, claiming at age 70 generates more cumulative wealth than claiming early at 62.
+          {lang === 'es' ? (
+            <><span class="font-semibold text-ink">Punto de Equilibrio Vitalicio:</span> Si vives más allá de los <span id="breakeven-age" class="font-bold text-ink">--</span> años, solicitar la jubilación a los 70 genera más patrimonio acumulado que hacerlo anticipadamente a los 62.</>
+          ) : lang === 'de' ? (
+            <><span class="font-semibold text-ink">Lebenslanger Break-Even-Punkt:</span> Wenn Sie älter als <span id="breakeven-age" class="font-bold text-ink">--</span> Jahre werden, bringt der Renteneintritt mit 70 Jahren mehr kumuliertes Gesamtvermögen als die vorzeitige Inanspruchnahme mit 62 Jahren.</>
+          ) : lang === 'ja' ? (
+            <><span class="font-semibold text-ink">生涯損益分岐年齢:</span> <span id="breakeven-age" class="font-bold text-ink">--</span>歳を超えて長生きする場合、62歳で早期受給するよりも70歳まで繰り下げて受給した方が生涯の年金受給累計額が多くなります。</>
+          ) : lang === 'pt' ? (
+            <><span class="font-semibold text-ink">Ponto de Equilíbrio Vitalício:</span> Se você viver além dos <span id="breakeven-age" class="font-bold text-ink">--</span> anos, solicitar o benefício aos 70 gera mais patrimônio acumulado do que antecipar para os 62.</>
+          ) : (
+            <><span class="font-semibold text-ink">Lifetime Break-Even Point:</span> If you live past age <span id="breakeven-age" class="font-bold text-ink">--</span>, claiming at age 70 generates more cumulative wealth than claiming early at 62.</>
+          )}
         </div>
       </div>
     </div>

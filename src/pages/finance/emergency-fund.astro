@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('emergency-fund');
 
 <CalculatorLayout 
   title="Emergency Fund Calculator" 
-  description="Calculate the exact size of your emergency safety cushion based on your essential monthly expenses and job stability."
+  seoTitle="Emergency Fund Calculator: How Much Cash Do You Need? | financialcalculatorapp.com"
+  description="Calculate your ideal 3-month or 6-month emergency cash safety net based on essential monthly expenses, job stability, and family dependents."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -85,7 +86,7 @@ const faqs = getCalculatorFaqs('emergency-fund');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Savings CSV
+          <span>📊</span> {t('Download Savings CSV')}
         </button>
       </div>
     </div>
@@ -140,7 +141,7 @@ const faqs = getCalculatorFaqs('emergency-fund');
 
     const formattedTarget = formatCurrency(result.targetAmount);
     const formattedShortfall = formatCurrency(result.shortfall);
-    const monthsText = result.shortfall > 0 ? (contribution > 0 ? `${result.monthsToGoal.toFixed(1)} months` : 'Infinity (Savings rate = $0)') : 'Funded';
+    const monthsText = result.shortfall > 0 ? (contribution > 0 ? `${result.monthsToGoal.toFixed(1)} months` : `Infinity (Savings rate = ${formatCurrency(0)})`) : 'Funded';
 
     // Update UI
     if (resTarget) resTarget.querySelector('.font-mono')!.textContent = formattedTarget;

@@ -685,3 +685,248 @@ export function calculateDTI(params: DTIParams): DTIResult {
   };
 }
 
+// ─── REFINANCE TRAJECTORY & BREAK-EVEN ENGINE ───
+
+export interface RefinanceTrajectoryEntry {
+  year: number;
+  month: number;
+  label: string;
+  currentCumulativeCost: number;
+  newCumulativeCost: number;
+  netCumulativeSavings: number;
+  currentBalance: number;
+  newBalance: number;
+}
+
+export function generateRefinanceTrajectory(params: RefinanceParams): {
+  trajectory: RefinanceTrajectoryEntry[];
+  breakEvenMonths: number | null;
+  breakEvenYear: number | null;
+  monthlySavings: number;
+  lifetimeSavings: number;
+} {
+  const { currentBalance, currentRate, currentTermRemaining, newRate, newTerm, closingCosts } = params;
+
+  const currentPMT = calculateLoanPMT({
+    principal: currentBalance,
+    rate: currentRate,
+    years: currentTermRemaining
+  });
+
+  const newPMT = calculateLoanPMT({
+    principal: currentBalance,
+    rate: newRate,
+    years: newTerm
+  });
+
+  const monthlySavings = currentPMT - newPMT;
+  const breakEvenMonths = closingCosts <= 0 ? 0 : (monthlySavings > 0 ? closingCosts / monthlySavings : null);
+  const breakEvenYear = breakEvenMonths !== null ? breakEvenMonths / 12 : null;
+
+  const currentMonths = Math.round(currentTermRemaining * 12);
+  const newMonths = Math.round(newTerm * 12);
+  const totalMonths = Math.min(Math.max(currentMonths, newMonths), 360);
+
+  // Remaining balance helper using exact amortization
+  function calcBalance(principal: number, annualRate: number, totalTermMonths: number, m: number): number {
+    if (m >= totalTermMonths) return 0;
+    if (annualRate <= 0) {
+      return Math.max(0, principal - (principal / totalTermMonths) * m);
+    }
+    const r = annualRate / 12;
+    const pmt = calculateLoanPMT({ principal, rate: annualRate, years: totalTermMonths / 12 });
+    const factor = Math.pow(1 + r, m);
+    const bal = principal * factor - pmt * ((factor - 1) / r);
+    return Math.max(0, bal);
+  }
+
+  // Sample intervals: yearly, plus Year 0 and optionally Break-even
+  const sampleMonths: number[] = [0];
+  const step = totalMonths <= 60 ? 6 : 12; // 6-month steps for short loans, yearly for mortgages
+
+  for (let m = step; m <= totalMonths; m += step) {
+    sampleMonths.push(m);
+  }
+  if (!sampleMonths.includes(totalMonths)) {
+    sampleMonths.push(totalMonths);
+  }
+
+  // Include breakEven month if within horizon and not already present
+  if (breakEvenMonths !== null && breakEvenMonths > 0 && breakEvenMonths < totalMonths) {
+    const roundedBreakEven = Math.round(breakEvenMonths);
+    if (!sampleMonths.includes(roundedBreakEven)) {
+      sampleMonths.push(roundedBreakEven);
+      sampleMonths.sort((a, b) => a - b);
+    }
+  }
+
+  const trajectory: RefinanceTrajectoryEntry[] = sampleMonths.map((m) => {
+    // Current loan cumulative cost
+    const currentPaidMonths = Math.min(m, currentMonths);
+    const currentCumulativeCost = currentPMT * currentPaidMonths;
+    const currBal = calcBalance(currentBalance, currentRate, currentMonths, m);
+
+    // New loan cumulative cost (includes closing costs from month 0)
+    const newPaidMonths = Math.min(m, newMonths);
+    const newCumulativeCost = closingCosts + (newPMT * newPaidMonths);
+    const nBal = calcBalance(currentBalance, newRate, newMonths, m);
+
+    const netCumulativeSavings = currentCumulativeCost - newCumulativeCost;
+    const yr = parseFloat((m / 12).toFixed(1));
+
+    return {
+      year: yr,
+      month: m,
+      label: m === 0 ? 'Start' : `Yr ${yr}`,
+      currentCumulativeCost: Math.round(currentCumulativeCost),
+      newCumulativeCost: Math.round(newCumulativeCost),
+      netCumulativeSavings: Math.round(netCumulativeSavings),
+      currentBalance: Math.round(currBal),
+      newBalance: Math.round(nBal)
+    };
+  });
+
+  const lifetimeSavings = (currentPMT * currentMonths) - ((newPMT * newMonths) + closingCosts);
+
+  return {
+    trajectory,
+    breakEvenMonths,
+    breakEvenYear,
+    monthlySavings,
+    lifetimeSavings
+  };
+}
+
+// ─── STUDENT LOAN IDR TRAJECTORY ENGINE ───
+
+export interface StudentLoanTrajectoryEntry {
+  year: number;
+  label: string;
+  idrBalance: number;
+  idrCumulativePaid: number;
+  idrMonthlyPayment: number;
+  standardBalance: number;
+  standardCumulativePaid: number;
+  isForgiven: boolean;
+}
+
+export function generateStudentLoanTrajectory(params: StudentLoanParams): {
+  trajectory: StudentLoanTrajectoryEntry[];
+  forgivenessYears: number;
+  totalIdrPaid: number;
+  totalStandardPaid: number;
+  forgivenAmount: number;
+  savingsVsStandard: number;
+} {
+  const { balance, rate, agi, familySize, plan, loanType } = params;
+
+  // Undergrad loans forgiven after 20 years, Grad/Mixed after 25 years
+  const forgivenessYears = (plan === 'SAVE' && loanType === 'undergrad') ? 20 : (loanType === 'undergrad' ? 20 : 25);
+  const standardYears = 10;
+  const standardPMT = calculateLoanPMT({ principal: balance, rate, years: standardYears });
+  const totalStandardPaid = standardPMT * (standardYears * 12);
+
+  const povertyBase = 15800 + (familySize - 1) * 5400;
+  const multiplier = plan === 'SAVE' ? 2.25 : 1.5;
+  const povertyShield = povertyBase * multiplier;
+  const planRate = plan === 'SAVE' ? (loanType === 'undergrad' ? 0.05 : loanType === 'grad' ? 0.10 : 0.075) : 0.10;
+
+  const trajectory: StudentLoanTrajectoryEntry[] = [];
+
+  let curIdrBalance = balance;
+  let cumIdrPaid = 0;
+  const monthlyRate = rate / 12;
+
+  // Year 0 starting point
+  trajectory.push({
+    year: 0,
+    label: 'Start',
+    idrBalance: Math.round(balance),
+    idrCumulativePaid: 0,
+    idrMonthlyPayment: Math.round(Math.max(0, ((Math.max(0, agi - povertyShield) * planRate) / 12))),
+    standardBalance: Math.round(balance),
+    standardCumulativePaid: 0,
+    isForgiven: false
+  });
+
+  // Project year by year
+  for (let y = 1; y <= forgivenessYears; y++) {
+    // Standard 3% modest annual income growth
+    const inflatedAgi = agi * Math.pow(1.03, y - 1);
+    const discretionaryIncome = Math.max(0, inflatedAgi - povertyShield);
+    const annualIdrPayment = discretionaryIncome * planRate;
+    const monthlyIdrPayment = annualIdrPayment / 12;
+
+    // Simulate 12 months for IDR balance
+    for (let m = 1; m <= 12; m++) {
+      if (curIdrBalance <= 0) break;
+      const monthlyInterest = curIdrBalance * monthlyRate;
+
+      if (plan === 'SAVE') {
+        // SAVE: 100% unpaid interest subsidy prevents balance growth
+        if (monthlyIdrPayment > monthlyInterest) {
+          curIdrBalance = Math.max(0, curIdrBalance - (monthlyIdrPayment - monthlyInterest));
+        }
+        // If monthlyIdrPayment <= monthlyInterest, government waives excess interest, balance unchanged
+      } else {
+        // PAYE / IBR: Unpaid interest accumulates (bounded to 1.5x principal cap)
+        if (monthlyIdrPayment >= monthlyInterest) {
+          curIdrBalance = Math.max(0, curIdrBalance - (monthlyIdrPayment - monthlyInterest));
+        } else {
+          curIdrBalance = Math.min(balance * 1.5, curIdrBalance + (monthlyInterest - monthlyIdrPayment));
+        }
+      }
+      cumIdrPaid += monthlyIdrPayment;
+    }
+
+    // Standard 10-year balance & cumulative paid
+    let stdBal = 0;
+    let stdCumPaid = totalStandardPaid;
+    if (y < standardYears) {
+      const mStd = y * 12;
+      const factor = Math.pow(1 + monthlyRate, mStd);
+      stdBal = Math.max(0, balance * factor - standardPMT * ((factor - 1) / monthlyRate));
+      stdCumPaid = standardPMT * mStd;
+    }
+
+    const isForgiven = (y === forgivenessYears);
+    const balanceBeforeForgiveness = curIdrBalance;
+    if (isForgiven) {
+      curIdrBalance = 0; // Forgiven!
+    }
+
+    trajectory.push({
+      year: y,
+      label: `Yr ${y}`,
+      idrBalance: Math.round(isForgiven ? 0 : curIdrBalance),
+      idrCumulativePaid: Math.round(cumIdrPaid),
+      idrMonthlyPayment: Math.round(monthlyIdrPayment),
+      standardBalance: Math.round(stdBal),
+      standardCumulativePaid: Math.round(stdCumPaid),
+      isForgiven
+    });
+
+    if (isForgiven) {
+      const forgivenAmount = Math.max(0, Math.round(balanceBeforeForgiveness));
+      return {
+        trajectory,
+        forgivenessYears,
+        totalIdrPaid: Math.round(cumIdrPaid),
+        totalStandardPaid: Math.round(totalStandardPaid),
+        forgivenAmount,
+        savingsVsStandard: Math.round(totalStandardPaid - cumIdrPaid)
+      };
+    }
+  }
+
+  return {
+    trajectory,
+    forgivenessYears,
+    totalIdrPaid: Math.round(cumIdrPaid),
+    totalStandardPaid: Math.round(totalStandardPaid),
+    forgivenAmount: 0,
+    savingsVsStandard: Math.round(totalStandardPaid - cumIdrPaid)
+  };
+}
+
+

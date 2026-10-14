@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('capm');
 
 <CalculatorLayout 
   title="CAPM Calculator" 
-  description="Calculate the expected rate of return for an asset using the Capital Asset Pricing Model (CAPM) based on risk-free rate, beta, and market return."
+  seoTitle="CAPM Calculator: Capital Asset Pricing Model & Return | financialcalculatorapp.com"
+  description="Calculate expected return on equity or portfolio assets using the Capital Asset Pricing Model (CAPM) based on risk-free rate, beta, and market return."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -74,7 +75,7 @@ const faqs = getCalculatorFaqs('capm');
 
       <!-- Risk Premium Visual Bar -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Cost of Capital Breakdown</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Cost of Capital Breakdown')}</h4>
         <div class="h-64 relative">
           <canvas id="capm-chart"></canvas>
         </div>
@@ -84,12 +85,12 @@ const faqs = getCalculatorFaqs('capm');
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Formula Breakdown</span>
+            <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
             <div>
-              <p class="font-semibold text-ink mb-1">CAPM Required Return Equation</p>
+              <p class="font-semibold text-ink mb-1">{t('CAPM Required Return Equation')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words">
                 E(R) = Rf + β × (Rm - Rf)
               </code>
@@ -108,6 +109,8 @@ const faqs = getCalculatorFaqs('capm');
   import { calculateCAPM } from '../../lib/math/retirement';
   import { formatPercentage } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('capm-chart');
 
   const capmForm = document.getElementById('capm-form') as HTMLFormElement;
   const riskFreeInput = document.getElementById('risk-free') as HTMLInputElement;

@@ -11,51 +11,70 @@ const faqs = getCalculatorFaqs('401k');
 ---
 
 <CalculatorLayout 
-  title="401k Calculator & Retirement Planner" 
-  description="Simulate how your 401(k) retirement balance grows over time with employee salary deferrals, employer match formulas, and compound investment returns."
+  title="401k Calculator: Retirement Growth, Employer Match & By Age" 
+  seoTitle="401k Calculator with Match – By Age, Growth & Payout Estimator | financialcalculatorapp.com"
+  description="Free 401(k) retirement calculator. Calculate your 401k growth by age with employer match, compare Roth vs Traditional, estimate monthly retirement payout, tax savings, and early withdrawal rules."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="four-oh-one-k-form" class="space-y-6">
-        <!-- Salary Details -->
+        <!-- Salary Details & Plan Type -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Income & Contributions', 'Salary & Deferral Settings')}</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Salary & Deferral Settings', 'Salary & Deferral Settings')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-2">
               <Input id="salary" label="Annual Salary" type="number" prefix="$" value="95000" />
             </div>
             <Input id="salary-growth" label="Salary Increase" type="number" suffix="%" value="3.0" />
           </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
             <Input id="contribution-pct" label="Your Contribution Rate" type="number" suffix="%" value="8.0" />
             <Input id="tax-rate" label="Marginal Tax Rate" type="number" suffix="%" value="24" />
+          </div>
+
+          <!-- Plan Type Selection -->
+          <div class="pt-2 border-t border-hairline/60">
+            <label class="block text-xs font-mono uppercase text-mute mb-2">401(k) Plan Type</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="plan-type" value="traditional" checked class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Traditional (Pre-tax)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="plan-type" value="roth" class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Roth (Post-tax)</span>
+              </label>
+            </div>
           </div>
         </div>
 
         <!-- Employer Matching Details -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Employer Matching Rules', 'Growth & Match Assumptions')}</h3>
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Employer Matching Rules', 'Employer Matching Rules')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="match-pct" label="Employer Match Pct" type="number" suffix="%" value="50" placeholder="e.g. 50% match" />
             <Input id="max-match-pct" label="Matching Limit" type="number" suffix="%" value="6.0" placeholder="e.g. up to 6% of salary" />
           </div>
           <p class="text-[11px] text-mute leading-normal">
-            * **Employer Match**: The percentage of your contribution the employer matches (e.g., 50% match means they add $0.50 for every $1.00 you contribute).
-            <br/>
-            * **Matching Limit**: The maximum salary percentage the employer will match (e.g., up to 6% of your salary).
+            * <strong>Employer Match</strong>: The percentage of your contribution matched (e.g., 50% match adds $0.50 for every $1.00 you contribute).<br/>
+            * <strong>Matching Limit</strong>: The maximum salary percentage matched (e.g., up to 6% of your salary).
           </p>
         </div>
 
-        <!-- General Parameters -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-canvas-soft border border-hairline rounded-md">
-          <div class="md:col-span-2">
-            <Input id="current-balance" label="Current 401k Balance" type="number" prefix="$" value="25000" />
+        <!-- Age & Horizon Parameters -->
+        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Timeline & Age Parameters', 'Timeline & Age Parameters')}</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input id="current-age" label="Current Age" type="number" value="30" />
+            <Input id="retire-age" label="Retirement Age" type="number" value="65" />
+            <Input id="years" label="Years to Save" type="number" value="35" />
           </div>
-          <Input id="years" label="Years to Save" type="number" value="25" />
-          <div class="md:col-span-3 pt-2 border-t border-hairline/60">
-            <Input id="return-rate" label="Expected Investment Return" type="number" suffix="%" value="7.5" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-hairline/60">
+            <Input id="current-balance" label="Current 401(k) Balance" type="number" prefix="$" value="25000" />
+            <Input id="return-rate" label="Expected Annual Return" type="number" suffix="%" value="7.5" />
           </div>
         </div>
 
@@ -72,23 +91,49 @@ const faqs = getCalculatorFaqs('401k');
 
     <!-- Right Column (Results & Charts) -->
     <div class="lg:col-span-6 space-y-6">
-      <div class="flex flex-col gap-3">
-        <div id="res-ending">
-          <ResultCard title="Projected 401k" value="--" highlight={true} description="Estimated balance at the end of the saving period." />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div id="res-ending" class="sm:col-span-2">
+          <ResultCard title="Projected 401(k) Balance" value="--" highlight={true} description="Estimated nest egg at your target retirement age." />
+        </div>
+        <div id="res-monthly-income">
+          <ResultCard title="Est. Monthly Retirement Payout" value="--" description="Sustainable monthly income under standard 4% safe withdrawal rule." />
         </div>
         <div id="res-matching">
-          <ResultCard title="Company Match" value="--" description="Total matching funds paid by your employer." />
+          <ResultCard title="Total Company Match" value="--" description="Free matching contributions paid directly by your employer." />
+        </div>
+        <div id="res-contributions">
+          <ResultCard title="Your Total Contributions" value="--" description="Your cumulative payroll salary contributions." />
         </div>
         <div id="res-tax">
-          <ResultCard title="Pre-tax Tax Savings" value="--" description="Total income tax savings on pre-tax contributions." />
+          <ResultCard title="Pre-tax Tax Savings" value="--" description="Federal & state tax savings on pre-tax Traditional deferrals." />
         </div>
       </div>
 
       <!-- Growth Chart Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">401k Growth Composition</h4>
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('401(k) Growth Composition by Age')}</h4>
+          <div class="flex items-center gap-1 bg-canvas-soft border border-hairline p-0.5 rounded-lg text-xs font-mono">
+            <button 
+              type="button" 
+              id="chart-type-area" 
+              class="px-2.5 py-1 rounded font-medium text-xs transition-colors bg-canvas text-ink shadow-xs cursor-pointer"
+              aria-label="Show Area Chart"
+            >
+              Area
+            </button>
+            <button 
+              type="button" 
+              id="chart-type-bar" 
+              class="px-2.5 py-1 rounded font-medium text-xs text-mute hover:text-ink transition-colors cursor-pointer"
+              aria-label="Show Stacked Bar Chart"
+            >
+              Bar
+            </button>
+          </div>
+        </div>
         <div class="h-80 relative">
-          <canvas id="growth-chart"></canvas>
+          <canvas id="four-oh-one-k-chart"></canvas>
         </div>
       </div>
     </div>
@@ -98,14 +143,14 @@ const faqs = getCalculatorFaqs('401k');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">401k Year-by-Year Schedule</h3>
-        <p class="text-sm text-body mt-1">Detailed compound projection listing salary increases, employee deposits, employer matching, and tax savings.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('401k Year-by-Year Schedule')}</h3>
+        <p class="text-sm text-body mt-1">{t('Compound growth trajectory listing annual salary, employee deposits, employer matching, investment returns, and tax savings.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Annual Schedule
+        {t('Show Annual Schedule')}
       </button>
     </div>
 
@@ -114,12 +159,12 @@ const faqs = getCalculatorFaqs('401k');
         <table class="w-full border-collapse text-left text-sm">
           <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Year</th>
+              <th class="px-5 py-3">Year / Age</th>
               <th class="px-5 py-3 text-right">Salary</th>
               <th class="px-5 py-3 text-right">Employee Deposits</th>
               <th class="px-5 py-3 text-right">Employer Match</th>
-              <th class="px-5 py-3 text-right">Interest</th>
-              <th class="px-5 py-3 text-right">Ending Bal</th>
+              <th class="px-5 py-3 text-right">Investment Growth</th>
+              <th class="px-5 py-3 text-right">Ending Balance</th>
               <th class="px-5 py-3 text-right">Annual Tax Saved</th>
             </tr>
           </thead>
@@ -130,51 +175,505 @@ const faqs = getCalculatorFaqs('401k');
       </div>
     </div>
   </div>
+
+  <!-- Educational & Deep-Dive Modules -->
+  <div class="mt-14 space-y-12">
+    <!-- Module 1: 401(k) Balance Milestones by Age -->
+    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-hairline pb-4 mb-6">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Benchmark Guide</span>
+          <h2 class="text-xl font-bold text-ink mt-1">401(k) Balance by Age: How Much Should You Have Saved?</h2>
+          <p class="text-sm text-mute mt-1">
+            Fidelity and certified financial planner savings targets calculated for your salary (<span id="milestone-salary-display" class="font-semibold text-ink">$95,000</span>):
+          </p>
+        </div>
+        <div id="milestone-status-box" class="px-4 py-2.5 rounded-lg border border-hairline bg-canvas-soft text-xs font-mono">
+          <span class="text-mute">Status at Age <span id="status-cur-age" class="text-ink font-semibold">30</span>:</span>
+          <div id="status-evaluation" class="text-ink font-bold text-sm mt-0.5">$25,000 / $95,000 (26%)</div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="border-b border-hairline font-mono text-xs text-mute uppercase">
+              <th class="py-2.5 px-3">Target Age</th>
+              <th class="py-2.5 px-3">Fidelity Multiple</th>
+              <th class="py-2.5 px-3 text-right">Recommended Target</th>
+              <th class="py-2.5 px-3 text-right">Monthly Payout (4% Rule)</th>
+              <th class="py-2.5 px-3 text-right">Benchmark Note</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-xs font-mono">
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 30</td>
+              <td class="py-3 px-3 text-mute">1.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-30">$95,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-30-mo">$317 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Early compounding foundation</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 35</td>
+              <td class="py-3 px-3 text-mute">2.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-35">$190,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-35-mo">$633 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Match capturing acceleration</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 40</td>
+              <td class="py-3 px-3 text-mute">3.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-40">$285,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-40-mo">$950 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Compounding exceeds contributions</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 45</td>
+              <td class="py-3 px-3 text-mute">4.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-45">$380,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-45-mo">$1,267 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Mid-career wealth inflection</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 50</td>
+              <td class="py-3 px-3 text-mute">6.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-50">$570,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-50-mo">$1,900 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Eligible for $7,500 catch-up limits</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 55</td>
+              <td class="py-3 px-3 text-mute">7.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-55">$665,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-55-mo">$2,217 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Eligible for Rule of 55 separation</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Age 60</td>
+              <td class="py-3 px-3 text-mute">8.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-medium" id="ms-60">$760,000</td>
+              <td class="py-3 px-3 text-right text-mute" id="ms-60-mo">$2,533 /mo</td>
+              <td class="py-3 px-3 text-right text-mute">Penalty-free withdrawals at 59½</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft bg-primary/5">
+              <td class="py-3 px-3 font-semibold text-primary">Age 67</td>
+              <td class="py-3 px-3 text-primary font-medium">10.0× Annual Salary</td>
+              <td class="py-3 px-3 text-right text-primary font-bold" id="ms-67">$950,000</td>
+              <td class="py-3 px-3 text-right text-primary font-bold" id="ms-67-mo">$3,167 /mo</td>
+              <td class="py-3 px-3 text-right text-primary">Full Social Security retirement age</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Module 2: Roth vs. Traditional 401(k) -->
+    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-6">
+      <div class="border-b border-hairline pb-4">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Tax Strategy</span>
+        <h2 class="text-xl font-bold text-ink mt-1">Roth 401(k) vs. Traditional 401(k): Which Should You Choose?</h2>
+        <p class="text-sm text-mute mt-1">
+          Understanding whether to pay taxes today or during retirement is the most crucial decision in maximizing net take-home wealth.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Traditional 401(k) Card -->
+        <div class="border border-hairline rounded-lg p-5 bg-canvas-soft space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-3">
+            <h3 class="font-bold text-base text-ink">Traditional 401(k)</h3>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-amber-500/10 text-amber-700 dark:text-amber-300">Pre-Tax Today</span>
+          </div>
+          <ul class="space-y-2.5 text-xs text-body leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-500 font-bold">✓</span>
+              <span><strong>Upfront Tax Break</strong>: Contributions lower your taxable income dollar-for-dollar in the current tax year.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-500 font-bold">✓</span>
+              <span><strong>Tax Savings Formula</strong>: Contribution × Marginal Tax Rate (e.g. $10,000 at 24% bracket saves $2,400).</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 font-bold">⚠️</span>
+              <span><strong>Taxed on Distribution</strong>: Every withdrawal in retirement (principal and gains) is taxed as ordinary income.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary font-bold">🎯</span>
+              <span><strong>Best For</strong>: Peak earners currently in their highest federal/state brackets who anticipate lower income during retirement.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Roth 401(k) Card -->
+        <div class="border border-hairline rounded-lg p-5 bg-canvas-soft space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-3">
+            <h3 class="font-bold text-base text-ink">Roth 401(k)</h3>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">Tax-Free Later</span>
+          </div>
+          <ul class="space-y-2.5 text-xs text-body leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-500 font-bold">✓</span>
+              <span><strong>100% Tax-Free Retirement</strong>: All investment growth, dividends, and distributions after age 59½ are completely federal and state tax-free.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-500 font-bold">✓</span>
+              <span><strong>No Lifetime RMDs</strong>: Under the SECURE 2.0 Act, Roth 401(k) accounts have no Required Minimum Distributions during your lifetime.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 font-bold">⚠️</span>
+              <span><strong>No Immediate Deduction</strong>: Contributions are made with after-tax money, providing no tax cut this year.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary font-bold">🎯</span>
+              <span><strong>Best For</strong>: Younger professionals, career starters, or anyone expecting future tax rates and income to rise.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-lg bg-canvas-soft border border-hairline flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="text-xs text-mute">
+          Want to compare individual retirement accounts outside employer plans? Review income phaseouts and backdoor rules:
+        </div>
+        <a href="/compare/roth-vs-traditional-ira" class="px-4 py-2 bg-canvas border border-hairline hover:bg-canvas-soft rounded-lg text-xs font-mono font-semibold text-ink transition-colors whitespace-nowrap">
+          Compare Roth vs Traditional IRA →
+        </a>
+      </div>
+    </section>
+
+    <!-- Module 3: Withdrawals, 4% Rule & Early Withdrawal Penalties -->
+    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-8">
+      <div class="border-b border-hairline pb-4">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Distribution Strategy</span>
+        <h2 class="text-xl font-bold text-ink mt-1">401(k) Withdrawals, Monthly Payouts & Early Penalty Calculator</h2>
+        <p class="text-sm text-mute mt-1">
+          How much can you withdraw per month in retirement, and what happens if you access your 401(k) early?
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Part A: Safe Retirement Withdrawals (4% Rule) -->
+        <div class="space-y-4">
+          <h3 class="font-bold text-base text-ink flex items-center gap-2">
+            <span>Monthly Payout & The 4% Rule</span>
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            The 4% safe withdrawal rule (originating from the landmark Trinity Study) calculates the annual amount you can safely withdraw from your retirement portfolio with a 95%+ probability of your savings lasting 30+ years:
+          </p>
+          <div class="p-3.5 bg-canvas-soft border border-hairline rounded-lg font-mono text-xs text-center text-primary font-semibold">
+            Monthly Payout = (Total 401k Balance × 0.04) ÷ 12
+          </div>
+          <div class="space-y-2 text-xs font-mono">
+            <div class="flex justify-between p-2 rounded bg-canvas-soft border border-hairline/60">
+              <span class="text-mute">$500,000 Portfolio</span>
+              <span class="font-bold text-ink">$1,667 / month ($20,000/yr)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-canvas-soft border border-hairline/60">
+              <span class="text-mute">$1,000,000 Portfolio</span>
+              <span class="font-bold text-ink">$3,333 / month ($40,000/yr)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-canvas-soft border border-hairline/60">
+              <span class="text-mute">$1,500,000 Portfolio</span>
+              <span class="font-bold text-ink">$5,000 / month ($60,000/yr)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-canvas-soft border border-hairline/60">
+              <span class="text-mute">$2,000,000 Portfolio</span>
+              <span class="font-bold text-ink">$6,667 / month ($80,000/yr)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part B: Interactive Early Withdrawal Penalty Estimator -->
+        <div class="bg-canvas-soft border border-hairline rounded-lg p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <h3 class="font-bold text-sm text-ink">Early Withdrawal Penalty & Tax Estimator</h3>
+            <span class="text-[10px] font-mono text-rose-600 bg-rose-500/10 px-2 py-0.5 rounded font-bold">Under Age 59½</span>
+          </div>
+          <p class="text-[11px] text-mute">
+            Withdrawing before age 59½ incurs a mandatory 10% IRS penalty plus federal and state income taxes on the entire distributed amount.
+          </p>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-mono uppercase text-mute mb-1">Withdrawal Amount</label>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs text-mute">$</span>
+                <input id="early-amount" type="number" value="20000" class="w-full pl-7 pr-3 py-1.5 text-xs font-mono bg-canvas border border-hairline rounded" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] font-mono uppercase text-mute mb-1">Marginal Tax Rate</label>
+              <div class="relative">
+                <input id="early-tax" type="number" value="24" class="w-full pr-7 pl-3 py-1.5 text-xs font-mono bg-canvas border border-hairline rounded" />
+                <span class="absolute right-3 top-2 text-xs text-mute">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-hairline/60 space-y-1.5 text-xs font-mono">
+            <div class="flex justify-between text-rose-600">
+              <span>10% IRS Early Penalty:</span>
+              <span id="early-pen-val" class="font-semibold">-$2,000</span>
+            </div>
+            <div class="flex justify-between text-rose-600">
+              <span>Estimated Income Tax:</span>
+              <span id="early-tax-val" class="font-semibold">-$4,800</span>
+            </div>
+            <div class="flex justify-between font-bold text-ink pt-1 border-t border-hairline/40">
+              <span>Net Cash In Your Pocket:</span>
+              <span id="early-net-val" class="text-primary text-sm">$13,200 (66%)</span>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-mute border-t border-hairline/60 pt-2 space-y-1">
+            <strong>Penalty-Free Exceptions:</strong>
+            <ul class="list-disc list-inside space-y-0.5">
+              <li><strong>Rule of 55</strong>: Leave your employer during or after the calendar year turning 55.</li>
+              <li><strong>401(k) Loan</strong>: Borrow up to 50% or $50,000 and repay yourself with interest.</li>
+              <li><strong>SEPP (Rule 72t)</strong>: Equal annual payments spread over life expectancy.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 4: Solo 401(k) for Self-Employed -->
+    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-6">
+      <div class="border-b border-hairline pb-4">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Self-Employed & Small Business</span>
+        <h2 class="text-xl font-bold text-ink mt-1">Solo 401(k) Calculator & Contribution Limits</h2>
+        <p class="text-sm text-mute mt-1">
+          Self-employed freelancers, independent 1099 contractors, and single-member business owners can contribute both as employee AND employer up to the combined $69,000 limit.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <div class="md:col-span-5 bg-canvas-soft border border-hairline rounded-lg p-5 space-y-4">
+          <h3 class="text-xs font-mono uppercase text-mute tracking-wider border-b border-hairline pb-2 font-semibold">Solo 401(k) Inputs</h3>
+          <div>
+            <label class="block text-xs font-mono uppercase text-mute mb-1">Net Self-Employment Profit</label>
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-xs text-mute">$</span>
+              <input id="solo-profit" type="number" value="120000" class="w-full pl-7 pr-3 py-1.5 text-xs font-mono bg-canvas border border-hairline rounded" />
+            </div>
+            <p class="text-[10px] text-mute mt-1">Schedule C net profit or S-Corp W-2 wages.</p>
+          </div>
+
+          <div class="pt-2 border-t border-hairline/60">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="solo-catchup" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary rounded" />
+              <span class="text-xs text-ink font-medium">Age 50 or Older (+$7,500 catch-up)</span>
+            </label>
+          </div>
+
+          <div class="pt-2 border-t border-hairline/60">
+            <label class="block text-xs font-mono uppercase text-mute mb-1">Business Structure</label>
+            <select id="solo-structure" class="w-full py-1.5 px-3 text-xs font-mono bg-canvas border border-hairline rounded">
+              <option value="sole-prop">Sole Proprietorship / Single LLC (20%)</option>
+              <option value="scorp">S-Corporation / C-Corp W-2 (25%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="md:col-span-7 border border-hairline rounded-lg p-5 bg-canvas space-y-4">
+          <h3 class="text-xs font-mono uppercase text-mute tracking-wider border-b border-hairline pb-2 font-semibold">Max Allowable Solo 401(k) Contribution</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 bg-canvas-soft border border-hairline rounded">
+              <span class="text-[10px] font-mono uppercase text-mute block">Employee Deferral</span>
+              <span id="solo-emp-res" class="text-base font-bold font-mono text-ink">$23,000</span>
+              <span class="text-[10px] text-mute block mt-0.5">100% of income up to limit</span>
+            </div>
+            <div class="p-3 bg-canvas-soft border border-hairline rounded">
+              <span class="text-[10px] font-mono uppercase text-mute block">Employer Profit-Share</span>
+              <span id="solo-empr-res" class="text-base font-bold font-mono text-ink">$24,000</span>
+              <span class="text-[10px] text-mute block mt-0.5">20% of net profit</span>
+            </div>
+            <div class="p-3 bg-primary/10 border border-primary/20 rounded">
+              <span class="text-[10px] font-mono uppercase text-primary block font-semibold">Total Contribution</span>
+              <span id="solo-total-res" class="text-base font-bold font-mono text-primary">$47,000</span>
+              <span class="text-[10px] text-primary/80 block mt-0.5">Annual tax-sheltered</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-canvas-soft border border-hairline rounded-lg text-xs space-y-1">
+            <div class="flex justify-between font-mono">
+              <span class="text-mute">Estimated Tax Savings (at 24% bracket):</span>
+              <span id="solo-tax-saved" class="font-bold text-emerald-600 dark:text-emerald-400">~$11,280</span>
+            </div>
+            <p class="text-[11px] text-mute pt-1 border-t border-hairline/60">
+              * The combined 2024 IRS limit is $69,000 ($76,500 if age 50+). Solo 401(k) plans also feature higher limits than SEP-IRAs at lower net incomes because the employee deferral is accessible immediately without requiring 25% profit.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </CalculatorLayout>
 
 <script>
   import { simulate401KPath } from '../../lib/math/retirement';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+
+  enhanceChartCanvas('four-oh-one-k-chart', { filename: '401k-retirement-growth-chart' });
 
   // DOM Elements
-  const form = document.getElementById('four-oh-one-k-form') as HTMLFormElement;
+  const form = document.getElementById('four-oh-one-k-form') as HTMLFormElement | null;
   
-  const salaryInput = document.getElementById('salary') as HTMLInputElement;
-  const salaryGrowthInput = document.getElementById('salary-growth') as HTMLInputElement;
-  const contributionPctInput = document.getElementById('contribution-pct') as HTMLInputElement;
-  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement;
+  const salaryInput = document.getElementById('salary') as HTMLInputElement | null;
+  const salaryGrowthInput = document.getElementById('salary-growth') as HTMLInputElement | null;
+  const contributionPctInput = document.getElementById('contribution-pct') as HTMLInputElement | null;
+  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement | null;
   
-  const matchPctInput = document.getElementById('match-pct') as HTMLInputElement;
-  const maxMatchPctInput = document.getElementById('max-match-pct') as HTMLInputElement;
+  const matchPctInput = document.getElementById('match-pct') as HTMLInputElement | null;
+  const maxMatchPctInput = document.getElementById('max-match-pct') as HTMLInputElement | null;
   
-  const currentBalanceInput = document.getElementById('current-balance') as HTMLInputElement;
-  const yearsInput = document.getElementById('years') as HTMLInputElement;
-  const returnRateInput = document.getElementById('return-rate') as HTMLInputElement;
+  const currentAgeInput = document.getElementById('current-age') as HTMLInputElement | null;
+  const retireAgeInput = document.getElementById('retire-age') as HTMLInputElement | null;
+  const yearsInput = document.getElementById('years') as HTMLInputElement | null;
+  
+  const currentBalanceInput = document.getElementById('current-balance') as HTMLInputElement | null;
+  const returnRateInput = document.getElementById('return-rate') as HTMLInputElement | null;
 
   const resEndingCard = document.getElementById('res-ending');
+  const resMonthlyIncomeCard = document.getElementById('res-monthly-income');
   const resMatchingCard = document.getElementById('res-matching');
+  const resContributionsCard = document.getElementById('res-contributions');
   const resTaxCard = document.getElementById('res-tax');
 
   const toggleScheduleBtn = document.getElementById('toggle-schedule');
   const scheduleWrapper = document.getElementById('schedule-wrapper');
   const scheduleBody = document.getElementById('schedule-body');
 
+  // Milestone Elements
+  const milestoneSalaryDisplay = document.getElementById('milestone-salary-display');
+  const statusCurAge = document.getElementById('status-cur-age');
+  const statusEvaluation = document.getElementById('status-evaluation');
+  const ms30 = document.getElementById('ms-30');
+  const ms30Mo = document.getElementById('ms-30-mo');
+  const ms35 = document.getElementById('ms-35');
+  const ms35Mo = document.getElementById('ms-35-mo');
+  const ms40 = document.getElementById('ms-40');
+  const ms40Mo = document.getElementById('ms-40-mo');
+  const ms45 = document.getElementById('ms-45');
+  const ms45Mo = document.getElementById('ms-45-mo');
+  const ms50 = document.getElementById('ms-50');
+  const ms50Mo = document.getElementById('ms-50-mo');
+  const ms55 = document.getElementById('ms-55');
+  const ms55Mo = document.getElementById('ms-55-mo');
+  const ms60 = document.getElementById('ms-60');
+  const ms60Mo = document.getElementById('ms-60-mo');
+  const ms67 = document.getElementById('ms-67');
+  const ms67Mo = document.getElementById('ms-67-mo');
+
+  // Early Withdrawal Elements
+  const earlyAmountInput = document.getElementById('early-amount') as HTMLInputElement | null;
+  const earlyTaxInput = document.getElementById('early-tax') as HTMLInputElement | null;
+  const earlyPenVal = document.getElementById('early-pen-val');
+  const earlyTaxVal = document.getElementById('early-tax-val');
+  const earlyNetVal = document.getElementById('early-net-val');
+
+  // Solo 401(k) Elements
+  const soloProfitInput = document.getElementById('solo-profit') as HTMLInputElement | null;
+  const soloCatchupInput = document.getElementById('solo-catchup') as HTMLInputElement | null;
+  const soloStructureInput = document.getElementById('solo-structure') as HTMLSelectElement | null;
+  const soloEmpRes = document.getElementById('solo-emp-res');
+  const soloEmprRes = document.getElementById('solo-empr-res');
+  const soloTotalRes = document.getElementById('solo-total-res');
+  const soloTaxSaved = document.getElementById('solo-tax-saved');
+
+  // Chart Controls
+  const btnArea = document.getElementById('chart-type-area') as HTMLButtonElement | null;
+  const btnBar = document.getElementById('chart-type-bar') as HTMLButtonElement | null;
+
   let chartInstance: Chart | null = null;
+  let currentChartType: 'area' | 'bar' = 'area';
+  let lastSchedule: any[] = [];
+  let lastInitial = 25000;
+  let lastCurrentAge = 30;
+
+  function setChartType(type: 'area' | 'bar') {
+    if (currentChartType === type) return;
+    currentChartType = type;
+    if (btnArea && btnBar) {
+      if (type === 'area') {
+        btnArea.className = 'px-2.5 py-1 rounded font-medium text-xs transition-colors bg-canvas text-ink shadow-xs cursor-pointer';
+        btnBar.className = 'px-2.5 py-1 rounded font-medium text-xs text-mute hover:text-ink transition-colors cursor-pointer';
+      } else {
+        btnBar.className = 'px-2.5 py-1 rounded font-medium text-xs transition-colors bg-canvas text-ink shadow-xs cursor-pointer';
+        btnArea.className = 'px-2.5 py-1 rounded font-medium text-xs text-mute hover:text-ink transition-colors cursor-pointer';
+      }
+    }
+    if (lastSchedule && lastSchedule.length > 0) {
+      updateChart(lastSchedule, lastInitial, lastCurrentAge);
+    }
+  }
+
+  btnArea?.addEventListener('click', () => setChartType('area'));
+  btnBar?.addEventListener('click', () => setChartType('bar'));
+
+  // Null-safe Result Card Updaters
+  function updateCardValue(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const valEl = cardEl.querySelector('[data-result-value], .font-mono');
+    if (valEl) valEl.textContent = text;
+  }
+
+  function updateCardDesc(cardEl: HTMLElement | null, text: string) {
+    if (!cardEl) return;
+    const descEl = cardEl.querySelector('.text-body, p:last-child, p');
+    if (descEl) descEl.textContent = text;
+  }
+
+  // Sync Age and Years inputs
+  if (currentAgeInput && retireAgeInput && yearsInput) {
+    currentAgeInput.addEventListener('input', () => {
+      const curAge = Math.max(18, parseInt(currentAgeInput.value) || 30);
+      const retAge = Math.max(curAge + 1, parseInt(retireAgeInput.value) || 65);
+      yearsInput.value = (retAge - curAge).toString();
+      performCalculation();
+    });
+
+    retireAgeInput.addEventListener('input', () => {
+      const curAge = Math.max(18, parseInt(currentAgeInput.value) || 30);
+      const retAge = Math.max(curAge + 1, parseInt(retireAgeInput.value) || 65);
+      yearsInput.value = (retAge - curAge).toString();
+      performCalculation();
+    });
+
+    yearsInput.addEventListener('input', () => {
+      const curAge = Math.max(18, parseInt(currentAgeInput.value) || 30);
+      const yrs = Math.max(1, parseInt(yearsInput.value) || 35);
+      retireAgeInput.value = (curAge + yrs).toString();
+      performCalculation();
+    });
+  }
+
+  // Plan Type radio listener
+  const planTypeRadios = document.querySelectorAll('input[name="plan-type"]');
+  planTypeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      performCalculation();
+    });
+  });
 
   // Run simulation
   function performCalculation() {
-    const annualSalary = Math.max(0, parseFloat(salaryInput.value) || 0);
-    const salaryIncreaseRate = Math.max(0, (parseFloat(salaryGrowthInput.value) || 0) / 100);
-    const contributionPct = Math.min(1, Math.max(0, (parseFloat(contributionPctInput.value) || 0) / 100));
-    const taxRate = Math.min(1, Math.max(0, (parseFloat(taxRateInput.value) || 0) / 100));
+    const annualSalary = Math.max(0, parseFloat(salaryInput?.value || '0') || 0);
+    const salaryIncreaseRate = Math.max(0, (parseFloat(salaryGrowthInput?.value || '0') || 0) / 100);
+    const contributionPct = Math.min(1, Math.max(0, (parseFloat(contributionPctInput?.value || '0') || 0) / 100));
+    const taxRate = Math.min(1, Math.max(0, (parseFloat(taxRateInput?.value || '0') || 0) / 100));
     
-    const employerMatchPct = Math.max(0, (parseFloat(matchPctInput.value) || 0) / 100);
-    const employerMaxMatchPct = Math.min(1, Math.max(0, (parseFloat(maxMatchPctInput.value) || 0) / 100));
+    const employerMatchPct = Math.max(0, (parseFloat(matchPctInput?.value || '0') || 0) / 100);
+    const employerMaxMatchPct = Math.min(1, Math.max(0, (parseFloat(maxMatchPctInput?.value || '0') || 0) / 100));
     
-    const current401kBalance = Math.max(0, parseFloat(currentBalanceInput.value) || 0);
-    const yearsToRetire = Math.min(100, Math.max(0, parseInt(yearsInput.value) || 0));
-    const annualReturn = (parseFloat(returnRateInput.value) || 0) / 100;
+    const current401kBalance = Math.max(0, parseFloat(currentBalanceInput?.value || '0') || 0);
+    const yearsToRetire = Math.min(100, Math.max(1, parseInt(yearsInput?.value || '35') || 35));
+    const currentAge = Math.max(18, parseInt(currentAgeInput?.value || '30') || 30);
+    const annualReturn = (parseFloat(returnRateInput?.value || '0') || 0) / 100;
+
+    const selectedPlanType = (document.querySelector('input[name="plan-type"]:checked') as HTMLInputElement)?.value || 'traditional';
+    const isRoth = selectedPlanType === 'roth';
 
     const schedule = simulate401KPath({
       annualSalary,
@@ -191,35 +690,113 @@ const faqs = getCalculatorFaqs('401k');
     if (!schedule || schedule.length === 0) return;
     const finalYear = schedule[schedule.length - 1];
 
-    // Summarize cumulative matching and tax savings
+    // Cache simulation state for chart toggle
+    lastSchedule = schedule;
+    lastInitial = current401kBalance;
+    lastCurrentAge = currentAge;
+
+    // Summarize cumulative employee deposits, matching, and tax savings
+    let totalEmployeeContributions = 0;
     let totalMatching = 0;
     let totalTaxSavings = 0;
     schedule.forEach(e => {
+      totalEmployeeContributions += e.employeeContributions;
       totalMatching += e.employerMatch;
       totalTaxSavings += e.taxSavings;
     });
 
-    // Update Result Cards
-    if (resEndingCard) resEndingCard.querySelector('.font-mono')!.textContent = formatCurrency(finalYear.endingBalance);
-    if (resMatchingCard) resMatchingCard.querySelector('.font-mono')!.textContent = formatCurrency(totalMatching);
-    if (resTaxCard) resTaxCard.querySelector('.font-mono')!.textContent = formatCurrency(totalTaxSavings);
+    const endingBalance = finalYear.endingBalance;
+    const monthlyPayout = (endingBalance * 0.04) / 12;
+
+    // Update Result Cards safely
+    updateCardValue(resEndingCard, formatCurrency(endingBalance));
+    updateCardValue(resMonthlyIncomeCard, `${formatCurrency(monthlyPayout)} /mo`);
+    updateCardValue(resMatchingCard, formatCurrency(totalMatching));
+    updateCardValue(resContributionsCard, formatCurrency(totalEmployeeContributions + current401kBalance));
+    
+    if (resTaxCard) {
+      if (isRoth) {
+        updateCardValue(resTaxCard, '100% Tax-Free');
+        updateCardDesc(resTaxCard, 'All growth and retirement distributions are 100% tax-free.');
+      } else {
+        updateCardValue(resTaxCard, formatCurrency(totalTaxSavings));
+        updateCardDesc(resTaxCard, 'Federal & state income tax savings on pre-tax contributions.');
+      }
+    }
+
+    // Update Age Milestones
+    updateMilestones(annualSalary, currentAge, current401kBalance);
 
     // Update Chart
-    updateChart(schedule, current401kBalance);
-    // Update Table
-    updateScheduleTable(schedule);
+    updateChart(schedule, current401kBalance, currentAge);
+
+    // Update Schedule Table
+    updateScheduleTable(schedule, currentAge);
   }
 
-  function updateChart(schedule: any[], initial: number) {
-    const canvas = document.getElementById('growth-chart') as HTMLCanvasElement;
+  function updateMilestones(salary: number, currentAge: number, currentBalance: number) {
+    if (milestoneSalaryDisplay) milestoneSalaryDisplay.textContent = formatCurrency(salary);
+    if (statusCurAge) statusCurAge.textContent = currentAge.toString();
+
+    const m30 = salary * 1.0;
+    const m35 = salary * 2.0;
+    const m40 = salary * 3.0;
+    const m45 = salary * 4.0;
+    const m50 = salary * 6.0;
+    const m55 = salary * 7.0;
+    const m60 = salary * 8.0;
+    const m67 = salary * 10.0;
+
+    if (ms30) ms30.textContent = formatCurrency(m30);
+    if (ms30Mo) ms30Mo.textContent = `${formatCurrency((m30 * 0.04) / 12)} /mo`;
+    if (ms35) ms35.textContent = formatCurrency(m35);
+    if (ms35Mo) ms35Mo.textContent = `${formatCurrency((m35 * 0.04) / 12)} /mo`;
+    if (ms40) ms40.textContent = formatCurrency(m40);
+    if (ms40Mo) ms40Mo.textContent = `${formatCurrency((m40 * 0.04) / 12)} /mo`;
+    if (ms45) ms45.textContent = formatCurrency(m45);
+    if (ms45Mo) ms45Mo.textContent = `${formatCurrency((m45 * 0.04) / 12)} /mo`;
+    if (ms50) ms50.textContent = formatCurrency(m50);
+    if (ms50Mo) ms50Mo.textContent = `${formatCurrency((m50 * 0.04) / 12)} /mo`;
+    if (ms55) ms55.textContent = formatCurrency(m55);
+    if (ms55Mo) ms55Mo.textContent = `${formatCurrency((m55 * 0.04) / 12)} /mo`;
+    if (ms60) ms60.textContent = formatCurrency(m60);
+    if (ms60Mo) ms60Mo.textContent = `${formatCurrency((m60 * 0.04) / 12)} /mo`;
+    if (ms67) ms67.textContent = formatCurrency(m67);
+    if (ms67Mo) ms67Mo.textContent = `${formatCurrency((m67 * 0.04) / 12)} /mo`;
+
+    // Determine target for current age
+    let target = m30;
+    if (currentAge <= 30) target = m30;
+    else if (currentAge <= 35) target = m30 + ((currentAge - 30) / 5) * (m35 - m30);
+    else if (currentAge <= 40) target = m35 + ((currentAge - 35) / 5) * (m40 - m35);
+    else if (currentAge <= 45) target = m40 + ((currentAge - 40) / 5) * (m45 - m40);
+    else if (currentAge <= 50) target = m45 + ((currentAge - 45) / 5) * (m50 - m45);
+    else if (currentAge <= 55) target = m50 + ((currentAge - 50) / 5) * (m55 - m50);
+    else if (currentAge <= 60) target = m55 + ((currentAge - 55) / 5) * (m60 - m55);
+    else target = m60 + ((Math.min(67, currentAge) - 60) / 7) * (m67 - m60);
+
+    const pct = target > 0 ? Math.round((currentBalance / target) * 100) : 0;
+    if (statusEvaluation) {
+      if (pct >= 100) {
+        statusEvaluation.className = 'text-emerald-600 dark:text-emerald-400 font-bold text-sm mt-0.5';
+        statusEvaluation.textContent = `${formatCurrency(currentBalance)} / ${formatCurrency(target)} (${pct}% - Ahead of Target! 🚀)`;
+      } else {
+        statusEvaluation.className = 'text-ink font-bold text-sm mt-0.5';
+        statusEvaluation.textContent = `${formatCurrency(currentBalance)} / ${formatCurrency(target)} (${pct}% of Target)`;
+      }
+    }
+  }
+
+  function updateChart(schedule: any[], initial: number, currentAge: number) {
+    const canvas = document.getElementById('four-oh-one-k-chart') as HTMLCanvasElement | null;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const labels = schedule.map(e => `Yr ${e.year}`);
+    const labels = schedule.map(e => `Age ${currentAge + e.year}`);
+    const totalBalances = schedule.map(e => e.endingBalance);
     
-    // Accumulate total employee contributions, employer match, and interest growth
-    let cumEmployee = initial; // Seed starting balance in employee bucket for simplicty
+    let cumEmployee = initial;
     let cumEmployer = 0;
     
     const employeeData = schedule.map(e => {
@@ -230,109 +807,236 @@ const faqs = getCalculatorFaqs('401k');
       cumEmployer += e.employerMatch;
       return cumEmployer;
     });
-    const interestData = schedule.map(e => {
-      const totalDeposits = e.employeeContributions + e.employerMatch;
-      // Growth is Ending Balance - Starting Balance - Deposits
-      return Math.max(0, e.endingBalance - (e.startingBalance + totalDeposits));
-    });
-    
-    // Accumulate interest growth cumulatively
+    const totalContributionsData = schedule.map((_, i) => employeeData[i] + employerData[i]);
+
     let cumInterest = 0;
-    const interestCumData = interestData.map(val => {
-      cumInterest += val;
+    const interestCumData = schedule.map(e => {
+      cumInterest += (e.interest || 0);
       return cumInterest;
     });
 
+    const existingChart = Chart.getChart(canvas);
+    const targetType = currentChartType === 'area' ? 'line' : 'bar';
+    const needsRecreate = !chartInstance || 
+                          existingChart !== chartInstance || 
+                          chartInstance.config.type !== targetType;
+
+    if (needsRecreate) {
+      if (existingChart) {
+        existingChart.destroy();
+      }
+      if (chartInstance && chartInstance !== existingChart) {
+        chartInstance.destroy();
+      }
+      chartInstance = null;
+    }
+
     if (chartInstance) {
       chartInstance.data.labels = labels;
-      chartInstance.data.datasets[0].data = employeeData;
-      chartInstance.data.datasets[1].data = employerData;
-      chartInstance.data.datasets[2].data = interestCumData;
+      if (currentChartType === 'area') {
+        chartInstance.data.datasets[0].data = totalBalances;
+        chartInstance.data.datasets[1].data = totalContributionsData;
+        chartInstance.data.datasets[2].data = employeeData;
+      } else {
+        chartInstance.data.datasets[0].data = employeeData;
+        chartInstance.data.datasets[1].data = employerData;
+        chartInstance.data.datasets[2].data = interestCumData;
+      }
       chartInstance.update();
     } else {
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Your Contributions',
-              data: employeeData,
-              backgroundColor: '#3b82f6',
-              borderColor: '#3b82f6',
-              borderWidth: 1,
-              stack: 'stack0'
-            },
-            {
-              label: 'Employer Matching',
-              data: employerData,
-              backgroundColor: '#8b5cf6',
-              borderColor: '#8b5cf6',
-              borderWidth: 1,
-              stack: 'stack0'
-            },
-            {
-              label: 'Investment Growth',
-              data: interestCumData,
-              backgroundColor: '#10b981',
-              borderColor: '#10b981',
-              borderWidth: 1,
-              stack: 'stack0'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-              labels: {
-                boxWidth: 8,
-                padding: 12,
-                font: { family: 'Geist, sans-serif', size: 10 }
+      if (currentChartType === 'area') {
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Total 401(k) Balance',
+                data: totalBalances,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.16)',
+                fill: true,
+                tension: 0.25,
+                borderWidth: 2.5,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                order: 3
+              },
+              {
+                label: 'Total Deposits (You + Match)',
+                data: totalContributionsData,
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.16)',
+                fill: true,
+                tension: 0.25,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                order: 2
+              },
+              {
+                label: 'Your Contributions',
+                data: employeeData,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.20)',
+                fill: true,
+                tension: 0.25,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                order: 1
               }
-            },
-            tooltip: {
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
               mode: 'index',
               intersect: false
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              stacked: true,
-              ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
             },
-            y: {
-              stacked: true,
-              ticks: {
-                font: { family: 'Geist Mono, monospace', size: 9 },
-                callback: function(value) {
-                  return formatCurrencyTick(value);
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  boxWidth: 10,
+                  padding: 12,
+                  font: { family: 'Geist, sans-serif', size: 10 }
+                }
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(context: any) {
+                    const label = context.dataset.label || '';
+                    const val = context.parsed.y;
+                    return ` ${label}: ${formatCurrency(val)}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
+              },
+              y: {
+                ticks: {
+                  font: { family: 'Geist Mono, monospace', size: 9 },
+                  callback: function(value) {
+                    return formatCurrencyTick(value);
+                  }
                 }
               }
             }
           }
-        }
-      });
+        });
+      } else {
+        // Stacked Bar Chart
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Your Contributions',
+                data: employeeData,
+                backgroundColor: '#3b82f6',
+                borderColor: '#3b82f6',
+                borderWidth: 1,
+                stack: 'stack0'
+              },
+              {
+                label: 'Employer Matching',
+                data: employerData,
+                backgroundColor: '#8b5cf6',
+                borderColor: '#8b5cf6',
+                borderWidth: 1,
+                stack: 'stack0'
+              },
+              {
+                label: 'Investment Returns',
+                data: interestCumData,
+                backgroundColor: '#10b981',
+                borderColor: '#10b981',
+                borderWidth: 1,
+                stack: 'stack0'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  boxWidth: 8,
+                  padding: 12,
+                  font: { family: 'Geist, sans-serif', size: 10 }
+                }
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(context: any) {
+                    const label = context.dataset.label || '';
+                    const val = context.parsed.y;
+                    return ` ${label}: ${formatCurrency(val)}`;
+                  },
+                  footer: function(items: any[]) {
+                    let total = 0;
+                    items.forEach(item => {
+                      total += item.parsed.y || 0;
+                    });
+                    return `Total Nest Egg: ${formatCurrency(total)}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                stacked: true,
+                ticks: { maxTicksLimit: 12, font: { family: 'Geist Mono, monospace', size: 9 } }
+              },
+              y: {
+                stacked: true,
+                ticks: {
+                  font: { family: 'Geist Mono, monospace', size: 9 },
+                  callback: function(value) {
+                    return formatCurrencyTick(value);
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
     }
   }
 
-  function updateScheduleTable(schedule: any[]) {
+  function updateScheduleTable(schedule: any[], currentAge: number) {
     if (!scheduleBody) return;
     
     let html = '';
     schedule.forEach(e => {
       html += `
         <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-          <td class="px-5 py-3 font-semibold text-body">Year ${e.year}</td>
+          <td class="px-5 py-3 font-semibold text-body">Yr ${e.year} (Age ${currentAge + e.year})</td>
           <td class="px-5 py-3 text-right">${formatCurrency(e.salary)}</td>
           <td class="px-5 py-3 text-right text-link">${formatCurrency(e.employeeContributions)}</td>
-          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.employerMatch)}</td>
-          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.interest)}</td>
-          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+          <td class="px-5 py-3 text-right text-purple-600 dark:text-purple-400 font-medium">${formatCurrency(e.employerMatch)}</td>
+          <td class="px-5 py-3 text-right text-emerald-600 dark:text-emerald-400">${formatCurrency(e.interest)}</td>
+          <td class="px-5 py-3 text-right font-bold text-ink">${formatCurrency(e.endingBalance)}</td>
           <td class="px-5 py-3 text-right text-link">${formatCurrency(e.taxSavings)}</td>
         </tr>
       `;
@@ -341,22 +1045,97 @@ const faqs = getCalculatorFaqs('401k');
     scheduleBody.innerHTML = html;
   }
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    performCalculation();
-  });
+  // Early Withdrawal Calculator Logic
+  function calculateEarlyWithdrawal() {
+    if (!earlyAmountInput || !earlyTaxInput) return;
+    const amount = Math.max(0, parseFloat(earlyAmountInput.value) || 0);
+    const taxRate = Math.max(0, parseFloat(earlyTaxInput.value) || 0) / 100;
 
-  form.addEventListener('reset', () => {
-    setTimeout(() => {
-      if (resEndingCard) resEndingCard.querySelector('.font-mono')!.textContent = '--';
-      if (resMatchingCard) resMatchingCard.querySelector('.font-mono')!.textContent = '--';
-      if (resTaxCard) resTaxCard.querySelector('.font-mono')!.textContent = '--';
-      if (chartInstance) {
-        chartInstance.destroy();
-        chartInstance = null;
-      }
-      if (scheduleBody) scheduleBody.innerHTML = '';
-    }, 0);
+    const penalty = amount * 0.10;
+    const tax = amount * taxRate;
+    const totalDeduction = penalty + tax;
+    const netCash = Math.max(0, amount - totalDeduction);
+    const pctKept = amount > 0 ? Math.round((netCash / amount) * 100) : 0;
+
+    if (earlyPenVal) earlyPenVal.textContent = `-${formatCurrency(penalty)}`;
+    if (earlyTaxVal) earlyTaxVal.textContent = `-${formatCurrency(tax)}`;
+    if (earlyNetVal) earlyNetVal.textContent = `${formatCurrency(netCash)} (${pctKept}%)`;
+  }
+
+  if (earlyAmountInput && earlyTaxInput) {
+    earlyAmountInput.addEventListener('input', calculateEarlyWithdrawal);
+    earlyTaxInput.addEventListener('input', calculateEarlyWithdrawal);
+    calculateEarlyWithdrawal();
+  }
+
+  // Solo 401(k) Calculator Logic
+  function calculateSolo401k() {
+    if (!soloProfitInput || !soloCatchupInput || !soloStructureInput) return;
+    const profit = Math.max(0, parseFloat(soloProfitInput.value) || 0);
+    const isCatchup = soloCatchupInput.checked;
+    const structure = soloStructureInput.value;
+
+    const maxEmployee = isCatchup ? 30500 : 23000;
+    const employeeContrib = Math.min(profit, maxEmployee);
+
+    // Employer rate: 20% for sole prop (Schedule C), 25% for S-Corp W-2
+    const employerRate = structure === 'scorp' ? 0.25 : 0.20;
+    const rawEmployerContrib = profit * employerRate;
+    
+    // Overall ceiling: $69,000 ($76,500 if catch-up)
+    const overallCeiling = isCatchup ? 76500 : 69000;
+    const maxEmployerAllowed = Math.max(0, overallCeiling - employeeContrib);
+    const employerContrib = Math.min(rawEmployerContrib, maxEmployerAllowed);
+
+    const totalContribution = employeeContrib + employerContrib;
+    const estTaxSavings = totalContribution * 0.24; // assume 24% tax rate
+
+    if (soloEmpRes) soloEmpRes.textContent = formatCurrency(employeeContrib);
+    if (soloEmprRes) soloEmprRes.textContent = formatCurrency(employerContrib);
+    if (soloTotalRes) soloTotalRes.textContent = formatCurrency(totalContribution);
+    if (soloTaxSaved) soloTaxSaved.textContent = `~${formatCurrency(estTaxSavings)}`;
+  }
+
+  if (soloProfitInput && soloCatchupInput && soloStructureInput) {
+    soloProfitInput.addEventListener('input', calculateSolo401k);
+    soloCatchupInput.addEventListener('change', calculateSolo401k);
+    soloStructureInput.addEventListener('change', calculateSolo401k);
+    calculateSolo401k();
+  }
+
+  // Main Form Event Listeners
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      performCalculation();
+    });
+
+    form.addEventListener('reset', () => {
+      setTimeout(() => {
+        updateCardValue(resEndingCard, '--');
+        updateCardValue(resMonthlyIncomeCard, '--');
+        updateCardValue(resMatchingCard, '--');
+        updateCardValue(resContributionsCard, '--');
+        updateCardValue(resTaxCard, '--');
+        const existingChart = Chart.getChart('four-oh-one-k-chart');
+        if (existingChart) {
+          existingChart.destroy();
+        }
+        if (chartInstance) {
+          chartInstance.destroy();
+          chartInstance = null;
+        }
+        if (scheduleBody) scheduleBody.innerHTML = '';
+        performCalculation();
+      }, 0);
+    });
+  }
+
+  // Live input updates on main form
+  [salaryInput, salaryGrowthInput, contributionPctInput, taxRateInput, matchPctInput, maxMatchPctInput, currentBalanceInput, returnRateInput].forEach(inp => {
+    inp?.addEventListener('input', () => {
+      performCalculation();
+    });
   });
 
   // Table toggle
@@ -375,8 +1154,21 @@ const faqs = getCalculatorFaqs('401k');
 
   // Listen for currency changes
   window.addEventListener('currency-change', () => {
-    if (resEndingCard && resEndingCard.querySelector('.font-mono')?.textContent !== '--') {
-      performCalculation();
-    }
+    performCalculation();
+    calculateEarlyWithdrawal();
+    calculateSolo401k();
   });
+
+  // Handle Astro page transitions and initial load
+  document.addEventListener('astro:page-load', () => {
+    enhanceChartCanvas('four-oh-one-k-chart', { filename: '401k-retirement-growth-chart' });
+    performCalculation();
+  });
+
+  // Initial calculation on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', performCalculation);
+  } else {
+    performCalculation();
+  }
 </script>

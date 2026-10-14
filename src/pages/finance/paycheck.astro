@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('paycheck');
 
 <CalculatorLayout 
   title="Paycheck Calculator" 
-  description="Estimate your take-home pay after federal taxes, state taxes, FICA, and pre-tax benefit deductions."
+  seoTitle="Paycheck Calculator: Calculate Take-Home Pay & Taxes | financialcalculatorapp.com"
+  description="Free paycheck calculator. Estimate net take-home pay per paycheck after federal withholding, state taxes, FICA, and pre-tax retirement deductions."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -25,18 +26,18 @@ const faqs = getCalculatorFaqs('paycheck');
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Salary & Pay Schedule')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="75000" data-freq="biweekly" data-pre="6000" data-post="1200" data-state="4.5">Standard $75k</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="150000" data-freq="semimonthly" data-pre="18000" data-post="2400" data-state="6.0">Tech Lead $150k</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="75000" data-freq="biweekly" data-pre="6000" data-post="1200" data-state="4.5">{t('Standard $75k')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-gross="150000" data-freq="semimonthly" data-pre="18000" data-post="2400" data-state="6.0">{t('Tech Lead $150k')}</button>
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="gross-pay" label="Gross Annual Salary" type="number" prefix="$" value="75000" placeholder="0.00" tooltip="Your base annual gross earnings before any taxes or deductions." />
             <Select id="frequency" label="Pay Frequency" options={[
-              { value: 'weekly', label: 'Weekly (52 checks/yr)' },
-              { value: 'biweekly', label: 'Bi-Weekly (26 checks/yr)' },
-              { value: 'semimonthly', label: 'Semi-Monthly (24 checks/yr)' },
-              { value: 'monthly', label: 'Monthly (12 checks/yr)' }
+              { value: 'weekly', label: t('Weekly (52 checks/yr)') },
+              { value: 'biweekly', label: t('Bi-Weekly (26 checks/yr)') },
+              { value: 'semimonthly', label: t('Semi-Monthly (24 checks/yr)') },
+              { value: 'monthly', label: t('Monthly (12 checks/yr)') }
             ]} value="biweekly" />
           </div>
 
@@ -78,7 +79,7 @@ const faqs = getCalculatorFaqs('paycheck');
 
       <!-- Breakdown Pie Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Salary Breakdown</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Salary Breakdown')}</h4>
         <div class="h-64 relative">
           <canvas id="paycheck-chart"></canvas>
         </div>
@@ -86,18 +87,18 @@ const faqs = getCalculatorFaqs('paycheck');
 
       <!-- Detailed Breakdown Table -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">Withholding Schedule</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider border-b border-hairline pb-2">{t('Withholding Schedule')}</h4>
         <div class="text-xs space-y-2">
           <div class="flex justify-between">
-            <span class="text-body font-medium">Federal Income Tax</span>
+            <span class="text-body font-medium">{t('Federal Income Tax')}</span>
             <span class="font-mono text-ink" id="withhold-fed">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
-            <span class="text-body font-medium">FICA Tax (SS + Medicare)</span>
+            <span class="text-body font-medium">{t('FICA Tax (SS + Medicare)')}</span>
             <span class="font-mono text-ink" id="withhold-fica">--</span>
           </div>
           <div class="flex justify-between border-t border-hairline/60 pt-2">
-            <span class="text-body font-medium">State Income Tax</span>
+            <span class="text-body font-medium">{t('State Income Tax')}</span>
             <span class="font-mono text-ink" id="withhold-state">--</span>
           </div>
         </div>
@@ -106,7 +107,7 @@ const faqs = getCalculatorFaqs('paycheck');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Paycheck CSV
+          <span>📊</span> {t('Download Paycheck CSV')}
         </button>
       </div>
     </div>
@@ -120,6 +121,8 @@ const faqs = getCalculatorFaqs('paycheck');
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('paycheck-chart');
 
 
   // DOM Elements

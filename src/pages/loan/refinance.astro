@@ -2,17 +2,29 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import RefinanceBreakEvenChart from '../../components/charts/RefinanceBreakEvenChart';
+import { generateRefinanceTrajectory } from '../../lib/math/loan';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 const faqs = getCalculatorFaqs('refinance');
+
+const initialTrajectoryData = generateRefinanceTrajectory({
+  currentBalance: 300000,
+  currentRate: 0.068,
+  currentTermRemaining: 25,
+  newRate: 0.052,
+  newTerm: 30,
+  closingCosts: 5000
+});
 ---
 
 <CalculatorLayout 
   title="Loan Refinance Calculator" 
-  description="Evaluate if refinancing your mortgage or loan will save you money. Compare monthly payments, lifetime interest, and calculate your exact break-even timeline."
+  seoTitle="Loan Refinance Calculator: Check Savings & Break-Even | financialcalculatorapp.com"
+  description="Find out if refinancing your loan saves you money. Compare new monthly payments, lifetime interest savings, and your exact break-even month."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -74,24 +86,33 @@ const faqs = getCalculatorFaqs('refinance');
 
       <!-- Payment Comparison Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-4">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Payment Comparison</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Payment Comparison')}</h4>
         <div class="grid grid-cols-2 gap-4 divide-x divide-hairline">
           <div class="space-y-1">
-            <span class="text-xs text-mute font-mono block">Current Loan P&I</span>
+            <span class="text-xs text-mute font-mono block">{t('Current Loan P&I')}</span>
             <span class="text-xl font-semibold text-ink font-mono" id="comp-current-pmt">--</span>
           </div>
           <div class="pl-4 space-y-1">
-            <span class="text-xs text-mute font-mono block">New Refinanced P&I</span>
+            <span class="text-xs text-mute font-mono block">{t('New Refinanced P&I')}</span>
             <span class="text-xl font-semibold text-ink font-mono" id="comp-new-pmt">--</span>
           </div>
         </div>
       </div>
 
+      <!-- Break-Even & Trajectory Chart -->
+      <RefinanceBreakEvenChart
+        client:load
+        initialTrajectory={initialTrajectoryData.trajectory}
+        initialBreakEvenMonths={initialTrajectoryData.breakEvenMonths}
+        initialMonthlySavings={initialTrajectoryData.monthlySavings}
+        initialLifetimeSavings={initialTrajectoryData.lifetimeSavings}
+      />
+
       <!-- Formula steps -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Formula Breakdown</span>
+            <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
@@ -121,7 +142,7 @@ const faqs = getCalculatorFaqs('refinance');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>
@@ -129,7 +150,7 @@ const faqs = getCalculatorFaqs('refinance');
 </CalculatorLayout>
 
 <script>
-  import { calculateRefinance } from '../../lib/math/loan';
+  import { calculateRefinance, generateRefinanceTrajectory } from '../../lib/math/loan';
   import { formatCurrency } from '../../lib/utils';
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
@@ -186,14 +207,17 @@ const faqs = getCalculatorFaqs('refinance');
     const nRate = parseFloat(newRate.value) / 100;
     const nTerm = parseInt(newTerm.value);
 
-    const result = calculateRefinance({
+    const params = {
       currentBalance,
       currentRate: cRate,
       currentTermRemaining: cTerm,
       newRate: nRate,
       newTerm: nTerm,
       closingCosts
-    });
+    };
+
+    const result = calculateRefinance(params);
+    const trajectoryData = generateRefinanceTrajectory(params);
 
     let breakEvenText = 'Never (No Savings)';
     if (result.breakEvenMonths === 0) {
@@ -227,12 +251,25 @@ const faqs = getCalculatorFaqs('refinance');
     if (stepLifetime) {
       stepLifetime.innerHTML = `Remaining Old Loan = ${formatCurrency(result.currentPMT)} × ${cTerm*12} mo = ${formatCurrency(result.currentTotalRemaining)}<br/>New Loan Total = (${formatCurrency(result.newPMT)} × ${nTerm*12} mo) + ${formatCurrency(closingCosts)} = ${formatCurrency(result.newTotalCost)}<br/>Net Savings = ${formatCurrency(result.currentTotalRemaining)} - ${formatCurrency(result.newTotalCost)} = <strong>${formattedLifetime}</strong>`;
     }
+
+    // Dispatch chart update
+    window.dispatchEvent(
+      new CustomEvent('refinance-data-updated', {
+        detail: {
+          trajectory: trajectoryData.trajectory,
+          breakEvenMonths: trajectoryData.breakEvenMonths,
+          monthlySavings: trajectoryData.monthlySavings,
+          lifetimeSavings: trajectoryData.lifetimeSavings
+        }
+      })
+    );
   }
 
-  // Bind input listeners
+  // Bind input listeners with real-time recalculation
   [currentBal, currentRate, currentTerm, closingCostsInput, newRate, newTerm].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
     });
   });
 
@@ -252,6 +289,8 @@ const faqs = getCalculatorFaqs('refinance');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
+
+      performCalculation();
     });
   });
 

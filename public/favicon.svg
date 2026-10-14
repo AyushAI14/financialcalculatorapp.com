@@ -1,4 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <circle cx="64" cy="64" r="60" fill="#171717" />
-  <path d="M64 16v96M88 36H52a18 18 0 0 0 0 36h24a18 18 0 0 1 0 36H40" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <!-- Body -->
+  <rect width="128" height="128" rx="28" fill="#111315" />
+  <!-- Screen -->
+  <rect x="16" y="16" width="96" height="44" rx="10" fill="#f0efec" />
+  <!-- Chart Arrow -->
+  <path d="M 24 49 L 50 33 L 69 41 L 96 23" fill="none" stroke="#be5037" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 83 22 L 98 22 L 98 37" fill="none" stroke="#be5037" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Keypad Row 1 -->
+  <rect x="16" y="68" width="18" height="18" rx="5" fill="#f0efec" />
+  <rect x="40" y="68" width="18" height="18" rx="5" fill="#f0efec" />
+  <rect x="64" y="68" width="18" height="18" rx="5" fill="#f0efec" />
+  <!-- Keypad Row 2 -->
+  <rect x="16" y="92" width="18" height="18" rx="5" fill="#f0efec" />
+  <rect x="40" y="92" width="18" height="18" rx="5" fill="#f0efec" />
+  <rect x="64" y="92" width="18" height="18" rx="5" fill="#f0efec" />
+  <!-- Tall Equals Button -->
+  <rect x="88" y="68" width="24" height="42" rx="8" fill="#be5037" />
+  <path d="M 94 85 H 106 M 94 93 H 106" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
 </svg>

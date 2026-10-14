@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('crypto-dca');
 
 <CalculatorLayout 
   title="Crypto DCA Calculator" 
-  description="Simulate dollar-cost averaging (DCA) into Bitcoin, Ethereum, or other crypto assets with recurring recurring purchases."
+  seoTitle="Crypto DCA Calculator: Bitcoin Dollar-Cost Averaging | financialcalculatorapp.com"
+  description="Simulate recurring dollar-cost averaging (DCA) into Bitcoin and Ethereum. Backtest and project recurring buying strategies over time."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -25,16 +26,16 @@ const faqs = getCalculatorFaqs('crypto-dca');
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('DCA Settings', 'DCA Strategy Settings')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50" data-freq="weekly" data-years="3" data-growth="20.0">Weekly Accumulator</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="200" data-freq="monthly" data-years="5" data-growth="15.0">Monthly Long-Term</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50" data-freq="weekly" data-years="3" data-growth="20.0">{t('Weekly Accumulator')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="200" data-freq="monthly" data-years="5" data-growth="15.0">{t('Monthly Long-Term')}</button>
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="purchase-amount" label="Recurring Purchase Amount" type="number" prefix="$" value="50" placeholder="0.00" tooltip="The cash amount you allocate for each buy order." />
             <Select id="frequency" label="Purchase Frequency" options={[
-              { value: 'weekly', label: 'Weekly' },
-              { value: 'monthly', label: 'Monthly' }
+              { value: 'weekly', label: t('Weekly') },
+              { value: 'monthly', label: t('Monthly') }
             ]} value="weekly" />
           </div>
 
@@ -74,7 +75,7 @@ const faqs = getCalculatorFaqs('crypto-dca');
 
       <!-- DCA Projection Line Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">DCA Accumulation Path</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('DCA Accumulation Path')}</h4>
         <div class="h-64 relative">
           <canvas id="dca-chart"></canvas>
         </div>
@@ -83,7 +84,7 @@ const faqs = getCalculatorFaqs('crypto-dca');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download DCA Schedule CSV
+          <span>📊</span> {t('Download DCA Schedule CSV')}
         </button>
       </div>
     </div>
@@ -97,6 +98,8 @@ const faqs = getCalculatorFaqs('crypto-dca');
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('dca-chart');
 
   // DOM Elements
   const form = document.getElementById('crypto-dca-form') as HTMLFormElement;

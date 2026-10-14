@@ -14,7 +14,8 @@ const faqs = getCalculatorFaqs('loan');
 
 <CalculatorLayout 
   title="Loan Calculator & Payment Schedule" 
-  description="Calculate monthly loan payments, total interest charges, and comprehensive amortization schedules for personal, auto, or home loans with extra payment options."
+  seoTitle="Loan Calculator: Monthly Payments & Payoff Schedule | financialcalculatorapp.com"
+  description="Free personal loan calculator. Calculate monthly repayments, total interest, and complete amortization schedules with extra payment options."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -84,7 +85,7 @@ const faqs = getCalculatorFaqs('loan');
 
       <!-- Amortization Drawdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Amortization Drawdown Chart</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Amortization Drawdown Chart')}</h4>
         <div class="h-80 relative">
           <canvas id="amortization-chart"></canvas>
         </div>
@@ -96,20 +97,20 @@ const faqs = getCalculatorFaqs('loan');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Amortization Schedule</h3>
-        <p class="text-sm text-body mt-1">Detailed period-by-period progression showing starting balances, payment structures, and interest margins.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Amortization Schedule')}</h3>
+        <p class="text-sm text-body mt-1">{t('Detailed period-by-period progression showing starting balances, payment structures, and interest margins.')}</p>
       </div>
       <div class="flex items-center gap-3">
         <Select id="schedule-view" label="" options={[
-          { value: 'yearly', label: 'Yearly Summary' },
-          { value: 'monthly', label: 'Monthly Table' }
+          { value: 'yearly', label: t('Yearly Summary') },
+          { value: 'monthly', label: t('Monthly Table') }
         ]} value="yearly" />
         
         <button 
           id="toggle-schedule" 
           class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer whitespace-nowrap"
         >
-          Show Amortization Table
+          {t('Show Amortization Table')}
         </button>
       </div>
     </div>
@@ -140,6 +141,8 @@ const faqs = getCalculatorFaqs('loan');
   import { generateAmortizationSchedule, calculateLoanPMT, compileYearlyAmortization } from '../../lib/math/loan';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('amortization-chart');
 
   // DOM Elements
   const form = document.getElementById('loan-form') as HTMLFormElement;

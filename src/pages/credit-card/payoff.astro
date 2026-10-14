@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
 <CalculatorLayout 
   title="Credit Card Payoff Calculator" 
-  description="Discover how long it will take to pay off your credit card balance with minimum payments versus accelerated payments, and calculate total interest savings."
+  seoTitle="Credit Card Payoff Calculator: Pay Off Debt Fast | financialcalculatorapp.com"
+  description="Calculate how long minimum payments take to clear card balances and see how much extra monthly payments save you in interest charges."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -74,7 +75,7 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
       <!-- Drawdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Balance Drawdown Timeline</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Drawdown Timeline')}</h4>
         <div class="h-64 relative">
           <canvas id="payoff-chart"></canvas>
         </div>
@@ -86,14 +87,14 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Monthly Payment Schedule</h3>
-        <p class="text-sm text-body mt-1">Month-by-month repayment progression listing interest fees and principal declines.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Monthly Payment Schedule')}</h3>
+        <p class="text-sm text-body mt-1">{t('Month-by-month repayment progression listing interest fees and principal declines.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Monthly Schedule
+        {t('Show Monthly Schedule')}
       </button>
     </div>
 
@@ -122,7 +123,10 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 <script>
   import { simulateCreditCardPayoff } from '../../lib/math/misc';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
+  import { getEffectiveCurrency, getCurrencySymbol } from '../../lib/currency';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('payoff-chart');
 
   // DOM Elements
   const form = document.getElementById('payoff-form') as HTMLFormElement;
@@ -164,7 +168,8 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
     } else {
       if (valLabel) valLabel.textContent = 'Monthly Payment Amount';
       if (valSpan) {
-        valSpan.textContent = '$';
+        valSpan.textContent = getCurrencySymbol(getEffectiveCurrency(document.documentElement.lang));
+        valSpan.setAttribute('data-currency-prefix', 'true');
         valSpan.classList.add('left-3');
         valSpan.classList.remove('right-3');
         paymentValInput.classList.add('pl-7');

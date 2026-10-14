@@ -3,8 +3,12 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const isEs = lang === 'es';
+const isDe = lang === 'de';
+const isJa = lang === 'ja';
+const isPt = lang === 'pt';
 
-const faqs = [
+const faqsEn = [
   {
     question: "What is an HP 12C financial calculator and why is it used?",
     answer: "The HP 12C is the gold standard programmable financial calculator created by Hewlett-Packard in 1981. It is renowned for its durability, Reverse Polish Notation (RPN) efficiency, and is one of the few calculators permitted on the CFA, CFP, and Real Estate appraiser certification examinations."
@@ -22,31 +26,150 @@ const faqs = [
     answer: "Yes! Use your computer numpad or number keys for digits 0-9, Enter for the ENTER stack key, standard arithmetic keys (+, -, *, /), and Backspace to clear the entry."
   }
 ];
+
+const faqsEs = [
+  {
+    question: "¿Qué es la calculadora financiera HP 12C y por qué se utiliza?",
+    answer: "La HP 12C es la calculadora financiera de referencia absoluta creada por Hewlett-Packard en 1981. Destaca por su fiabilidad, el sistema de Notación Polaca Inversa (RPN) y es una de las pocas calculadoras permitidas en los exámenes oficiales CFA, CFP y certificaciones de tasación inmobiliaria."
+  },
+  {
+    question: "¿Cómo funciona la Notación Polaca Inversa (RPN) en la HP 12C?",
+    answer: "El sistema RPN elimina la necesidad de paréntesis y de tecla igual. Primero introduces los números en una pila de 4 niveles (X, Y, Z, T) y después pulsas la operación. Por ejemplo, para sumar 25 y 15, pulsas [2][5] [ENTER] [1][5] [+], obteniendo 40 de inmediato."
+  },
+  {
+    question: "¿Cómo se calcula el Valor del Dinero en el Tiempo (TVM) en este emulador?",
+    answer: "Guarda los valores conocidos en los registros de TVM (n para periodos, i para tasa de interés, PV para valor actual, PMT para pago periódico, FV para valor futuro). Pulsa la tecla de la variable desconocida para calcularla. Recuerda la convención de signos: las salidas de dinero se introducen con signo negativo mediante la tecla CHS."
+  },
+  {
+    question: "¿Puedo usar el teclado físico de mi ordenador con este emulador?",
+    answer: "¡Sí! Utiliza el teclado numérico o las teclas numéricas del 0 al 9, Enter para la tecla ENTER de la pila, las teclas estándar (+, -, *, /) y Retroceso (Backspace) para borrar."
+  }
+];
+
+const faqsDe = [
+  {
+    question: "Was ist der Finanzrechner HP 12C und warum wird er verwendet?",
+    answer: "Der HP 12C ist der 1981 von Hewlett-Packard eingeführte Goldstandard unter den programmierbaren Finanzrechnern. Er ist berühmt für seine Langlebigkeit, die Effizienz der Umgekehrten Polnischen Notation (UPN/RPN) und ist einer der wenigen Taschenrechner, die bei offiziellen CFA-, CFP- und Immobilien-Sachverständigenprüfungen zugelassen sind."
+  },
+  {
+    question: "Wie funktioniert die Umgekehrte Polnische Notation (UPN/RPN) beim HP 12C?",
+    answer: "UPN macht Klammern und eine Gleichheitstaste überflüssig. Sie geben Zahlen zuerst auf einen 4-stufigen Stack (X, Y, Z, T) ein und drücken anschließend die Rechenoperation. Um beispielsweise 25 und 15 zu addieren, drücken Sie [2][5] [ENTER] [1][5] [+], was sofort 40 ergibt."
+  },
+  {
+    question: "Wie berechne ich Zinseszins und Zeitwert des Geldes (TVM) auf diesem Emulator?",
+    answer: "Speichern Sie die bekannten Werte in den TVM-Registern (n für Laufzeit/Perioden, i für Zinssatz, PV für Barwert, PMT für regelmäßige Rate, FV für Endwert). Drücken Sie die Taste der gesuchten Variablen, um diese zu berechnen. Beachten Sie Vorzeichenkonventionen: Geldabflüsse werden mit CHS als negativer Betrag eingegeben."
+  },
+  {
+    question: "Kann ich meine Tastatur mit diesem Emulator verwenden?",
+    answer: "Ja! Nutzen Sie den Nummernblock oder die Zifferntasten 0–9, Enter für den Stack-Eintrag (ENTER), die Standard-Rechenzeichen (+, -, *, /) und die Rücktaste (Backspace) zum Löschen."
+  }
+];
+
+const faqsJa = [
+  {
+    question: "HP 12C金融電卓とは何ですか？なぜ選ばれるのですか？",
+    answer: "HP 12Cは、1981年にヒューレット・パッカード社が開発したプログラム可能な金融電卓の世界的スタンダードです。高い堅牢性と逆ポーランド記法（RPN）による計算の高速性が特徴で、米国証券アナリスト（CFA）やファイナンシャルプランナー（CFP）、不動産鑑定士試験での持ち込みが公式認定されています。"
+  },
+  {
+    question: "HP 12Cの逆ポーランド記法（RPN）はどのように操作しますか？",
+    answer: "RPN記法ではカッコや等号［＝］キーが不要です。まず4段スタック（X, Y, Z, T）に数値を入力し、その後に演算子キーを押します。例えば25＋15を計算する場合、［2］［5］［ENTER］［1］［5］［＋］と入力すると即座に40が表示されます。"
+  },
+  {
+    question: "このエミュレータで貨幣の時間価値（TVM）を計算する方法は？",
+    answer: "判明している数値を各TVMレジスタ（期間 n、年利 i、現在価値 PV、毎月支払額 PMT、将来価値 FV）に代入し、求めたい変数のキーを押すだけで算出されます。金融計算の符号規約に従い、現金の流出（支払い）は［CHS］キーでマイナス値にして入力してください。"
+  },
+  {
+    question: "パソコンのキーボードでエミュレータを操作できますか？",
+    answer: "はい！テンキーや数字キー［0-9］、スタック入力の［Enter］、四則演算キー［＋, －, ＊, ／］、入力取り消しの［Backspace］など、PCキーボードショートカットで実機同様に快適に操作できます。"
+  }
+];
+
+const faqsPt = [
+  {
+    question: "O que é a calculadora HP 12C e por que ela é o padrão financeiro no Brasil?",
+    answer: "A HP 12C é a calculadora financeira mais famosa do mundo, lançada pela Hewlett-Packard em 1981. No Brasil, ela é o padrão absoluto e obrigatório no mercado bancário, corretoras de investimentos, mercado imobiliário e faculdades de Economia, Administração, Ciências Contábeis e Engenharia. Além disso, é a calculadora formalmente homologada para exames de certificação do mercado financeiro, como ANBIMA (CPA-10, CPA-20, CEA), CFP e perícia contábil/judicial. Sua popularidade decorre da precisão matemática indiscutível, algoritmos consolidados de juros compostos e extrema velocidade operacional proporcionada pela Notação Polonesa Reversa (RPN)."
+  },
+  {
+    question: "Calculadora HP 12C como usar: como somar e fazer cálculos básicos com a lógica RPN?",
+    answer: "Diferente das calculadoras tradicionais, a HP 12C não possui a tecla de igual (=) nem parênteses. Ela opera com Notação Polonesa Reversa (RPN) e uma pilha de 4 registradores (X, Y, Z, T). Para somar, você insere o primeiro número, pressiona [ENTER] para salvá-lo na pilha, digita o segundo número e aperta a operação [+]. Exemplo: para somar 25 + 15, tecle [2][5] [ENTER] [1][5] [+]. O visor exibe imediatamente 40.00. Para subtrair 40 - 10: tecle [4][0] [ENTER] [1][0] [-]. Para multiplicar 8 × 7: [8] [ENTER] [7] [×]. Esse sistema elimina a necessidade de rascunhos e parênteses em cálculos financeiros encadeados."
+  },
+  {
+    question: "Como calcular juros compostos e valor futuro (FV) na HP 12C?",
+    answer: "Para calcular o valor futuro (FV) com juros compostos: 1) Limpe os registradores financeiros teclando [f] [FIN]. 2) Digite o valor presente (capital inicial), inverta o sinal com [CHS] (convenção financeira para saída de caixa/investimento) e tecle [PV] (ex: 5000 [CHS] [PV]). 3) Digite a taxa de juros periódica e tecle [i] (ex: 1.2 [i] para 1,2% ao mês). 4) Digite o número de períodos e tecle [n] (ex: 24 [n] para 24 meses). 5) Pressione a tecla [FV]. O emulador calculará instantaneamente o montante acumulado de R$ 6.649,22."
+  },
+  {
+    question: "O que significa PMT na HP 12C e como calcular a prestação na Tabela Price?",
+    answer: "PMT significa 'Payment' (pagamento periódico ou prestação fixa). Na matemática financeira e no crédito bancário brasileiro (financiamento imobiliário e veicular pelo Sistema Francês / Tabela Price), o PMT calcula o valor exato da parcela mensal constante. Para calcular a prestação de um empréstimo de R$ 30.000 em 36 parcelas a 1,5% ao mês: tecle [f] [FIN], depois 30000 [PV], 1.5 [i], 36 [n] e pressione [PMT]. O visor exibirá -1.085,82 (sinal negativo indicando pagamento/saída mensal de caixa)."
+  },
+  {
+    question: "Como calcular o prazo (n) em juros compostos na HP 12C?",
+    answer: "Para saber em quanto tempo um capital atinge determinado valor com juros compostos: 1) Limpe as variáveis financeiras com [f] [FIN]. 2) Insira o valor inicial negativo em [PV] (ex: 10000 [CHS] [PV]). 3) Insira o valor futuro desejado em [FV] (ex: 20000 [FV] para dobrar o patrimônio). 4) Digite a taxa de juros do período em [i] (ex: 1 [i] para 1% a.m.). 5) Pressione a tecla [n]. A HP 12C exibirá 70 meses (lembrando que a calculadora sempre arredonda para cima frações de período quando calcula n)."
+  },
+  {
+    question: "Como calcular juros simples na HP 12C?",
+    answer: "Para calcular juros simples na HP 12C, utiliza-se a função amarela [f] [INT] (Interest). O procedimento padrão da HP é: 1) Digite o número de dias e tecle [n]. 2) Digite a taxa de juros anual e tecle [i]. 3) Digite o valor do capital com sinal negativo e tecle [PV] (ex: 12000 [CHS] [PV]). 4) Pressione [f] [INT]. O visor exibirá os juros simples acumulados com base no ano comercial de 360 dias (neste exemplo, R$ 540,00). Pressionando [+] em seguida, você obtém o montante total com o capital: R$ 12.540,00."
+  },
+  {
+    question: "Como calcular o Custo Efetivo Total (CET) na HP 12C?",
+    answer: "O Custo Efetivo Total (CET) mede a taxa real de um financiamento no Brasil, somando juros nominais, IOF, TAC e seguros. Para calculá-lo na HP 12C: 1) Em [PV], lance o valor líquido que realmente foi creditado na sua conta com sinal negativo [CHS] [PV] (ex: empréstimo de R$ 10.000 com R$ 500 de taxas descontadas = 9500 [CHS] [PV]). 2) Em [PMT], insira o valor bruto da prestação que você pagará ao banco. 3) Em [n], insira a quantidade de parcelas. 4) Pressione [i]. A taxa encontrada é a taxa periódica mensal do CET. Para o CET anual, basta capitalizar a taxa mensal para 12 meses."
+  },
+  {
+    question: "Como programar e calcular taxas equivalentes na HP 12C (ao mês vs ao ano)?",
+    answer: "No regime de juros compostos, uma taxa anual deve ser convertida para taxa equivalente ao mês pela fórmula (1 + i_ano) = (1 + i_mes)^12. Para converter uma taxa Selic de 13,25% ao ano para taxa mensal na HP 12C: tecle [1] [ENTER] [1][3][.][2][5] [ENTER] [1][0][0] [÷] [+] (resulta 1,1325), depois [1] [ENTER] [1][2] [÷] (resulta 0,08333), depois [y^x], depois [1] [-] [1][0][0] [×]. O visor exibirá 1,041% ao mês. Para o inverso (mês para ano), insira o fator mensal (ex: 1.015), eleve a 12 com [1][2] [y^x] e subtraia 1 multiplicando por 100."
+  },
+  {
+    question: "Como zerar a HP 12C, como resetar e limpar a memória (f CLX, f REG e f FIN)?",
+    answer: "A HP 12C possui diferentes níveis de limpeza: 1) Para limpar apenas o visor: tecle [CLX] (Clear X). 2) Para limpar as 5 variáveis financeiras (n, i, PV, PMT, FV): tecle a tecla amarela [f] seguida de [CLX] (função CLEAR FIN). É fundamental fazer isso antes de cada cálculo para não usar resíduos de contas anteriores! 3) Para limpar todos os registradores operacionais, memórias 0 a 9 e estatística: tecle [f] [REG]. 4) Reset de fábrica completo do aparelho físico: desligue a calculadora, segure a tecla de menos [-] e pressione [ON]."
+  },
+  {
+    question: "Como aumentar ou alterar as casas decimais na HP 12C?",
+    answer: "Para ajustar a quantidade de casas decimais exibidas no visor LCD da HP 12C, pressione a tecla de função amarela [f] seguida do número de casas desejado (entre 0 e 9). Exemplo: [f] [2] para o padrão financeiro de 2 casas (0.00), [f] [4] para 4 casas decimais (0.0000, muito usado em taxas de juros e câmbio) e [f] [9] para visualizar a precisão máxima do visor. Vale lembrar que a HP 12C sempre preserva até 10 dígitos internamente, mesmo que o visor exiba apenas 2 casas arredondadas."
+  },
+  {
+    question: "O que é o erro 'Pr Error' na HP 12C e como resolver?",
+    answer: "'Pr Error' significa Programming Error (Erro de Programação). Ele costuma acontecer quando o usuário pressiona por engano a tecla [f] [P/R], fazendo a calculadora entrar em modo de programação, ou quando uma rotina de programa tenta acessar uma memória inválida ou vazia. Para resolver e sair do Pr Error: pressione qualquer tecla (como [CLX] ou [f] [P/R]) para retornar ao modo de cálculo imediato. Se o erro ocorrer na calculadora física e não sair, retire as pilhas por 30 segundos ou efetue o reset segurando [-] e [ON]."
+  },
+  {
+    question: "Qual a diferença entre a calculadora HP 12C Gold e a HP 12C Platinum?",
+    answer: "A HP 12C Gold (Dourada) é o modelo tradicional lançado em 1981, operando exclusivamente com notação RPN, com memória para 99 passos de programação e processador clássico. A HP 12C Platinum (Prata/Preta) é uma evolução moderna: permite alternar entre o modo RPN e o modo Algébrico convencional (ALG com parênteses), possui memória expandida para 399 passos (4 vezes mais), processador até 6 vezes mais veloz para resolver taxas internas de retorno (TIR/IRR) complexas e conta com tecla dedicada de Backspace. Nosso emulador web reproduz as funções da Platinum, permitindo alternar entre RPN e ALG."
+  },
+  {
+    question: "Preciso fazer download da calculadora HP 12C ou o emulador online é grátis?",
+    answer: "Você não precisa fazer download nem instalar nenhum arquivo executável (.exe ou APK suspeito). Nosso emulador da calculadora financeira HP 12C online é 100% gratuito, seguro e roda diretamente no navegador de qualquer dispositivo: computador (Windows, Mac, Linux), notebook, tablet, celular Android ou iPhone. Além de não consumir armazenamento do seu aparelho, todas as operações são processadas localmente no seu navegador com total privacidade."
+  },
+  {
+    question: "Quanto custa uma calculadora HP 12C física no Brasil vs emulador online?",
+    answer: "No mercado brasileiro, uma calculadora física original HP 12C nova custa em média entre R$ 320,00 e R$ 580,00 (dependendo do modelo Gold ou Platinum e da cotação do dólar). Para estudantes, concurseiros e profissionais que precisam realizar cálculos financeiros rápidos no dia a dia do trabalho ou nos estudos, o emulador online grátis do financialcalculatorapp.com oferece a mesma confiabilidade matemática sem nenhum custo."
+  }
+];
+
+const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : faqsEn)));
 ---
 
 <CalculatorLayout 
-  title="HP 12C Calculator Online - Interactive Financial Emulator" 
-  description="Free online HP 12C financial calculator emulator. Complete Reverse Polish Notation (RPN), TVM solver, amortization, and cash flow analysis with keyboard hotkeys."
+  title={isPt ? "calc.hp12c.name" : (isEs ? "calc.hp12c.name" : (isDe ? "HP 12C Rechner Online - Interaktiver Finanz-Emulator" : (isJa ? "HP 12C 金融電卓 オンライン - インタラクティブRPNエミュレーター" : "calc.hp12c.name")))} 
+  seoTitle={isPt ? "calc.hp12c.seoTitle" : (isEs ? "calc.hp12c.seoTitle" : (isDe ? "HP 12C Rechner Online: Interaktiver UPN-Emulator | financialcalculatorapp.com" : (isJa ? "HP 12C 金融電卓 オンライン: 無料のRPNエミュレーター | financialcalculatorapp.com" : "calc.hp12c.seoTitle")))}
+  description={isPt ? "calc.hp12c.desc" : (isEs ? "calc.hp12c.desc" : (isDe ? "Kostenloser Online-Emulator des Finanzrechners HP 12C: Umgekehrte Polnische Notation (UPN/RPN), TVM-Löser, Tilgung und Cashflow-Analyse mit Tastaturkürzeln." : (isJa ? "無料のHP 12C金融電卓オンラインエミュレーター。本物の逆ポーランド記法（RPN）、TVMレジスタ、元利均等償還表、キャッシュフロー分析をブラウザ上で完全再現。" : "calc.hp12c.desc")))}
   faqs={faqs}
   calcKey="hp-12c"
 >
-  <div class="max-w-4xl mx-auto space-y-8">
+  <div class="w-full space-y-8">
     <!-- Emulator Header & Mode Selector -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-canvas border border-hairline rounded-lg shadow-sm">
       <div>
-        <h2 class="text-base font-semibold text-ink">Hewlett-Packard HP 12C Platinum Web Emulator</h2>
-        <p class="text-xs text-mute">RPN Stack & TVM Financial Engine with Full Keyboard Hotkey Support</p>
+        <h2 class="text-base font-semibold text-ink">{isEs ? "Emulador Web Hewlett-Packard HP 12C Platinum" : (isDe ? "Hewlett-Packard HP 12C Platinum Web-Emulator" : (isJa ? "Hewlett-Packard HP 12C Platinum Webエミュレーター" : (isPt ? "Emulador Web Hewlett-Packard HP 12C Platinum & Gold" : "Hewlett-Packard HP 12C Platinum Web Emulator")))}</h2>
+        <p class="text-xs text-mute">{isEs ? "Pila RPN y Motor Financiero TVM con Soporte Completo de Atajos de Teclado" : (isDe ? "UPN/RPN-Stack und TVM-Finanzrechenwerk mit voller Tastaturunterstützung" : (isJa ? "RPNスタック＆TVM金融演算エンジン（フルキーボードショートカット対応）" : (isPt ? "Pilha RPN e Motor Financeiro TVM com Suporte Completo a Atalhos de Teclado Físico" : "RPN Stack & TVM Financial Engine with Full Keyboard Hotkey Support")))}</p>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs font-mono text-mute">Mode:</span>
+        <span class="text-xs font-mono text-mute">{isEs ? "Modo:" : (isDe ? "Modus:" : (isJa ? "モード:" : (isPt ? "Modo:" : "Mode:")))}</span>
         <button id="mode-toggle-btn" class="px-3 py-1 bg-primary text-on-primary text-xs font-mono rounded-full font-medium shadow-sm transition-colors cursor-pointer">
-          RPN Mode
+          {isEs ? "Modo RPN" : (isDe ? "RPN/UPN-Modus" : (isJa ? "RPNモード" : (isPt ? "Modo RPN" : "RPN Mode")))}
         </button>
       </div>
     </div>
 
     <!-- The HP 12C Physical Device Frame -->
-    <div class="relative bg-neutral-900 border-2 border-neutral-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl text-neutral-100 max-w-2xl mx-auto select-none">
+    <div id="emulator-frame" class="relative bg-neutral-900 border-2 border-neutral-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl text-neutral-100 max-w-2xl mx-auto select-none">
       
       <!-- Top Metallic Faceplate & LCD Display -->
       <div class="bg-neutral-800/90 border border-neutral-700 rounded-xl p-4 mb-6 shadow-inner">
@@ -56,7 +179,7 @@ const faqs = [
             <span id="flag-f" class="hidden text-amber-400 font-bold">f</span>
             <span id="flag-g" class="hidden text-sky-400 font-bold">g</span>
             <span id="flag-bgn" class="hidden text-amber-300 font-bold">BEGIN</span>
-            <span class="text-neutral-400">RPN</span>
+            <span id="flag-mode" class="text-neutral-400 font-bold">RPN</span>
           </div>
         </div>
 
@@ -70,29 +193,29 @@ const faqs = [
       <div class="grid grid-cols-10 gap-1.5 sm:gap-2 text-[11px] font-mono">
         <!-- Row 1: TVM & Registers -->
         <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="n">
-          <span class="text-[9px] text-amber-400 block">12×</span>
+          <span class="text-[9px] text-amber-400 block">AMORT</span>
           <span>n</span>
-          <span class="text-[9px] text-sky-400 block">12÷</span>
-        </button>
-        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="i">
-          <span class="text-[9px] text-amber-400 block">12÷</span>
-          <span>i</span>
           <span class="text-[9px] text-sky-400 block">12×</span>
         </button>
+        <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="i">
+          <span class="text-[9px] text-amber-400 block">INT</span>
+          <span>i</span>
+          <span class="text-[9px] text-sky-400 block">12÷</span>
+        </button>
         <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="PV">
-          <span class="text-[9px] text-amber-400 block">CF0</span>
+          <span class="text-[9px] text-amber-400 block">NPV</span>
           <span>PV</span>
-          <span class="text-[9px] text-sky-400 block">NPV</span>
+          <span class="text-[9px] text-sky-400 block">CF0</span>
         </button>
         <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="PMT">
-          <span class="text-[9px] text-amber-400 block">CFj</span>
+          <span class="text-[9px] text-amber-400 block">RND</span>
           <span>PMT</span>
-          <span class="text-[9px] text-sky-400 block">IRR</span>
+          <span class="text-[9px] text-sky-400 block">CFj</span>
         </button>
         <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100" data-key="FV">
-          <span class="text-[9px] text-amber-400 block">Nj</span>
+          <span class="text-[9px] text-amber-400 block">IRR</span>
           <span>FV</span>
-          <span class="text-[9px] text-sky-400 block">BOND</span>
+          <span class="text-[9px] text-sky-400 block">Nj</span>
         </button>
 
         <!-- Row 2: Modifiers & Math -->
@@ -137,7 +260,10 @@ const faqs = [
         <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="-"><span>-</span></button>
 
         <!-- Row 6 -->
-        <button class="hp-key col-span-3 bg-neutral-700 hover:bg-neutral-600" data-key="CLX"><span>CLX</span></button>
+        <button class="hp-key col-span-3 bg-neutral-700 hover:bg-neutral-600" data-key="CLX">
+          <span class="text-[9px] text-amber-400 block font-normal">CLEAR</span>
+          <span>CLX</span>
+        </button>
         <button class="hp-key col-span-4 bg-neutral-800 hover:bg-neutral-700 text-center" data-key="0"><span>0</span></button>
         <button class="hp-key col-span-2 bg-neutral-800 hover:bg-neutral-700 text-center" data-key="."><span>.</span></button>
         <button class="hp-key col-span-1 bg-neutral-700 hover:bg-neutral-600" data-key="+"><span>+</span></button>
@@ -145,14 +271,14 @@ const faqs = [
 
       <!-- Quick Numpad Helper Hint -->
       <div class="mt-4 text-center text-[10px] text-neutral-400 font-mono">
-        Keyboard Shortcuts: [0-9] Numbers • [Enter] Stack Push • [+ - * /] Operators • [Backspace] Clear
+        {isEs ? "Atajos de teclado: [0-9] Números • [Enter] Entrada en pila • [+ - * /] Operadores • [N, I, P, M, V] TVM • [F, G] Shift • [C] CHS • [X] x≷y • [Retroceso/Esc] Limpiar" : (isDe ? "Tastenkombinationen: [0-9] Ziffern • [Enter] Stack-Eingabe • [+ - * /] Rechenzeichen • [N, I, P, M, V] TVM • [F, G] Shift • [C] CHS • [X] x≷y • [Rücktaste/Esc] Löschen" : (isJa ? "キーボードショートカット: [0-9] 数字 • [Enter] スタック入力 • [+ - * /] 演算子 • [N, I, P, M, V] TVM • [F, G] シフト • [C] 符号反転(CHS) • [X] レジスタ交換(x≷y) • [Backspace/Esc] クリア" : (isPt ? "Atalhos de teclado: [0-9] Números • [Enter] Entrada na pilha • [+ - * /] Operadores • [N, I, P, M, V] TVM • [F, G] Shift • [C] CHS • [X] x≷y • [Backspace/Esc] Limpar" : "Keyboard Shortcuts: [0-9] Numbers • [Enter] Stack Push • [+ - * /] Operators • [N, I, P, M, V] TVM • [F, G] Shift • [C] CHS • [X] x≷y • [Backspace/Esc] Clear")))}
       </div>
     </div>
 
     <!-- Active Registers & TVM Status Table -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h3 class="text-xs font-mono uppercase tracking-wider text-mute border-b border-hairline pb-2 font-semibold">RPN Stack Registers</h3>
+        <h3 class="text-xs font-mono uppercase tracking-wider text-mute border-b border-hairline pb-2 font-semibold">{isEs ? "Registros de la pila RPN" : (isDe ? "UPN/RPN-Stack-Register" : (isJa ? "RPNスタックレジスタ" : (isPt ? "Registradores da Pilha RPN" : "RPN Stack Registers")))}</h3>
         <div class="grid grid-cols-4 gap-2 text-center font-mono text-xs">
           <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
             <span class="text-[10px] text-mute block">T</span>
@@ -167,14 +293,19 @@ const faqs = [
             <span id="reg-y" class="font-bold text-ink">0.00</span>
           </div>
           <div class="p-2.5 bg-primary/10 border border-primary/20 rounded">
-            <span class="text-[10px] text-primary block">X (Display)</span>
+            <span class="text-[10px] text-primary block">{isEs ? "X (Pantalla)" : (isDe ? "X (Anzeige)" : (isJa ? "X（ディスプレイ表示）" : (isPt ? "X (Visor)" : "X (Display)")))}</span>
             <span id="reg-x" class="font-bold text-primary">0.00</span>
           </div>
         </div>
       </div>
 
       <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h3 class="text-xs font-mono uppercase tracking-wider text-mute border-b border-hairline pb-2 font-semibold">Stored TVM Values</h3>
+        <div class="flex items-center justify-between border-b border-hairline pb-2">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Valores TVM almacenados" : (isDe ? "Gespeicherte TVM-Werte" : (isJa ? "TVM保存値" : (isPt ? "Valores TVM Armazenados" : "Stored TVM Values")))}</h3>
+          <button id="clear-tvm-btn" type="button" class="text-[10px] font-mono text-link hover:underline cursor-pointer">
+            {isEs ? "Limpiar TVM" : (isDe ? "TVM leeren" : (isJa ? "TVMクリア" : (isPt ? "Limpar TVM" : "Clear TVM")))}
+          </button>
+        </div>
         <div class="grid grid-cols-5 gap-2 text-center font-mono text-xs">
           <div class="p-2 bg-canvas-soft border border-hairline rounded">
             <span class="text-[10px] text-mute block">n</span>
@@ -199,6 +330,561 @@ const faqs = [
         </div>
       </div>
     </div>
+
+    <!-- Amortization Schedule Section -->
+    <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Tabla de Amortización TVM" : (isDe ? "TVM-Tilgungsplan" : (isJa ? "TVM元利均等償還表" : (isPt ? "Tabela de Amortização TVM" : "TVM Amortization Schedule")))}</h3>
+          <p class="text-xs text-mute">{isEs ? "Generado dinámicamente con las variables TVM activas" : (isDe ? "Dynamisch generiert aus den aktiven TVM-Werten" : (isJa ? "現在のTVM設定値から動的に生成" : (isPt ? "Gerado dinamicamente com as variáveis TVM ativas" : "Dynamically generated from current TVM values")))}</p>
+        </div>
+        <button 
+          id="toggle-amort-btn" 
+          type="button" 
+          class="px-3 py-1.5 border border-hairline rounded text-xs font-mono bg-canvas-soft hover:bg-canvas text-ink transition-colors cursor-pointer w-fit"
+          data-show-label={isEs ? "Ver desglose de pagos" : (isDe ? "Tilgungstabelle anzeigen" : (isJa ? "返済明細スケジュールを表示" : (isPt ? "Ver cronograma de pagamentos" : "View Payment Schedule")))}
+          data-hide-label={isEs ? "Ocultar desglose" : (isDe ? "Tabelle ausblenden" : (isJa ? "スケジュールを閉じる" : (isPt ? "Ocultar cronograma" : "Hide Payment Schedule")))}
+        >
+          {isEs ? "Ver desglose de pagos" : (isDe ? "Tilgungstabelle anzeigen" : (isJa ? "返済明細スケジュールを表示" : (isPt ? "Ver cronograma de pagamentos" : "View Payment Schedule")))}
+        </button>
+      </div>
+      <div id="amort-table-wrapper" class="hidden overflow-x-auto max-h-80 border border-hairline rounded">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline text-mute uppercase text-[10px]">
+            <tr>
+              <th class="p-2.5">#</th>
+              <th class="p-2.5 text-right">{isEs ? "Saldo Inicial" : (isDe ? "Anfangsbestand" : (isJa ? "期首残高" : (isPt ? "Saldo Inicial" : "Starting Bal")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Pago" : (isDe ? "Rate" : (isJa ? "返済額" : (isPt ? "Parcela" : "Payment")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Interés" : (isDe ? "Zinsen" : (isJa ? "利息" : (isPt ? "Juros" : "Interest")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Saldo Final" : (isDe ? "Endbestand" : (isJa ? "期末残高" : (isPt ? "Saldo Final" : "Ending Bal")))}</th>
+            </tr>
+          </thead>
+          <tbody id="amort-table-body" class="divide-y divide-hairline">
+            <tr>
+              <td colspan="5" class="p-4 text-center text-mute font-mono">
+                {isEs ? "Guarde valores en los registros TVM (n, i, PV, PMT) para visualizar la amortización." : (isDe ? "Geben Sie TVM-Werte ein (n, i, PV, PMT), um den Tilgungsplan zu berechnen." : (isJa ? "償還表を表示するには、TVMレジスタ（n, i, PV, PMT）に数値を設定してください。" : (isPt ? "Preencha os registradores TVM (n, i, PV, PMT) para visualizar a tabela de amortização." : "Populate TVM registers (n, i, PV, PMT) to generate schedule.")))}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Comprehensive Educational & SEO Guide Section -->
+    {isPt ? (
+      <section class="mt-12 border-t-2 border-line pt-10 space-y-12 text-ink no-print" aria-label="Guia da Calculadora HP 12C">
+        <!-- Main Guide Heading -->
+        <div class="space-y-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/40 text-[11px] font-mono font-bold text-ink shadow-[var(--control-shadow)]">
+            <span class="text-input-accent">✦</span>
+            <span>Manual do Usuário · Guia Passo a Passo para Finanças e Concursos</span>
+          </div>
+          <h2 class="font-display font-black text-2xl sm:text-3xl tracking-tight text-ink">
+            Calculadora HP 12C: Como Usar, Lógica RPN e Tutoriais Financeiros
+          </h2>
+          <p class="text-sm text-muted leading-relaxed max-w-3xl">
+            A <strong>HP 12C</strong> é o instrumento padrão no mercado financeiro brasileiro, imobiliário e em certificações como <strong>ANBIMA (CPA-10, CPA-20, CEA)</strong> e <strong>CFP</strong>. Abaixo você encontra um guia completo com passo a passo para cálculos de juros compostos, amortização (Tabela Price), juros simples, taxas equivalentes e solução de dúvidas frequentes como o <em>Pr Error</em> e como zerar a calculadora.
+          </p>
+        </div>
+
+        <!-- 1. Beginner Guide: RPN & How to Sum -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-6">
+          <div class="flex items-center gap-3 border-b border-line/20 pb-4">
+            <span class="text-2xl">💡</span>
+            <div>
+              <h3 class="font-display font-bold text-lg sm:text-xl text-ink">Como Usar a HP 12C e Como Somar (Lógica RPN)</h3>
+              <p class="text-xs text-muted">Aprenda a operar a Notação Polonesa Reversa sem a tecla de igual (=) e sem parênteses</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div class="space-y-3">
+              <h4 class="font-bold text-ink font-mono text-xs uppercase tracking-wider">O que é a Notação Polonesa Reversa (RPN)?</h4>
+              <p class="text-muted text-xs leading-relaxed">
+                Nas calculadoras comuns (lógica algébrica), você digita <code class="px-1.5 py-0.5 bg-soft rounded text-ink font-mono font-bold">2 + 3 =</code>. Na HP 12C, os números entram primeiro em uma pilha operacional de memória e a operação matemática é executada logo após.
+              </p>
+              <p class="text-muted text-xs leading-relaxed">
+                Essa lógica foi criada para economizar teclas e eliminar parênteses em cálculos encadeados complexos, tornando a velocidade de cálculo imbatível.
+              </p>
+              <div class="bg-canvas border border-hairline rounded-lg p-3 space-y-2">
+                <span class="text-[11px] font-mono font-bold text-ink block">A Pilha de 4 Registradores (Stack):</span>
+                <ul class="text-[11px] font-mono text-muted space-y-1 list-disc list-inside">
+                  <li><strong>X</strong>: Número exibido atualmente no visor LCD.</li>
+                  <li><strong>Y</strong>: Segundo nível da pilha (onde fica o valor anterior ao pressionar ENTER).</li>
+                  <li><strong>Z e T</strong>: Níveis superiores para cálculos encadeados de múltiplos fatores.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h4 class="font-bold text-ink font-mono text-xs uppercase tracking-wider">Como Somar na HP 12C (Passo a Passo)</h4>
+              <p class="text-muted text-xs leading-relaxed">
+                Para efetuar uma soma simples de <strong>25 + 15</strong>, siga esta sequência exata:
+              </p>
+              <div class="bg-soft border border-ink/30 rounded-lg p-4 font-mono text-xs space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-[10px]">1</span>
+                  <span>Digite <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">25</kbd></span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-[10px]">2</span>
+                  <span>Pressione <kbd class="px-2 py-0.5 bg-neutral-800 text-amber-400 rounded font-bold">ENTER</kbd> (duplica o valor para o registrador Y)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-[10px]">3</span>
+                  <span>Digite <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">15</kbd></span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-[10px]">4</span>
+                  <span>Pressione <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">+</kbd></span>
+                </div>
+                <div class="mt-2 pt-2 border-t border-line/20 font-bold text-emerald-600 dark:text-emerald-400">
+                  Visor: 40.00
+                </div>
+              </div>
+              <p class="text-[11px] text-muted">
+                O mesmo raciocínio se aplica à subtração (<kbd class="px-1 bg-neutral-800 text-white rounded">-</kbd>), multiplicação (<kbd class="px-1 bg-neutral-800 text-white rounded">×</kbd>) e divisão (<kbd class="px-1 bg-neutral-800 text-white rounded">÷</kbd>).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Financial Calculation Tutorials Grid -->
+        <div class="space-y-6">
+          <div class="border-b border-line/20 pb-3">
+            <h3 class="font-display font-bold text-xl text-ink">Tutoriais Passo a Passo de Cálculos Financeiros</h3>
+            <p class="text-xs text-muted">Exemplos reais resolvidos na prática com botão para testar diretamente no emulador acima</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Tutorial 1: Juros Compostos e FV -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Tutorial 1</span>
+                <h4 class="font-display font-bold text-base text-ink">Como Calcular Juros Compostos e Valor Futuro (FV)</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  Aplicação de <strong>R$ 5.000,00</strong> a uma taxa de <strong>1,2% ao mês</strong> durante <strong>24 meses</strong>. Qual o valor acumulado?
+                </p>
+                <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd> (limpa financeiro)</div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">5000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">1.2</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">24</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Teclar [FV] → R$ 6.649,22</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="-5000"
+                data-example-i="1.2"
+                data-example-n="24"
+                data-example-pmt="0"
+                data-example-fv="0"
+                data-example-solve="FV"
+              >
+                Testar este Exemplo no Emulador ↑
+              </button>
+            </div>
+
+            <!-- Tutorial 2: Prestação PMT (Tabela Price) -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Tutorial 2</span>
+                <h4 class="font-display font-bold text-base text-ink">Como Calcular Prestação / Parcela (PMT - Tabela Price)</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  Financiamento de <strong>R$ 30.000,00</strong> em <strong>36 parcelas mensais</strong> com taxa de juros de <strong>1,5% ao mês</strong>.
+                </p>
+                <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd></div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">30000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">1.5</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">36</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Teclar [PMT] → -R$ 1.085,82</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="30000"
+                data-example-i="1.5"
+                data-example-n="36"
+                data-example-pmt="0"
+                data-example-fv="0"
+                data-example-solve="PMT"
+              >
+                Testar este Financiamento ↑
+              </button>
+            </div>
+
+            <!-- Tutorial 3: Prazo n em Juros Compostos -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Tutorial 3</span>
+                <h4 class="font-display font-bold text-base text-ink">Como Calcular o Prazo (n) em Juros Compostos</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  Em quanto tempo um capital de <strong>R$ 10.000,00</strong> dobra de valor para <strong>R$ 20.000,00</strong> a <strong>1,0% a.m.</strong>?
+                </p>
+                <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd></div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">10000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">20000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">FV</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">1</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Teclar [n] → 70 Meses</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="-10000"
+                data-example-fv="20000"
+                data-example-i="1"
+                data-example-pmt="0"
+                data-example-solve="n"
+              >
+                Testar Prazo no Emulador ↑
+              </button>
+            </div>
+
+            <!-- Tutorial 4: Juros Simples (f INT) -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Tutorial 4</span>
+                <h4 class="font-display font-bold text-base text-ink">Como Calcular Juros Simples na HP 12C</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  Empréstimo de <strong>R$ 12.000,00</strong> a juros simples com taxa anual de <strong>18% a.a.</strong> por <strong>90 dias</strong> comerciais.
+                </p>
+                <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. Digitar <kbd class="px-1 bg-neutral-800 text-white rounded">90</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd> (dias)</div>
+                  <div>2. Digitar <kbd class="px-1 bg-neutral-800 text-white rounded">18</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd> (taxa anual)</div>
+                  <div>3. Digitar <kbd class="px-1 bg-neutral-800 text-white rounded">12000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>4. Pressionar <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">INT</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">Resultado dos Juros: R$ 540,00</div>
+                </div>
+              </div>
+              <div class="text-[11px] text-muted italic">
+                Pressione a tecla <kbd class="px-1 bg-neutral-800 text-white rounded font-bold">+</kbd> logo após o cálculo para somar os juros ao capital e obter o montante total de R$ 12.540,00.
+              </div>
+            </div>
+
+            <!-- Tutorial 5: Taxas Equivalentes e CET -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4 md:col-span-2">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Tutorial 5</span>
+                <h4 class="font-display font-bold text-base text-ink">Como Programar Taxas Equivalentes e Custo Efetivo Total (CET)</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  No Brasil, <strong>1% ao mês não é 12% ao ano</strong> porque a capitalização é composta: <code class="font-mono text-ink font-bold">(1 + i_ano) = (1 + i_mês)¹²</code>.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                  <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                    <strong class="block text-ink text-xs font-sans">Converter Taxa Anual em Mensal (ex: Selic 13,25% a.a.):</strong>
+                    <div>1. <kbd class="px-1 bg-neutral-800 text-white rounded">1</kbd> <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">ENTER</kbd></div>
+                    <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">13.25</kbd> <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">ENTER</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">100</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">÷</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">+</kbd></div>
+                    <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">1</kbd> <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">ENTER</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">12</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">÷</kbd></div>
+                    <div>4. Teclar <kbd class="px-1 bg-neutral-800 text-white rounded">yˣ</kbd>, depois <kbd class="px-1 bg-neutral-800 text-white rounded">1</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">-</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">100</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">×</kbd></div>
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">Taxa Mensal Equivalente: 1,041% a.m.</div>
+                  </div>
+                  <div class="bg-soft border border-hairline rounded p-3 font-mono text-[11px] space-y-1 text-ink">
+                    <strong class="block text-ink text-xs font-sans">Cálculo do Custo Efetivo Total (CET):</strong>
+                    <p class="text-[10px] text-muted font-sans leading-normal">
+                      Empréstimo de R$ 10.000 com R$ 500 retidos em IOF e tarifas (crédito real: R$ 9.500) e 12 parcelas de R$ 980,00.
+                    </p>
+                    <div>1. <kbd class="px-1 bg-neutral-800 text-white rounded">9500</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd> (líquido recebido)</div>
+                    <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">980</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PMT</kbd> (parcela bruta)</div>
+                    <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">12</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd></div>
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">4. Teclar [i] → CET de 3,42% a.m.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Troubleshooting Section -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-6">
+          <div class="border-b border-line/20 pb-4">
+            <h3 class="font-display font-bold text-xl text-ink">Dicas de Uso e Resolução de Problemas (Troubleshooting)</h3>
+            <p class="text-xs text-muted">Como zerar, ajustar casas decimais e resolver travamentos na calculadora HP 12C</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+            <!-- Box 1: Como Zerar -->
+            <div class="bg-canvas border border-hairline rounded-lg p-4 space-y-3">
+              <span class="text-lg">🧹</span>
+              <h4 class="font-bold text-sm text-ink">Como Zerar e Limpar a HP 12C</h4>
+              <p class="text-muted leading-relaxed">
+                Antes de iniciar uma nova conta, sempre limpe resíduos anteriores:
+              </p>
+              <ul class="space-y-1.5 font-mono text-[11px] text-ink">
+                <li><kbd class="px-1.5 py-0.5 bg-neutral-800 text-white rounded font-bold">CLX</kbd>: limpa somente o visor atual (X).</li>
+                <li><kbd class="px-1.5 py-0.5 bg-neutral-800 text-amber-400 rounded font-bold">f</kbd> <kbd class="px-1.5 py-0.5 bg-neutral-800 text-white rounded font-bold">CLX</kbd>: limpa os registradores financeiros (n, i, PV, PMT, FV).</li>
+                <li><kbd class="px-1.5 py-0.5 bg-neutral-800 text-amber-400 rounded font-bold">f</kbd> <kbd class="px-1.5 py-0.5 bg-neutral-800 text-white rounded font-bold">REG</kbd>: limpa toda a pilha e memórias 0 a 9.</li>
+              </ul>
+            </div>
+
+            <!-- Box 2: Casas Decimais -->
+            <div class="bg-canvas border border-hairline rounded-lg p-4 space-y-3">
+              <span class="text-lg">🔢</span>
+              <h4 class="font-bold text-sm text-ink">Como Aumentar Casas Decimais</h4>
+              <p class="text-muted leading-relaxed">
+                Pressione a tecla amarela <kbd class="px-1.5 py-0.5 bg-neutral-800 text-amber-400 rounded font-bold">f</kbd> seguida do número de dígitos desejado (0 a 9):
+              </p>
+              <ul class="space-y-1.5 font-mono text-[11px] text-ink">
+                <li><kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">2</kbd>: exibe 2 casas (padrão monetário 0.00).</li>
+                <li><kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">4</kbd>: exibe 4 casas (ideal para taxas de juros).</li>
+                <li><kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">9</kbd>: precisão máxima sem arredondamento.</li>
+              </ul>
+              <p class="text-[10px] text-muted">A HP 12C mantém internamente 10 dígitos mesmo exibindo 2 casas.</p>
+            </div>
+
+            <!-- Box 3: Pr Error -->
+            <div class="bg-canvas border border-hairline rounded-lg p-4 space-y-3">
+              <span class="text-lg">⚠️</span>
+              <h4 class="font-bold text-sm text-ink">O que é e Como Resolver o 'Pr Error'</h4>
+              <p class="text-muted leading-relaxed">
+                <strong>Pr Error</strong> significa <em>Programming Error</em>. Ocorre quando a calculadora entra acidentalmente em modo de programação com a tecla <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">P/R</kbd> ou ao executar uma instrução inválida.
+              </p>
+              <div class="p-2 bg-amber-500/10 border border-amber-500/20 rounded text-[11px] text-ink">
+                <strong>Como resolver:</strong> Pressione qualquer tecla como <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd> para desbloquear. Se persistir no aparelho físico, faça o reset segurando <kbd class="px-1 bg-neutral-800 text-white rounded">-</kbd> e apertando <kbd class="px-1 bg-neutral-800 text-white rounded">ON</kbd>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Comparison Table: HP 12C Gold vs HP 12C Platinum -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-6">
+          <div class="border-b border-line/20 pb-4">
+            <h3 class="font-display font-bold text-xl text-ink">HP 12C Gold vs HP 12C Platinum: Qual a Diferença?</h3>
+            <p class="text-xs text-muted">Comparativo completo entre os dois modelos mais vendidos no Brasil</p>
+          </div>
+
+          <div class="overflow-x-auto border border-ink/30 rounded-lg">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-soft border-b border-ink/20 font-mono text-[11px] uppercase text-muted font-bold">
+                <tr>
+                  <th class="p-3">Característica</th>
+                  <th class="p-3">HP 12C Gold (Dourada)</th>
+                  <th class="p-3">HP 12C Platinum (Prata)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-line/15 text-muted font-sans text-xs">
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Modo de Operação</td>
+                  <td class="p-3">Exclusivamente RPN (Notação Polonesa Reversa)</td>
+                  <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">RPN e Algébrico tradicional (ALG com parênteses)</td>
+                </tr>
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Capacidade de Memória</td>
+                  <td class="p-3">99 passos de programa · 20 registradores</td>
+                  <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">399 passos de programa (4x mais) · 30 registradores</td>
+                </tr>
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Processador & Velocidade</td>
+                  <td class="p-3">Processador clássico Saturn (TIR/IRR leva alguns segundos)</td>
+                  <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">Processador moderno até 6x mais rápido (resolução instantânea)</td>
+                </tr>
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Correção de Dígitos</td>
+                  <td class="p-3">CLX apaga o visor inteiro</td>
+                  <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">Possui tecla dedicada Backspace (apaga dígito por dígito) e Undo</td>
+                </tr>
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Aprovação em Exames</td>
+                  <td class="p-3">Homologada ANBIMA (CPA-10, 20, CEA), CFP e Perícia</td>
+                  <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">Homologada nos mesmos exames oficiais</td>
+                </tr>
+                <tr class="hover:bg-soft/40">
+                  <td class="p-3 font-bold text-ink font-mono">Nosso Emulador Web</td>
+                  <td class="p-3" colspan="2">
+                    <span class="text-ink font-medium">Este emulador online simula as funções completas da <strong>HP 12C Platinum</strong>, permitindo alternar livremente entre os modos <strong>RPN</strong> e <strong>ALG</strong> no botão do cabeçalho.</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. Online Free Emulator vs Download / Hardware -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-4">
+          <h3 class="font-display font-bold text-xl text-ink">Emulador HP 12C Online Grátis vs Download de Aplicativos</h3>
+          <p class="text-sm text-muted leading-relaxed">
+            Uma calculadora física HP 12C original custa entre <strong>R$ 320,00 e R$ 580,00</strong> no Brasil. Se você precisa realizar cálculos esporádicos para a faculdade, simular um financiamento imobiliário ou estudar para a prova da ANBIMA, o <strong>emulador online gratuito do financialcalculatorapp.com</strong> oferece:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="p-4 bg-soft border border-hairline rounded-lg space-y-1.5">
+              <span class="text-xl">🚀</span>
+              <strong class="block text-ink text-xs font-mono uppercase font-bold">Sem Download ou Instalação</strong>
+              <p class="text-xs text-muted">Acesse instantaneamente no Google Chrome, Safari ou Edge pelo computador, tablet ou celular, sem risco de malwares.</p>
+            </div>
+            <div class="p-4 bg-soft border border-hairline rounded-lg space-y-1.5">
+              <span class="text-xl">🔒</span>
+              <strong class="block text-ink text-xs font-mono uppercase font-bold">100% Privado no Navegador</strong>
+              <p class="text-xs text-muted">Nenhum valor, patrimônio ou dado bancário é transmitido para servidores. Toda a matemática é executada localmente.</p>
+            </div>
+            <div class="p-4 bg-soft border border-hairline rounded-lg space-y-1.5">
+              <span class="text-xl">⌨️</span>
+              <strong class="block text-ink text-xs font-mono uppercase font-bold">Teclado Numérico Físico</strong>
+              <p class="text-xs text-muted">Digite com as teclas normais do seu teclado de computador (0-9, Enter, +, -, *, /, Backspace) para máxima agilidade.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    ) : (
+      <section class="mt-12 border-t-2 border-line pt-10 space-y-12 text-ink no-print" aria-label="HP 12C Calculator User Guide">
+        <div class="space-y-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/40 text-[11px] font-mono font-bold text-ink shadow-[var(--control-shadow)]">
+            <span class="text-input-accent">✦</span>
+            <span>User Manual · Financial TVM & RPN Guide</span>
+          </div>
+          <h2 class="font-display font-black text-2xl sm:text-3xl tracking-tight text-ink">
+            HP 12C Financial Calculator: RPN Stack, TVM Mechanics & Tutorials
+          </h2>
+          <p class="text-sm text-muted leading-relaxed max-w-3xl">
+            The <strong>HP 12C</strong> is the timeless standard for banking, financial planning, real estate, and CFA certification examinations. Below is an exhaustive reference on Reverse Polish Notation (RPN), Time Value of Money (TVM) solving, amortization schedule generation, and hardware troubleshooting.
+          </p>
+        </div>
+
+        <!-- RPN Mechanics -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-6">
+          <div class="flex items-center gap-3 border-b border-line/20 pb-4">
+            <span class="text-2xl">💡</span>
+            <div>
+              <h3 class="font-display font-bold text-lg sm:text-xl text-ink">Understanding Reverse Polish Notation (RPN)</h3>
+              <p class="text-xs text-muted">Eliminate parentheses and equal keys with the 4-level automatic stack</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div class="space-y-3">
+              <h4 class="font-bold text-ink font-mono text-xs uppercase tracking-wider">How RPN Eliminates Parentheses</h4>
+              <p class="text-muted text-xs leading-relaxed">
+                Standard algebraic calculators evaluate expressions as typed (e.g. <code class="px-1.5 py-0.5 bg-soft rounded text-ink font-mono font-bold">2 + 3 =</code>). In RPN, you load operands onto an automatic memory stack first, and the operation is applied immediately to the bottom two numbers.
+              </p>
+              <div class="bg-canvas border border-hairline rounded-lg p-3 space-y-1.5 font-mono text-[11px]">
+                <span class="font-bold text-ink block">The 4 Stack Registers:</span>
+                <div><strong>X</strong>: Bottom register (displayed on the LCD screen)</div>
+                <div><strong>Y</strong>: Second register (pushed when pressing ENTER)</div>
+                <div><strong>Z & T</strong>: Intermediate registers for chained formulas</div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h4 class="font-bold text-ink font-mono text-xs uppercase tracking-wider">Basic Arithmetic Example</h4>
+              <p class="text-muted text-xs leading-relaxed">To add 25 and 15 in RPN mode:</p>
+              <div class="bg-soft border border-ink/30 rounded-lg p-3 font-mono text-xs space-y-1.5">
+                <div>1. Type <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">25</kbd></div>
+                <div>2. Press <kbd class="px-2 py-0.5 bg-neutral-800 text-amber-400 rounded font-bold">ENTER</kbd> (copies 25 to Y)</div>
+                <div>3. Type <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">15</kbd></div>
+                <div>4. Press <kbd class="px-2 py-0.5 bg-neutral-800 text-white rounded font-bold">+</kbd> → <strong class="text-emerald-600 dark:text-emerald-400">Result: 40.00</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TVM Practical Tutorials -->
+        <div class="space-y-6">
+          <div class="border-b border-line/20 pb-3">
+            <h3 class="font-display font-bold text-xl text-ink">Time Value of Money (TVM) Tutorials</h3>
+            <p class="text-xs text-muted">Click any example to automatically populate the emulator above and solve</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- TVM Card 1 -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Example 1</span>
+                <h4 class="font-display font-bold text-base text-ink">Compound Interest & Future Value</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  Invest <strong>$5,000</strong> today at <strong>7% annual interest (0.5833% monthly)</strong> for <strong>5 years (60 months)</strong>.
+                </p>
+                <div class="bg-soft border border-hairline rounded p-2.5 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd></div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">5000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">0.5833</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">60</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Press [FV] → $7,088.13</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="-5000"
+                data-example-i="0.5833"
+                data-example-n="60"
+                data-example-pmt="0"
+                data-example-solve="FV"
+              >
+                Load Example in Emulator ↑
+              </button>
+            </div>
+
+            <!-- TVM Card 2 -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Example 2</span>
+                <h4 class="font-display font-bold text-base text-ink">Loan Monthly Payment (PMT)</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  A <strong>$25,000</strong> auto loan financed over <strong>48 months</strong> at <strong>6% annual interest (0.5% monthly)</strong>.
+                </p>
+                <div class="bg-soft border border-hairline rounded p-2.5 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd></div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">25000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">0.5</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">48</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">n</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Press [PMT] → -$587.13</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="25000"
+                data-example-i="0.5"
+                data-example-n="48"
+                data-example-solve="PMT"
+              >
+                Load Loan in Emulator ↑
+              </button>
+            </div>
+
+            <!-- TVM Card 3 -->
+            <div class="bg-paper border border-ink/40 rounded-xl p-5 shadow-[var(--control-shadow)] flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <span class="text-xs font-mono font-bold text-input-accent uppercase tracking-wider">Example 3</span>
+                <h4 class="font-display font-bold text-base text-ink">Solving for Investment Duration (n)</h4>
+                <p class="text-xs text-muted leading-relaxed">
+                  How many months will it take for <strong>$10,000</strong> to grow to <strong>$15,000</strong> at <strong>0.8% monthly interest</strong>?
+                </p>
+                <div class="bg-soft border border-hairline rounded p-2.5 font-mono text-[11px] space-y-1 text-ink">
+                  <div>1. <kbd class="px-1 bg-neutral-800 text-amber-400 rounded">f</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CLX</kbd></div>
+                  <div>2. <kbd class="px-1 bg-neutral-800 text-white rounded">10000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">CHS</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">PV</kbd></div>
+                  <div>3. <kbd class="px-1 bg-neutral-800 text-white rounded">15000</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">FV</kbd></div>
+                  <div>4. <kbd class="px-1 bg-neutral-800 text-white rounded">0.8</kbd> <kbd class="px-1 bg-neutral-800 text-white rounded">i</kbd></div>
+                  <div class="font-bold text-emerald-600 dark:text-emerald-400 pt-1">5. Press [n] → 51 Months</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="btn-load-example w-full py-2 bg-ink text-canvas hover:bg-ink/90 font-mono text-xs font-bold rounded-lg transition-colors cursor-pointer text-center"
+                data-example-pv="-10000"
+                data-example-fv="15000"
+                data-example-i="0.8"
+                data-example-solve="n"
+              >
+                Load Duration in Emulator ↑
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gold vs Platinum Model Comparison -->
+        <div class="bg-paper border border-ink/40 rounded-xl p-6 sm:p-8 shadow-[var(--control-shadow)] space-y-4">
+          <h3 class="font-display font-bold text-xl text-ink">HP 12C Gold vs HP 12C Platinum</h3>
+          <p class="text-xs text-muted leading-relaxed">
+            The HP 12C was introduced in 1981 in its iconic gold faceplate edition. The HP 12C Platinum introduced algebraic (ALG) mode, a 6x faster processor, dedicated backspace keys, and 399 program steps. This online emulator supports both RPN and Algebraic calculation modes.
+          </p>
+        </div>
+      </section>
+    )}
   </div>
 </CalculatorLayout>
 
@@ -220,13 +906,24 @@ const faqs = [
 </style>
 
 <script>
-  import { calculateTVM } from '../../lib/math/finance';
+  import { calculateTVM, generateTVMSchedule } from '../../lib/math/finance';
+  import { formatNumber } from '../../lib/utils';
 
   let stack = [0, 0, 0, 0]; // X, Y, Z, T
   let currentInput = '';
-  let isNewNumber = true;
+  let isDigitEntry = false;
+  let liftEnabled = true;
   let activeShift: 'f' | 'g' | null = null;
+  let activeStore = false;
+  let activeRecall = false;
   let beginMode = false;
+  let precision = 2;
+  let currentMode: 'rpn' | 'alg' = 'rpn';
+  let algOperand: number | null = null;
+  let algOperator: string | null = null;
+
+  // General registers 0-9
+  const memory = new Array(10).fill(0);
 
   // TVM Registers
   const tvm = { n: 0, i: 0, pv: 0, pmt: 0, fv: 0 };
@@ -243,165 +940,453 @@ const faqs = [
   const tvmFV = document.getElementById('tvm-fv');
   const flagF = document.getElementById('flag-f');
   const flagG = document.getElementById('flag-g');
+  const flagBgn = document.getElementById('flag-bgn');
+  const flagMode = document.getElementById('flag-mode');
+  const modeToggleBtn = document.getElementById('mode-toggle-btn');
+  const clearTvmBtn = document.getElementById('clear-tvm-btn');
+  const toggleAmortBtn = document.getElementById('toggle-amort-btn');
+  const amortWrapper = document.getElementById('amort-table-wrapper');
+  const amortBody = document.getElementById('amort-table-body');
 
-  function updateDisplay(val?: number | string) {
-    if (!displayEl) return;
-    const valueToShow = val !== undefined ? String(val) : (currentInput || String(stack[0].toFixed(2)));
-    displayEl.textContent = valueToShow;
-
-    if (regX) regX.textContent = Number(stack[0]).toFixed(2);
-    if (regY) regY.textContent = Number(stack[1]).toFixed(2);
-    if (regZ) regZ.textContent = Number(stack[2]).toFixed(2);
-    if (regT) regT.textContent = Number(stack[3]).toFixed(2);
-
-    if (tvmN) tvmN.textContent = String(tvm.n);
-    if (tvmI) tvmI.textContent = String(tvm.i.toFixed(2));
-    if (tvmPV) tvmPV.textContent = String(tvm.pv.toFixed(2));
-    if (tvmPMT) tvmPMT.textContent = String(tvm.pmt.toFixed(2));
-    if (tvmFV) tvmFV.textContent = String(tvm.fv.toFixed(2));
-  }
-
-  function pushStack(val: number) {
+  function liftStack() {
     stack[3] = stack[2];
     stack[2] = stack[1];
     stack[1] = stack[0];
-    stack[0] = val;
+  }
+
+  function dropStack() {
+    stack[1] = stack[2];
+    stack[2] = stack[3];
+  }
+
+  function commitDigitEntry() {
+    if (isDigitEntry) {
+      stack[0] = parseFloat(currentInput) || 0;
+      isDigitEntry = false;
+      currentInput = '';
+    }
+  }
+
+  function formatDisplay(num: number, prec: number = precision): string {
+    if (isNaN(num) || !isFinite(num)) return 'Error 5';
+    const abs = Math.abs(num);
+    const fixed = abs.toFixed(prec);
+    const parts = fixed.split('.');
+    const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const sign = num < 0 ? '-' : '';
+    return prec > 0 ? `${sign}${intPart}.${parts[1]}` : `${sign}${intPart}`;
+  }
+
+  function updateAmortization() {
+    if (!amortBody) return;
+    const n = Math.abs(tvm.n) || 0;
+    const rate = Math.abs(tvm.i) / 100;
+    if (n <= 0 || (tvm.pv === 0 && tvm.pmt === 0)) {
+      amortBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-mute font-mono">No active TVM schedule to display. Enter variables and solve.</td></tr>`;
+      return;
+    }
+    try {
+      const timing = beginMode ? 'beginning' : 'end';
+      const schedule = generateTVMSchedule({
+        pv: tvm.pv,
+        fv: tvm.fv,
+        pmt: tvm.pmt,
+        rate,
+        periods: Math.min(n, 360),
+        compoundingFrequency: 1,
+        paymentFrequency: 1,
+        timing,
+      });
+      amortBody.innerHTML = schedule.slice(0, 120).map((row) => `
+        <tr class="hover:bg-canvas-soft/50">
+          <td class="p-2.5 font-bold">${row.period}</td>
+          <td class="p-2.5 text-right">${formatNumber(Math.abs(row.beginningBalance), 2)}</td>
+          <td class="p-2.5 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatNumber(Math.abs(row.payment), 2)}</td>
+          <td class="p-2.5 text-right text-amber-600 dark:text-amber-400">${formatNumber(Math.abs(row.interest), 2)}</td>
+          <td class="p-2.5 text-right font-medium">${formatNumber(Math.abs(row.endingBalance), 2)}</td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      amortBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-mute font-mono">Unable to compute amortization schedule.</td></tr>`;
+    }
+  }
+
+  function updateDisplay(overrideVal?: string) {
+    if (displayEl) {
+      if (overrideVal !== undefined) {
+        displayEl.textContent = overrideVal;
+      } else if (isDigitEntry) {
+        displayEl.textContent = currentInput || '0';
+      } else {
+        displayEl.textContent = formatDisplay(stack[0]);
+      }
+    }
+
+    if (regX) regX.textContent = formatDisplay(stack[0]);
+    if (regY) regY.textContent = formatDisplay(stack[1]);
+    if (regZ) regZ.textContent = formatDisplay(stack[2]);
+    if (regT) regT.textContent = formatDisplay(stack[3]);
+
+    if (tvmN) tvmN.textContent = String(tvm.n);
+    if (tvmI) tvmI.textContent = tvm.i.toFixed(Math.max(2, precision));
+    if (tvmPV) tvmPV.textContent = formatDisplay(tvm.pv, 2);
+    if (tvmPMT) tvmPMT.textContent = formatDisplay(tvm.pmt, 2);
+    if (tvmFV) tvmFV.textContent = formatDisplay(tvm.fv, 2);
+
+    flagF?.classList.toggle('hidden', activeShift !== 'f');
+    flagG?.classList.toggle('hidden', activeShift !== 'g');
+    flagBgn?.classList.toggle('hidden', !beginMode);
+    if (flagMode) flagMode.textContent = currentMode.toUpperCase();
+    if (modeToggleBtn) {
+      modeToggleBtn.textContent = currentMode === 'rpn' ? 'Modo RPN' : 'Modo ALG';
+    }
+
+    updateAmortization();
   }
 
   function handleKey(key: string) {
     if (key >= '0' && key <= '9') {
-      if (isNewNumber) {
-        currentInput = key;
-        isNewNumber = false;
-      } else {
-        currentInput += key;
+      if (activeShift === 'f') {
+        precision = parseInt(key, 10);
+        activeShift = null;
+        updateDisplay();
+        return;
       }
-      stack[0] = parseFloat(currentInput) || 0;
-      updateDisplay(currentInput);
+
+      if (activeStore) {
+        commitDigitEntry();
+        memory[parseInt(key, 10)] = stack[0];
+        activeStore = false;
+        liftEnabled = true;
+        updateDisplay();
+        return;
+      }
+
+      if (activeRecall) {
+        commitDigitEntry();
+        if (liftEnabled) liftStack();
+        stack[0] = memory[parseInt(key, 10)];
+        activeRecall = false;
+        liftEnabled = true;
+        updateDisplay();
+        return;
+      }
+
+      if (currentMode === 'rpn') {
+        if (!isDigitEntry) {
+          if (liftEnabled) liftStack();
+          currentInput = key;
+          isDigitEntry = true;
+          liftEnabled = true;
+        } else {
+          if (currentInput.length < 12) currentInput += key;
+        }
+        stack[0] = parseFloat(currentInput) || 0;
+      } else {
+        // ALG mode
+        if (!isDigitEntry) {
+          currentInput = key;
+          isDigitEntry = true;
+        } else {
+          if (currentInput.length < 12) currentInput += key;
+        }
+        stack[0] = parseFloat(currentInput) || 0;
+      }
+
+      updateDisplay();
       return;
     }
 
     if (key === '.') {
-      if (isNewNumber) {
+      activeShift = null;
+      activeStore = false;
+      activeRecall = false;
+
+      if (!isDigitEntry) {
+        if (currentMode === 'rpn' && liftEnabled) liftStack();
         currentInput = '0.';
-        isNewNumber = false;
+        isDigitEntry = true;
+        liftEnabled = true;
       } else if (!currentInput.includes('.')) {
         currentInput += '.';
       }
-      updateDisplay(currentInput);
+      stack[0] = parseFloat(currentInput) || 0;
+      updateDisplay();
       return;
     }
 
     if (key === 'ENTER') {
-      if (!isNewNumber) {
-        stack[0] = parseFloat(currentInput) || 0;
+      if (currentMode === 'rpn') {
+        commitDigitEntry();
+        liftStack();
+        liftEnabled = false; // HP suppresses lift on immediate next number entry
+      } else {
+        // ALG mode acts as '='
+        commitDigitEntry();
+        if (algOperator !== null && algOperand !== null) {
+          const b = stack[0];
+          const a = algOperand;
+          let res = 0;
+          if (algOperator === '+') res = a + b;
+          if (algOperator === '-') res = a - b;
+          if (algOperator === '*') res = a * b;
+          if (algOperator === '/') res = b !== 0 ? a / b : NaN;
+          stack[0] = res;
+          algOperator = null;
+          algOperand = null;
+        }
       }
-      pushStack(stack[0]);
-      isNewNumber = true;
-      currentInput = '';
+      activeShift = null;
+      activeStore = false;
+      activeRecall = false;
+      updateDisplay();
+      return;
+    }
+
+    if (['+', '-', '*', '/'].includes(key)) {
+      commitDigitEntry();
+      if (currentMode === 'rpn') {
+        const x = stack[0];
+        const y = stack[1];
+        let res = 0;
+        if (key === '+') res = y + x;
+        if (key === '-') res = y - x;
+        if (key === '*') res = y * x;
+        if (key === '/') res = x !== 0 ? y / x : NaN;
+
+        stack[0] = res;
+        dropStack();
+        liftEnabled = true;
+      } else {
+        // ALG mode
+        if (algOperator !== null && algOperand !== null) {
+          const b = stack[0];
+          const a = algOperand;
+          let res = 0;
+          if (algOperator === '+') res = a + b;
+          if (algOperator === '-') res = a - b;
+          if (algOperator === '*') res = a * b;
+          if (algOperator === '/') res = b !== 0 ? a / b : NaN;
+          stack[0] = res;
+        }
+        algOperand = stack[0];
+        algOperator = key;
+      }
+      activeShift = null;
+      activeStore = false;
+      activeRecall = false;
       updateDisplay();
       return;
     }
 
     if (key === 'CHS') {
-      stack[0] = -stack[0];
-      if (currentInput) {
-        currentInput = String(stack[0]);
+      if (activeShift === 'g') {
+        // g BEG toggles Annuity Due (BEGIN mode)
+        beginMode = !beginMode;
+        activeShift = null;
+        updateDisplay();
+        return;
+      }
+      if (activeShift === 'f') {
+        activeShift = null;
+      }
+
+      if (isDigitEntry) {
+        if (currentInput.startsWith('-')) currentInput = currentInput.slice(1);
+        else currentInput = '-' + currentInput;
+        stack[0] = parseFloat(currentInput) || 0;
+      } else {
+        stack[0] = -stack[0];
       }
       updateDisplay();
       return;
     }
 
     if (key === 'CLX') {
-      stack[0] = 0;
-      currentInput = '0';
-      isNewNumber = true;
-      updateDisplay('0.00');
-      return;
-    }
-
-    if (['+', '-', '*', '/'].includes(key)) {
-      const x = stack[0];
-      const y = stack[1];
-      let res = 0;
-      if (key === '+') res = y + x;
-      if (key === '-') res = y - x;
-      if (key === '*') res = y * x;
-      if (key === '/') res = x !== 0 ? y / x : 0;
-
-      stack[0] = res;
-      stack[1] = stack[2];
-      stack[2] = stack[3];
-      isNewNumber = true;
+      if (activeShift === 'f') {
+        // f CLX: CLEAR FIN & Memory
+        tvm.n = 0; tvm.i = 0; tvm.pv = 0; tvm.pmt = 0; tvm.fv = 0;
+        memory.fill(0);
+        activeShift = null;
+        updateDisplay();
+        return;
+      }
       currentInput = '';
+      isDigitEntry = false;
+      stack[0] = 0;
+      liftEnabled = false;
+      algOperand = null;
+      algOperator = null;
+      activeShift = null;
+      activeStore = false;
+      activeRecall = false;
       updateDisplay();
       return;
     }
 
     if (key === 'xy') {
+      commitDigitEntry();
       const temp = stack[0];
       stack[0] = stack[1];
       stack[1] = temp;
-      isNewNumber = true;
-      updateDisplay();
-      return;
-    }
-
-    // TVM Keys
-    if (['n', 'i', 'PV', 'PMT', 'FV'].includes(key)) {
-      if (activeShift === 'f') {
-        // Solve for TVM
-        try {
-          const timing = beginMode ? 'beginning' : 'end';
-          if (key === 'FV') {
-            tvm.fv = calculateTVM('fv', { pv: tvm.pv, pmt: tvm.pmt, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
-            stack[0] = tvm.fv;
-          } else if (key === 'PV') {
-            tvm.pv = calculateTVM('pv', { fv: tvm.fv, pmt: tvm.pmt, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
-            stack[0] = tvm.pv;
-          } else if (key === 'PMT') {
-            tvm.pmt = calculateTVM('pmt', { pv: tvm.pv, fv: tvm.fv, rate: tvm.i / 100, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
-            stack[0] = tvm.pmt;
-          } else if (key === 'n') {
-            tvm.n = calculateTVM('periods', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, rate: tvm.i / 100, compoundingFrequency: 1, paymentFrequency: 1, timing });
-            stack[0] = tvm.n;
-          } else if (key === 'i') {
-            tvm.i = calculateTVM('rate', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing }) * 100;
-            stack[0] = tvm.i;
-          }
-        } catch (e) {}
-        activeShift = null;
-        flagF?.classList.add('hidden');
-      } else {
-        // Store into TVM register
-        const val = stack[0];
-        if (key === 'n') tvm.n = val;
-        if (key === 'i') tvm.i = val;
-        if (key === 'PV') tvm.pv = val;
-        if (key === 'PMT') tvm.pmt = val;
-        if (key === 'FV') tvm.fv = val;
-      }
-      isNewNumber = true;
-      currentInput = '';
+      liftEnabled = true;
+      activeShift = null;
+      activeStore = false;
+      activeRecall = false;
       updateDisplay();
       return;
     }
 
     if (key === 'f') {
       activeShift = activeShift === 'f' ? null : 'f';
-      flagF?.classList.toggle('hidden', activeShift !== 'f');
-      flagG?.classList.add('hidden');
+      activeStore = false;
+      activeRecall = false;
+      updateDisplay();
       return;
     }
 
     if (key === 'g') {
       activeShift = activeShift === 'g' ? null : 'g';
-      flagG?.classList.toggle('hidden', activeShift !== 'g');
-      flagF?.classList.add('hidden');
+      activeStore = false;
+      activeRecall = false;
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'STO') {
+      activeStore = !activeStore;
+      activeRecall = false;
+      activeShift = null;
+      updateDisplay();
+      return;
+    }
+
+    if (key === 'RCL') {
+      activeRecall = !activeRecall;
+      activeStore = false;
+      activeShift = null;
+      updateDisplay();
+      return;
+    }
+
+    // TVM Keys (n, i, PV, PMT, FV)
+    if (['n', 'i', 'PV', 'PMT', 'FV'].includes(key)) {
+      // 1. Shifted Blue 'g' Functions
+      if (activeShift === 'g') {
+        if (key === 'n') {
+          commitDigitEntry();
+          tvm.n = Math.round(stack[0] * 12);
+          stack[0] = tvm.n;
+          liftEnabled = true;
+          activeShift = null;
+          updateDisplay();
+          return;
+        }
+        if (key === 'i') {
+          commitDigitEntry();
+          tvm.i = stack[0] / 12;
+          stack[0] = tvm.i;
+          liftEnabled = true;
+          activeShift = null;
+          updateDisplay();
+          return;
+        }
+        activeShift = null;
+      }
+
+      // 2. STO + TVM Key
+      if (activeStore) {
+        commitDigitEntry();
+        if (key === 'n') tvm.n = stack[0];
+        if (key === 'i') tvm.i = stack[0];
+        if (key === 'PV') tvm.pv = stack[0];
+        if (key === 'PMT') tvm.pmt = stack[0];
+        if (key === 'FV') tvm.fv = stack[0];
+        activeStore = false;
+        liftEnabled = false;
+        updateDisplay();
+        return;
+      }
+
+      // 3. RCL + TVM Key
+      if (activeRecall) {
+        commitDigitEntry();
+        if (liftEnabled) liftStack();
+        if (key === 'n') stack[0] = tvm.n;
+        if (key === 'i') stack[0] = tvm.i;
+        if (key === 'PV') stack[0] = tvm.pv;
+        if (key === 'PMT') stack[0] = tvm.pmt;
+        if (key === 'FV') stack[0] = tvm.fv;
+        activeRecall = false;
+        liftEnabled = true;
+        updateDisplay();
+        return;
+      }
+
+      // 4. Storing keyed number into TVM
+      if (isDigitEntry) {
+        commitDigitEntry();
+        if (key === 'n') tvm.n = stack[0];
+        if (key === 'i') tvm.i = stack[0];
+        if (key === 'PV') tvm.pv = stack[0];
+        if (key === 'PMT') tvm.pmt = stack[0];
+        if (key === 'FV') tvm.fv = stack[0];
+        liftEnabled = false; // Suppresses lift for the next number entry
+        activeShift = null;
+        updateDisplay();
+        return;
+      }
+
+      // 5. Solving for target TVM variable
+      activeShift = null;
+      const timing = beginMode ? 'beginning' : 'end';
+      const rate = tvm.i / 100;
+      try {
+        if (key === 'FV') {
+          tvm.fv = calculateTVM('fv', { pv: tvm.pv, pmt: tvm.pmt, rate, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+          stack[0] = tvm.fv;
+        } else if (key === 'PV') {
+          tvm.pv = calculateTVM('pv', { fv: tvm.fv, pmt: tvm.pmt, rate, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+          stack[0] = tvm.pv;
+        } else if (key === 'PMT') {
+          tvm.pmt = calculateTVM('pmt', { pv: tvm.pv, fv: tvm.fv, rate, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+          stack[0] = tvm.pmt;
+        } else if (key === 'n') {
+          tvm.n = calculateTVM('periods', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, rate, compoundingFrequency: 1, paymentFrequency: 1, timing });
+          stack[0] = tvm.n;
+        } else if (key === 'i') {
+          tvm.i = calculateTVM('rate', { pv: tvm.pv, fv: tvm.fv, pmt: tvm.pmt, periods: tvm.n, compoundingFrequency: 1, paymentFrequency: 1, timing }) * 100;
+          stack[0] = tvm.i;
+        }
+      } catch (e) {
+        stack[0] = NaN;
+      }
+      liftEnabled = true;
+      updateDisplay();
       return;
     }
   }
 
+  function handleBackspace() {
+    if (isDigitEntry) {
+      if (currentInput.length > 1) {
+        currentInput = currentInput.slice(0, -1);
+        if (currentInput === '-') currentInput = '';
+        stack[0] = parseFloat(currentInput) || 0;
+      } else {
+        currentInput = '';
+        isDigitEntry = false;
+        stack[0] = 0;
+        liftEnabled = false;
+      }
+    } else {
+      stack[0] = 0;
+      liftEnabled = false;
+    }
+    updateDisplay();
+  }
+
+  // Event Listeners
   document.querySelectorAll('.hp-key').forEach((btn) => {
     btn.addEventListener('click', () => {
       const k = btn.getAttribute('data-key');
@@ -409,15 +1394,76 @@ const faqs = [
     });
   });
 
+  modeToggleBtn?.addEventListener('click', () => {
+    currentMode = currentMode === 'rpn' ? 'alg' : 'rpn';
+    algOperand = null;
+    algOperator = null;
+    updateDisplay();
+  });
+
+  clearTvmBtn?.addEventListener('click', () => {
+    tvm.n = 0; tvm.i = 0; tvm.pv = 0; tvm.pmt = 0; tvm.fv = 0;
+    updateDisplay();
+  });
+
+  toggleAmortBtn?.addEventListener('click', () => {
+    if (amortWrapper) {
+      const isHidden = amortWrapper.classList.toggle('hidden');
+      const showLabel = toggleAmortBtn.getAttribute('data-show-label') || 'Show Table';
+      const hideLabel = toggleAmortBtn.getAttribute('data-hide-label') || 'Hide Table';
+      toggleAmortBtn.textContent = isHidden ? showLabel : hideLabel;
+    }
+  });
+
+  // Tutorial interactive example buttons
+  document.querySelectorAll('.btn-load-example').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const n = parseFloat(btn.getAttribute('data-example-n') || '0');
+      const i = parseFloat(btn.getAttribute('data-example-i') || '0');
+      const pv = parseFloat(btn.getAttribute('data-example-pv') || '0');
+      const pmt = parseFloat(btn.getAttribute('data-example-pmt') || '0');
+      const fv = parseFloat(btn.getAttribute('data-example-fv') || '0');
+      const solve = btn.getAttribute('data-example-solve');
+
+      tvm.n = n;
+      tvm.i = i;
+      tvm.pv = pv;
+      tvm.pmt = pmt;
+      tvm.fv = fv;
+
+      if (solve && ['n', 'i', 'PV', 'PMT', 'FV'].includes(solve)) {
+        handleKey(solve);
+      } else {
+        updateDisplay();
+      }
+
+      document.getElementById('emulator-frame')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
   window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) return;
+
     if (e.key >= '0' && e.key <= '9') handleKey(e.key);
     else if (e.key === '.') handleKey('.');
     else if (e.key === 'Enter') { e.preventDefault(); handleKey('ENTER'); }
     else if (e.key === '+') handleKey('+');
     else if (e.key === '-') handleKey('-');
     else if (e.key === '*') handleKey('*');
-    else if (e.key === '/') handleKey('/');
-    else if (e.key === 'Backspace') handleKey('CLX');
+    else if (e.key === '/') { e.preventDefault(); handleKey('/'); }
+    else if (e.key === 'Backspace') { e.preventDefault(); handleBackspace(); }
+    else if (e.key === 'Escape') handleKey('CLX');
+    else if (e.key === 'n' || e.key === 'N') handleKey('n');
+    else if (e.key === 'i' || e.key === 'I') handleKey('i');
+    else if (e.key === 'p' || e.key === 'P') handleKey('PV');
+    else if (e.key === 'm' || e.key === 'M') handleKey('PMT');
+    else if (e.key === 'v' || e.key === 'V') handleKey('FV');
+    else if (e.key === 'f' || e.key === 'F') handleKey('f');
+    else if (e.key === 'g' || e.key === 'G') handleKey('g');
+    else if (e.key === 'c' || e.key === 'C') handleKey('CHS');
+    else if (e.key === 'x' || e.key === 'X') handleKey('xy');
+    else if (e.key === 's' || e.key === 'S') handleKey('STO');
+    else if (e.key === 'r' || e.key === 'R') handleKey('RCL');
   });
 
   updateDisplay();

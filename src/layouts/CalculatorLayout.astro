@@ -12,13 +12,14 @@ interface FAQItem {
 
 interface Props {
   title: string;
+  seoTitle?: string;
   description?: string;
   faqs?: FAQItem[];
   lastUpdated?: string;
   calcKey?: string;
 }
 
-const { title, description, faqs = [], lastUpdated = 'July 2026', calcKey } = Astro.props;
+const { title, seoTitle, description, faqs = [], calcKey } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
@@ -32,14 +33,42 @@ const defaultMeta = getCurrencyInfo(defaultCurr);
 const categories = getLocalizedCategories(t);
 
 // Determine related calculators in the same category
-const currentCategory = categories.find(cat => cat.links.some(link => link.url === cleanPath));
+const normCleanPath = cleanPath.replace(/\/+$/, '') || '/';
+const currentCategory = categories.find(cat => cat.links.some(link => link.url.replace(/\/+$/, '') === normCleanPath));
 const relatedLinks = currentCategory 
-  ? currentCategory.links.filter(l => l.url !== cleanPath).slice(0, 3)
+  ? currentCategory.links.filter(l => l.url.replace(/\/+$/, '') !== normCleanPath).slice(0, 3)
   : [];
 
 // Localized values
 const localizedTitle = t(title, title);
-const localizedDescription = description ? t(description, description) : undefined;
+
+let localizedSeoTitle: string;
+if (seoTitle) {
+  const trSeo = t(seoTitle, seoTitle);
+  if (trSeo !== seoTitle) {
+    localizedSeoTitle = trSeo;
+  } else if (lang === 'ja' || lang === 'pt') {
+    localizedSeoTitle = `${localizedTitle} | financialcalculatorapp.com`;
+  } else {
+    localizedSeoTitle = trSeo;
+  }
+} else {
+  localizedSeoTitle = localizedTitle;
+}
+
+let localizedDescription: string | undefined = undefined;
+if (description) {
+  const trDesc = t(description, description);
+  if (trDesc !== description) {
+    localizedDescription = trDesc;
+  } else if (lang === 'ja' || lang === 'pt') {
+    const currentCalcItem = categories.flatMap(cat => cat.calculators).find(c => c.url.replace(/\/+$/, '') === normCleanPath);
+    localizedDescription = currentCalcItem?.snippet || undefined;
+  } else {
+    localizedDescription = trDesc;
+  }
+}
+
 const localizedFaqs = faqs.map(faq => ({
   question: t(faq.question, faq.question),
   answer: t(faq.answer, faq.answer)
@@ -104,7 +133,7 @@ const breadcrumbSchema = {
   ]
 };
 ---
-<Layout title={localizedTitle} description={localizedDescription} lang={lang}>
+<Layout title={localizedSeoTitle} description={localizedDescription} lang={lang}>
   <!-- Inject Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(webAppSchema)} />
   {faqSchema && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />}
@@ -183,7 +212,7 @@ const breadcrumbSchema = {
             <button id="save-scenario-btn" class="text-[10px] text-input-accent hover:underline cursor-pointer font-mono font-bold uppercase" title="Save current inputs">+ {t('calc.save', 'Save')}</button>
           </div>
           <div id="scenarios-list" class="space-y-1 text-xs px-2 font-mono">
-            <span class="text-muted text-[11px] block">No saved scenarios yet.</span>
+            <span class="text-muted text-[11px] block">{t('calc.noSaved', 'No saved scenarios yet.')}</span>
           </div>
           <button id="compare-scenarios-btn" class="hidden w-full mt-2 py-1.5 card-action text-ink text-[11px] font-mono font-bold rounded-full">
             {t('calc.compare', 'Compare Selected (2)')}
@@ -214,7 +243,6 @@ const breadcrumbSchema = {
       <div class="mb-8">
         <h1 class="font-display font-black text-3xl sm:text-4xl tracking-tight text-ink mb-3">{localizedTitle}</h1>
         {localizedDescription && <p class="text-sm sm:text-base text-muted max-w-3xl font-sans leading-relaxed">{localizedDescription}</p>}
-        {lastUpdated && <p class="text-[11px] text-muted font-mono font-bold uppercase mt-2.5">{t('calc.lastUpdated')}: {lastUpdated}</p>}
       </div>
       <slot />
 
@@ -265,9 +293,9 @@ const breadcrumbSchema = {
             id="currency-rate-notice-toggle"
             type="button"
             class="card-action self-start sm:self-auto text-[10px] font-mono px-3 py-1 rounded-full text-ink"
-            title="Toggle between dynamic FX conversion and 1:1 nominal units"
+            title={t('currency.toggle.title', 'Toggle between dynamic FX conversion and 1:1 nominal units')}
           >
-            Mode: 💱 FX Rate
+            {t('currency.mode.fx', 'Mode: 💱 FX Rate')}
           </button>
         </div>
       </div>
@@ -318,7 +346,7 @@ const breadcrumbSchema = {
 
       <!-- Feedback Widget -->
       <div class="mt-12 border-t border-line/20 pt-6 no-print">
-        <div id="feedback-widget-container" class="space-y-4">
+        <div id="feedback-widget-container" class="space-y-4" data-thank-you={t('feedback.thankYou', 'Thank you for your feedback!')}>
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <span class="text-xs text-muted font-mono font-bold uppercase">{t('feedback.helpful', 'Was this calculator helpful?')}</span>
             <div id="feedback-widget" class="flex items-center gap-2" role="group" aria-label="Feedback ratings">
@@ -422,7 +450,8 @@ const breadcrumbSchema = {
     safeSetItem('feedback_responses', JSON.stringify(feedbackList));
 
     if (widgetContainer) {
-      widgetContainer.innerHTML = `<span class="text-xs text-success font-medium animate-fade-in">Thank you for your feedback!</span>`;
+      const thankYouMsg = widgetContainer.getAttribute('data-thank-you') || 'Thank you for your feedback!';
+      widgetContainer.innerHTML = `<span class="text-xs text-success font-medium animate-fade-in">${thankYouMsg}</span>`;
     }
   }
 

@@ -386,3 +386,235 @@ export function calculateStockReturns(params: StockReturnParams) {
     annualizedReturn
   };
 }
+
+// ─── FIRE TRAJECTORY & MILESTONES ENGINE ───
+
+export interface FireTrajectoryParams {
+  currentAge: number;
+  currentNetWorth: number;
+  annualSavings: number;
+  annualExpenses: number;
+  swr: number; // e.g. 0.04
+  realReturn: number; // e.g. 0.07
+}
+
+export interface FireTrajectoryEntry {
+  age: number;
+  year: number;
+  label: string;
+  netWorth: number;
+  fireTarget: number;
+  leanTarget: number;
+  fatTarget: number;
+  passiveIncome: number;
+  isFireReached: boolean;
+}
+
+export function generateFireTrajectory(params: FireTrajectoryParams): {
+  trajectory: FireTrajectoryEntry[];
+  fireGoal: number;
+  leanGoal: number;
+  fatGoal: number;
+  yearsToFire: number;
+  fireAge: number;
+  fundedPct: number;
+} {
+  const { currentAge, currentNetWorth, annualSavings, annualExpenses, swr, realReturn } = params;
+
+  const fireGoal = swr > 0 ? annualExpenses / swr : 0;
+  const leanGoal = fireGoal * 0.8;
+  const fatGoal = fireGoal * 1.5;
+
+  // Calculate years to FIRE
+  let yearsToFire = 0;
+  let testBalance = currentNetWorth;
+  const maxSimYears = 60;
+
+  if (currentNetWorth >= fireGoal) {
+    yearsToFire = 0;
+  } else if (realReturn <= 0 && annualSavings <= 0) {
+    yearsToFire = 99;
+  } else {
+    while (testBalance < fireGoal && yearsToFire < maxSimYears) {
+      testBalance = testBalance * (1 + realReturn) + annualSavings;
+      yearsToFire++;
+    }
+  }
+
+  const fireAge = currentAge + yearsToFire;
+  const fundedPct = fireGoal > 0 ? Math.min(100, (currentNetWorth / fireGoal) * 100) : 0;
+
+  // Horizon: project at least 5 years past FIRE, up to age 75 or 30 years min
+  const horizonYears = Math.min(
+    maxSimYears,
+    Math.max(yearsToFire + 8, 25, 65 - currentAge)
+  );
+
+  const trajectory: FireTrajectoryEntry[] = [];
+  let currentNW = currentNetWorth;
+
+  // Age 0 / Year 0
+  trajectory.push({
+    age: Math.round(currentAge),
+    year: 0,
+    label: `Age ${Math.round(currentAge)}`,
+    netWorth: Math.round(currentNW),
+    fireTarget: Math.round(fireGoal),
+    leanTarget: Math.round(leanGoal),
+    fatTarget: Math.round(fatGoal),
+    passiveIncome: Math.round(currentNW * swr),
+    isFireReached: currentNW >= fireGoal
+  });
+
+  for (let y = 1; y <= horizonYears; y++) {
+    const age = Math.round(currentAge + y);
+    const reached = currentNW >= fireGoal;
+
+    if (!reached) {
+      // Accumulation phase: investing savings + compound growth
+      currentNW = currentNW * (1 + realReturn) + annualSavings;
+    } else {
+      // Post-FIRE phase: portfolio sustains annual expenses (indexed to real return)
+      currentNW = Math.max(0, (currentNW - annualExpenses) * (1 + realReturn));
+    }
+
+    trajectory.push({
+      age,
+      year: y,
+      label: `Age ${age}`,
+      netWorth: Math.round(currentNW),
+      fireTarget: Math.round(fireGoal),
+      leanTarget: Math.round(leanGoal),
+      fatTarget: Math.round(fatGoal),
+      passiveIncome: Math.round(currentNW * swr),
+      isFireReached: reached || (currentNW >= fireGoal)
+    });
+  }
+
+  return {
+    trajectory,
+    fireGoal: Math.round(fireGoal),
+    leanGoal: Math.round(leanGoal),
+    fatGoal: Math.round(fatGoal),
+    yearsToFire,
+    fireAge,
+    fundedPct
+  };
+}
+
+// ─── SUPERANNUATION TRAJECTORY ENGINE ───
+
+export interface SuperTrajectoryParams {
+  currentSuper: number;
+  salary: number;
+  currentAge: number;
+  retireAge: number;
+  sgRate: number; // e.g. 0.12
+  salarySacrificeMonthly: number;
+  grossReturn: number; // e.g. 0.075
+  fees: number; // e.g. 0.008
+}
+
+export interface SuperTrajectoryEntry {
+  age: number;
+  year: number;
+  label: string;
+  totalBalance: number;
+  startingBalance: number;
+  cumEmployerContrib: number; // net of 15% tax
+  cumSacrificeContrib: number; // net of 15% tax
+  compoundGrowth: number;
+  baselineBalance: number; // balance without salary sacrifice
+}
+
+export function generateSuperTrajectory(params: SuperTrajectoryParams): {
+  trajectory: SuperTrajectoryEntry[];
+  finalBalance: number;
+  baselineBalance: number;
+  sacrificeBonus: number;
+  totalEmployerPaid: number;
+  asfaSingle: number;
+  asfaCouple: number;
+} {
+  const {
+    currentSuper,
+    salary,
+    currentAge,
+    retireAge,
+    sgRate,
+    salarySacrificeMonthly,
+    grossReturn,
+    fees
+  } = params;
+
+  const netAnnualRate = Math.max(0, grossReturn - fees);
+  const totalYears = Math.max(1, Math.min(60, Math.round(retireAge - currentAge)));
+
+  // Australian Super statutory 15% contributions tax on concessional contributions
+  const annualEmployerContrib = salary * sgRate;
+  const netEmployerDeposit = annualEmployerContrib * 0.85;
+
+  const annualSacrifice = salarySacrificeMonthly * 12;
+  const netSacrificeDeposit = annualSacrifice * 0.85;
+
+  const netAnnualDeposit = netEmployerDeposit + netSacrificeDeposit;
+
+  const trajectory: SuperTrajectoryEntry[] = [];
+
+  let balance = currentSuper;
+  let baseBalance = currentSuper;
+  let cumEmployer = 0;
+  let cumSacrifice = 0;
+  let grossEmployerPaid = 0;
+
+  // Year 0
+  trajectory.push({
+    age: Math.round(currentAge),
+    year: 0,
+    label: `Age ${Math.round(currentAge)}`,
+    totalBalance: Math.round(currentSuper),
+    startingBalance: Math.round(currentSuper),
+    cumEmployerContrib: 0,
+    cumSacrificeContrib: 0,
+    compoundGrowth: 0,
+    baselineBalance: Math.round(currentSuper)
+  });
+
+  for (let y = 1; y <= totalYears; y++) {
+    const age = Math.round(currentAge + y);
+
+    balance = (balance + netAnnualDeposit) * (1 + netAnnualRate);
+    baseBalance = (baseBalance + netEmployerDeposit) * (1 + netAnnualRate);
+
+    cumEmployer += netEmployerDeposit;
+    cumSacrifice += netSacrificeDeposit;
+    grossEmployerPaid += annualEmployerContrib;
+
+    const compoundGrowth = Math.max(0, balance - currentSuper - cumEmployer - cumSacrifice);
+
+    trajectory.push({
+      age,
+      year: y,
+      label: `Age ${age}`,
+      totalBalance: Math.round(balance),
+      startingBalance: Math.round(currentSuper),
+      cumEmployerContrib: Math.round(cumEmployer),
+      cumSacrificeContrib: Math.round(cumSacrifice),
+      compoundGrowth: Math.round(compoundGrowth),
+      baselineBalance: Math.round(baseBalance)
+    });
+  }
+
+  const sacrificeBonus = Math.max(0, Math.round(balance - baseBalance));
+
+  return {
+    trajectory,
+    finalBalance: Math.round(balance),
+    baselineBalance: Math.round(baseBalance),
+    sacrificeBonus,
+    totalEmployerPaid: Math.round(grossEmployerPaid),
+    asfaSingle: 595000,
+    asfaCouple: 690000
+  };
+}
+

@@ -337,6 +337,52 @@ export function generateCompoundInterestSchedule(params: CompoundInterestParams)
   return schedule;
 }
 
+export interface CompoundingComparisonEntry {
+  year: number;
+  dateLabel: string;
+  totalContributions: number;
+  dailyBalance: number;
+  dailyInterest: number;
+  monthlyBalance: number;
+  monthlyInterest: number;
+  annualBalance: number;
+  annualInterest: number;
+}
+
+export function generateCompoundingComparison(
+  params: Omit<CompoundInterestParams, 'compoundingFrequency'>
+): CompoundingComparisonEntry[] {
+  const schedDaily = generateCompoundInterestSchedule({ ...params, compoundingFrequency: 365 });
+  const schedMonthly = generateCompoundInterestSchedule({ ...params, compoundingFrequency: 12 });
+  const schedAnnual = generateCompoundInterestSchedule({ ...params, compoundingFrequency: 1 });
+
+  const currentYear = new Date().getFullYear();
+  const comparison: CompoundingComparisonEntry[] = [];
+
+  for (let i = 0; i < schedDaily.length; i++) {
+    const d = schedDaily[i];
+    const m = schedMonthly[i] || d;
+    const a = schedAnnual[i] || d;
+
+    const targetYear = currentYear + d.year;
+    const dateLabel = d.year === 0 ? 'Today' : `${targetYear} (Yr ${d.year})`;
+
+    comparison.push({
+      year: d.year,
+      dateLabel,
+      totalContributions: Math.round(d.totalContributions * 100) / 100,
+      dailyBalance: Math.round(d.endingBalance * 100) / 100,
+      dailyInterest: Math.round(d.totalInterest * 100) / 100,
+      monthlyBalance: Math.round(m.endingBalance * 100) / 100,
+      monthlyInterest: Math.round(m.totalInterest * 100) / 100,
+      annualBalance: Math.round(a.endingBalance * 100) / 100,
+      annualInterest: Math.round(a.totalInterest * 100) / 100
+    });
+  }
+
+  return comparison;
+}
+
 // ─── ROI CALCULATOR MATHEMATICS ───
 
 export interface ROIParams {
@@ -670,6 +716,120 @@ export function calculateCollegeSavings(
     shortfall,
     pmtNeeded
   };
+}
+
+export interface CollegeSavingsScheduleEntry {
+  year: number;
+  age: number;
+  isCollegeYear: boolean;
+  isEnrollmentYear: boolean;
+  collegeYearNumber?: number;
+  balance: number;
+  collegeCost: number;
+  annualExpense: number;
+  cumulativeExpense: number;
+  shortfall: number;
+}
+
+export function generateCollegeSavingsSchedule(
+  currentAge: number,
+  enrollmentAge: number,
+  currentAnnualCost: number,
+  costInflation: number,
+  currentSaved: number,
+  monthlyContribution: number,
+  returnRate: number
+): CollegeSavingsScheduleEntry[] {
+  const yearsToSave = Math.min(Math.max(0, enrollmentAge - currentAge), 50);
+  const monthlyReturn = returnRate / 12;
+
+  // Pre-calculate 4 years of college tuition expenses starting at enrollmentAge
+  const annualCollegeExpenses: number[] = [];
+  let total4YearCostAtEnrollment = 0;
+  for (let i = 0; i < 4; i++) {
+    const cost = currentAnnualCost * Math.pow(1 + costInflation, yearsToSave + i);
+    annualCollegeExpenses.push(cost);
+    total4YearCostAtEnrollment += cost;
+  }
+
+  // Pre-calculate baseline 4-year cost in today's dollars
+  let base4YearCostToday = 0;
+  for (let i = 0; i < 4; i++) {
+    base4YearCostToday += currentAnnualCost * Math.pow(1 + costInflation, i);
+  }
+
+  const schedule: CollegeSavingsScheduleEntry[] = [];
+  let runningBalance = currentSaved;
+
+  // 1. Savings Phase: from currentAge (year 0) up to enrollmentAge (year = yearsToSave)
+  for (let y = 0; y <= yearsToSave; y++) {
+    const age = currentAge + y;
+    const isEnrollment = y === yearsToSave;
+
+    // Projected total 4-year cost as of this year (inflating over time)
+    const projected4YearCost = isEnrollment
+      ? total4YearCostAtEnrollment
+      : base4YearCostToday * Math.pow(1 + costInflation, y);
+
+    const shortfall = Math.max(0, projected4YearCost - runningBalance);
+
+    schedule.push({
+      year: y,
+      age,
+      isCollegeYear: false,
+      isEnrollmentYear: isEnrollment,
+      balance: Math.round(runningBalance * 100) / 100,
+      collegeCost: Math.round(projected4YearCost * 100) / 100,
+      annualExpense: 0,
+      cumulativeExpense: 0,
+      shortfall: Math.round(shortfall * 100) / 100
+    });
+
+    // Advance 12 months of monthly contributions & compounding for the next year
+    if (y < yearsToSave) {
+      for (let m = 1; m <= 12; m++) {
+        runningBalance = (runningBalance + monthlyContribution) * (1 + monthlyReturn);
+      }
+    }
+  }
+
+  // 2. College Phase: 4 college years (Years 1 to 4)
+  let drawBalance = runningBalance;
+  let cumExpense = 0;
+
+  for (let cYear = 1; cYear <= 4; cYear++) {
+    const age = enrollmentAge + cYear;
+    const expense = annualCollegeExpenses[cYear - 1];
+    cumExpense += expense;
+
+    // Withdraw tuition at start of college year
+    if (drawBalance >= expense) {
+      drawBalance -= expense;
+      // Remaining balance continues to grow over the 12-month period
+      for (let m = 1; m <= 12; m++) {
+        drawBalance = drawBalance * (1 + monthlyReturn);
+      }
+    } else {
+      drawBalance = 0;
+    }
+
+    const shortfall = Math.max(0, total4YearCostAtEnrollment - drawBalance);
+
+    schedule.push({
+      year: yearsToSave + cYear,
+      age,
+      isCollegeYear: true,
+      isEnrollmentYear: false,
+      collegeYearNumber: cYear,
+      balance: Math.round(drawBalance * 100) / 100,
+      collegeCost: Math.round(total4YearCostAtEnrollment * 100) / 100,
+      annualExpense: Math.round(expense * 100) / 100,
+      cumulativeExpense: Math.round(cumExpense * 100) / 100,
+      shortfall: Math.round(shortfall * 100) / 100
+    });
+  }
+
+  return schedule;
 }
 
 // ─── CRYPTO DCA CALCULATOR ───

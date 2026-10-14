@@ -239,16 +239,52 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
   // 13. 401(k)
   '401k': [
     {
-      question: "What is an employer 401(k) match?",
-      answer: "An employer match is money your employer contributes to your 401(k) account based on your own contributions (e.g. matching 50% of contributions up to 6% of your salary). It is effectively an instant return on your savings."
+      question: "How much should I contribute to my 401(k)?",
+      answer: "Most financial advisors recommend contributing at least 15% of your gross annual salary toward retirement (including employer matching). At a minimum, always contribute enough to capture your employer's full matching contribution—missing the match is walking away from free money and an instant 50% to 100% return. For 2024, the IRS employee elective deferral limit is $23,000 per year, or $30,500 if you are age 50 or older."
     },
     {
-      question: "What are the 401(k) contribution limits for 2024?",
-      answer: "For 2024, the employee contribution limit is $23,000 for those under 50. Individuals aged 50 and older can contribute an additional $7,500 catch-up contribution for a total of $30,500."
+      question: "How does an employer 401(k) match work?",
+      answer: "An employer match is additional money contributed by your company based on your payroll deferrals. A common formula is a 50% match up to 6% of your salary: if you earn $95,000 and contribute 6% ($5,700), your company deposits an additional $2,850 into your account. Always meet your employer's matching ceiling to maximize compensation."
     },
     {
-      question: "What is the difference between Traditional 401(k) and Roth 401(k)?",
-      answer: "Traditional 401(k) contributions are pre-tax and reduce your current taxable income, with withdrawals taxed in retirement. Roth 401(k) contributions are post-tax, but all qualified growth and withdrawals are completely tax-free."
+      question: "How much should I have in my 401(k) by age?",
+      answer: "Standard retirement benchmarks (such as Fidelity guidelines) suggest having: 1x your annual salary by age 30; 2x by age 35; 3x by age 40; 4x by age 45; 6x by age 50; 8x by age 60; and 10x your final salary by age 67. If you earn $90,000 at age 40, your target 401(k) balance is approximately $270,000 to remain on track for complete income replacement."
+    },
+    {
+      question: "Should I do a Roth or Traditional 401(k)?",
+      answer: "In a Traditional 401(k), you contribute pre-tax dollars, lowering your taxable income and federal tax liability today; withdrawals in retirement are taxed as ordinary income. In a Roth 401(k), you contribute after-tax dollars, but your investment earnings grow completely tax-free and all qualified distributions in retirement are 100% tax-free. If you are in a low tax bracket now (early career), choose Roth; if you are currently in your peak earning years and highest tax bracket, choose Traditional."
+    },
+    {
+      question: "How much does a 401(k) contribution reduce my taxes?",
+      answer: "Every dollar contributed to a pre-tax Traditional 401(k) reduces your taxable income dollar-for-dollar. The tax savings formula is: Annual Contribution × Marginal Tax Rate. For example, contributing $10,000 at a 24% federal tax bracket plus 5% state tax saves $2,900 in total taxes. Your take-home pay only drops by $7,100 while your retirement nest egg grows by a full $10,000."
+    },
+    {
+      question: "How much will my 401(k) be worth at retirement?",
+      answer: "Your projected 401(k) balance depends on compound interest, contribution rate, employer matching, and time. For example, contributing $600 per month starting at age 30 with a $25,000 starting balance and an average 7.5% annual return yields approximately $1,350,000 by age 65. The vast majority of this total (over 70%) comes from compound investment growth rather than out-of-pocket deposits."
+    },
+    {
+      question: "How much in a 401(k) do I need to retire?",
+      answer: "Under the Rule of 25 (the inverse of the 4% safe withdrawal rule), you need roughly 25 to 30 times your planned annual retirement living expenses minus Social Security. If you need $60,000 per year from your portfolio, your target retirement nest egg is $1,500,000 ($60,000 × 25). This nest egg provides sustainable inflation-adjusted income throughout a 30-year retirement."
+    },
+    {
+      question: "How much will my 401(k) pay me per month in retirement?",
+      answer: "Based on the 4% safe withdrawal rule, your monthly payout is estimated as: (Ending 401k Balance × 0.04) ÷ 12. For example, a $500,000 401(k) generates ~$1,667/month ($20,000/year); a $1,000,000 401(k) generates ~$3,333/month ($40,000/year); and a $1,500,000 401(k) generates ~$5,000/month ($60,000/year). Combined with Social Security, this replaces 70% to 90% of pre-retirement income."
+    },
+    {
+      question: "How long will my 401(k) last in retirement?",
+      answer: "If you follow the 4% safe withdrawal rule and maintain a balanced portfolio (e.g. 60% equities and 40% fixed income), historical market data from the Trinity Study indicates a 95%+ probability that your savings will last at least 30 years. Withdrawing at a higher rate (such as 6% or 7% annually) significantly increases the risk of exhausting funds within 15 to 20 years during market downturns."
+    },
+    {
+      question: "How much tax and penalty do I pay on early 401(k) withdrawals?",
+      answer: "Withdrawing funds from a Traditional 401(k) before age 59½ triggers a 10% IRS early withdrawal penalty PLUS ordinary federal and state income taxes on the distributed amount. For someone in the 22% federal bracket and 5% state bracket, an early withdrawal of $20,000 forfeits $7,400 (37%) to penalties and taxes, leaving only $12,600. Key exceptions to the penalty include the Rule of 55 (leaving an employer at age 55 or older), qualifying hardship distributions, or Substantially Equal Periodic Payments (SEPP / Rule 72t)."
+    },
+    {
+      question: "What is a Solo 401(k) and how does it work for the self-employed?",
+      answer: "A Solo 401(k) (or One-Participant 401k) is a retirement plan for self-employed professionals, freelancers, and small business owners with no full-time W-2 employees (other than a spouse). It allows dual contributions: up to $23,000 in elective employee deferrals ($30,500 if age 50+) PLUS an employer profit-sharing contribution up to 25% of net adjusted business earnings (20% for sole proprietors), up to a combined maximum of $69,000 in 2024."
+    },
+    {
+      question: "Can I borrow against my 401(k) instead of taking an early withdrawal?",
+      answer: "Yes, many employer plans permit a 401(k) loan for up to 50% of your vested balance or $50,000, whichever is less. A 401(k) loan avoids income tax and the 10% IRS penalty because you repay principal and interest back into your own account (usually over 5 years). However, if you leave your employer before repaying, the remaining balance usually becomes due by the federal tax filing deadline, or it converts into a taxable early distribution."
     }
   ],
 

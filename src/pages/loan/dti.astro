@@ -33,7 +33,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Debt-to-Income (DTI) Ratio Calculator" 
-  description="Calculate your front-end DTI (housing cost ratio) and back-end DTI (total monthly debt ratio) to see if you meet standard mortgage qualifying guidelines."
+  seoTitle="Debt-to-Income (DTI) Calculator: Front & Back-End Ratios | financialcalculatorapp.com"
+  description="Calculate your front-end and back-end DTI ratio instantly. See if you qualify for conventional, FHA, VA, or jumbo mortgage underwriting limits."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -117,13 +118,13 @@ const faqs = [
           </summary>
           <div class="mt-4 text-xs text-body space-y-3 pt-3 border-t border-hairline">
             <div>
-              <p class="font-semibold text-ink mb-1">Front-End DTI Ratio</p>
+              <p class="font-semibold text-ink mb-1">{t('Front-End DTI Ratio')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-front">
                 Front-End Ratio = Monthly Housing Costs / Gross Monthly Income
               </code>
             </div>
             <div>
-              <p class="font-semibold text-ink mb-1">Back-End DTI Ratio</p>
+              <p class="font-semibold text-ink mb-1">{t('Back-End DTI Ratio')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-back">
                 Back-End Ratio = (Monthly Housing + Other Debts) / Gross Monthly Income
               </code>
@@ -135,7 +136,7 @@ const faqs = [
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>

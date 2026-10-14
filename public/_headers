@@ -1,0 +1,24 @@
+# Cloudflare Pages Headers Configuration
+# Duplicate Content Penalty Prevention (Blocks search engines on preview subdomains)
+https://financialcalculatorapp.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+https://:subdomain.financialcalculatorapp.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+# Global Security & Hardening Headers
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+  Content-Security-Policy: frame-ancestors 'self';
+
+# Immutable long-term cache for Astro bundled assets
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache control for Service Worker
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate

@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('inflation');
 
 <CalculatorLayout 
   title="Inflation Calculator" 
-  description="Calculate how inflation erodes purchasing power over time and determine the future cost of goods and services."
+  seoTitle="Inflation Calculator: Purchasing Power & Future Cost | financialcalculatorapp.com"
+  description="Calculate how inflation erodes purchasing power over time. Determine what today's dollars will buy 5, 10, or 30 years in the future."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -24,9 +25,9 @@ const faqs = getCalculatorFaqs('inflation');
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Inflation Parameters')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="10000" data-rate="3.2" data-years="10">10y Normal</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50000" data-rate="2.5" data-years="30">30y Safe</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="5000" data-rate="6.5" data-years="5">High Inflation</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="10000" data-rate="3.2" data-years="10">{t('10y Normal')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="50000" data-rate="2.5" data-years="30">{t('30y Safe')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="5000" data-rate="6.5" data-years="5">{t('High Inflation')}</button>
             </div>
           </div>
 
@@ -57,13 +58,13 @@ const faqs = getCalculatorFaqs('inflation');
           <ResultCard title="Future Purchasing Power" value="--" highlight={true} description="What today's cash amount will be worth in terms of buying power in the future." />
         </div>
         <div id="res-future-price">
-          <ResultCard title="Future Cost of Goods" value="--" description="What costs $10,000 today will cost in the future under this inflation rate." />
+          <ResultCard title="Future Cost of Goods" value="--" description="What your starting cash amount costs today will cost in future years under this inflation rate." />
         </div>
       </div>
 
       <!-- Purchasing Power Decay Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Purchasing Power Erosion</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Purchasing Power Erosion')}</h4>
         <div class="h-64 relative">
           <canvas id="inflation-chart"></canvas>
         </div>
@@ -73,7 +74,7 @@ const faqs = getCalculatorFaqs('inflation');
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Formula Breakdown</span>
+            <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
@@ -96,7 +97,7 @@ const faqs = getCalculatorFaqs('inflation');
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>
@@ -110,6 +111,8 @@ const faqs = getCalculatorFaqs('inflation');
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('inflation-chart');
 
   // DOM Elements
   const form = document.getElementById('inflation-form') as HTMLFormElement;
@@ -195,7 +198,7 @@ const faqs = getCalculatorFaqs('inflation');
           labels,
           datasets: [
             {
-              label: 'Purchasing Power ($)',
+              label: 'Purchasing Power',
               data,
               borderColor: '#f43f5e',
               tension: 0.1,

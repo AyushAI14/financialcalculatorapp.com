@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('auto-loan');
 
 <CalculatorLayout 
   title="Car Finance & Auto Loan Calculator" 
-  description="Estimate your monthly car finance repayments, auto loan interest rates, and overall purchase costs. Factor in sales taxes, dealer documentation fees, and trade-in credits."
+  seoTitle="Auto Loan Calculator: Monthly Car Payment & Interest | financialcalculatorapp.com"
+  description="Calculate monthly car payments, trade-in value, sales tax, and total financing interest. Know your exact auto loan budget before visiting the dealer."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -86,7 +87,7 @@ const faqs = getCalculatorFaqs('auto-loan');
 
       <!-- Purchase Price Breakdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Total Cost of Purchase Breakdown</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Total Cost of Purchase Breakdown')}</h4>
         <div class="h-64 relative">
           <canvas id="cost-chart"></canvas>
         </div>
@@ -99,6 +100,8 @@ const faqs = getCalculatorFaqs('auto-loan');
   import { calculateAutoLoan } from '../../lib/math/misc';
   import { formatCurrency } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('cost-chart');
 
   // DOM Elements
   const form = document.getElementById('auto-loan-form') as HTMLFormElement;

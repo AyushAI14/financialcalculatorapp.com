@@ -653,6 +653,203 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Simule seus pagamentos na <a href="/pt/loan/student-loan">Calculadora de Financiamento Estudantil</a>!</p>
 `
     },
+  },
+  "calculadora-hp-12c-como-usar": {
+    pt: {
+      title: "Calculadora HP 12C: Como Usar, Lógica RPN e Guia Prático Passo a Passo",
+      description: "Aprenda como usar a calculadora financeira HP 12C do zero. Guia prático com lógica RPN, cálculo de juros compostos, parcelas PMT (Tabela Price), taxas equivalentes e resolução do Pr Error.",
+      content: `
+<p>A <strong>calculadora financeira HP 12C</strong> é o instrumento mais consagrado do mercado financeiro mundial e um ícone absoluto no Brasil. Desde o seu lançamento em 1981 pela Hewlett-Packard, ela permanece como a ferramenta padrão em faculdades de Economia, Administração e Ciências Contábeis, no setor bancário e nas principais provas de certificação, como <strong>ANBIMA (CPA-10, CPA-20, CEA)</strong>, <strong>CFP</strong> e perícia judicial.</p>
+
+<p>Se você está começando a usar a HP 12C pela primeira vez ou precisa revisar os cálculos para uma prova ou simulação de financiamento, este guia traz tudo o que você precisa saber com exemplos práticos resolvidos passo a passo.</p>
+
+<p>Você pode testar todos os exemplos deste tutorial diretamente no nosso <a href="/pt/emulators/hp-12c/">Emulador da Calculadora HP 12C Online</a>, 100% grátis no seu navegador com suporte ao teclado físico do computador.</p>
+
+<h2>1. Por que a HP 12C Não Tem Tecla de Igual (=)? A Lógica RPN</h2>
+<p>A primeira grande surpresa de quem pega uma HP 12C pela primeira vez é a ausência da tecla de igual (<strong>=</strong>) e de parênteses.</p>
+<p>A HP 12C opera com <strong>Notação Polonesa Reversa (RPN)</strong>. Em vez de digitar a fórmula na ordem tradicional (<code>2 + 3 =</code>), você insere os números primeiro em uma pilha operacional de memória e aperta o operador aritmético em seguida.</p>
+
+<h3>A Pilha de 4 Registradores (Stack: X, Y, Z, T)</h3>
+<ul>
+  <li><strong>Registrador X:</strong> É o visor da calculadora. Exibe o número digitado no momento ou o resultado da operação anterior.</li>
+  <li><strong>Registrador Y:</strong> O nível imediatamente superior. Quando você pressiona <code>ENTER</code>, o valor de X sobe para Y.</li>
+  <li><strong>Registradores Z e T:</strong> Níveis mais altos que guardam resultados intermediários automaticamente em contas com múltiplos fatores.</li>
+</ul>
+
+<h3>Como Somar e Calcular na HP 12C (Passo a Passo)</h3>
+<p>Para calcular <strong>25 + 15</strong> na HP 12C:</p>
+<ol>
+  <li>Digite <code>25</code></li>
+  <li>Pressione <code>ENTER</code> (o valor 25 fica armazenado em Y)</li>
+  <li>Digite <code>15</code></li>
+  <li>Pressione a operação <code>+</code></li>
+  <li><strong>Resultado imediato no visor: 40.00</strong></li>
+</ol>
+
+<p>Para contas encadeadas como <code>(10 + 5) × (8 - 2)</code>:</p>
+<ol>
+  <li>Digite <code>10</code>, aperte <code>ENTER</code>, digite <code>5</code>, aperte <code>+</code> (dá 15)</li>
+  <li>Digite <code>8</code>, aperte <code>ENTER</code>, digite <code>2</code>, aperte <code>-</code> (dá 6)</li>
+  <li>Aperte <code>×</code> (multiplica 15 por 6)</li>
+  <li><strong>Resultado final: 90.00</strong></li>
+</ol>
+<p>Sem rascunhos de papel e sem risco de errar a ordem das operações!</p>
+
+<h2>2. As Teclas Financeiras Fundamentais (TVM)</h2>
+<p>Na primeira linha da calculadora encontram-se as 5 teclas de ouro da matemática financeira:</p>
+<ul>
+  <li><strong>n (Períodos):</strong> Número de parcelas ou meses do investimento/financiamento.</li>
+  <li><strong>i (Taxa de juros):</strong> Taxa de juros periódica em percentual (ex.: 1.5 para 1,5% ao mês).</li>
+  <li><strong>PV (Present Value):</strong> Valor presente ou capital inicial financiado/aplicado.</li>
+  <li><strong>PMT (Payment):</strong> Valor da prestação ou parcela periódica constante (Tabela Price).</li>
+  <li><strong>FV (Future Value):</strong> Valor futuro ou montante final acumulado.</li>
+</ul>
+
+<p><strong>Atenção à Convenção de Sinais:</strong> O dinheiro que sai do seu bolso deve ser lançado com sinal negativo usando a tecla <code>CHS</code> (Change Sign). Se você aplica R$ 5.000, digite <code>5000 CHS PV</code>.</p>
+
+<h2>3. Tutoriais de Cálculos Mais Buscados no Brasil</h2>
+
+<h3>Como Calcular Juros Compostos e Valor Futuro (FV)</h3>
+<p><strong>Cenário:</strong> Aplicação de R$ 5.000,00 a uma taxa de juros de 1,2% ao mês durante 24 meses. Qual o montante final?</p>
+<ol>
+  <li>Limpe a memória financeira: <code>f</code> <code>CLX</code> (ou <code>f</code> <code>FIN</code>)</li>
+  <li>Digite <code>5000</code> <code>CHS</code> <code>PV</code></li>
+  <li>Digite <code>1.2</code> <code>i</code></li>
+  <li>Digite <code>24</code> <code>n</code></li>
+  <li>Pressione <code>FV</code></li>
+  <li><strong>Resultado: R$ 6.649,22</strong></li>
+</ol>
+
+<h3>Como Calcular a Parcela do Financiamento (PMT - Tabela Price)</h3>
+<p><strong>Cenário:</strong> Financiamento de um veículo de R$ 30.000,00 em 36 prestações mensais a 1,5% ao mês.</p>
+<ol>
+  <li>Limpe as variáveis: <code>f</code> <code>CLX</code></li>
+  <li>Digite <code>30000</code> <code>PV</code></li>
+  <li>Digite <code>1.5</code> <code>i</code></li>
+  <li>Digite <code>36</code> <code>n</code></li>
+  <li>Pressione <code>PMT</code></li>
+  <li><strong>Resultado: -R$ 1.085,82</strong> (valor da parcela mensal)</li>
+</ol>
+
+<h3>Como Calcular o Prazo (n) em Juros Compostos</h3>
+<p><strong>Cenário:</strong> Em quanto tempo R$ 10.000,00 dobram para R$ 20.000,00 rendendo 1,0% ao mês?</p>
+<ol>
+  <li><code>f</code> <code>CLX</code></li>
+  <li><code>10000</code> <code>CHS</code> <code>PV</code></li>
+  <li><code>20000</code> <code>FV</code></li>
+  <li><code>1</code> <code>i</code></li>
+  <li>Pressione <code>n</code></li>
+  <li><strong>Resultado: 70 meses</strong></li>
+</ol>
+
+<h3>Como Calcular Juros Simples na HP 12C</h3>
+<p>Para juros simples comerciais (ano de 360 dias), use a função <code>f INT</code>:</p>
+<ol>
+  <li>Digite o número de dias e tecle <code>n</code> (ex.: 90 n)</li>
+  <li>Digite a taxa de juros anual e tecle <code>i</code> (ex.: 18 i)</li>
+  <li>Digite o capital com sinal negativo e tecle <code>PV</code> (ex.: 12000 CHS PV)</li>
+  <li>Pressione <code>f</code> <code>INT</code></li>
+  <li><strong>Resultado dos Juros: R$ 540,00</strong> (pressione <code>+</code> para somar ao capital e obter R$ 12.540,00).</li>
+</ol>
+
+<h3>Como Calcular Taxas Equivalentes (Selic Anual para Mensal)</h3>
+<p>No Brasil, uma taxa anual de 13,25% a.a. não pode ser dividida por 12 em juros compostos. A equivalência é: <code>(1 + i_ano) = (1 + i_mês)¹²</code>.</p>
+<ol>
+  <li>Digite <code>1</code> <code>ENTER</code> <code>13.25</code> <code>ENTER</code> <code>100</code> <code>÷</code> <code>+</code> (resulta 1,1325)</li>
+  <li>Digite <code>1</code> <code>ENTER</code> <code>12</code> <code>÷</code> (resulta 0,08333)</li>
+  <li>Pressione <code>yˣ</code></li>
+  <li>Digite <code>1</code> <code>-</code> <code>100</code> <code>×</code></li>
+  <li><strong>Resultado: 1,041% ao mês</strong></li>
+</ol>
+
+<h2>4. Resolução de Problemas e Dúvidas Frequentes</h2>
+
+<h3>Como Zerar e Limpar a Calculadora HP 12C</h3>
+<ul>
+  <li><code>CLX</code>: limpa apenas o número digitado na tela.</li>
+  <li><code>f</code> <code>CLX</code>: limpa os registradores financeiros (n, i, PV, PMT, FV). Sempre faça isso antes de uma conta nova!</li>
+  <li><code>f</code> <code>REG</code>: limpa todos os registradores, memórias gerais e estatística.</li>
+</ul>
+
+<h3>Como Aumentar as Casas Decimais</h3>
+<p>Pressione a tecla amarela <code>f</code> seguida do número de casas desejado (0 a 9): <code>f 2</code> para duas casas (0.00), <code>f 4</code> para quatro casas (0.0000) e <code>f 9</code> para máxima precisão.</p>
+
+<h3>O que Fazer Quando Aparece 'Pr Error'?</h3>
+<p>O <strong>Pr Error</strong> significa <em>Programming Error</em>. Ocorre quando a tecla <code>f P/R</code> foi acionada sem querer, travando a máquina no modo de programação. Para destravar imediatamente, pressione qualquer tecla (como <code>CLX</code> ou <code>f P/R</code>). Se a calculadora física travar de vez, retire as pilhas ou segure a tecla <code>-</code> e aperte <code>ON</code> para efetuar o reset de fábrica.</p>
+
+<h2>5. Experimente Gratuitamente no Navegador</h2>
+<p>Você não precisa gastar centenas de reais nem arriscar baixar emuladores com vírus no computador. Acesse a nossa <a href="/pt/emulators/hp-12c/">Calculadora HP 12C Online Grátis</a> e faça suas simulações agora mesmo com cronograma de amortização automático e total privacidade!</p>
+`
+    },
+    en: {
+      title: "HP 12C Financial Calculator: Complete Beginner Guide, RPN Logic & Tutorials",
+      description: "Learn how to use the classic HP 12C financial calculator. Master Reverse Polish Notation (RPN), TVM compound interest, mortgage payments (PMT), and how to fix Pr Error.",
+      content: `
+<p>The <strong>HP 12C financial calculator</strong> is the gold standard for investment bankers, real estate appraisers, and students preparing for the CFA or CFP examinations. First introduced by Hewlett-Packard in 1981, its legendary durability, mathematical precision, and Reverse Polish Notation (RPN) make it a fixture on trading desks worldwide.</p>
+
+<p>You can practice all the tutorials below directly on our free interactive <a href="/emulators/hp-12c/">HP 12C Calculator Online Emulator</a> with full computer keyboard support.</p>
+
+<h2>1. Why Doesn't the HP 12C Have an Equals (=) Key? RPN Explained</h2>
+<p>Traditional algebraic calculators evaluate formulas as entered (e.g., <code>2 + 3 =</code>). The HP 12C uses <strong>Reverse Polish Notation (RPN)</strong>, which evaluates calculations using an automatic 4-level memory stack (X, Y, Z, and T registers).</p>
+<p>In RPN, you load numbers first and press the operator afterward. For example, to add 25 and 15:</p>
+<ol>
+  <li>Type <code>25</code></li>
+  <li>Press <code>ENTER</code> (pushes 25 to register Y)</li>
+  <li>Type <code>15</code></li>
+  <li>Press <code>+</code></li>
+  <li><strong>Display reads: 40.00</strong></li>
+</ol>
+<p>This eliminates the need for parentheses and equal keys in complex multi-step financial formulas.</p>
+
+<h2>2. The Core Financial Registers (TVM)</h2>
+<p>The top row features the 5 foundational Time Value of Money registers:</p>
+<ul>
+  <li><strong>n:</strong> Number of periods (months, years, days).</li>
+  <li><strong>i:</strong> Interest rate per compounding period (e.g. 1.2 for 1.2%).</li>
+  <li><strong>PV:</strong> Present Value (initial deposit or loan principal).</li>
+  <li><strong>PMT:</strong> Periodic Payment (monthly mortgage or annuity payment).</li>
+  <li><strong>FV:</strong> Future Value (final accumulated balance).</li>
+</ul>
+<p>Remember the cash flow convention: money leaving your pocket is entered as a negative number using <code>CHS</code> (Change Sign).</p>
+
+<h2>3. Step-by-Step Financial Tutorials</h2>
+<h3>Solving for Future Value (Compound Interest)</h3>
+<p>Invest $5,000 for 24 months at 1.2% monthly interest:</p>
+<ol>
+  <li>Clear financial registers: <code>f</code> <code>CLX</code></li>
+  <li><code>5000</code> <code>CHS</code> <code>PV</code></li>
+  <li><code>1.2</code> <code>i</code></li>
+  <li><code>24</code> <code>n</code></li>
+  <li>Press <code>FV</code> → <strong>Result: $6,649.22</strong></li>
+</ol>
+
+<h3>Solving for Monthly Loan Payment (PMT)</h3>
+<p>A $30,000 car loan over 36 months at 1.5% monthly interest:</p>
+<ol>
+  <li><code>f</code> <code>CLX</code></li>
+  <li><code>30000</code> <code>PV</code></li>
+  <li><code>1.5</code> <code>i</code></li>
+  <li><code>36</code> <code>n</code></li>
+  <li>Press <code>PMT</code> → <strong>Result: -$1,085.82</strong></li>
+</ol>
+
+<h2>4. Troubleshooting Common Issues</h2>
+<h3>Clearing Memory</h3>
+<ul>
+  <li><code>CLX</code>: Clears the displayed number (X register).</li>
+  <li><code>f</code> <code>CLX</code> (CLEAR FIN): Clears TVM registers (n, i, PV, PMT, FV).</li>
+  <li><code>f</code> <code>REG</code>: Clears all registers and general memories.</li>
+</ul>
+
+<h3>Changing Decimal Places</h3>
+<p>Press <code>f</code> followed by the desired number of digits: <code>f 2</code> for two decimals, <code>f 4</code> for four, or <code>f 9</code> for full precision.</p>
+
+<h3>How to Fix "Pr Error"</h3>
+<p><strong>Pr Error</strong> indicates a Programming Error, typically triggered when <code>f P/R</code> was pressed accidentally. Press any key like <code>CLX</code> or <code>f P/R</code> to return to normal calculation mode immediately.</p>
+
+<p>Experience the authentic HP 12C right in your browser with our <a href="/emulators/hp-12c/">Free Online HP 12C Calculator Emulator</a>!</p>
+`
+    }
   }
 };
 

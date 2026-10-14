@@ -15,7 +15,9 @@ export const faqsIntlBatch2: Partial<Record<Lang, Record<string, string>>> = {
     "What is the Rule of 72?": "Qu'est-ce que la règle de 72 ?",
     "The Rule of 72 is a quick mental formula to estimate how many years it takes to double your money. Divide 72 by your annual interest rate (e.g. at 8%, your money doubles in about 9 years).": "C'est une formule de calcul mental : divisez 72 par le rendement annuel estimé pour connaître le nombre d'années nécessaires pour doubler votre capital.",
     "What is Dollar-Cost Averaging (DCA)?": "Qu'est-ce que le Dollar-Cost Averaging (DCA) ?",
-    "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price.": "Le DCA consiste à investir une somme fixe à intervalles réguliers afin de lisser son prix d'achat et d'éliminer le stress lié au timing de marché."
+    "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price.": "Le DCA consiste à investir une somme fixe à intervalles réguliers afin de lisser son prix d'achat et d'éliminer le stress lié au timing de marché.",
+    "Can I pay off my loan early without penalty?": "Puis-je rembourser mon prêt par anticipation sans pénalités ?",
+    "Most consumer loans and conventional mortgages allow prepayment without penalties, but some lenders include a prepayment penalty clause. Always verify your loan agreement terms before making accelerated principal payments.": "La plupart des crédits à la consommation et des prêts immobiliers classiques autorisent le remboursement anticipé sans frais, mais certains contrats prévoient des indemnités de remboursement anticipé. Vérifiez toujours les conditions de votre offre de prêt avant d'accélérer vos remboursements."
   },
   "pt": {
     "How does an amortized loan work?": "Como funciona um empréstimo amortizável?",
@@ -31,6 +33,8 @@ export const faqsIntlBatch2: Partial<Record<Lang, Record<string, string>>> = {
     "What is the Rule of 72?": "O que é a Regra dos 72?",
     "The Rule of 72 is a quick mental formula to estimate how many years it takes to double your money. Divide 72 by your annual interest rate (e.g. at 8%, your money doubles in about 9 years).": "É uma fórmula prática: divida 72 pela taxa de rentabilidade anual para saber quantos anos levará para duplicar seu dinheiro.",
     "What is Dollar-Cost Averaging (DCA)?": "O que é Dollar-Cost Averaging (DCA)?",
-    "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price.": "É a estratégia de aplicar uma quantia fixa regularmente, permitindo comprar mais cotas nos momentos de baixa e reduzir o preço médio."
+    "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price.": "É a estratégia de aplicar uma quantia fixa regularmente, permitindo comprar mais cotas nos momentos de baixa e reduzir o preço médio.",
+    "Can I pay off my loan early without penalty?": "Posso quitar meu empréstimo antecipadamente sem multa?",
+    "Most consumer loans and conventional mortgages allow prepayment without penalties, but some lenders include a prepayment penalty clause. Always verify your loan agreement terms before making accelerated principal payments.": "A maioria dos empréstimos pessoais e financiamentos imobiliários convencionais permite a quitação antecipada sem custos, mas alguns contratos preveem multa por pagamento antecipado. Verifique sempre as condições do seu contrato antes de acelerar os pagamentos."
   },
 };

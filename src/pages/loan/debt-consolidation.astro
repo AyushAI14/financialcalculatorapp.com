@@ -3,9 +3,10 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
-import { getLangFromUrl } from '../../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 
 const faqs = [
   {
@@ -29,7 +30,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Debt Consolidation Loan Calculator - Compare Interest & Payment Savings" 
-  description="Calculate how much interest and money you can save by consolidating multiple credit cards and personal loans into a single low-interest loan."
+  seoTitle="Debt Consolidation Calculator: Compare Rates & Savings | financialcalculatorapp.com"
+  description="See how combining credit card balances and high-interest personal loans into a single low-rate payment cuts total interest and clears debt sooner."
   faqs={faqs}
   calcKey="debt-consolidation"
 >
@@ -41,22 +43,22 @@ const faqs = [
         <!-- Existing Debts Card -->
         <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
           <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">Your Current Debts</h3>
-            <span class="text-[11px] font-mono text-mute">Credit Cards, Auto, Personal Loans</span>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Current Debts')}</h3>
+            <span class="text-[11px] font-mono text-mute">{t('Credit Cards, Auto, Personal Loans')}</span>
           </div>
 
           <!-- Debt 1 -->
           <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
-              <label for="d1-bal" class="text-[10px] text-mute block mb-1">Debt 1 Balance ($)</label>
+              <label for="d1-bal" class="text-[10px] text-mute block mb-1">{t('Debt 1 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d1-bal" type="number" value="6500" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d1-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <label for="d1-rate" class="text-[10px] text-mute block mb-1">{t('Current APR')} (%)</label>
               <input id="d1-rate" type="number" step="0.1" value="24.5" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d1-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <label for="d1-pmt" class="text-[10px] text-mute block mb-1">{t('Monthly Pmt')} (<span data-currency-symbol>$</span>)</label>
               <input id="d1-pmt" type="number" value="220" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
           </div>
@@ -64,15 +66,15 @@ const faqs = [
           <!-- Debt 2 -->
           <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
-              <label for="d2-bal" class="text-[10px] text-mute block mb-1">Debt 2 Balance ($)</label>
+              <label for="d2-bal" class="text-[10px] text-mute block mb-1">{t('Debt 2 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d2-bal" type="number" value="4800" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d2-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <label for="d2-rate" class="text-[10px] text-mute block mb-1">{t('Current APR')} (%)</label>
               <input id="d2-rate" type="number" step="0.1" value="21.0" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d2-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <label for="d2-pmt" class="text-[10px] text-mute block mb-1">{t('Monthly Pmt')} (<span data-currency-symbol>$</span>)</label>
               <input id="d2-pmt" type="number" value="160" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
           </div>
@@ -80,15 +82,15 @@ const faqs = [
           <!-- Debt 3 -->
           <div class="grid grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
-              <label for="d3-bal" class="text-[10px] text-mute block mb-1">Debt 3 Balance ($)</label>
+              <label for="d3-bal" class="text-[10px] text-mute block mb-1">{t('Debt 3 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d3-bal" type="number" value="3200" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d3-rate" class="text-[10px] text-mute block mb-1">Current APR (%)</label>
+              <label for="d3-rate" class="text-[10px] text-mute block mb-1">{t('Current APR')} (%)</label>
               <input id="d3-rate" type="number" step="0.1" value="18.5" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
             <div>
-              <label for="d3-pmt" class="text-[10px] text-mute block mb-1">Monthly Pmt ($)</label>
+              <label for="d3-pmt" class="text-[10px] text-mute block mb-1">{t('Monthly Pmt')} (<span data-currency-symbol>$</span>)</label>
               <input id="d3-pmt" type="number" value="110" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
             </div>
           </div>
@@ -97,27 +99,27 @@ const faqs = [
         <!-- Proposed Consolidation Loan Card -->
         <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
           <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">New Consolidation Loan Offer</h3>
-            <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">Target Fixed Rate</span>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('New Consolidation Loan Offer')}</h3>
+            <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">{t('Target Fixed Rate')}</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input id="new-rate" name="newRate" label="New Consolidation Loan APR" type="number" suffix="%" value="10.5" />
             <Select id="new-term" name="newTerm" label="New Loan Term (Payoff Horizon)" options={[
-              { value: '24', label: '2 Years (24 Months)' },
-              { value: '36', label: '3 Years (36 Months)' },
-              { value: '48', label: '4 Years (48 Months)' },
-              { value: '60', label: '5 Years (60 Months)' }
+              { value: '24', label: t('2 Years (24 Months)') },
+              { value: '36', label: t('3 Years (36 Months)') },
+              { value: '48', label: t('4 Years (48 Months)') },
+              { value: '60', label: t('5 Years (60 Months)') }
             ]} value="36" />
           </div>
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Calculate Consolidation Savings
+            {t('Calculate Consolidation Savings')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -132,46 +134,56 @@ const faqs = [
 
       <!-- Side-by-Side Comparison Matrix -->
       <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Current Debts vs. New Consolidated Loan</h4>
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Current Debts vs. New Consolidated Loan')}</h4>
 
         <div class="grid grid-cols-2 gap-3 text-xs font-mono">
           <!-- Current Column -->
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-2">
-            <span class="text-[10px] text-mute block font-bold">STATUS QUO (SEPARATE)</span>
+            <span class="text-[10px] text-mute block font-bold">{t('STATUS QUO (SEPARATE)')}</span>
             <div>
-              <span class="text-[9px] text-mute block">Total Balance</span>
+              <span class="text-[9px] text-mute block">{t('Total Balance')}</span>
               <span id="cur-total-bal" class="font-bold text-ink">--</span>
             </div>
             <div>
-              <span class="text-[9px] text-mute block">Combined Monthly</span>
+              <span class="text-[9px] text-mute block">{t('Combined Monthly')}</span>
               <span id="cur-total-pmt" class="font-bold text-ink">--</span>
             </div>
             <div>
-              <span class="text-[9px] text-mute block">Estimated Interest</span>
+              <span class="text-[9px] text-mute block">{t('Estimated Interest')}</span>
               <span id="cur-total-int" class="font-bold text-rose-500">--</span>
             </div>
           </div>
 
           <!-- Consolidated Column -->
           <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-2">
-            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block font-bold">CONSOLIDATED LOAN</span>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block font-bold">{t('CONSOLIDATED LOAN')}</span>
             <div>
-              <span class="text-[9px] text-mute block">Consolidated Amount</span>
+              <span class="text-[9px] text-mute block">{t('Consolidated Amount')}</span>
               <span id="new-total-bal" class="font-bold text-ink">--</span>
             </div>
             <div>
-              <span class="text-[9px] text-mute block">New Monthly Payment</span>
+              <span class="text-[9px] text-mute block">{t('New Monthly Payment')}</span>
               <span id="new-monthly-pmt" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>
             </div>
             <div>
-              <span class="text-[9px] text-mute block">Total New Interest</span>
+              <span class="text-[9px] text-mute block">{t('Total New Interest')}</span>
               <span id="new-total-int" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>
             </div>
           </div>
         </div>
 
         <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline">
-          <span class="font-semibold text-ink">Bottom Line:</span> By replacing your blended high-interest rates with a lower-rate consolidation loan, you eliminate interest charges and pay off debt faster.
+          {lang === 'es' ? (
+            <><span class="font-semibold text-ink">Conclusión:</span> Al sustituir tus altas tasas de interés combinadas por un préstamo de consolidación más bajo, eliminas costes por intereses y amortizas tu deuda mucho más rápido.</>
+          ) : lang === 'de' ? (
+            <><span class="font-semibold text-ink">Fazit:</span> Durch die Ablösung teurer Einzelkredite durch einen zinsgünstigeren Umschuldungskredit senken Sie Ihre Zinskosten spürbar und werden schneller schuldenfrei.</>
+          ) : lang === 'ja' ? (
+            <><span class="font-semibold text-ink">結論:</span> 高金利の複数債務を低金利の一本化ローン（おまとめローン）に借り換えることで、無駄な利息負担を大幅に削減し、より短期間で完済できます。</>
+          ) : lang === 'pt' ? (
+            <><span class="font-semibold text-ink">Conclusão:</span> Ao substituir suas taxas de juros elevadas por um empréstimo de consolidação com taxa menor, você elimina gastos com juros e quita suas dívidas muito mais rápido.</>
+          ) : (
+            <><span class="font-semibold text-ink">Bottom Line:</span> By replacing your blended high-interest rates with a lower-rate consolidation loan, you eliminate interest charges and pay off debt faster.</>
+          )}
         </div>
       </div>
     </div>
@@ -181,6 +193,7 @@ const faqs = [
 <script>
   import { calculateLoanPMT } from '../../lib/math/loan';
   import { syncInputsWithURL } from '../../lib/shareable';
+  import { formatCurrency } from '../../lib/utils';
 
   const form = document.getElementById('consolidation-form') as HTMLFormElement | null;
   const d1Bal = document.getElementById('d1-bal') as HTMLInputElement | null;
@@ -248,16 +261,16 @@ const faqs = [
     const monthlySavings = Math.max(0, totalPmt - newMonthlyPmt);
     const interestSaved = Math.max(0, currentTotalInterest - newTotalInterest);
 
-    updateCardValue(resMonthlySavings, `$${monthlySavings.toFixed(2)} / mo`);
-    updateCardValue(resInterestSaved, `$${Math.round(interestSaved).toLocaleString('en-US')}`);
+    updateCardValue(resMonthlySavings, `${formatCurrency(monthlySavings)} / mo`);
+    updateCardValue(resInterestSaved, `${formatCurrency(Math.round(interestSaved))}`);
 
-    if (curBalEl) curBalEl.textContent = `$${totalBal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-    if (curPmtEl) curPmtEl.textContent = `$${totalPmt.toFixed(2)}`;
-    if (curIntEl) curIntEl.textContent = `$${Math.round(currentTotalInterest).toLocaleString('en-US')}`;
+    if (curBalEl) curBalEl.textContent = formatCurrency(totalBal);
+    if (curPmtEl) curPmtEl.textContent = formatCurrency(totalPmt);
+    if (curIntEl) curIntEl.textContent = formatCurrency(Math.round(currentTotalInterest));
 
-    if (newBalEl) newBalEl.textContent = `$${totalBal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-    if (newPmtEl) newPmtEl.textContent = `$${newMonthlyPmt.toFixed(2)}`;
-    if (newIntEl) newIntEl.textContent = `$${Math.round(newTotalInterest).toLocaleString('en-US')}`;
+    if (newBalEl) newBalEl.textContent = formatCurrency(totalBal);
+    if (newPmtEl) newPmtEl.textContent = formatCurrency(newMonthlyPmt);
+    if (newIntEl) newIntEl.textContent = formatCurrency(Math.round(newTotalInterest));
     if (newTermDisp) newTermDisp.textContent = `${newTermMonths} months`;
   }
 

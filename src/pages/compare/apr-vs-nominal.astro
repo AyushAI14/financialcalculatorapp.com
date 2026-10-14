@@ -5,18 +5,22 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const isEs = lang === 'es';
+const isDe = lang === 'de';
+const isJa = lang === 'ja';
+const isPt = lang === 'pt';
 ---
 
 <Layout 
-  title="Nominal Interest Rate vs. APR: What's the Difference? - financialcalculatorapp.com" 
-  description="Learn the differences between your loan's base interest rate (nominal rate) and the Annual Percentage Rate (APR) including fee impacts."
+  title={isEs ? "Tipo de Interés Nominal vs. TAE: ¿Cuál es la Diferencia? | financialcalculatorapp.com" : (isDe ? "Sollzins vs. Effektiver Jahreszins: Was ist der Unterschied? | financialcalculatorapp.com" : (isJa ? "表面金利（名目金利）vs. 実質年率（APR）の違いと見分け方 | financialcalculatorapp.com" : (isPt ? "Taxa de Juros Nominal vs. CET (APR): Qual é a Diferença? | financialcalculatorapp.com" : "Nominal Interest Rate vs. APR: What is the Difference? | financialcalculatorapp.com")))} 
+  description={isEs ? "Aprende por qué la Tasa Anual Equivalente (TAE/APR) es superior al tipo de interés nominal. Descubre el impacto de comisiones bancarias y capitalización." : (isDe ? "Lernen Sie, warum der Effektivzins über dem Sollzins liegt: Bankgebühren, Bereitstellungsprovisionen und Zinseszinsperioden im Kreditvergleich." : (isJa ? "なぜ実質年率（APR）は表面金利よりも高くなるのか？融資事務手数料、保証料、諸費用が実質的な借入コストに与える影響を徹底解説・比較。" : (isPt ? "Aprenda por que o Custo Efetivo Total (CET / APR) é maior que a taxa nominal. Veja o impacto de tarifas bancárias, seguros e juros compostos no custo real." : "Learn why Annual Percentage Rate (APR) is higher than nominal interest rate. See how closing points, bank fees, and compounding affect loan cost.")))}
   lang={lang}
 >
-  <div class="max-w-6xl mx-auto py-8 px-4 space-y-12">
+  <div class="w-full space-y-12">
     <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
-      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Interest Rate vs. APR</h1>
-      <p class="text-sm text-body max-w-2xl">Understand nominal interest rates versus Annual Percentage Rates (APR) to find the best borrowing deals.</p>
+      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">{isEs ? "Guía Comparativa" : (isDe ? "Vergleichsleitfaden" : (isJa ? "比較ガイド" : (isPt ? "Guia Comparativo" : "Comparison Guide")))}</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">{isEs ? "Tipo de Interés vs. TAE" : (isDe ? "Sollzins vs. Effektiver Jahreszins" : (isJa ? "表面金利 vs. 実質年率（APR）" : (isPt ? "Taxa de Juros Nominal vs. CET / APR" : "Interest Rate vs. APR")))}</h1>
+      <p class="text-sm text-body max-w-2xl">{isEs ? "Comprende las diferencias entre el tipo de interés nominal y la TAE para elegir las mejores condiciones de financiación." : (isDe ? "Verstehen Sie den Unterschied zwischen Nominalzins und Effektivzins, um die besten Kreditangebote zu vergleichen." : (isJa ? "名目金利と実質年率の違いを正しく理解し、最もお得なローン条件を見極めましょう。" : (isPt ? "Compreenda as diferenças entre taxa nominal e Custo Efetivo Total (CET / APR) para escolher as melhores condições de financiamento." : "Understand nominal interest rates versus Annual Percentage Rates (APR) to find the best borrowing deals.")))}</p>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -24,15 +28,15 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
       <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
         <div class="flex items-center gap-2">
           <span class="text-2xl">🏷️</span>
-          <h2 class="text-xl font-bold text-ink">Nominal Interest Rate</h2>
+          <h2 class="text-xl font-bold text-ink">{isEs ? "Tipo de Interés Nominal" : (isDe ? "Gebundener Sollzins (Nominalzins)" : (isJa ? "名目金利（表面金利）" : (isPt ? "Taxa Nominal" : "Nominal Interest Rate")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
-          The advertised base interest rate on your loan. Lenders use this percentage rate to compute the periodic interest accrued directly on your outstanding balance, excluding any fee disclosures.
+          {isEs ? "El tipo de interés base ofertado para tu préstamo. Las entidades utilizan este porcentaje para calcular los intereses periódicos devengados directamente sobre el saldo deudor, excluyendo comisiones y gastos adicionales." : (isDe ? "Der reine Zinssatz für das geliehene Kapital ohne Nebenkosten. Banken nutzen diesen Satz zur Berechnung der laufenden Zinsbelastung auf die Restschuld." : (isJa ? "広告やパンフレットに表示されるローンの基準金利。金融機関が毎期の利息額を借入残高に対して計算する基礎となりますが、事務手数料や諸費用は含まれません。" : (isPt ? "A taxa de juros base divulgada para o empréstimo. Os credores utilizam esse percentual para calcular os juros periódicos que incidem sobre o saldo devedor, desconsiderando tarifas e encargos adicionais." : "The advertised base interest rate on your loan. Lenders use this percentage rate to compute the periodic interest accrued directly on your outstanding balance, excluding any fee disclosures.")))}
         </p>
         <ul class="space-y-2 text-xs text-mute list-disc pl-4">
-          <li><strong>Scope:</strong> Base cost of borrowing the principal only.</li>
-          <li><strong>Purpose:</strong> Used to compute the basic monthly amortization payment.</li>
-          <li><strong>Limitation:</strong> Hides loan fees, points, and origination charges.</li>
+          <li><strong>{isEs ? "Alcance:" : (isDe ? "Umfang:" : (isJa ? "対象範囲:" : (isPt ? "Abrangência:" : "Scope:")))}</strong> {isEs ? "Coste base por pedir prestado únicamente el capital principal." : (isDe ? "Reine Kosten für das Leihen des Nettodarlehensbetrags." : (isJa ? "借入元金そのものに対する純粋な金利コスト。" : (isPt ? "Custo básico de captação incidente exclusivamente sobre o principal." : "Base cost of borrowing the principal only.")))}</li>
+          <li><strong>{isEs ? "Propósito:" : (isDe ? "Zweck:" : (isJa ? "主な用途:" : (isPt ? "Finalidade:" : "Purpose:")))}</strong> {isEs ? "Utilizado para calcular la cuota básica mensual de amortización." : (isDe ? "Grundlage für die monatliche Zins- und Tilgungsrate." : (isJa ? "月々の基本返済額（元利金）を計算する基礎。" : (isPt ? "Utilizada para calcular a parcela básica mensal de amortização e juros." : "Used to compute the basic monthly amortization payment.")))}</li>
+          <li><strong>{isEs ? "Limitación:" : (isDe ? "Einschränkung:" : (isJa ? "注意点:" : (isPt ? "Limitação:" : "Limitation:")))}</strong> {isEs ? "Oculta comisiones de apertura, corretaje y gastos de estudio." : (isDe ? "Berücksichtigt keine Bearbeitungsgebühren, Vermittlungskosten oder Disagios." : (isJa ? "事務手数料、保証料、ローン組成ポイントなどの初期費用が隠されている。" : (isPt ? "Omite taxas de abertura de crédito, tarifas de contratação e seguros obrigatórios." : "Hides loan fees, points, and origination charges.")))}</li>
         </ul>
       </div>
 
@@ -40,44 +44,44 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
       <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
         <div class="flex items-center gap-2">
           <span class="text-2xl text-link">💸</span>
-          <h2 class="text-xl font-bold text-ink">Annual Percentage Rate (APR)</h2>
+          <h2 class="text-xl font-bold text-ink">{isEs ? "Tasa Anual Equivalente (TAE / APR)" : (isDe ? "Effektiver Jahreszins (Effektivzins)" : (isJa ? "実質年率（APR）" : (isPt ? "Custo Efetivo Total / Taxa Anual Efetiva (CET / APR)" : "Annual Percentage Rate (APR)")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
-          The comprehensive annual cost of borrowing, incorporating both the base nominal rate and all administrative fees, points, broker commissions, and closing costs.
+          {isEs ? "El coste anual integral del préstamo, que incorpora tanto el tipo nominal base como todas las comisiones de apertura, corretaje y gastos de cierre." : (isDe ? "Die Gesamtkosten des Kredits pro Jahr als Prozentsatz. Beinhaltet sowohl den Sollzins als auch Nebenkosten, Bearbeitungsgebühren und Auszahlungsabschläge." : (isJa ? "表面金利だけでなく、契約事務手数料、保証料、仲介手数料など、借入にかかるすべての諸費用を合算した年間の実質的な総借入コスト。" : (isPt ? "O custo financeiro anual abrangente do empréstimo, que incorpora tanto a taxa nominal quanto todas as tarifas administrativas, encargos e despesas de contratação." : "The comprehensive annual cost of borrowing, incorporating both the base nominal rate and all administrative fees, points, broker commissions, and closing costs.")))}
         </p>
         <ul class="space-y-2 text-xs text-mute list-disc pl-4">
-          <li><strong>Scope:</strong> Base rate + all closing costs and upfront charges.</li>
-          <li><strong>Purpose:</strong> Provides a standard metric to compare competing lenders.</li>
-          <li><strong>Advantage:</strong> A truer, more transparent representation of actual cost.</li>
+          <li><strong>{isEs ? "Alcance:" : (isDe ? "Umfang:" : (isJa ? "対象範囲:" : (isPt ? "Abrangência:" : "Scope:")))}</strong> {isEs ? "Tipo base + todas las comisiones iniciales y gastos de formalización." : (isDe ? "Sollzins plus sämtliche anfallende Kreditnebenkosten." : (isJa ? "表面金利 ＋ すべての初期費用および諸手数料。" : (isPt ? "Taxa nominal + todas as despesas iniciais e tarifas bancárias." : "Base rate + all closing costs and upfront charges.")))}</li>
+          <li><strong>{isEs ? "Propósito:" : (isDe ? "Zweck:" : (isJa ? "主な用途:" : (isPt ? "Finalidade:" : "Purpose:")))}</strong> {isEs ? "Métrica estándar oficial para comparar de forma justa distintas ofertas bancarias." : (isDe ? "Gesetzlicher Standard zur objektiven Vergleichbarkeit verschiedener Kreditangebote." : (isJa ? "各金融機関の融資提案を公正かつ透明に比較するための公的基準指標。" : (isPt ? "Métrica padrão oficial para comparar propostas concorrentes de forma transparente." : "Provides a standard metric to compare competing lenders.")))}</li>
+          <li><strong>{isEs ? "Ventaja:" : (isDe ? "Vorteil:" : (isJa ? "メリット:" : (isPt ? "Vantagem:" : "Advantage:")))}</strong> {isEs ? "Una representación veraz y transparente del coste financiero total." : (isDe ? "Realistisches und transparentes Gesamtbild der tatsächlichen Kreditkosten." : (isJa ? "隠れたコストのない、借入にかかる本当の総費用の可視化。" : (isPt ? "Uma representação fiel, transparente e realista do custo financeiro total." : "A truer, more transparent representation of actual cost.")))}</li>
         </ul>
       </div>
     </div>
 
     <!-- Comparative Table -->
-    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm max-w-4xl mx-auto">
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm w-full">
       <table class="w-full border-collapse text-left text-xs">
         <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
           <tr>
-            <th class="px-5 py-3.5">Feature</th>
-            <th class="px-5 py-3.5">Nominal Interest Rate</th>
-            <th class="px-5 py-3.5">APR</th>
+            <th class="px-5 py-3.5">{isEs ? "Característica" : (isDe ? "Merkmal" : (isJa ? "項目" : (isPt ? "Característica" : "Feature")))}</th>
+            <th class="px-5 py-3.5">{isEs ? "Tipo de Interés Nominal" : (isDe ? "Sollzins" : (isJa ? "名目金利（表面金利）" : (isPt ? "Taxa Nominal" : "Nominal Interest Rate")))}</th>
+            <th class="px-5 py-3.5">{isEs ? "TAE / APR" : (isDe ? "Effektiver Jahreszins" : (isJa ? "実質年率（APR）" : (isPt ? "CET / APR" : "APR")))}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-hairline text-body text-ink">
           <tr>
-            <td class="px-5 py-3 font-semibold">Includes Closing Costs?</td>
-            <td class="px-5 py-3">No</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (origination, points, broker fees)</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "¿Incluye Gastos de Cierre?" : (isDe ? "Beinhaltet Kreditnebenkosten?" : (isJa ? "諸費用・手数料を含むか？" : (isPt ? "Inclui Custos de Contratação?" : "Includes Closing Costs?")))}</td>
+            <td class="px-5 py-3">{isEs ? "No" : (isDe ? "Nein" : (isJa ? "含まない" : (isPt ? "Não" : "No")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "Sí (comisiones de apertura, corretaje, etc.)" : (isDe ? "Ja (Abschlussgebühren, Disagio, Vermittlung)" : (isJa ? "含む（事務手数料、保証料、ポイント等）" : (isPt ? "Sim (taxas de abertura, tarifas, seguros)" : "Yes (origination, points, broker fees)")))}</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold">Used for Interest Accrual</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (compounds on principal)</td>
-            <td class="px-5 py-3">No (only used for overall cost comparison)</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Cálculo de Intereses Periódicos" : (isDe ? "Berechnung der Monatszinsen" : (isJa ? "月々の利息計算に使用されるか？" : (isPt ? "Cálculo dos Juros Periódicos" : "Used for Interest Accrual")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "Sí (se calcula sobre el saldo principal)" : (isDe ? "Ja (wird direkt auf Restschuld angewendet)" : (isJa ? "使用される（残高に対して直接適用）" : (isPt ? "Sim (calculada sobre o saldo devedor)" : "Yes (compounds on principal)")))}</td>
+            <td class="px-5 py-3">{isEs ? "No (solo como métrica comparativa)" : (isDe ? "Nein (dient als Vergleichsmaßstab)" : (isJa ? "使用されない（総コストの比較用指標）" : (isPt ? "Não (utilizada como métrica comparativa)" : "No (only used for overall cost comparison)")))}</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold">Comparison Accuracy</td>
-            <td class="px-5 py-3">Low (a low rate can hide very high fees)</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">High (standardized metric for true cost)</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Precisión Comparativa" : (isDe ? "Vergleichsgenauigkeit" : (isJa ? "比較時の精度・透明性" : (isPt ? "Precisão Comparativa" : "Comparison Accuracy")))}</td>
+            <td class="px-5 py-3">{isEs ? "Baja (un tipo bajo puede encubrir comisiones altas)" : (isDe ? "Gering (niedriger Zins kann hohe Gebühren verschleiern)" : (isJa ? "低い（低金利でも高額な手数料が隠れている可能性）" : (isPt ? "Baixa (uma taxa nominal baixa pode camuflar tarifas pesadas)" : "Low (a low rate can hide very high fees)")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "Alta (métrica estandarizada del coste real)" : (isDe ? "Hoch (gesetzlich normierter Standard für echte Gesamtkosten)" : (isJa ? "極めて高い（実質的な総借入コストの国際標準指標）" : (isPt ? "Alta (métrica padronizada do custo efetivo real)" : "High (standardized metric for true cost)")))}</td>
           </tr>
         </tbody>
       </table>
@@ -86,41 +90,41 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
     <!-- Embedded Calculator Section -->
     <section class="border-t border-hairline pt-12 space-y-6">
       <div class="text-center max-w-xl mx-auto space-y-2">
-        <h2 class="text-2xl font-bold text-ink">Interactive APR Calculator</h2>
-        <p class="text-xs text-mute">Input your borrowing amount and upfront fees below to calculate your true Annual Percentage Rate.</p>
+        <h2 class="text-2xl font-bold text-ink">{isEs ? "Calculadora Interactiva de TAE" : (isDe ? "Interaktiver Effektivzins-Rechner" : (isJa ? "インタラクティブ実質年率（APR）計算機" : (isPt ? "Calculadora Interativa de CET / APR" : "Interactive APR Calculator")))}</h2>
+        <p class="text-xs text-mute">{isEs ? "Ingresa el capital a solicitar y las comisiones iniciales para conocer tu TAE real." : (isDe ? "Geben Sie Kreditsumme, Sollzins und Nebenkosten ein, um den tatsächlichen Effektivzins zu ermitteln." : (isJa ? "借入希望額、名目金利、諸費用を入力すると、実際の正確な実質年率（APR）が瞬時に計算されます。" : (isPt ? "Informe o valor do empréstimo, a taxa nominal e os custos iniciais para apurar o CET real." : "Input your borrowing amount and upfront fees below to calculate your true Annual Percentage Rate.")))}</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
         <!-- Left Column (Inputs) -->
         <div class="lg:col-span-6 space-y-6">
           <form id="apr-form" class="space-y-6">
             <div class="space-y-5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-2">
-                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Loan Details</h3>
+                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{isEs ? "Detalles del Préstamo" : (isDe ? "Kreditdaten" : (isJa ? "借入条件の入力" : (isPt ? "Detalhes do Empréstimo" : "Loan Details")))}</h3>
                 <div class="flex flex-wrap items-center gap-1.5 no-print">
-                  <span class="text-[10px] text-mute font-mono">Presets:</span>
-                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">Auto Loan</button>
-                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">Mortgage</button>
+                  <span class="text-[10px] text-mute font-mono">{isEs ? "Preajustes:" : (isDe ? "Vorlagen:" : (isJa ? "プリセット:" : (isPt ? "Predefinições:" : "Presets:")))}</span>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">{isEs ? "Préstamo Coche" : (isDe ? "Autokredit" : (isJa ? "マイカーローン" : (isPt ? "Financiamento de Veículo" : "Auto Loan")))}</button>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="350000" data-rate="6.5" data-term="30" data-fees="6000">{isEs ? "Hipoteca" : (isDe ? "Baufinanzierung" : (isJa ? "住宅ローン" : (isPt ? "Financiamento Imobiliário" : "Mortgage")))}</button>
                 </div>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
-                <Input id="loan-amount" label="Loan Principal" type="number" prefix="$" value="200000" />
-                <Input id="interest-rate" label="Nominal Rate" type="number" suffix="%" value="6.0" />
+                <Input id="loan-amount" label={isEs ? "Capital del Préstamo" : (isDe ? "Kreditsumme (Nettodarlehen)" : (isJa ? "借入元金" : (isPt ? "Valor do Empréstimo" : "Loan Principal")))} type="number" prefix="$" value="200000" />
+                <Input id="interest-rate" label={isEs ? "Tipo Nominal" : (isDe ? "Sollzins (Nominal)" : (isJa ? "表面金利（名目）" : (isPt ? "Taxa Nominal" : "Nominal Rate")))} type="number" suffix="%" value="6.0" />
               </div>
 
               <div class="grid grid-cols-2 gap-3 pt-3 border-t border-hairline/60">
-                <Input id="term" label="Loan Term" type="number" suffix="years" value="30" />
-                <Input id="fees" label="Upfront Fees" type="number" prefix="$" value="4000" />
+                <Input id="term" label={isEs ? "Plazo del Préstamo" : (isDe ? "Laufzeit" : (isJa ? "借入期間" : (isPt ? "Prazo do Contrato" : "Loan Term")))} type="number" suffix={isEs ? "años" : (isDe ? "Jahre" : (isJa ? "年" : (isPt ? "anos" : (isPt ? "anos" : "years"))))} value="30" />
+                <Input id="fees" label={isEs ? "Comisiones Iniciales" : (isDe ? "Einmalige Nebenkosten" : (isJa ? "初期諸費用・手数料" : (isPt ? "Tarifas e Custos Iniciais" : "Upfront Fees")))} type="number" prefix="$" value="4000" />
               </div>
             </div>
 
             <div class="pt-2 border-t border-hairline flex gap-3">
               <button type="submit" class="px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity cursor-pointer">
-                Calculate APR
+                {isEs ? "Calcular TAE" : (isDe ? "Effektivzins berechnen" : (isJa ? "実質年率を計算" : (isPt ? "Calcular CET / APR" : "Calculate APR")))}
               </button>
               <button type="reset" id="reset-btn" class="px-6 py-2 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-                Clear
+                {isEs ? "Limpiar" : (isDe ? "Zurücksetzen" : (isJa ? "クリア" : (isPt ? "Limpar" : "Clear")))}
               </button>
             </div>
           </form>
@@ -130,22 +134,22 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         <div class="lg:col-span-6 space-y-6">
           <div class="flex flex-col gap-3">
             <div id="res-apr">
-              <ResultCard title="Effective APR" value="--" highlight={true} description="The real interest rate you pay annually once upfront fees are included." />
+              <ResultCard title={isEs ? "TAE Efectiva" : (isDe ? "Effektiver Jahreszins" : (isJa ? "実質年率（APR）" : (isPt ? "CET Efetivo Anual" : "Effective APR")))} value="--" highlight={true} description={isEs ? "El tipo de interés real anual que pagas una vez incluidas las comisiones iniciales." : (isDe ? "Die tatsächliche jährliche Zinsbelastung inklusive aller Nebenkosten." : (isJa ? "初期諸費用を含めて計算された、年間の実質的な負担金利です。" : (isPt ? "A taxa de juros real anual paga considerando todas as tarifas e encargos iniciais." : "The real interest rate you pay annually once upfront fees are included.")))} />
             </div>
             <div id="res-nominal">
-              <ResultCard title="Interest Rate" value="--" description="The base interest rate stated on your loan note." />
+              <ResultCard title={isEs ? "Tipo de Interés Nominal" : (isDe ? "Gebundener Sollzins" : (isJa ? "契約名目金利" : (isPt ? "Taxa de Juros Nominal" : "Interest Rate")))} value="--" description={isEs ? "El tipo de interés base fijado en el contrato de tu préstamo." : (isDe ? "Der im Kreditvertrag vereinbarte Nominalzins." : (isJa ? "ローン契約書に記載される基本表面金利です。" : (isPt ? "A taxa de juros básica expressa no seu contrato de financiamento." : "The base interest rate stated on your loan note.")))} />
             </div>
             <div id="res-payment">
-              <ResultCard title="Monthly Payment (P&I)" value="--" />
+              <ResultCard title={isEs ? "Cuota Mensual (Capital e Intereses)" : (isDe ? "Monatliche Rate (Zins & Tilgung)" : (isJa ? "毎月の返済額（元利均等）" : (isPt ? "Parcela Mensal (Amortização e Juros)" : "Monthly Payment (P&I)")))} value="--" />
             </div>
             <div id="res-fees">
-              <ResultCard title="Total Finance Fees" value="--" />
+              <ResultCard title={isEs ? "Total de Comisiones de Financiación" : (isDe ? "Gesamte Kreditnebenkosten" : (isJa ? "融資諸費用総額" : (isPt ? "Total de Encargos e Tarifas" : "Total Finance Fees")))} value="--" />
             </div>
           </div>
 
           <!-- Chart -->
           <div class="bg-canvas border border-hairline rounded-lg p-4 shadow-sm">
-            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2">Rate vs. APR Comparison</h4>
+            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2">{isEs ? "Comparativa de Tipo Nominal vs. TAE" : (isDe ? "Vergleich Sollzins vs. Effektivzins" : (isJa ? "表面金利 vs. 実質年率（APR）の比較" : (isPt ? "Comparativo Taxa Nominal vs. CET (APR)" : "Rate vs. APR Comparison")))}</h4>
             <div class="h-56 relative">
               <canvas id="apr-chart"></canvas>
             </div>
@@ -154,7 +158,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
           <!-- Download CSV -->
           <div class="flex gap-4 no-print">
             <button id="download-csv-btn" class="w-full py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-              <span>📊</span> Download Results CSV
+              <span>📊</span> {isEs ? "Descargar Resultados en CSV" : (isDe ? "Ergebnisse als CSV herunterladen" : (isJa ? "計算結果をCSVでダウンロード" : (isPt ? "Baixar Resultados em CSV" : "Download Results CSV")))}
             </button>
           </div>
         </div>
@@ -169,6 +173,8 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
   import { validateForm, validateField } from '../../lib/validation';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('apr-chart');
 
   const form = document.getElementById('apr-form') as HTMLFormElement;
   

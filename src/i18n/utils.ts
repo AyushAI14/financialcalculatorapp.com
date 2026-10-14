@@ -39,7 +39,8 @@ export function getPathWithoutLocale(pathname: string): string {
     const rest = segments.slice(1).join('/');
     return rest ? `/${rest}` : '/';
   }
-  return pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const clean = pathname.replace(/\/+$/, '');
+  return clean ? clean : '/';
 }
 
 /**
@@ -60,6 +61,18 @@ export function useTranslations(lang: Lang) {
     }
     if (key in currentUi) {
       return currentUi[key];
+    }
+
+    if (fallback) {
+      if (fallback in currentFaq) {
+        return currentFaq[fallback];
+      }
+      if (fallback in currentJson) {
+        return currentJson[fallback];
+      }
+      if (fallback in currentUi) {
+        return currentUi[fallback];
+      }
     }
 
     const defaultFaq = (faqTranslations as any)[defaultLang] || {};
@@ -85,17 +98,22 @@ export function useTranslations(lang: Lang) {
  */
 export function useTranslatedPath(lang: Lang) {
   return function translatePath(path: string, targetLang: Lang = lang): string {
+    if (!path || path.startsWith('#')) return path;
     const cleanPath = getPathWithoutLocale(path);
+    const hasExtension = /\.[a-z0-9]+$/i.test(cleanPath);
+    const formattedPath = (cleanPath === '/' || cleanPath.endsWith('/') || hasExtension)
+      ? cleanPath
+      : `${cleanPath}/`;
     
     if (!showDefaultLang && targetLang === defaultLang) {
-      return cleanPath;
+      return formattedPath;
     }
     
-    if (cleanPath === '/') {
-      return `/${targetLang}`;
+    if (formattedPath === '/') {
+      return `/${targetLang}/`;
     }
     
-    return `/${targetLang}${cleanPath}`;
+    return `/${targetLang}${formattedPath}`;
   };
 }
 

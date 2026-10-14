@@ -23,7 +23,7 @@
   --display: "Plus Jakarta Sans", "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
   --body: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
   --mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
-  --max-width: 1184px;
+  --max-width: 1440px;
   --ui-stroke: 1px;
   --control-height: 44px;
   --control-radius: 22px;
@@ -177,7 +177,19 @@ html.dark {
 
 @media (min-width: 640px) {
   .page-shell {
-    width: min(var(--max-width), calc(100% - 40px));
+    width: min(var(--max-width), calc(100% - 32px));
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
+    width: min(var(--max-width), calc(100% - 48px));
+  }
+}
+
+@media (min-width: 1440px) {
+  .page-shell {
+    width: min(var(--max-width), calc(100% - 64px));
   }
 }
 
@@ -277,6 +289,63 @@ html.dark .theme-toggle__icon--moon {
 }
 
 /* Pill Filter Buttons */
+.filter-bar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+.filter-panel .filter-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  border: var(--ui-stroke) solid var(--ink);
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: var(--control-shadow);
+  cursor: pointer;
+  transition: background-color 0.12s, opacity 0.15s, transform 0.12s;
+}
+.filter-panel .filter-arrow:hover {
+  background: var(--soft);
+}
+.filter-panel .filter-arrow.is-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.filter-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.filter-fade-left {
+  left: 28px;
+  background: linear-gradient(to right, var(--canvas), transparent);
+}
+.filter-fade-right {
+  right: 28px;
+  background: linear-gradient(to left, var(--canvas), transparent);
+}
+.filter-fade.is-hidden {
+  opacity: 0;
+}
+.filter-list .filter-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .filter-button {
   cursor: pointer;
   border: var(--ui-stroke) solid var(--ink);

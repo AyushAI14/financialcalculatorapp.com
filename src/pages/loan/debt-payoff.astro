@@ -32,7 +32,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Debt Snowball vs Avalanche Calculator" 
-  description="Compare two popular strategies for paying off multiple debts: the Snowball method (smallest balances first) and the Avalanche method (highest interest rates first)."
+  seoTitle="Debt Snowball vs. Avalanche Calculator: Compare Payoff | financialcalculatorapp.com"
+  description="Compare the Snowball method (smallest balances first) against the Avalanche method (highest interest first) to see which clears debt faster."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -53,7 +54,7 @@ const faqs = [
           <div class="space-y-3">
             <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-link"></span>
-              Debt 1 (e.g. Credit Card)
+              {t('Debt 1 (e.g. Credit Card)')}
             </h4>
             <div class="grid grid-cols-3 gap-3">
               <Input id="debt1-balance" label="Balance" type="number" prefix="$" value="5000" />
@@ -66,7 +67,7 @@ const faqs = [
           <div class="space-y-3 pt-4 border-t border-hairline/60">
             <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-violet"></span>
-              Debt 2 (e.g. Car Loan)
+              {t('Debt 2 (e.g. Car Loan)')}
             </h4>
             <div class="grid grid-cols-3 gap-3">
               <Input id="debt2-balance" label="Balance" type="number" prefix="$" value="12000" />
@@ -79,7 +80,7 @@ const faqs = [
           <div class="space-y-3 pt-4 border-t border-hairline/60">
             <h4 class="text-xs font-semibold text-ink flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-cyan"></span>
-              Debt 3 (e.g. Student Loan)
+              {t('Debt 3 (e.g. Student Loan)')}
             </h4>
             <div class="grid grid-cols-3 gap-3">
               <Input id="debt3-balance" label="Balance" type="number" prefix="$" value="25000" />
@@ -108,34 +109,34 @@ const faqs = [
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Snowball Card -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-          <h4 class="text-xs font-mono text-mute uppercase tracking-wider">Snowball Strategy</h4>
+          <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Snowball Strategy')}</h4>
           <div class="space-y-1">
             <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">--</span>
-            <span class="text-[10px] text-mute block">Payoff Timeline</span>
+            <span class="text-[10px] text-mute block">{t('Payoff Timeline')}</span>
           </div>
           <div class="space-y-0.5">
             <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">--</span>
-            <span class="text-[9px] text-mute block">Total Interest Paid</span>
+            <span class="text-[9px] text-mute block">{t('Total Interest Paid')}</span>
           </div>
         </div>
 
         <!-- Avalanche Card -->
         <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3 border-link/30">
-          <h4 class="text-xs font-mono text-link uppercase tracking-wider">Avalanche Strategy</h4>
+          <h4 class="text-xs font-mono text-link uppercase tracking-wider">{t('Avalanche Strategy')}</h4>
           <div class="space-y-1">
             <span class="text-3xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">--</span>
-            <span class="text-[10px] text-mute block">Payoff Timeline</span>
+            <span class="text-[10px] text-mute block">{t('Payoff Timeline')}</span>
           </div>
           <div class="space-y-0.5">
             <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">--</span>
-            <span class="text-[9px] text-mute block">Total Interest Paid</span>
+            <span class="text-[9px] text-mute block">{t('Total Interest Paid')}</span>
           </div>
         </div>
       </div>
 
       <!-- Strategy Comparison Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Total Balance Projection over Time</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Total Balance Projection over Time')}</h4>
         <div class="h-64 relative">
           <canvas id="debt-chart"></canvas>
         </div>
@@ -145,22 +146,86 @@ const faqs = [
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>How Calculations are Computed</span>
+            <span>{t('How Calculations are Computed')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-3 pt-3 border-t border-hairline leading-relaxed">
-            <p>Every month, the simulator performs these operations:</p>
-            <ol class="list-decimal pl-4 space-y-1">
-              <li>Interest accrues on all active debt accounts: <code>Interest = Balance × (APR / 12)</code>.</li>
-              <li>Required minimum payments are deducted from the monthly budget and applied to each debt.</li>
-              <li>Any leftover budget is focused entirely on the **Target Debt**:
-                <ul class="list-disc pl-4 mt-1">
-                  <li><strong>Snowball target:</strong> The debt with the smallest balance (psychological prioritization).</li>
-                  <li><strong>Avalanche target:</strong> The debt with the highest APR interest rate (mathematical prioritization).</li>
-                </ul>
-              </li>
-              <li>When the target debt is fully paid off, its minimum payment rolls over to the next target.</li>
-            </ol>
+            {lang === 'es' ? (
+              <>
+                <p>Cada mes, el simulador ejecuta las siguientes operaciones:</p>
+                <ol class="list-decimal pl-4 space-y-1">
+                  <li>Se acumulan intereses en todas las cuentas de deuda activas: <code>Interés = Saldo × (TAE / 12)</code>.</li>
+                  <li>Los pagos mínimos requeridos se descuentan del presupuesto mensual y se aplican a cada deuda.</li>
+                  <li>El presupuesto sobrante se destina íntegramente a la <strong>Deuda Objetivo</strong>:
+                    <ul class="list-disc pl-4 mt-1">
+                      <li><strong>Objetivo Bola de Nieve:</strong> La deuda con el menor saldo pendiente (priorización psicológica).</li>
+                      <li><strong>Objetivo Avalancha:</strong> La deuda con la tasa de interés TAE más alta (priorización matemática).</li>
+                    </ul>
+                  </li>
+                  <li>Cuando la deuda objetivo se liquida por completo, su pago mínimo se transfiere a la siguiente deuda objetivo.</li>
+                </ol>
+              </>
+            ) : lang === 'de' ? (
+              <>
+                <p>In jedem Monat führt der Simulator folgende Rechenschritte durch:</p>
+                <ol class="list-decimal pl-4 space-y-1">
+                  <li>Zinsen fallen auf alle aktiven Kreditsalden an: <code>Zinsen = Restsaldo × (Sollzins / 12)</code>.</li>
+                  <li>Erforderliche Mindestraten werden vom Monatsbudget abgezogen und auf die jeweiligen Kredite angewendet.</li>
+                  <li>Das verbleibende Restbudget fließt vollständig in die <strong>Fokusschuld</strong>:
+                    <ul class="list-disc pl-4 mt-1">
+                      <li><strong>Schneeball-Fokus:</strong> Der Kredit mit dem kleinsten Restsaldo (psychologische Priorisierung).</li>
+                      <li><strong>Lawinen-Fokus:</strong> Der Kredit mit dem höchsten Sollzins (mathematische Priorisierung).</li>
+                    </ul>
+                  </li>
+                  <li>Sobald die Fokusschuld vollständig abbezahlt ist, wird deren Mindestrate auf das nächste Ziel übertragen.</li>
+                </ol>
+              </>
+            ) : lang === 'ja' ? (
+              <>
+                <p>シミュレーターは毎月、以下の手順で計算を実行します：</p>
+                <ol class="list-decimal pl-4 space-y-1">
+                  <li>すべての有効な債務残高に月利息が発生します：<code>利息 ＝ 残高 × (実質年率 ÷ 12)</code>。</li>
+                  <li>毎月の返済予算から各債務の最低返済額がまず充当されます。</li>
+                  <li>残りの余剰返済予算はすべて<strong>優先返済対象（ターゲット債務）</strong>に集中的に繰り上げ返済されます：
+                    <ul class="list-disc pl-4 mt-1">
+                      <li><strong>スノーボール法（雪だるま方式）:</strong> 最も残高が少ない債務を優先（早期の完済体験による心理的モチベーション重視）。</li>
+                      <li><strong>アバランチ法（雪崩方式）:</strong> 最も金利（実質年率）が高い債務を優先（支払利息を最小化する数学的最適化）。</li>
+                    </ul>
+                  </li>
+                  <li>ターゲット債務が完済されると、それまで支払っていた返済額が次の優先返済債務へと上乗せ（ロールオーバー）されます。</li>
+                </ol>
+              </>
+            ) : lang === 'pt' ? (
+              <>
+                <p>Todos os meses, o simulador executa as seguintes operações:</p>
+                <ol class="list-decimal pl-4 space-y-1">
+                  <li>Os juros incidem sobre todos os saldos devedores ativos: <code>Juros = Saldo × (Taxa Anual / 12)</code>.</li>
+                  <li>Os pagamentos mínimos obrigatórios são deduzidos do orçamento mensal e aplicados a cada dívida.</li>
+                  <li>O saldo restante do orçamento é direcionado integralmente para a <strong>Dívida Alvo</strong>:
+                    <ul class="list-disc pl-4 mt-1">
+                      <li><strong>Alvo Bola de Neve:</strong> A dívida com o menor saldo devedor (foco na motivação psicológica e vitórias rápidas).</li>
+                      <li><strong>Alvo Avalanche:</strong> A dívida com a maior taxa de juros (otimização matemática para economizar o máximo de juros).</li>
+                    </ul>
+                  </li>
+                  <li>Quando a dívida alvo é totalmente quitada, seu valor de pagamento mínimo é transferido (efeito bola de neve) para a próxima dívida alvo.</li>
+                </ol>
+              </>
+            ) : (
+              <>
+                <p>Every month, the simulator performs these operations:</p>
+                <ol class="list-decimal pl-4 space-y-1">
+                  <li>Interest accrues on all active debt accounts: <code>Interest = Balance × (APR / 12)</code>.</li>
+                  <li>Required minimum payments are deducted from the monthly budget and applied to each debt.</li>
+                  <li>Any leftover budget is focused entirely on the **Target Debt**:
+                    <ul class="list-disc pl-4 mt-1">
+                      <li><strong>Snowball target:</strong> The debt with the smallest balance (psychological prioritization).</li>
+                      <li><strong>Avalanche target:</strong> The debt with the highest APR interest rate (mathematical prioritization).</li>
+                    </ul>
+                  </li>
+                  <li>When the target debt is fully paid off, its minimum payment rolls over to the next target.</li>
+                </ol>
+              </>
+            )}
           </div>
         </details>
       </div>
@@ -168,7 +233,7 @@ const faqs = [
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Comparison CSV
+          <span>📊</span> {t('Download Comparison CSV')}
         </button>
       </div>
     </div>
@@ -182,6 +247,8 @@ const faqs = [
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('debt-chart');
 
   // DOM Elements
   const form = document.getElementById('debt-form') as HTMLFormElement;
@@ -247,9 +314,9 @@ const faqs = [
 
     if (debts.length === 0) {
       if (sbTime) sbTime.textContent = '0 mo';
-      if (sbInterest) sbInterest.textContent = '$0.00';
+      if (sbInterest) sbInterest.textContent = formatCurrency(0);
       if (avTime) avTime.textContent = '0 mo';
-      if (avInterest) avInterest.textContent = '$0.00';
+      if (avInterest) avInterest.textContent = formatCurrency(0);
       return;
     }
 

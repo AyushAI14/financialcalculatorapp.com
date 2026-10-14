@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('roi');
 
 <CalculatorLayout 
   title="ROI Calculator" 
-  description="Calculate the Return on Investment (ROI) and annualized ROI for any business venture, real estate deal, or stock purchase."
+  seoTitle="ROI Calculator: Return on Investment & Annualized CAGR | financialcalculatorapp.com"
+  description="Measure net return on investment (ROI) and annualized profitability for real estate purchases, business investments, or stock positions."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -100,7 +101,7 @@ const faqs = getCalculatorFaqs('roi');
 
       <!-- Chart Container -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Investment Comparison</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Investment Comparison')}</h4>
         <div class="h-64 relative">
           <canvas id="roi-chart"></canvas>
         </div>
@@ -113,6 +114,8 @@ const faqs = getCalculatorFaqs('roi');
   import { calculateROI } from '../../lib/math/finance';
   import { formatCurrency, formatPercentage, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('roi-chart');
 
   // DOM Elements
   const form = document.getElementById('roi-form') as HTMLFormElement;
@@ -188,7 +191,7 @@ const faqs = getCalculatorFaqs('roi');
           labels: ['Total Invested Cost', 'Total Returned Value'],
           datasets: [
             {
-              label: 'Amount ($)',
+              label: 'Amount',
               data: [cost, returns],
               backgroundColor: ['#6366f1', '#10b981'],
               borderColor: ['#6366f1', '#10b981'],

@@ -15,7 +15,8 @@ const faqs = getCalculatorFaqs('savings-goal');
 
 <CalculatorLayout 
   title="Savings Goal Calculator" 
-  description="Determine how much money you need to save each month to reach your financial savings target by a specific deadline."
+  seoTitle="Savings Goal Calculator: How Much to Save Monthly | financialcalculatorapp.com"
+  description="Find out exactly how much you must save each month to hit your financial milestone by a target date, complete with interest compounding."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -107,7 +108,7 @@ const faqs = getCalculatorFaqs('savings-goal');
 
       <!-- Growth Chart Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Savings Accumulation Progress</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Savings Accumulation Progress')}</h4>
         <div class="h-80 relative">
           <canvas id="savings-chart"></canvas>
         </div>
@@ -119,14 +120,14 @@ const faqs = getCalculatorFaqs('savings-goal');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Savings Schedule</h3>
-        <p class="text-sm text-body mt-1">Yearly accumulation breakdown of starting balance, additions, and compound growth.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Savings Schedule')}</h3>
+        <p class="text-sm text-body mt-1">{t('Yearly accumulation breakdown of starting balance, additions, and compound growth.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Detailed Table
+        {t('Show Detailed Table')}
       </button>
     </div>
 
@@ -156,6 +157,8 @@ const faqs = getCalculatorFaqs('savings-goal');
   import { calculateTVM } from '../../lib/math/finance';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('savings-chart');
 
   // DOM Elements
   const form = document.getElementById('savings-goal-form') as HTMLFormElement;

@@ -3,17 +3,29 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import StudentLoanIDRChart from '../../components/charts/StudentLoanIDRChart';
+import { generateStudentLoanTrajectory } from '../../lib/math/loan';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 const faqs = getCalculatorFaqs('student-loan');
+
+const initialTrajectoryData = generateStudentLoanTrajectory({
+  balance: 40000,
+  rate: 0.055,
+  agi: 55000,
+  familySize: 1,
+  plan: 'SAVE',
+  loanType: 'undergrad'
+});
 ---
 
 <CalculatorLayout 
   title="Student Loan IDR Calculator" 
-  description="Estimate your monthly student loan payments under Income-Driven Repayment (IDR) plans like SAVE, PAYE, and IBR based on your income, loan type, and family size."
+  seoTitle="Student Loan IDR Calculator: Estimate SAVE, PAYE & IBR | financialcalculatorapp.com"
+  description="Estimate monthly student loan payments under income-driven repayment plans (SAVE, PAYE, IBR). See potential loan forgiveness and payoff timelines."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -96,6 +108,18 @@ const faqs = getCalculatorFaqs('student-loan');
         </div>
       </div>
 
+      <!-- IDR Repayment & Forgiveness Trajectory Chart -->
+      <StudentLoanIDRChart
+        client:load
+        initialTrajectory={initialTrajectoryData.trajectory}
+        initialForgivenessYears={initialTrajectoryData.forgivenessYears}
+        initialTotalIdrPaid={initialTrajectoryData.totalIdrPaid}
+        initialTotalStandardPaid={initialTrajectoryData.totalStandardPaid}
+        initialForgivenAmount={initialTrajectoryData.forgivenAmount}
+        initialSavingsVsStandard={initialTrajectoryData.savingsVsStandard}
+        initialPlan="SAVE"
+      />
+
       <!-- Formula steps -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
@@ -137,7 +161,7 @@ const faqs = getCalculatorFaqs('student-loan');
 </CalculatorLayout>
 
 <script>
-  import { calculateStudentLoanIDR } from '../../lib/math/loan';
+  import { calculateStudentLoanIDR, generateStudentLoanTrajectory } from '../../lib/math/loan';
   import { formatCurrency } from '../../lib/utils';
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
@@ -193,14 +217,17 @@ const faqs = getCalculatorFaqs('student-loan');
     const plan = planSelect.value as 'SAVE' | 'PAYE' | 'IBR';
     const loanType = typeSelect.value as 'undergrad' | 'grad' | 'mixed';
 
-    const result = calculateStudentLoanIDR({
+    const params = {
       balance,
       rate,
       agi,
       familySize,
       plan,
       loanType
-    });
+    };
+
+    const result = calculateStudentLoanIDR(params);
+    const trajectoryData = generateStudentLoanTrajectory(params);
 
     const formattedMonthly = formatCurrency(result.monthlyPayment);
     const formattedDiscretionary = formatCurrency(result.discretionaryIncome);
@@ -220,7 +247,7 @@ const faqs = getCalculatorFaqs('student-loan');
 
     // Formulas
     if (stepShield) {
-      stepShield.innerHTML = `Poverty Line = $15,800 + (${familySize} - 1) × $5,400 = <strong>${formatCurrency(povertyBase)}</strong><br/>Shield Limit (${multiplier * 100}%) = ${formatCurrency(povertyBase)} × ${multiplier} = <strong>${formatCurrency(povertyShield)}</strong>`;
+      stepShield.innerHTML = `Poverty Line = ${formatCurrency(15800)} + (${familySize} - 1) × ${formatCurrency(5400)} = <strong>${formatCurrency(povertyBase)}</strong><br/>Shield Limit (${multiplier * 100}%) = ${formatCurrency(povertyBase)} × ${multiplier} = <strong>${formatCurrency(povertyShield)}</strong>`;
     }
     if (stepDisc) {
       stepDisc.innerHTML = `Discretionary Income = AGI - ShieldLimit = ${formatCurrency(agi)} - ${formatCurrency(povertyShield)} = <strong>${formattedDiscretionary} / yr</strong>`;
@@ -229,13 +256,33 @@ const faqs = getCalculatorFaqs('student-loan');
       const planRate = plan === 'SAVE' ? (loanType === 'undergrad' ? 0.05 : loanType === 'grad' ? 0.10 : 0.075) : 0.10;
       stepPayment.innerHTML = `Monthly Repayment = (Discretionary × ${planRate * 100}%) / 12 = (${formattedDiscretionary} × ${planRate}) / 12 = <strong>${formattedMonthly} / mo</strong>`;
     }
+
+    // Dispatch chart update
+    window.dispatchEvent(
+      new CustomEvent('student-loan-data-updated', {
+        detail: {
+          trajectory: trajectoryData.trajectory,
+          forgivenessYears: trajectoryData.forgivenessYears,
+          totalIdrPaid: trajectoryData.totalIdrPaid,
+          totalStandardPaid: trajectoryData.totalStandardPaid,
+          forgivenAmount: trajectoryData.forgivenAmount,
+          savingsVsStandard: trajectoryData.savingsVsStandard,
+          plan
+        }
+      })
+    );
   }
 
-  // Bind input listeners
-  [balanceInput, rateInput, agiInput, sizeInput, planSelect, typeSelect].forEach(el => {
+  // Bind input & select listeners with real-time recalculation
+  [balanceInput, rateInput, agiInput, sizeInput].forEach(el => {
     el.addEventListener('input', () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
+      performCalculation();
     });
+  });
+
+  [planSelect, typeSelect].forEach(el => {
+    el.addEventListener('change', performCalculation);
   });
 
   // Preset scenarios click handlers
@@ -254,6 +301,8 @@ const faqs = getCalculatorFaqs('student-loan');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
+
+      performCalculation();
     });
   });
 

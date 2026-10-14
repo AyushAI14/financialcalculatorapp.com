@@ -13,7 +13,8 @@ const faqs = getCalculatorFaqs('dividend');
 
 <CalculatorLayout 
   title="Dividend Calculator" 
-  description="Project future dividend income, yield on cost, and portfolio growth with automatic dividend reinvestment (DRIP)."
+  seoTitle="Dividend Calculator: Reinvestment (DRIP) & Passive Income | financialcalculatorapp.com"
+  description="Forecast future dividend income, yield on cost, and portfolio compounding with automatic dividend reinvestment (DRIP)."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -80,7 +81,7 @@ const faqs = getCalculatorFaqs('dividend');
 
       <!-- Growth Chart Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">DRIP Growth Composition</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('DRIP Growth Composition')}</h4>
         <div class="h-80 relative">
           <canvas id="growth-chart"></canvas>
         </div>
@@ -92,14 +93,14 @@ const faqs = getCalculatorFaqs('dividend');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Dividend Growth Schedule</h3>
-        <p class="text-sm text-body mt-1">Yearly breakdown of contributions, gross dividends earned, taxes paid, and capital appreciation.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Dividend Growth Schedule')}</h3>
+        <p class="text-sm text-body mt-1">{t('Yearly breakdown of contributions, gross dividends earned, taxes paid, and capital appreciation.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Yearly Table
+        {t('Show Yearly Table')}
       </button>
     </div>
 
@@ -130,6 +131,8 @@ const faqs = getCalculatorFaqs('dividend');
   import { simulateDividends } from '../../lib/math/retirement';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('growth-chart');
 
   // DOM Elements
   const form = document.getElementById('dividend-form') as HTMLFormElement;

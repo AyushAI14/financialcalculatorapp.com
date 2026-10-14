@@ -5,18 +5,22 @@ import ResultCard from '../../components/ui/ResultCard.astro';
 import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const isEs = lang === 'es';
+const isDe = lang === 'de';
+const isJa = lang === 'ja';
+const isPt = lang === 'pt';
 ---
 
 <Layout 
-  title="Roth IRA vs. Traditional IRA: Which is Better? - financialcalculatorapp.com" 
-  description="Compare Roth and Traditional IRAs side-by-side to understand tax brackets, income limits, deductions, and tax-free retirement growth rules."
+  title={isEs ? "Roth IRA vs. IRA Tradicional: ¿Cuál es Mejor en 2026? | financialcalculatorapp.com" : (isDe ? "Roth IRA vs. Traditionelle IRA: Was ist 2026 besser? | financialcalculatorapp.com" : (isJa ? "Roth IRA vs. Traditional IRA: 2026年の選び方と税制比較 | financialcalculatorapp.com" : (isPt ? "Roth IRA vs. IRA Tradicional: Qual é Melhor em 2026? | financialcalculatorapp.com" : "Roth IRA vs. Traditional IRA: Which is Better in 2026? | financialcalculatorapp.com")))} 
+  description={isEs ? "Comprende las diferencias exactas entre cuentas Roth e IRA Tradicional: deducciones ahora vs. ingresos libres de impuestos después, límites y retiros." : (isDe ? "Verstehen Sie die genauen Unterschiede zwischen Roth und traditioneller IRA: Sofortige Steuerabzüge vs. steuerfreie Auszahlungen, Einkommensgrenzen und RMDs." : (isJa ? "Roth IRAとTraditional IRAの違いを徹底比較。現時点の所得控除 vs. 将来の非課税引出、年収制限、73歳以降の最低引出義務（RMD）のシミュレーション。" : (isPt ? "Entenda as diferenças exatas entre contas Roth e IRA Tradicional: dedução fiscal agora vs. resgate isento de impostos no futuro, limites e regras." : "Understand the exact differences between Roth and Traditional IRAs: tax deductions now vs. tax-free income later, income caps, and RMDs.")))}
   lang={lang}
 >
-  <div class="max-w-6xl mx-auto py-8 px-4 space-y-12">
+  <div class="w-full space-y-12">
     <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
-      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">Comparison Guide</span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">Roth IRA vs. Traditional IRA</h1>
-      <p class="text-sm text-body max-w-2xl">A side-by-side comparison of the two main tax-advantaged retirement accounts in the United States.</p>
+      <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">{isEs ? "Guía Comparativa" : (isDe ? "Vergleichsleitfaden" : (isJa ? "比較ガイド" : (isPt ? "Guia Comparativo" : "Comparison Guide")))}</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">{isEs ? "Roth IRA vs. IRA Tradicional" : (isDe ? "Roth IRA vs. Traditionelle IRA" : (isJa ? "Roth IRA vs. 従来型IRA（個人退職年金）" : (isPt ? "Roth IRA vs. IRA Tradicional" : "Roth IRA vs. Traditional IRA")))}</h1>
+      <p class="text-sm text-body max-w-2xl">{isEs ? "Una comparación detallada de las dos principales cuentas de jubilación con ventajas fiscales en Estados Unidos." : (isDe ? "Ein detaillierter Vergleich der beiden steuerbegünstigten Vorsorgemodelle: Nachgelagerte vs. vorgelagerte Besteuerung." : (isJa ? "米国の2大税制優遇個人退職年金口座（IRA）の仕組みと違いを詳細に比較します。" : (isPt ? "Uma comparação detalhada dos dois principais modelos de planos de aposentadoria com benefícios fiscais." : "A side-by-side comparison of the two main tax-advantaged retirement accounts in the United States.")))}</p>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -24,15 +28,15 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
       <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
         <div class="flex items-center gap-2">
           <span class="text-2xl">📉</span>
-          <h2 class="text-xl font-bold text-ink">Traditional IRA</h2>
+          <h2 class="text-xl font-bold text-ink">{isEs ? "IRA Tradicional" : (isDe ? "Traditionelle Altersvorsorge (Vorgelagert absetzbar)" : (isJa ? "Traditional IRA（従来型・拠出時控除）" : (isPt ? "IRA Tradicional" : "Traditional IRA")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
-          Contributions are made with **pre-tax dollars** (meaning they are tax-deductible in the year you make them). Earnings grow tax-deferred, but all withdrawals during retirement are taxed as ordinary income.
+          {isEs ? "Las aportaciones se realizan con **dinero antes de impuestos** (deducibles de tu base imponible en el año en que se aportan). Los rendimientos crecen con impuestos diferidos, pero todos los retiros en la jubilación tributan como ingresos ordinarios." : (isDe ? "Beiträge werden aus dem **Bruttoeinkommen** geleistet (steuerlich sofort absetzbar). Erträge wachsen steuerstundend, aber alle Auszahlungen im Ruhestand unterliegen der regulären Einkommensteuer." : (isJa ? "拠出は**税引前資金**（拠出年の所得控除対象）で行われます。運用益は課税繰り延べ（非課税再投資）で成長しますが、退職後の引き出し時には通常所得として全額課税されます。" : (isPt ? "As contribuições são feitas com **dinheiro antes de impostos** (dedutíveis da base tributável no ano do aporte). Os rendimentos acumulam com diferimento fiscal, mas os resgates na aposentadoria são tributados como renda ordinária." : "Contributions are made with **pre-tax dollars** (meaning they are tax-deductible in the year you make them). Earnings grow tax-deferred, but all withdrawals during retirement are taxed as ordinary income.")))}
         </p>
         <ul class="space-y-2 text-xs text-mute list-disc pl-4">
-          <li><strong>Tax Timing:</strong> Pay taxes later (during retirement).</li>
-          <li><strong>Immediate Benefit:</strong> Deduct contributions to lower this year's taxable income.</li>
-          <li><strong>Best If:</strong> Your tax bracket will be lower in retirement than it is now.</li>
+          <li><strong>{isEs ? "Momento impositivo:" : (isDe ? "Besteuerungszeitpunkt:" : (isJa ? "課税タイミング:" : (isPt ? "Momento da Tributação:" : "Tax Timing:")))}</strong> {isEs ? "Paga impuestos más tarde (durante la jubilación)." : (isDe ? "Nachgelagert (erst bei Auszahlung im Ruhestand)." : (isJa ? "後から課税（退職後の受取時）。" : (isPt ? "Tributação posterior (durante a aposentadoria)." : "Pay taxes later (during retirement).")))}</li>
+          <li><strong>{isEs ? "Beneficio inmediato:" : (isDe ? "Sofortiger Steuervorteil:" : (isJa ? "即効のメリット:" : (isPt ? "Benefício Imediato:" : "Immediate Benefit:")))}</strong> {isEs ? "Deduce aportaciones para reducir la factura tributaria actual." : (isDe ? "Beiträge mindern direkt das zu versteuernde Jahreseinkommen." : (isJa ? "毎年の所得控除により今期の税負担を直接軽減。" : (isPt ? "Deduz as contribuições para reduzir o imposto devido no ano atual." : "Deduct contributions to lower this year's taxable income.")))}</li>
+          <li><strong>{isEs ? "Ideal si:" : (isDe ? "Empfohlen wenn:" : (isJa ? "おすすめな人:" : (isPt ? "Ideal se:" : "Best If:")))}</strong> {isEs ? "Tu tramo fiscal será menor en la jubilación que ahora." : (isDe ? "Ihr Steuersatz im Ruhestand voraussichtlich niedriger ist als heute." : (isJa ? "退職後の税率（所得ブラケット）が現在よりも低くなると見込まれる場合。" : (isPt ? "Sua alíquota de imposto for menor na aposentadoria do que no presente." : "Your tax bracket will be lower in retirement than it is now.")))}</li>
         </ul>
       </div>
 
@@ -40,49 +44,49 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
       <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
         <div class="flex items-center gap-2">
           <span class="text-2xl text-link">📈</span>
-          <h2 class="text-xl font-bold text-ink">Roth IRA</h2>
+          <h2 class="text-xl font-bold text-ink">{isEs ? "Roth IRA" : (isDe ? "Roth IRA (Steuerfrei im Alter)" : (isJa ? "Roth IRA（ロスコ型・受取時非課税）" : (isPt ? "Roth IRA" : "Roth IRA")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
-          Contributions are made with **post-tax dollars** (meaning you receive no immediate tax deduction). However, your investments grow 100% tax-free, and all qualified withdrawals in retirement are completely tax-free.
+          {isEs ? "Las aportaciones se realizan con **dinero después de impuestos** (sin deducción fiscal inmediata). Sin embargo, tus inversiones crecen 100% libres de impuestos y todos los retiros válidos en la jubilación están completamente exentos." : (isDe ? "Beiträge werden aus dem **Nettoeinkommen** geleistet (keine sofortige Steuerersparnis). Das Kapital wächst jedoch komplett steuerfrei und Auszahlungen im Ruhestand sind zu 100 % steuerbefreit." : (isJa ? "拠出は**税引後資金**（現時点の控除なし）で行われます。しかし、運用益は100%非課税で成長し、退職後の適格引き出しは元本・運用益ともに完全非課税となります。" : (isPt ? "As contribuições são feitas com **dinheiro após impostos** (sem dedução fiscal imediata). Em contrapartida, os investimentos crescem 100% livres de impostos e todos os resgates na aposentadoria são totalmente isentos." : "Contributions are made with **post-tax dollars** (meaning you receive no immediate tax deduction). However, your investments grow 100% tax-free, and all qualified withdrawals in retirement are completely tax-free.")))}
         </p>
         <ul class="space-y-2 text-xs text-mute list-disc pl-4">
-          <li><strong>Tax Timing:</strong> Pay taxes now (when you contribute).</li>
-          <li><strong>Retirement Benefit:</strong> Withdrawals of principal & gains are 100% tax-free.</li>
-          <li><strong>Best If:</strong> Your tax bracket will be higher in retirement than it is now.</li>
+          <li><strong>{isEs ? "Momento impositivo:" : (isDe ? "Besteuerungszeitpunkt:" : (isJa ? "課税タイミング:" : (isPt ? "Momento da Tributação:" : "Tax Timing:")))}</strong> {isEs ? "Paga impuestos ahora (al momento de aportar)." : (isDe ? "Vorgelagert (heute bei der Einzahlung)." : (isJa ? "今課税（拠出時に税金を支払い済み）。" : (isPt ? "Pague impostos agora (no momento em que realiza os aportes)." : "Pay taxes now (when you contribute).")))}</li>
+          <li><strong>{isEs ? "Beneficio en jubilación:" : (isDe ? "Vorteil im Ruhestand:" : (isJa ? "退職後のメリット:" : (isPt ? "Benefício na Aposentadoria:" : "Retirement Benefit:")))}</strong> {isEs ? "Los retiros de capital y ganancias son 100% libres de impuestos." : (isDe ? "Auszahlungen von Kapital & Kursgewinnen sind 100 % steuerfrei." : (isJa ? "元本および将来の運用益の引き出しが100%非課税。" : (isPt ? "Saques de principal e rendimentos são 100% isentos de imposto de renda." : "Withdrawals of principal & gains are 100% tax-free.")))}</li>
+          <li><strong>{isEs ? "Ideal si:" : (isDe ? "Empfohlen wenn:" : (isJa ? "おすすめな人:" : (isPt ? "Ideal se:" : "Best If:")))}</strong> {isEs ? "Tu tramo fiscal será mayor en la jubilación que ahora." : (isDe ? "Ihr Steuersatz im Ruhestand voraussichtlich höher ist als heute." : (isJa ? "退職後の税率が現在よりも高くなると見込まれる場合。" : (isPt ? "Sua alíquota de imposto será maior na aposentadoria do que é hoje." : "Your tax bracket will be higher in retirement than it is now.")))}</li>
         </ul>
       </div>
     </div>
 
     <!-- Comparative Table -->
-    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm max-w-4xl mx-auto">
+    <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm w-full">
       <table class="w-full border-collapse text-left text-xs">
         <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
           <tr>
-            <th class="px-5 py-3.5">Feature</th>
-            <th class="px-5 py-3.5">Traditional IRA</th>
-            <th class="px-5 py-3.5">Roth IRA</th>
+            <th class="px-5 py-3.5">{isEs ? "Característica" : (isDe ? "Merkmal" : (isJa ? "項目" : (isPt ? "Característica" : "Feature")))}</th>
+            <th class="px-5 py-3.5">{isEs ? "IRA Tradicional" : (isDe ? "Traditionell" : (isJa ? "Traditional IRA" : (isPt ? "IRA Tradicional" : "Traditional IRA")))}</th>
+            <th class="px-5 py-3.5">{isEs ? "Roth IRA" : (isDe ? "Roth IRA" : (isJa ? "Roth IRA" : (isPt ? "Roth IRA" : "Roth IRA")))}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-hairline text-body text-ink">
           <tr>
-            <td class="px-5 py-3 font-semibold">Tax Deduction</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">Yes (reduces current tax bill)</td>
-            <td class="px-5 py-3">No (contributed post-tax)</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Deducción Fiscal" : (isDe ? "Steuerabzug heute" : (isJa ? "拠出時の所得控除" : (isPt ? "Dedução Fiscal" : "Tax Deduction")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "Sí (reduce impuestos actuales)" : (isDe ? "Ja (senkt sofortige Steuerlast)" : (isJa ? "あり（現在の税負担を軽減）" : (isPt ? "Sim (reduz a conta fiscal atual)" : "Yes (reduces current tax bill)")))}</td>
+            <td class="px-5 py-3">{isEs ? "No (aportaciones tras impuestos)" : (isDe ? "Nein (aus Nettoeinkommen)" : (isJa ? "なし（税引後所得からの拠出）" : (isPt ? "Não (contribuído pós-impostos)" : "No (contributed post-tax)")))}</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold">Retirement Withdrawals</td>
-            <td class="px-5 py-3">Taxed as ordinary income</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">100% Tax-Free</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Retiros en Jubilación" : (isDe ? "Auszahlung im Alter" : (isJa ? "退職時の受取（引出）" : (isPt ? "Resgates na Aposentadoria" : "Retirement Withdrawals")))}</td>
+            <td class="px-5 py-3">{isEs ? "Tributan como ingresos ordinarios" : (isDe ? "Voll steuerpflichtig" : (isJa ? "通常所得として課税" : (isPt ? "Tributados como renda ordinária" : "Taxed as ordinary income")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "100% Libres de impuestos" : (isDe ? "100 % steuerfrei" : (isJa ? "100% 完全非課税" : (isPt ? "100% Isentos de Impostos" : "100% Tax-Free")))}</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold">Required Minimum Distributions (RMDs)</td>
-            <td class="px-5 py-3">Required starting at age 73</td>
-            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">None during owner's lifetime</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Distribuciones Mínimas (RMDs)" : (isDe ? "Mindestauszahlungszwang" : (isJa ? "最低引出義務（RMD）" : (isPt ? "Distribuições Mínimas Obrigatórias (RMDs)" : "Required Minimum Distributions (RMDs)")))}</td>
+            <td class="px-5 py-3">{isEs ? "Obligatorias a partir de los 73 años" : (isDe ? "Gesetzlich vorgeschrieben" : (isJa ? "満73歳以降に引出義務あり" : (isPt ? "Obrigatórias a partir dos 73 anos" : "Required starting at age 73")))}</td>
+            <td class="px-5 py-3 font-semibold text-green-700 dark:text-green-400">{isEs ? "Ninguna durante la vida del titular" : (isDe ? "Keine Mindestauszahlung vorgeschrieben" : (isJa ? "生存中は引出義務なし" : (isPt ? "Nenhuma durante a vida do titular" : "None during owner's lifetime")))}</td>
           </tr>
           <tr>
-            <td class="px-5 py-3 font-semibold">Contribution Rules</td>
-            <td class="px-5 py-3">Anyone with earned income can contribute</td>
-            <td class="px-5 py-3">Subject to income limits (phases out at higher incomes)</td>
+            <td class="px-5 py-3 font-semibold">{isEs ? "Reglas de Aportación" : (isDe ? "Berechtigung" : (isJa ? "拠出資格・要件" : (isPt ? "Regras de Contribuição" : "Contribution Rules")))}</td>
+            <td class="px-5 py-3">{isEs ? "Cualquier persona con ingresos del trabajo" : (isDe ? "Jeder mit Erwerbseinkommen" : (isJa ? "勤労所得があれば誰でも拠出可能" : (isPt ? "Qualquer pessoa com renda do trabalho" : "Anyone with earned income can contribute")))}</td>
+            <td class="px-5 py-3">{isEs ? "Sujeto a límites de ingresos máximos" : (isDe ? "Einkommensgrenzen beachten" : (isJa ? "高所得者には拠出年収制限あり" : (isPt ? "Sujeito a tetos de renda anual" : "Subject to income limits (phases out at higher incomes)")))}</td>
           </tr>
         </tbody>
       </table>
@@ -91,46 +95,46 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
     <!-- Embedded Calculator Section -->
     <section class="border-t border-hairline pt-12 space-y-6">
       <div class="text-center max-w-xl mx-auto space-y-2">
-        <h2 class="text-2xl font-bold text-ink">Interactive IRA Strategy Comparison</h2>
-        <p class="text-xs text-mute">Model your custom tax scenarios below to see which account yields the highest retirement value.</p>
+        <h2 class="text-2xl font-bold text-ink">{isEs ? "Comparador Interactivo de Estrategia IRA" : (isDe ? "Interaktiver Vorsorge-Vergleich" : (isJa ? "インタラクティブIRA戦略シミュレーター" : (isPt ? "Comparador Interativo de Estratégia de Aposentadoria" : "Interactive IRA Strategy Comparison")))}</h2>
+        <p class="text-xs text-mute">{isEs ? "Modela tus escenarios fiscales personalizados para comprobar qué cuenta produce mayor patrimonio neto en la jubilación." : (isDe ? "Simulieren Sie verschiedene Steuersätze, um zu sehen, welche Anlageform Ihnen im Ruhestand mehr Nettovermögen sichert." : (isJa ? "税率シミュレーションを実行し、どちらの口座が退職時に多くの純資産（手取り額）をもたらすかを試算します。" : (isPt ? "Simule seus cenários fiscais personalizados para descobrir qual modalidade gera maior patrimônio líquido na aposentadoria." : "Model your custom tax scenarios below to see which account yields the highest retirement value.")))}</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
         <!-- Left Column (Inputs) -->
         <div class="lg:col-span-6 space-y-6">
           <form id="ira-form" class="space-y-6">
             <div class="space-y-5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-2">
-                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">Your Profile</h3>
+                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{isEs ? "Tu Perfil" : (isDe ? "Ihr Profil" : (isJa ? "あなたの基本情報" : (isPt ? "Seu Perfil" : "Your Profile")))}</h3>
                 <div class="flex flex-wrap items-center gap-1.5 no-print">
-                  <span class="text-[10px] text-mute font-mono">Presets:</span>
-                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="30" data-rage="65" data-contrib="7000" data-rate="7.0" data-curtax="22" data-rettax="15">Low Future Tax</button>
-                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="25" data-rage="65" data-contrib="7000" data-rate="8.0" data-curtax="12" data-rettax="22">High Future Tax</button>
+                  <span class="text-[10px] text-mute font-mono">{isEs ? "Preajustes:" : (isDe ? "Vorlagen:" : (isJa ? "プリセット:" : (isPt ? "Predefinições:" : "Presets:")))}</span>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="30" data-rage="65" data-contrib="7000" data-rate="7.0" data-curtax="22" data-rettax="15">{isEs ? "Impuestos Futuros Bajos" : (isDe ? "Niedrige Steuer im Alter" : (isJa ? "将来の税率が低い場合" : (isPt ? "Imposto Futuro Mais Baixo" : "Low Future Tax")))}</button>
+                  <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="25" data-rage="65" data-contrib="7000" data-rate="8.0" data-curtax="12" data-rettax="22">{isEs ? "Impuestos Futuros Altos" : (isDe ? "Hohe Steuer im Alter" : (isJa ? "将来の税率が高い場合" : (isPt ? "Imposto Futuro Mais Alto" : "High Future Tax")))}</button>
                 </div>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
-                <Input id="current-age" label="Current Age" type="number" value="30" placeholder="30" />
-                <Input id="retirement-age" label="Target Age" type="number" value="65" placeholder="65" />
+                <Input id="current-age" label={isEs ? "Edad Actual" : (isDe ? "Aktuelles Alter" : (isJa ? "現在の年齢" : (isPt ? "Idade Atual" : "Current Age")))} type="number" value="30" placeholder="30" />
+                <Input id="retirement-age" label={isEs ? "Edad de Jubilación" : (isDe ? "Rentenalter" : (isJa ? "目標退職年齢" : (isPt ? "Idade de Aposentadoria" : "Target Age")))} type="number" value="65" placeholder="65" />
               </div>
 
               <div class="grid grid-cols-2 gap-3 pt-3 border-t border-hairline/60">
-                <Input id="contribution" label="Annual Contribution" type="number" prefix="$" value="7000" />
-                <Input id="return-rate" label="Annual Return" type="number" suffix="%" value="7.0" />
+                <Input id="contribution" label={isEs ? "Aportación Anual" : (isDe ? "Jährlicher Sparbeitrag" : (isJa ? "年間拠出額" : (isPt ? "Aporte Anual" : "Annual Contribution")))} type="number" prefix="$" value="7000" />
+                <Input id="return-rate" label={isEs ? "Rendimiento Anual" : (isDe ? "Jährliche Rendite" : (isJa ? "想定年利回り" : (isPt ? "Retorno Anual Esperado" : "Annual Return")))} type="number" suffix="%" value="7.0" />
               </div>
 
               <div class="grid grid-cols-2 gap-3 pt-3 border-t border-hairline/60">
-                <Input id="current-tax" label="Current Tax Rate" type="number" suffix="%" value="22" />
-                <Input id="retirement-tax" label="Retirement Tax Rate" type="number" suffix="%" value="15" />
+                <Input id="current-tax" label={isEs ? "Tasa Impositiva Actual" : (isDe ? "Aktueller Steuersatz" : (isJa ? "現在の限界税率" : (isPt ? "Alíquota Marginal Atual" : "Current Tax Rate")))} type="number" suffix="%" value="22" />
+                <Input id="retirement-tax" label={isEs ? "Tasa Impositiva en Jubilación" : (isDe ? "Steuersatz im Ruhestand" : (isJa ? "退職時の予想税率" : (isPt ? "Alíquota Estimada na Aposentadoria" : "Retirement Tax Rate")))} type="number" suffix="%" value="15" />
               </div>
             </div>
 
             <div class="pt-2 border-t border-hairline flex gap-3">
               <button type="submit" class="px-6 py-2 bg-primary text-on-primary rounded-full font-medium text-xs hover:opacity-90 transition-opacity cursor-pointer">
-                Compare IRAs
+                {isEs ? "Comparar Cuentas IRA" : (isDe ? "Vorsorgeoptionen vergleichen" : (isJa ? "IRA口座を比較計算" : (isPt ? "Comparar Contas de Aposentadoria" : "Compare IRAs")))}
               </button>
               <button type="reset" id="reset-btn" class="px-6 py-2 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-                Clear
+                {isEs ? "Limpiar" : (isDe ? "Zurücksetzen" : (isJa ? "クリア" : (isPt ? "Limpar" : "Clear")))}
               </button>
             </div>
           </form>
@@ -140,19 +144,19 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
         <div class="lg:col-span-6 space-y-6">
           <div class="flex flex-col gap-3">
             <div id="res-winner">
-              <ResultCard title="Advantage Winner" value="--" highlight={true} description="The plan that provides the highest net wealth at retirement." />
+              <ResultCard title={isEs ? "Opción Ganadora" : (isDe ? "Vorteilhaftere Option" : (isJa ? "有利な選択肢" : (isPt ? "Opção Mais Vantajosa" : "Advantage Winner")))} value="--" highlight={true} description={isEs ? "El plan que proporciona el mayor patrimonio neto en la jubilación." : (isDe ? "Die Strategie mit dem höheren Nettoendvermögen im Ruhestand." : (isJa ? "退職時により多くの純資産（手取り額）を残せるプランです。" : (isPt ? "O modelo que proporciona o maior patrimônio líquido final na aposentadoria." : "The plan that provides the highest net wealth at retirement.")))} />
             </div>
             <div id="res-roth">
-              <ResultCard title="Roth IRA Net Value" value="--" />
+              <ResultCard title={isEs ? "Valor Neto Roth IRA" : (isDe ? "Nettowert Roth IRA" : (isJa ? "Roth IRA 純受取総額" : (isPt ? "Valor Líquido Roth IRA" : "Roth IRA Net Value")))} value="--" />
             </div>
             <div id="res-traditional">
-              <ResultCard title="Traditional Net Value" value="--" />
+              <ResultCard title={isEs ? "Valor Neto IRA Tradicional" : (isDe ? "Nettowert Traditionell" : (isJa ? "Traditional IRA 税引後純額" : (isPt ? "Valor Líquido IRA Tradicional" : "Traditional Net Value")))} value="--" />
             </div>
           </div>
 
           <!-- Chart -->
           <div class="bg-canvas border border-hairline rounded-lg p-4 shadow-sm">
-            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2">Portfolio Projections</h4>
+            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider mb-2">{isEs ? "Proyección de la Cartera" : (isDe ? "Vermögensentwicklung im Vergleich" : (isJa ? "ポートフォリオ資産推移の比較" : (isPt ? "Projeções Patrimoniais da Carteira" : "Portfolio Projections")))}</h4>
             <div class="h-64 relative">
               <canvas id="ira-chart"></canvas>
             </div>
@@ -160,14 +164,14 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 
           <!-- Tax savings -->
           <div class="bg-canvas border border-hairline rounded-lg p-4 shadow-sm space-y-2">
-            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider border-b border-hairline pb-1">Contribution Tax Savings</h4>
+            <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider border-b border-hairline pb-1">{isEs ? "Ahorro Fiscal en Aportaciones" : (isDe ? "Steuerersparnis bei Einzahlung" : (isJa ? "拠出による節税額" : (isPt ? "Economia de Impostos nos Aportes" : "Contribution Tax Savings")))}</h4>
             <div class="text-xs space-y-2">
               <div class="flex justify-between">
-                <span class="text-body font-medium">Annual Tax Saved (Traditional)</span>
+                <span class="text-body font-medium">{isEs ? "Ahorro Fiscal Anual (Tradicional)" : (isDe ? "Jährliche Steuerersparnis (Traditionell)" : (isJa ? "年間節税額（Traditional）" : (isPt ? "Economia Fiscal Anual (Tradicional)" : "Annual Tax Saved (Traditional)")))}</span>
                 <span class="font-mono text-ink text-right" id="savings-annual">--</span>
               </div>
               <div class="flex justify-between border-t border-hairline/60 pt-2">
-                <span class="text-body font-medium">Cumulative Lifetime Tax Savings</span>
+                <span class="text-body font-medium">{isEs ? "Ahorro Fiscal Acumulado de por Vida" : (isDe ? "Gesamte Steuerersparnis über die Laufzeit" : (isJa ? "生涯累計節税総額" : (isPt ? "Economia Fiscal Acumulada na Vida" : "Cumulative Lifetime Tax Savings")))}</span>
                 <span class="font-mono text-ink text-right" id="savings-cum">--</span>
               </div>
             </div>
@@ -176,7 +180,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
           <!-- Download CSV -->
           <div class="flex gap-4 no-print">
             <button id="download-csv-btn" class="w-full py-2 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-              <span>📊</span> Download Comparison CSV
+              <span>📊</span> {isEs ? "Descargar Comparativa en CSV" : (isDe ? "Vergleich als CSV herunterladen" : (isJa ? "比較結果をCSVでダウンロード" : (isPt ? "Baixar Comparativo em CSV" : "Download Comparison CSV")))}
             </button>
           </div>
         </div>
@@ -191,6 +195,8 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
   import { validateForm, validateField } from '../../lib/validation';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('ira-chart');
 
   const form = document.getElementById('ira-form') as HTMLFormElement;
 
@@ -246,11 +252,12 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 
     const result = compareIRA(cage, rage, contrib, rate, curTax, retTax);
 
-    let winnerText = 'Traditional IRA Wins';
+    const docLang = document.documentElement.lang;
+    let winnerText = docLang === 'ja' ? 'Traditional IRAが有利' : (docLang === 'de' ? 'Traditionelle IRA im Vorteil' : (docLang === 'es' ? 'Gana IRA Tradicional' : 'Traditional IRA Wins'));
     if (Math.abs(result.rothBalance - result.tradBalanceNet) < 1) {
-      winnerText = 'Both Plans Equal';
+      winnerText = docLang === 'ja' ? '両プラン同等' : (docLang === 'de' ? 'Beide Pläne gleichauf' : (docLang === 'es' ? 'Ambos planes equivalentes' : 'Both Plans Equal'));
     } else if (result.rothWins) {
-      winnerText = 'Roth IRA Wins';
+      winnerText = docLang === 'ja' ? 'Roth IRAが有利' : (docLang === 'de' ? 'Roth IRA im Vorteil' : (docLang === 'es' ? 'Gana Roth IRA' : 'Roth IRA Wins'));
     }
 
     if (resWinner) {
@@ -297,7 +304,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
           labels,
           datasets: [
             {
-              label: 'Roth IRA (Tax-Free Net)',
+              label: docLang === 'pt' ? 'Roth IRA (Líquido Isento de IR)' : (docLang === 'ja' ? 'Roth IRA（非課税受取額）' : (docLang === 'de' ? 'Roth IRA (steuerfrei netto)' : (docLang === 'es' ? 'Roth IRA (Neto Libre de Impuestos)' : 'Roth IRA (Tax-Free Net)'))),
               data: roth,
               borderColor: '#10b981',
               backgroundColor: 'transparent',
@@ -305,7 +312,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
               borderWidth: 2
             },
             {
-              label: 'Traditional IRA (Post-Tax Net)',
+              label: docLang === 'pt' ? 'IRA Tradicional (Líquido Pós-Tributação)' : (docLang === 'ja' ? 'Traditional IRA（課税後手取り額）' : (docLang === 'de' ? 'Traditionelle IRA (nach Steuern netto)' : (docLang === 'es' ? 'IRA Tradicional (Neto tras Impuestos)' : 'Traditional IRA (Post-Tax Net)'))),
               data: trad,
               borderColor: '#6366f1',
               backgroundColor: 'transparent',

@@ -1,10 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
 
-const glossary = [
+const glossaryEn = [
   {
     term: "Adjusted Gross Income (AGI)",
     definition: "Your total gross income minus specific pre-tax deductions (like student loan interest, IRA contributions, or HSA contributions). Lenders and tax authorities use AGI to assess tax liabilities and creditworthiness."
@@ -51,14 +52,203 @@ const glossary = [
   }
 ];
 
+const glossaryEs = [
+  {
+    term: "Ingreso Bruto Ajustado (AGI)",
+    definition: "Tu ingreso bruto total menos deducciones fiscales previas a impuestos (como intereses de préstamos estudiantiles o aportaciones a cuentas de jubilación). Los prestamistas y autoridades fiscales usan el AGI para evaluar obligaciones tributarias y solvencia crediticia."
+  },
+  {
+    term: "Tasa Anual Equivalente / Tasa Porcentual Anual (TAE / APR)",
+    definition: "El coste anual real de pedir un préstamo, expresado en porcentaje anual. A diferencia del tipo de interés nominal base, la TAE incorpora todas las comisiones iniciales de apertura, puntos y primas de seguros vinculadas."
+  },
+  {
+    term: "Rendimiento Porcentual Anual (TIN / APY)",
+    definition: "La tasa real de rendimiento obtenida en un depósito de ahorro o inversión durante un año, teniendo en cuenta los efectos del interés compuesto. El rendimiento anual es mayor que la tasa nominal cuando el interés se capitaliza más de una vez al año."
+  },
+  {
+    term: "Tasa de Crecimiento Anual Compuesto (CAGR)",
+    definition: "La tasa anualizada de crecimiento geométrico requerida para llevar una cartera desde su saldo inicial hasta su saldo final durante un periodo de años determinado, asumiendo que los rendimientos se reinvierten al final de cada periodo."
+  },
+  {
+    term: "Relación Deuda-Ingreso (DTI)",
+    definition: "El porcentaje de tus ingresos brutos mensuales destinado al pago de deudas recurrentes. La relación frontal considera solo los gastos de vivienda, mientras que la relación global incluye todas las deudas secundarias (autos, préstamos estudiantiles, tarjetas de crédito)."
+  },
+  {
+    term: "Ingreso Discrecional",
+    definition: "Para préstamos educativos, la porción de tus ingresos brutos ajustados que supera el umbral de las pautas de pobreza. Los planes de pago basados en ingresos calculan las cuotas mensuales a partir de este monto."
+  },
+  {
+    term: "Ley de Contribuciones al Seguro Federal (FICA)",
+    definition: "Deducción obligatoria sobre la nómina en EE. UU. destinada a financiar el Seguro Social (6,2% sobre ingresos hasta el tope salarial) y Medicare (1,45% base, más 0,9% adicional para ingresos altos)."
+  },
+  {
+    term: "Cuotas de Comunidad / Asociación de Propietarios (HOA)",
+    definition: "Cuotas periódicas abonadas por propietarios en urbanizaciones o edificios para cubrir el mantenimiento general del inmueble, seguros comunitarios, limpieza y áreas recreativas compartidas."
+  },
+  {
+    term: "Seguro Hipotecario Privado (PMI)",
+    definition: "Seguro exigido en préstamos hipotecarios convencionales cuando el pago inicial es inferior al 20% del precio de compra. Protege a la entidad bancaria frente al riesgo de impago."
+  },
+  {
+    term: "Retorno de la Inversión (ROI)",
+    definition: "Métrica financiera fundamental para evaluar la rentabilidad y eficiencia de una inversión. Se calcula dividiendo el beneficio neto generado entre el capital inicial invertido."
+  },
+  {
+    term: "Valor del Dinero en el Tiempo (TVM)",
+    definition: "Principio financiero que establece que el dinero disponible en el presente vale más que la misma cantidad prometida en el futuro, debido a su capacidad potencial de generar intereses y a la pérdida de poder adquisitivo por inflación."
+  }
+];
+
+const glossaryDe = [
+  {
+    term: "Bereinigtes Bruttoeinkommen (AGI)",
+    definition: "Ihr Bruttoeinkommen abzüglich bestimmter vorsteuerlicher Abzüge (wie Vorsorgeaufwendungen, Ausbildungskosten oder Freibeträge). Banken und Steuerbehörden nutzen das bereinigte Einkommen zur Bonitätsprüfung und Steuerfestsetzung."
+  },
+  {
+    term: "Effektiver Jahreszins (Effektivzins / APR)",
+    definition: "Die tatsächlichen jährlichen Gesamtkosten eines Kredits, ausgedrückt in Prozent. Im Gegensatz zum gebundenen Sollzins (Nominalzins) umfasst der Effektivzins sämtliche Bearbeitungsgebühren, Auszahlungsabschläge und Nebenkosten."
+  },
+  {
+    term: "Jährliche prozentuale Rendite (APY)",
+    definition: "Die tatsächliche jährliche Rendite eines Spar- oder Anlagekontos unter Berücksichtigung des Zinseszinseffekts. Durch unterjährige Zinsgutschriften (z. B. monatlich oder täglich) liegt der APY stets über dem nominalen Zinssatz."
+  },
+  {
+    term: "Durchschnittliche jährliche Wachstumsrate (CAGR)",
+    definition: "Die annualisierte geometrische Wachstumsrate eines Portfolios über mehrere Jahre, unter der Annahme, dass alle erwirtschafteten Erträge am Ende jeder Periode wieder angelegt werden."
+  },
+  {
+    term: "Schuldendienstquote / Schulden-Einkommens-Verhältnis (DTI)",
+    definition: "Der prozentuale Anteil Ihres monatlichen Bruttoeinkommens, der für wiederkehrende Verbindlichkeiten aufgewendet wird. Die Front-End-Quote betrachtet reine Wohnkosten, die Back-End-Quote alle Kredite zusammen."
+  },
+  {
+    term: "Frei verfügbares Einkommen (Discretionary Income)",
+    definition: "Der Teil des Einkommens, der nach Abzug gesetzlicher Freibeträge und grundlegender Lebenshaltungskosten verbleibt. Bei einkommensabhängigen Krediten dient dieser Wert zur Berechnung der zumutbaren Monatsrate."
+  },
+  {
+    term: "US-Sozialversicherungsabgaben (FICA)",
+    definition: "Pflichtbeiträge in den USA zur Finanzierung von staatlicher Rente (Social Security) und Krankenversicherung (Medicare)."
+  },
+  {
+    term: "Hausgeld & Wohngeldumlage (HOA)",
+    definition: "Monatliche Umlagen und Instandhaltungsrücklagen von Eigentümergemeinschaften für Instandhaltung, Versicherungen, Müllabfuhr und Gemeinschaftseinrichtungen einer Immobilie."
+  },
+  {
+    term: "Private Hypothekenversicherung (PMI / Restschuldversicherung)",
+    definition: "Zusätzliche Kreditausfallversicherung bei Baufinanzierungen, wenn der Eigenkapitalanteil unter 20 % des Kaufpreises liegt. Schützt den Kreditgeber gegen Ausfallrisiken."
+  },
+  {
+    term: "Kapitalrendite (ROI - Return on Investment)",
+    definition: "Finanzkennzahl zur Beurteilung der Rentabilität und Wirtschaftlichkeit einer Investition. Berechnet als Nettogewinn dividiert durch das ursprünglich eingesetzte Kapital."
+  },
+  {
+    term: "Zeitwert des Geldes (TVM - Time Value of Money)",
+    definition: "Zentrales Prinzip der Finanzmathematik: Ein Euro heute ist mehr wert als ein Euro in der Zukunft, da heutiges Kapital zinsbringend investiert werden kann und künftiges Geld durch Inflation an Kaufkraft verliert."
+  }
+];
+
+const glossaryJa = [
+  {
+    term: "調整後総所得（AGI - Adjusted Gross Income）",
+    definition: "総収入から特定の控除（学生ローン利息控除、IRA拠出控除、HSA拠出控除など）を差し引いた金額。金融機関や税務当局が納税義務や借入資格・信用力を審査する基準となります。"
+  },
+  {
+    term: "実質年率（APR - Annual Percentage Rate）",
+    definition: "融資やローンの年間の実質的な総借入コストを百分率で表した指標。表面的な名目金利とは異なり、融資事務手数料、保証料、ローン組成ポイントなどすべての初期費用を含めて算出されます。"
+  },
+  {
+    term: "実質年利回り（APY - Annual Percentage Yield）",
+    definition: "複利効果（日次や月次の利息組み入れ）を考慮した、預金口座や投資商品における年間実質収益率。複利頻度が年1回を超える場合、APYは名目年利よりも高くなります。"
+  },
+  {
+    term: "年平均成長率（CAGR - Compound Annual Growth Rate）",
+    definition: "複数年にわたる投資期間において、当初資産残高から最終資産残高に至るまでの幾何平均年間成長率。各期末に利益が全額再投資された前提で複利計算されます。"
+  },
+  {
+    term: "債務返済比率（DTI - Debt-to-Income Ratio）",
+    definition: "毎月の総支給額（税引前月収）に占める毎月の負債返済額の割合。住宅費用のみを対象とするフロントエンドDTIと、自動車ローンやクレジットカード等すべての負債を含むバックエンドDTIがあります。"
+  },
+  {
+    term: "可処分所得（Discretionary Income）",
+    definition: "連邦学生ローン等の公的制度において、調整後総所得（AGI）から連邦貧困基準に基づく最低限の生活保護費用を差し引いた余裕資金。所得連動型返済プランの月額支払額の算定基準となります。"
+  },
+  {
+    term: "米連邦保険拠出法税（FICA税）",
+    definition: "米国の公的社会保障制度（ソーシャルセキュリティ: 6.2%）および高齢者医療保険（メディケア: 1.45%＋高所得者付加税）の財源として、給与から源泉徴収される義務的社会保障税。"
+  },
+  {
+    term: "管理費・共益費（HOA費 - Homeowners Association Fees）",
+    definition: "分譲マンションや戸建て住宅コミュニティの所有者が支払う月額費用。共有部分の維持管理、共用施設保険、ゴミ収集、アメニティ設備の維持・修繕積立金に充てられます。"
+  },
+  {
+    term: "民間住宅ローン保険（PMI - Private Mortgage Insurance）",
+    definition: "住宅ローンの頭金が物件価格の20%未満の場合に加入が義務付けられる保証保険。借り手の債務不履行リスクから金融機関を保護するための費用で、月々の返済額に上乗せされます。"
+  },
+  {
+    term: "投資利益率（ROI - Return on Investment）",
+    definition: "投資の収益性や資本効率を評価するための代表的な財務指標。投資によって得られた純利益（利益－投資コスト）を初期投資資本で割って算出されます。"
+  },
+  {
+    term: "貨幣の時間価値（TVM - Time Value of Money）",
+    definition: "「今日の1円（1ドル）は将来の1円（1ドル）よりも価値が高い」という金融の基本概念。手元にある資金は運用によって利息を生み出す複利の力を持ち、将来の資金はインフレによって購買力が低下するためです。"
+  }
+];
+
+const glossaryPt = [
+  {
+    term: "Renda Bruta Ajustada (AGI - Adjusted Gross Income)",
+    definition: "Sua renda bruta total menos deduções fiscais específicas pré-tributação (como juros de financiamento estudantil ou aportes em previdência). Instituições financeiras e autoridades fiscais utilizam o AGI para avaliar a solvência e obrigações tributárias."
+  },
+  {
+    term: "Custo Efetivo Total / Taxa Anual Efetiva (APR / CET)",
+    definition: "O custo anual real de contrair um empréstimo ou financiamento, expresso como percentual anual. Ao contrário da taxa nominal básica, o CET incorpora todas as taxas administrativas iniciais, tarifas bancárias e seguros obrigatórios."
+  },
+  {
+    term: "Rendimento Efetivo Anual (APY - Annual Percentage Yield)",
+    definition: "A rentabilidade real obtida em um investimento ou depósito de poupança ao longo de um ano, considerando o efeito multiplicador dos juros compostos. O APY é ligeiramente superior à taxa nominal quando a capitalização ocorre mais de uma vez ao ano."
+  },
+  {
+    term: "Taxa de Crescimento Anual Composta (CAGR)",
+    definition: "A taxa de retorno geométrico anualizado necessária para que uma carteira cresça do saldo inicial ao saldo final em um período determinado de anos, presumindo o reinvestimento integral dos rendimentos."
+  },
+  {
+    term: "Índice de Comprometimento de Renda (DTI - Debt-to-Income)",
+    definition: "O percentual da sua renda bruta mensal pré-impostos comprometido com o pagamento de dívidas recorrentes. O DTI habitacional (front-end) refere-se apenas a despesas de moradia, enquanto o DTI total (back-end) inclui todas as dívidas secundárias (veículos, cartão de crédito, empréstimos)."
+  },
+  {
+    term: "Renda Discricionária (Discretionary Income)",
+    definition: "Em financiamentos estudantis federais e análise de crédito, é a parcela da sua Renda Bruta Ajustada que excede uma porcentagem do índice oficial de pobreza (150% a 225%). Planos de pagamento vinculados à renda baseiam as parcelas sobre esse montante."
+  },
+  {
+    term: "Contribuição para Seguro Social e Saúde (FICA)",
+    definition: "Tributo compulsório em folha de pagamento destinado ao financiamento da Seguridade Social (Previdência pública) e assistência médica pública (Medicare), deduzido diretamente do salário bruto do trabalhador."
+  },
+  {
+    term: "Taxa de Condomínio / Associação de Moradores (HOA)",
+    definition: "Taxa mensal paga por proprietários de apartamentos ou loteamentos fechados para cobrir despesas de manutenção predial, seguro das áreas comuns, segurança, conservação e comodidades comunitárias."
+  },
+  {
+    term: "Seguro Hipotecário Privado / Prestamista (PMI)",
+    definition: "Seguro exigido pelas instituições financeiras em empréstimos imobiliários quando o comprador dá uma entrada inferior a 20% do valor de avaliação do imóvel. O PMI protege o credor contra o risco de inadimplência e incide nas parcelas mensais."
+  },
+  {
+    term: "Retorno sobre o Investimento (ROI - Return on Investment)",
+    definition: "Métrica financeira fundamental usada para avaliar a eficiência e a lucratividade de uma aplicação de capital. É calculado dividindo-se o lucro líquido obtido pelo valor do investimento inicial."
+  },
+  {
+    term: "Valor do Dinheiro no Tempo (TVM - Time Value of Money)",
+    definition: "Conceito financeiro basilar que estabelece que um montante disponível hoje vale mais do que a mesma quantia recebida no futuro. Isso ocorre porque o capital presente pode render juros e se valorizar via juros compostos, além de estar imune à erosão inflacionária imediata."
+  }
+];
+
+const glossary = lang === 'es' ? glossaryEs : (lang === 'de' ? glossaryDe : (lang === 'ja' ? glossaryJa : (lang === 'pt' ? glossaryPt : glossaryEn)));
 const sortedGlossary = glossary.sort((a, b) => a.term.localeCompare(b.term));
 ---
 
-<Layout title="Financial Glossary - financialcalculatorapp.com" description="Browse clear, concise explanations and definitions for key financial terms, abbreviations, and variables including APR, APY, DTI, PMI, TVM, and FICA." lang={lang}>
+<Layout title={t('glossary.title', 'Financial Glossary: APR, APY, DTI & Loan Terms Defined | financialcalculatorapp.com')} description={t('glossary.description', 'Clear definitions for essential financial terms, formulas, and abbreviations. Learn what APR, APY, PMI, TVM, and FICA mean for your wallet.')} lang={lang}>
   <div class="max-w-4xl mx-auto py-8 px-4">
     <header class="mb-10 border-b border-hairline pb-6">
-      <h1 class="text-4xl font-extrabold tracking-tight text-ink">Financial Glossary</h1>
-      <p class="text-sm text-body mt-2">Definitions and concepts behind interest rates, tax scheduling, credit guidelines, and investment mathematics.</p>
+      <h1 class="text-4xl font-extrabold tracking-tight text-ink">{t('glossary.h1', 'Financial Glossary')}</h1>
+      <p class="text-sm text-body mt-2">{t('glossary.subtitle', 'Definitions and concepts behind interest rates, tax scheduling, credit guidelines, and investment mathematics.')}</p>
     </header>
 
     <!-- Search/Filter -->
@@ -66,7 +256,7 @@ const sortedGlossary = glossary.sort((a, b) => a.term.localeCompare(b.term));
       <input 
         type="text" 
         id="glossary-search" 
-        placeholder="Search glossary terms (e.g. APR, DTI)..."
+        placeholder={t('glossary.searchPlaceholder', 'Search glossary terms (e.g. APR, DTI)...')}
         class="w-full h-10 px-3 bg-canvas text-ink text-sm border border-hairline rounded-sm transition-colors focus:outline-none focus:border-hairline-strong focus:ring-1 focus:ring-hairline-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
       />
     </div>
@@ -87,7 +277,7 @@ const sortedGlossary = glossary.sort((a, b) => a.term.localeCompare(b.term));
       })}
       
       <div id="no-results" class="hidden text-center py-8 text-mute text-sm">
-        No matching glossary terms found.
+        {t('glossary.noResults', 'No matching glossary terms found.')}
       </div>
     </div>
   </div>

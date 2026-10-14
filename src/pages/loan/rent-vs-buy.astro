@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
 
 <CalculatorLayout 
   title="Rent vs Buy Calculator" 
-  description="Compare the long-term wealth impact of buying a home versus renting and investing the difference over a 10 to 30 year horizon."
+  seoTitle="Rent vs. Buy Calculator: Is Buying a Home Cheaper? | financialcalculatorapp.com"
+  description="Compare the true long-term cost of renting versus buying a home over 5 to 30 years. Factor in property taxes, maintenance, equity, and investment gains."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -87,7 +88,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
 
       <!-- Net Worth Chart Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Net Worth Projection over Time</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Net Worth Projection over Time')}</h4>
         <div class="h-80 relative">
           <canvas id="nw-chart"></canvas>
         </div>
@@ -100,6 +101,8 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
   import { simulateRentVsBuy } from '../../lib/math/loan';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('nw-chart');
 
   // DOM Elements
   const form = document.getElementById('rent-vs-buy-form') as HTMLFormElement;

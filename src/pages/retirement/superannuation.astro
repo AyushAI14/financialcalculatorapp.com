@@ -3,9 +3,24 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
-import { getLangFromUrl } from '../../i18n/utils';
+import SuperannuationChart from '../../components/charts/SuperannuationChart';
+import { generateSuperTrajectory } from '../../lib/math/retirement';
+import { formatCurrency } from '../../lib/utils';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+
+const initialTrajectoryData = generateSuperTrajectory({
+  currentSuper: 65000,
+  salary: 95000,
+  currentAge: 32,
+  retireAge: 67,
+  sgRate: 0.12,
+  salarySacrificeMonthly: 250,
+  grossReturn: 0.075,
+  fees: 0.008
+});
 
 const faqs = [
   {
@@ -29,7 +44,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Superannuation Calculator - Australian Super Growth & Retirement Income" 
-  description="Project your Australian superannuation nest egg at retirement. Model employer super guarantee contributions, salary sacrifice, and investment returns."
+  seoTitle="Superannuation Calculator: Australian Super Growth & Income | financialcalculatorapp.com"
+  description="Project your Australian superannuation nest egg at retirement. Model employer SG contributions, salary sacrifice, and tax concessional caps."
   faqs={faqs}
   calcKey="superannuation"
 >
@@ -39,8 +55,8 @@ const faqs = [
       <form id="super-form" class="space-y-6">
         <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
           <div class="flex items-center justify-between border-b border-hairline pb-2">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">Your Superannuation Profile</h3>
-            <span class="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold">AUD ($)</span>
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Superannuation Profile')}</h3>
+            <span class="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold"><span data-currency-symbol>$</span> {t('Benchmark')}</span>
           </div>
 
           <!-- Current Balance -->
@@ -76,10 +92,10 @@ const faqs = [
 
         <div class="pt-2 border-t border-hairline flex gap-4">
           <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
-            Project My Super Balance
+            {t('Project My Super Balance')}
           </button>
           <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
-            Clear
+            {t('Clear')}
           </button>
         </div>
       </form>
@@ -95,26 +111,47 @@ const faqs = [
 
       <!-- ASFA Comfortable Benchmark Card -->
       <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">ASFA Retirement Standard Benchmark</h4>
+        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('ASFA Retirement Standard Benchmark')}</h4>
         
         <div class="grid grid-cols-2 gap-3 text-center font-mono text-xs">
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">ASFA Single Comfortable</span>
-            <span class="font-bold text-ink text-sm">$595,000</span>
+            <span class="text-[10px] text-mute block">{t('ASFA Single Comfortable')}</span>
+            <span class="font-bold text-ink text-sm font-mono" data-asfa-single>{formatCurrency(595000)}</span>
             <span id="badge-single" class="text-[9px] text-mute block font-sans">--</span>
           </div>
 
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">ASFA Couple Comfortable</span>
-            <span class="font-bold text-ink text-sm">$690,000</span>
+            <span class="text-[10px] text-mute block">{t('ASFA Couple Comfortable')}</span>
+            <span class="font-bold text-ink text-sm font-mono" data-asfa-couple>{formatCurrency(690000)}</span>
             <span id="badge-couple" class="text-[9px] text-mute block font-sans">--</span>
           </div>
         </div>
 
         <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
-          <span class="font-semibold text-ink">Tax Efficiency:</span> Contributions reflect the Australian statutory 15% contributions tax. By salary sacrificing $250/mo, you reduce your taxable income while boosting your end balance by an extra <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>.
+          {lang === 'es' ? (
+            <><span class="font-semibold text-ink">Eficiencia Fiscal:</span> Las contribuciones reflejan el 15% reglamentario de impuestos en el fondo. Al realizar aportaciones voluntarias de <span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>/mes, reduces tu base imponible mientras incrementas tu saldo final en <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> adicionales.</>
+          ) : lang === 'de' ? (
+            <><span class="font-semibold text-ink">Steuereffizienz:</span> Die Beiträge berücksichtigen die gesetzliche Beitragsbesteuerung von 15 %. Durch freiwillige Entgeltumwandlung von <span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>/Monat senken Sie Ihr zu versteuerndes Einkommen und erhöhen Ihr Endkapital um zusätzliche <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>.</>
+          ) : lang === 'ja' ? (
+            <><span class="font-semibold text-ink">税制優遇効果:</span> 拠出金には法定の15%拠出税が適用されます。月額<span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>の給与天引き（拠出）を行うことで、課税所得を圧縮しながら、最終積立残高をさらに<span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>増やすことができます。</>
+          ) : lang === 'pt' ? (
+            <><span class="font-semibold text-ink">Eficiência Tributária:</span> As contribuições refletem a taxa legal de 15% sobre os aportes. Ao fazer aportes adicionais de <span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>/mês via dedução salarial, você reduz sua base de cálculo do imposto de renda enquanto aumenta seu saldo final em <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> adicionais.</>
+          ) : (
+            <><span class="font-semibold text-ink">Tax Efficiency:</span> Contributions reflect statutory 15% contributions tax. By salary sacrificing <span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>/mo, you reduce your taxable income while boosting your end balance by an extra <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>.</>
+          )}
         </div>
       </div>
+
+      <!-- Superannuation Accumulation & Benchmark Chart -->
+      <SuperannuationChart
+        client:load
+        initialTrajectory={initialTrajectoryData.trajectory}
+        initialFinalBalance={initialTrajectoryData.finalBalance}
+        initialBaselineBalance={initialTrajectoryData.baselineBalance}
+        initialSacrificeBonus={initialTrajectoryData.sacrificeBonus}
+        initialTotalEmployerPaid={initialTrajectoryData.totalEmployerPaid}
+        initialRetireAge={67}
+      />
     </div>
   </div>
 </CalculatorLayout>
@@ -122,6 +159,7 @@ const faqs = [
 <script>
   import { syncInputsWithURL } from '../../lib/shareable';
   import { formatCurrency } from '../../lib/utils';
+  import { generateSuperTrajectory } from '../../lib/math/retirement';
 
   const form = document.getElementById('super-form') as HTMLFormElement | null;
   const currentSuperInput = document.getElementById('current-super') as HTMLInputElement | null;
@@ -192,6 +230,17 @@ const faqs = [
     // Estimated monthly pension drawdown over 20 retirement years (4% safe drawdown)
     const monthlyDrawdown = (balance * 0.05) / 12;
 
+    const trajectoryData = generateSuperTrajectory({
+      currentSuper: P,
+      salary,
+      currentAge: age,
+      retireAge,
+      sgRate,
+      salarySacrificeMonthly: sacrificeMonthly,
+      grossReturn,
+      fees
+    });
+
     updateCardValue(resBalance, formatCurrency(Math.round(balance)));
     updateCardValue(resDrawdown, `${formatCurrency(Math.round(monthlyDrawdown))} / mo`);
     updateCardValue(resEmployer, formatCurrency(Math.round(totalEmployerPaid)));
@@ -208,20 +257,40 @@ const faqs = [
       badgeCouple.textContent = meets ? '✓ Goal Exceeded' : 'Under Goal';
       badgeCouple.className = meets ? 'text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans font-semibold' : 'text-[9px] text-rose-500 block font-sans font-semibold';
     }
+
+    // Dispatch chart update
+    window.dispatchEvent(
+      new CustomEvent('super-data-updated', {
+        detail: {
+          trajectory: trajectoryData.trajectory,
+          finalBalance: trajectoryData.finalBalance,
+          baselineBalance: trajectoryData.baselineBalance,
+          sacrificeBonus: trajectoryData.sacrificeBonus,
+          totalEmployerPaid: trajectoryData.totalEmployerPaid,
+          retireAge
+        }
+      })
+    );
   }
 
-  // Sliders binding without auto-calculation
+  // Sliders binding with real-time auto-calculation
   function bindSliderSync(numInput: HTMLInputElement | null, sliderInput: HTMLInputElement | null) {
     numInput?.addEventListener('input', () => {
       if (sliderInput) sliderInput.value = numInput.value;
+      calculateSuper();
     });
     sliderInput?.addEventListener('input', () => {
       if (numInput) numInput.value = sliderInput.value;
+      calculateSuper();
     });
   }
 
   bindSliderSync(currentSuperInput, superSlider);
   bindSliderSync(salaryInput, salarySlider);
+
+  [currentAgeInput, retireAgeInput, sgRateInput, sacrificeInput, returnInput, feesInput].forEach(el => {
+    el?.addEventListener('input', calculateSuper);
+  });
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -248,6 +317,13 @@ const faqs = [
   syncInputsWithURL('super-form', calculateSuper);
 
   window.addEventListener('currency-change', () => {
+    const singleEl = document.querySelector('[data-asfa-single]');
+    if (singleEl) singleEl.textContent = formatCurrency(595000);
+    const coupleEl = document.querySelector('[data-asfa-couple]');
+    if (coupleEl) coupleEl.textContent = formatCurrency(690000);
+    const sacEl = document.querySelector('[data-asfa-sacrifice]');
+    if (sacEl) sacEl.textContent = formatCurrency(250);
+
     const valEl = resBalance?.querySelector('[data-result-value]') || resBalance?.querySelector('.font-mono') || resBalance;
     if (valEl && valEl.textContent?.trim() !== '--') {
       calculateSuper();

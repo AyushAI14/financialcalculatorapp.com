@@ -104,7 +104,7 @@ const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
     const currentCurrency = getEffectiveCurrency(currentLang);
     const symbol = getCurrencySymbol(currentCurrency);
     
-    document.querySelectorAll('[data-currency-prefix]').forEach(span => {
+    document.querySelectorAll('[data-currency-prefix], [data-currency-symbol]').forEach(span => {
       span.textContent = symbol;
     });
   }

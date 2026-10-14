@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('home-affordability');
 
 <CalculatorLayout 
   title="Home Affordability Calculator" 
-  description="Calculate how much house you can afford based on your annual income, down payment, monthly debts, and local property taxes."
+  seoTitle="Home Affordability Calculator: How Much House Can I Afford? | financialcalculatorapp.com"
+  description="Calculate maximum home purchase price based on your annual salary, down payment, and monthly debt obligations using standard bank lending guidelines."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -57,9 +58,37 @@ const faqs = getCalculatorFaqs('home-affordability');
               <Input id="back-dti" label="Total Debt DTI Limit (Back-End)" type="number" suffix="%" value="36" />
             </div>
             <p class="text-[11px] text-mute leading-normal">
-              * **Front-End Ratio**: The maximum percentage of gross income going to housing expenses (PITI). Standard is 28%.
-              <br/>
-              * **Back-End Ratio**: The maximum percentage of gross income going to all debt obligations combined. Standard is 36%.
+              {lang === 'es' ? (
+                <>
+                  * <strong>Ratio Front-End</strong>: El porcentaje máximo de ingresos brutos destinados a gastos de vivienda (PITI). El estándar es del 28%.
+                  <br/>
+                  * <strong>Ratio Back-End</strong>: El porcentaje máximo de ingresos brutos destinados a la suma de todas las deudas. El estándar es del 36%.
+                </>
+              ) : lang === 'de' ? (
+                <>
+                  * <strong>Front-End DTI</strong>: Der maximale Prozentsatz des Bruttoeinkommens für reine Wohnkosten (Zins, Tilgung, Steuer, Versicherung). Der Standard liegt bei 28 %.
+                  <br/>
+                  * <strong>Back-End DTI</strong>: Der maximale Prozentsatz des Bruttoeinkommens für sämtliche monatlichen Verbindlichkeiten zusammengenommen. Der Standard liegt bei 36 %.
+                </>
+              ) : lang === 'ja' ? (
+                <>
+                  * <strong>フロントエンド比率（住宅費返済比率）</strong>: 月収（総支給額）に占める住宅関連費用（元利金・税・保険等）の推奨上限割合。標準基準は28%です。
+                  <br/>
+                  * <strong>バックエンド比率（総返済負担率）</strong>: 住宅費に加え、自動車ローンやクレジットカード等すべての負債返済額を含めた推奨上限割合。標準基準は36%です。
+                </>
+              ) : lang === 'pt' ? (
+                <>
+                  * <strong>Índice Front-End</strong>: A porcentagem máxima da renda bruta destinada exclusivamente às despesas de moradia (prestação, impostos e seguros). O padrão de mercado é de 28%.
+                  <br/>
+                  * <strong>Índice Back-End (Comprometimento Total)</strong>: A porcentagem máxima da renda bruta destinada à soma de todas as dívidas e encargos mensais. O padrão recomendado é de 36%.
+                </>
+              ) : (
+                <>
+                  * <strong>Front-End Ratio</strong>: The maximum percentage of gross income going to housing expenses (PITI). Standard is 28%.
+                  <br/>
+                  * <strong>Back-End Ratio</strong>: The maximum percentage of gross income going to all debt obligations combined. Standard is 36%.
+                </>
+              )}
             </p>
           </div>
         </details>
@@ -91,7 +120,7 @@ const faqs = getCalculatorFaqs('home-affordability');
 
       <!-- Payment Breakdown Card -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Housing Payment Breakdown (PITI)</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Housing Payment Breakdown (PITI)')}</h4>
         <div class="h-64 relative">
           <canvas id="payment-breakdown-chart"></canvas>
         </div>
@@ -104,6 +133,8 @@ const faqs = getCalculatorFaqs('home-affordability');
   import { calculateHomeAffordability, calculateLoanPMT } from '../../lib/math/loan';
   import { formatCurrency } from '../../lib/utils';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('payment-breakdown-chart');
 
   // DOM Elements
   const form = document.getElementById('affordability-form') as HTMLFormElement;

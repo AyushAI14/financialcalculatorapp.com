@@ -5,8 +5,12 @@ import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const isEs = lang === 'es';
+const isDe = lang === 'de';
+const isJa = lang === 'ja';
+const isPt = lang === 'pt';
 
-const faqs = [
+const faqsEn = [
   {
     question: "Is the TI BA II Plus permitted on CFA and CFP exams?",
     answer: "Yes! The Texas Instruments BA II Plus (including the Professional model) is one of only two official calculators authorized by the CFA Institute, GARP (FRM), and CFP Board for in-person certification examinations."
@@ -24,24 +28,103 @@ const faqs = [
     answer: "Financial calculators strictly enforce cash flow conventions. Money paid out (outflow/deposit/investment) is negative; money received (inflow/loan proceeds/future payout) is positive."
   }
 ];
+
+const faqsEs = [
+  {
+    question: "¿Está permitida la TI BA II Plus en los exámenes CFA y CFP?",
+    answer: "¡Sí! La Texas Instruments BA II Plus (incluida la versión Professional) es una de las dos únicas calculadoras oficiales autorizadas por el CFA Institute, GARP (FRM) y CFP Board para exámenes presenciales de certificación."
+  },
+  {
+    question: "¿Cómo calculo una variable de TVM (como PV o PMT) en la TI BA II Plus?",
+    answer: "Introduce los valores conocidos escribiendo el número seguido de la tecla de la variable (ej. [1][0] [N], [8] [I/Y], [5][0][0] [CHS] [PMT]). Para calcular la incógnita, presiona [CPT] seguido de la variable deseada (ej. [CPT] [PV])."
+  },
+  {
+    question: "¿Cuál es la diferencia entre el modo BGN y END?",
+    answer: "El modo END asume que los flujos de caja ocurren al final de cada periodo (préstamos ordinarios, anualidades vencidas). El modo BGN asume que los pagos se realizan al principio de cada periodo (anualidades anticipadas, cuotas de leasing)."
+  },
+  {
+    question: "¿Por qué mi resultado tiene signo negativo?",
+    answer: "Las calculadoras financieras aplican estrictamente la convención de flujos de efectivo. El dinero que sale de tu bolsillo (inversión/depósito/cuota pagada) se registra como negativo; el dinero recibido (préstamo concedido/rendimiento futuro) es positivo."
+  }
+];
+
+const faqsDe = [
+  {
+    question: "Ist der TI BA II Plus bei CFA- und CFP-Prüfungen zugelassen?",
+    answer: "Ja! Der Texas Instruments BA II Plus (einschließlich des Professional-Modells) ist einer von nur zwei offiziellen Taschenrechnern, die vom CFA Institute, GARP (FRM) und dem CFP Board für Zertifizierungsprüfungen zugelassen sind."
+  },
+  {
+    question: "Wie berechne ich eine TVM-Variable (wie PV oder PMT) auf dem TI BA II Plus?",
+    answer: "Geben Sie die bekannten Werte ein, indem Sie die Zahl gefolgt von der Variablentaste drücken (z. B. [1][0] [N], [8] [I/Y], [5][0][0] [CHS] [PMT]). Um den gesuchten Wert zu berechnen, drücken Sie [CPT] gefolgt von der Taste der Variablen (z. B. [CPT] [PV])."
+  },
+  {
+    question: "Was ist der Unterschied zwischen BGN- und END-Modus?",
+    answer: "Der END-Modus geht davon aus, dass Zahlungen am Ende jeder Periode erfolgen (nachschüssige Raten, reguläre Darlehen). Der BGN-Modus geht von Zahlungen zu Periodenbeginn aus (vorschüssige Renten, Leasingraten)."
+  },
+  {
+    question: "Warum hat mein Ergebnis ein negatives Vorzeichen?",
+    answer: "Finanzrechner folgen strengen Cashflow-Konventionen: Geldabflüsse (Investitionen, Auszahlungen, Tilgungsraten) sind negativ; Geldzuflüsse (Darlehensauszahlung, Erlöse, Endwert) sind positiv."
+  }
+];
+
+const faqsJa = [
+  {
+    question: "TI BA II PlusはCFA試験やCFP試験で持ち込み可能ですか？",
+    answer: "はい！Texas Instruments BA II Plus（Professionalモデルを含む）は、CFA協会、GARP（FRM）、CFP資格審査委員会によって公式試験会場への持ち込みが認められている数少ない認定電卓の1つです。"
+  },
+  {
+    question: "TI BA II PlusでTVM変数（PVやPMTなど）を計算するには？",
+    answer: "既知の数値を入力した後に対応する変数キーを押して登録します（例: ［1］［0］［N］、［8］［I/Y］、［5］［0］［0］［+/-］［PMT］）。未知の変数を算出するには、［CPT］を押してから求めたい変数キー（例: ［CPT］［PV］）を押します。"
+  },
+  {
+    question: "BGN（期首払い）モードとEND（期末払い）モードの違いは何ですか？",
+    answer: "ENDモードは一般的な融資や年金のように各期末に支払いが行われると仮定します。BGNモードはリース料や前払年金のように各期の期首に支払いが行われる計算で使用します。"
+  },
+  {
+    question: "計算結果がマイナス符号（負数）で表示されるのはなぜですか？",
+    answer: "金融電卓はキャッシュフローの方向（符号規約）を厳密に区別します。手元から出ていくお金（出金・投資・支払額）はマイナス、手元に入ってくるお金（受取額・借入金・将来価値）はプラスで扱われます。"
+  }
+];
+
+const faqsPt = [
+  {
+    question: "A calculadora TI BA II Plus é permitida nos exames CFA e CFP?",
+    answer: "Sim! A Texas Instruments BA II Plus (incluindo a versão Professional) é uma das duas únicas calculadoras oficiais homologadas pelo CFA Institute, GARP (FRM) e CFP Board para exames presenciais de certificação."
+  },
+  {
+    question: "Como calculo uma variável de TVM (como PV ou PMT) na TI BA II Plus?",
+    answer: "Insira seus valores conhecidos digitando o número seguido da tecla da respectiva variável (ex: [1][0] [N], [8] [I/Y], [5][0][0] [CHS] [PMT]). Para calcular a incógnita, pressione [CPT] seguido da tecla da variável desejada (ex: [CPT] [PV])."
+  },
+  {
+    question: "Qual é a diferença entre o modo BGN e o modo END?",
+    answer: "O modo END assume que as parcelas e fluxos ocorrem ao final de cada período (financiamentos tradicionais e anuidades postecipadas). O modo BGN assume pagamentos no início de cada período (anuidades antecipadas, aluguéis e contratos de leasing)."
+  },
+  {
+    question: "Por que o resultado do meu cálculo aparece com sinal negativo?",
+    answer: "As calculadoras financeiras aplicam com rigor a convenção de fluxo de caixa. O dinheiro desembolsado (saída, aporte, investimento ou pagamento de parcela) é registrado como negativo; o dinheiro recebido (entrada, liberação do empréstimo ou resgate futuro) é registrado como positivo."
+  }
+];
+
+const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : faqsEn)));
 ---
 
 <CalculatorLayout 
-  title="TI BA II Plus Calculator Online - Free Texas Instruments Financial Simulator" 
-  description="Free online Texas Instruments BA II Plus financial calculator simulator. Calculate TVM, NPV, IRR, and cash flows with CFA and CFP exam precision."
+  title={isEs ? "Calculadora TI BA II Plus Online - Simulador Financiero Texas Instruments" : (isDe ? "TI BA II Plus Rechner Online - Texas Instruments Finanz-Simulator" : (isJa ? "TI BA II Plus 電卓 オンライン - テキサス・インスツルメンツ金融シミュレーター" : (isPt ? "Calculadora TI BA II Plus Online - Simulador Financeiro Texas Instruments Gratuito" : "TI BA II Plus Calculator Online - Free Texas Instruments Financial Simulator")))} 
+  seoTitle={isEs ? "Calculadora TI BA II Plus Online: Simulador CFA | financialcalculatorapp.com" : (isDe ? "TI BA II Plus Rechner Online: CFA-Simulator | financialcalculatorapp.com" : (isJa ? "TI BA II Plus 電卓 オンライン: 無料CFA試験シミュレーター | financialcalculatorapp.com" : (isPt ? "Calculadora TI BA II Plus Online: Simulador Gratuito para Exames CFA | financialcalculatorapp.com" : "TI BA II Plus Calculator Online: Free CFA Exam Simulator | financialcalculatorapp.com")))}
+  description={isEs ? "Simulador gratuito online de la calculadora financiera Texas Instruments BA II Plus. Calcula TVM, VAN/NPV, TIR/IRR y flujos de caja con precisión para exámenes CFA y CFP." : (isDe ? "Kostenloser Online-Simulator des Finanzrechners Texas Instruments BA II Plus: TVM, Barwert (NPV), interner Zinsfuß (IRR) und Cashflows mit CFA- und CFP-Präzision berechnen." : (isJa ? "テキサス・インスツルメンツ（TI）BA II Plus金融電卓の無料オンラインシミュレーター。CFA・CFP試験対策にTVM、NPV、IRR、キャッシュフローをブラウザで正確に計算。" : (isPt ? "Simulador gratuito online da calculadora financeira Texas Instruments BA II Plus. Calcule TVM, VPL/NPV, TIR/IRR e fluxos de caixa com precisão para exames CFA e CFP." : "Free Texas Instruments TI BA II Plus financial simulator. Compute TVM, cash flows (NPV, IRR), and bond metrics in your browser for CFA exam prep.")))}
   faqs={faqs}
   calcKey="ti-ba-ii-plus"
 >
-  <div class="max-w-4xl mx-auto space-y-8">
+  <div class="w-full space-y-8">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-canvas border border-hairline rounded-lg shadow-sm">
       <div>
-        <h2 class="text-base font-semibold text-ink">Texas Instruments TI BA II Plus Web Simulator</h2>
-        <p class="text-xs text-mute">Authorized Exam Math Engine for CFA, CFP, and Corporate Finance Analysts</p>
+        <h2 class="text-base font-semibold text-ink">{isEs ? "Simulador Web Texas Instruments TI BA II Plus" : (isDe ? "Texas Instruments TI BA II Plus Web-Simulator" : (isJa ? "Texas Instruments TI BA II Plus Webシミュレーター" : (isPt ? "Simulador Web Texas Instruments TI BA II Plus" : "Texas Instruments TI BA II Plus Web Simulator")))}</h2>
+        <p class="text-xs text-mute">{isEs ? "Motor Matemático Autorizado para Exámenes CFA, CFP y Analistas Financieros" : (isDe ? "Zugelassenes Rechenwerk für CFA-, CFP-Prüfungen und Finanzanalysen" : (isJa ? "CFA®・CFP®試験および企業財務アナリスト向け公認金融演算エンジン" : (isPt ? "Motor Matemático Homologado para Exames CFA®, CFP® e Analistas Financeiros" : "Authorized Exam Math Engine for CFA, CFP, and Corporate Finance Analysts")))}</p>
       </div>
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-          CFA® Exam Accurate
+          {isEs ? "Precisión de Examen CFA®" : (isDe ? "CFA®-Prüfungspräzision" : (isJa ? "CFA®試験対応の高精度" : (isPt ? "Precisão Oficial para Exames CFA®" : "CFA® Exam Accurate")))}
         </span>
       </div>
     </div>
@@ -132,62 +215,105 @@ const faqs = [
       <div class="lg:col-span-6 space-y-6">
         <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-5">
           <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Active TVM Worksheet</h3>
-            <span class="text-[11px] font-mono text-mute">Synced with Simulator</span>
+            <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Hoja de Trabajo TVM Activa" : (isDe ? "Aktives TVM-Berechnungsblatt" : (isJa ? "アクティブTVMワークシート" : (isPt ? "Planilha TVM Ativa" : "Active TVM Worksheet")))}</h3>
+            <span class="text-[11px] font-mono text-mute">{isEs ? "Sincronizado con el Simulador" : (isDe ? "Synchronisiert mit Simulator" : (isJa ? "シミュレーターと自動同期" : (isPt ? "Sincronizado com o Simulador" : "Synced with Simulator")))}</span>
           </div>
 
           <div class="space-y-4">
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="ws-n" class="text-xs font-medium text-ink">Total Periods (N)</label>
-                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="n">Solve for N →</button>
+                <label for="ws-n" class="text-xs font-medium text-ink">{isEs ? "Periodos Totales (N)" : (isDe ? "Gesamtlaufzeit / Perioden (N)" : (isJa ? "支払期間数 (N)" : (isPt ? "Número de Períodos (N)" : "Total Periods (N)")))}</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="n">{isEs ? "Calcular N →" : (isDe ? "Berechne N →" : (isJa ? "Nを計算 →" : (isPt ? "Calcular N →" : "Solve for N →")))}</button>
               </div>
               <input id="ws-n" type="number" value="360" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
             </div>
 
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="ws-iy" class="text-xs font-medium text-ink">Annual Interest Rate (I/Y %)</label>
-                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="rate">Solve for I/Y →</button>
+                <label for="ws-iy" class="text-xs font-medium text-ink">{isEs ? "Tasa de Interés Anual (I/Y %)" : (isDe ? "Jahreszinssatz (I/Y %)" : (isJa ? "年利 (I/Y %)" : (isPt ? "Taxa de Juros Anual (I/Y %)" : "Annual Interest Rate (I/Y %)")))}</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline font-bold" data-target="rate">{isEs ? "Calcular I/Y →" : (isDe ? "Berechne I/Y →" : (isJa ? "I/Yを計算 →" : (isPt ? "Calcular I/Y →" : "Solve for I/Y →")))}</button>
               </div>
               <input id="ws-iy" type="number" step="0.01" value="6.5" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
             </div>
 
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="ws-pv" class="text-xs font-medium text-ink">Present Value (PV)</label>
-                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="pv">Solve for PV →</button>
+                <label for="ws-pv" class="text-xs font-medium text-ink">{isEs ? "Valor Actual (PV)" : (isDe ? "Barwert (PV)" : (isJa ? "現在価値 (PV)" : (isPt ? "Valor Presente (PV)" : "Present Value (PV)")))}</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="pv">{isEs ? "Calcular PV →" : (isDe ? "Berechne PV →" : (isJa ? "PVを計算 →" : (isPt ? "Calcular PV →" : "Solve for PV →")))}</button>
               </div>
               <input id="ws-pv" type="number" value="300000" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
             </div>
 
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="ws-pmt" class="text-xs font-medium text-ink">Periodic Payment (PMT)</label>
-                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline font-bold" data-target="pmt">Solve for PMT →</button>
+                <label for="ws-pmt" class="text-xs font-medium text-ink">{isEs ? "Pago Periódico (PMT)" : (isDe ? "Periodische Rate (PMT)" : (isJa ? "定期支払額 (PMT)" : (isPt ? "Parcela Periódica (PMT)" : "Periodic Payment (PMT)")))}</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline font-bold" data-target="pmt">{isEs ? "Calcular PMT →" : (isDe ? "Berechne PMT →" : (isJa ? "PMTを計算 →" : (isPt ? "Calcular PMT →" : "Solve for PMT →")))}</button>
               </div>
               <input id="ws-pmt" type="number" step="0.01" value="-1896.20" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
             </div>
 
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="ws-fv" class="text-xs font-medium text-ink">Future Value (FV)</label>
-                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="fv">Solve for FV →</button>
+                <label for="ws-fv" class="text-xs font-medium text-ink">{isEs ? "Valor Futuro (FV)" : (isDe ? "Endwert (FV)" : (isJa ? "将来価値 (FV)" : (isPt ? "Valor Futuro (FV)" : "Future Value (FV)")))}</label>
+                <button type="button" class="solve-btn text-[11px] font-mono text-link hover:underline" data-target="fv">{isEs ? "Calcular FV →" : (isDe ? "Berechne FV →" : (isJa ? "FVを計算 →" : (isPt ? "Calcular FV →" : "Solve for FV →")))}</button>
               </div>
               <input id="ws-fv" type="number" value="0" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ws-ppy" class="text-xs font-medium text-ink">{isEs ? "Frecuencia de Pagos / Año (P/Y)" : (isDe ? "Zahlungen / Jahr (P/Y)" : (isJa ? "年間支払回数 (P/Y)" : (isPt ? "Frequência de Pagamentos / Ano (P/Y)" : "Payment Frequency (P/Y)")))}</label>
+                <span class="text-[10px] font-mono text-mute">{isEs ? "Compounding" : (isDe ? "Verzinsung" : (isJa ? "複利計算" : (isPt ? "Capitalização" : "Compounding")))}</span>
+              </div>
+              <select id="ws-ppy" class="w-full h-9 bg-canvas text-ink text-sm border border-hairline rounded px-3 font-mono focus:border-link focus:outline-none">
+                <option value="12">{isEs ? "12 (Mensual - Hipotecas y préstamos)" : (isDe ? "12 (Monatlich - Standardkredite)" : (isJa ? "12（月次 - 住宅ローン・一般借入）" : (isPt ? "12 (Mensal - Empréstimos e Hipotecas)" : "12 (Monthly - Standard Loans/Mortgages)")))}</option>
+                <option value="1">{isEs ? "1 (Anual - Configuración recomendada CFA®)" : (isDe ? "1 (Jährlich - Empfohlener CFA®-Modus)" : (isJa ? "1（年次 - CFA®試験推奨設定）" : (isPt ? "1 (Anual - Configuração Recomendada CFA®)" : "1 (Annual - Recommended CFA® Setting)")))}</option>
+                <option value="2">{isEs ? "2 (Semestral - Bonos corporativos y deuda)" : (isDe ? "2 (Halbjährlich - Anleihen)" : (isJa ? "2（半年ごと - 米国債・社債）" : (isPt ? "2 (Semestral - Títulos e Debêntures)" : "2 (Semi-Annual - Corporate & Gov Bonds)")))}</option>
+                <option value="4">{isEs ? "4 (Trimestral)" : (isDe ? "4 (Vierteljährlich)" : (isJa ? "4（四半期ごと）" : (isPt ? "4 (Trimestral)" : "4 (Quarterly)")))}</option>
+              </select>
             </div>
           </div>
 
           <div class="pt-4 border-t border-hairline flex items-center justify-between">
-            <ToggleSwitch id="ws-timing" label="Beginning (BGN) Mode" checked={false} description="Check for lease / annuity due" />
+            <ToggleSwitch id="ws-timing" label={isEs ? "Modo Inicio (BGN)" : (isDe ? "Vorschüssig (BGN-Modus)" : (isJa ? "期首払い (BGN) モード" : (isPt ? "Modo Início (BGN)" : (isPt ? "Modo Início (BGN)" : "Beginning (BGN) Mode"))))} checked={false} description={isEs ? "Activar para anualidades anticipadas / arrendamientos" : (isDe ? "Aktivieren für vorschüssige Renten / Leasing" : (isJa ? "前払リース料・期首払年金の場合にオン" : (isPt ? "Ativar para anuidades antecipadas / contratos de leasing" : (isPt ? "Ativar para anuidades antecipadas / contratos de leasing" : "Check for lease / annuity due"))))} />
           </div>
         </div>
 
         <!-- Output Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <ResultCard id="res-ti-pmt" title="Computed Periodic PMT" value="-$1,896.20" highlight={true} />
-          <ResultCard id="res-ti-total" title="Total Outflow / Cost" value="$682,632.00" />
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <ResultCard id="res-ti-pmt" title={isEs ? "Pago (PMT)" : (isDe ? "Rate (PMT)" : (isJa ? "支払額 (PMT)" : (isPt ? "Parcela (PMT)" : "Payment (PMT)")))} value="--" highlight={true} />
+          <ResultCard id="res-ti-total" title={isEs ? "Desembolso Total" : (isDe ? "Gesamtauszahlung" : (isJa ? "支払総額" : (isPt ? "Desembolso Total" : "Total Outflow")))} value="--" />
+          <ResultCard id="res-ti-interest" title={isEs ? "Interés Total" : (isDe ? "Gesamtzinsen" : (isJa ? "利息総額" : (isPt ? "Total de Juros" : "Total Interest")))} value="--" />
         </div>
+      </div>
+    </div>
+
+    <!-- Amortization Schedule Section -->
+    <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Tabla de Amortización TVM" : (isDe ? "TVM-Tilgungsplan" : (isJa ? "TVM元利均等償還表" : (isPt ? "Tabela de Amortização TVM" : "TVM Amortization Schedule")))}</h3>
+          <p class="text-xs text-mute">{isEs ? "Desglose periodo a periodo sincronizado con el simulador" : (isDe ? "Periodenaufschlüsselung synchronisiert mit Simulator" : (isJa ? "シミュレーターと同期した各期の返済・残高推移明細" : (isPt ? "Detalhamento período a período sincronizado com o simulador" : "Period-by-period progression breakdown synced with simulator")))}</p>
+        </div>
+        <button id="toggle-ti-amort-btn" type="button" class="px-3 py-1.5 border border-hairline rounded text-xs font-mono bg-canvas-soft hover:bg-canvas text-ink transition-colors cursor-pointer w-fit">
+          {isEs ? "Ver Desglose de Pagos" : (isDe ? "Tilgungsplan anzeigen" : (isJa ? "返済スケジュールを表示" : (isPt ? "Ver Cronograma de Pagamentos" : "View Payment Schedule")))}
+        </button>
+      </div>
+      <div id="ti-amort-wrapper" class="hidden overflow-x-auto max-h-80 border border-hairline rounded">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline text-mute uppercase text-[10px]">
+            <tr>
+              <th class="p-2.5">#</th>
+              <th class="p-2.5 text-right">{isEs ? "Saldo Inicial" : (isDe ? "Anfangsbestand" : (isJa ? "期首残高" : (isPt ? "Saldo Inicial" : "Starting Bal")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Pago" : (isDe ? "Rate" : (isJa ? "返済額" : (isPt ? "Parcela" : "Payment")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Interés" : (isDe ? "Zinsen" : (isJa ? "利息" : (isPt ? "Juros" : "Interest")))}</th>
+              <th class="p-2.5 text-right">{isEs ? "Saldo Final" : (isDe ? "Endbestand" : (isJa ? "期末残高" : (isPt ? "Saldo Final" : "Ending Bal")))}</th>
+            </tr>
+          </thead>
+          <tbody id="ti-amort-body" class="divide-y divide-hairline">
+            <!-- Dynamic rows injected via JS -->
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -209,30 +335,85 @@ const faqs = [
 </style>
 
 <script>
-  import { calculateTVM } from '../../lib/math/finance';
+  import { calculateTVM, generateTVMSchedule } from '../../lib/math/finance';
+  import { formatCurrency, formatNumber } from '../../lib/utils';
 
   let currentInput = '';
   let isNewNum = true;
   let is2nd = false;
   let isCpt = false;
+  let pendingOp: string | null = null;
+  let pendingOperand: number | null = null;
 
-  const tvm = { n: 360, iy: 6.5, pv: 300000, pmt: -1896.20, fv: 0 };
+  const tvm = { n: 360, iy: 6.5, pv: 300000, pmt: -1896.20, fv: 0, ppy: 12 };
 
   const tiLcd = document.getElementById('ti-lcd');
   const flag2nd = document.getElementById('ti-2nd-flag');
   const flagCpt = document.getElementById('ti-cpt-flag');
+  const flagBgn = document.getElementById('ti-bgn-flag');
 
   const wsN = document.getElementById('ws-n') as HTMLInputElement | null;
   const wsIy = document.getElementById('ws-iy') as HTMLInputElement | null;
   const wsPv = document.getElementById('ws-pv') as HTMLInputElement | null;
   const wsPmt = document.getElementById('ws-pmt') as HTMLInputElement | null;
   const wsFv = document.getElementById('ws-fv') as HTMLInputElement | null;
+  const wsPpy = document.getElementById('ws-ppy') as HTMLSelectElement | null;
   const wsTiming = document.getElementById('ws-timing') as HTMLInputElement | null;
   const resPmt = document.getElementById('res-ti-pmt');
   const resTotal = document.getElementById('res-ti-total');
+  const resInterest = document.getElementById('res-ti-interest');
+
+  const toggleAmortBtn = document.getElementById('toggle-ti-amort-btn');
+  const amortWrapper = document.getElementById('ti-amort-wrapper');
+  const amortBody = document.getElementById('ti-amort-body');
 
   function updateLcd(val: string | number) {
     if (tiLcd) tiLcd.textContent = String(val);
+  }
+
+  function formatDisplay(num: number): string {
+    if (isNaN(num) || !isFinite(num)) return 'Error 5';
+    const abs = Math.abs(num);
+    const fixed = abs.toFixed(2);
+    const parts = fixed.split('.');
+    const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const sign = num < 0 ? '-' : '';
+    return `${sign}${intPart}.${parts[1]}`;
+  }
+
+  function updateAmortization() {
+    if (!amortBody) return;
+    const n = Math.abs(tvm.n) || 0;
+    const ppy = Math.max(1, tvm.ppy || 12);
+    const periodicRate = (Math.abs(tvm.iy) / 100) / ppy;
+    if (n <= 0 || (tvm.pv === 0 && tvm.pmt === 0)) {
+      amortBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-mute font-mono">No active TVM schedule to display. Enter variables and solve.</td></tr>`;
+      return;
+    }
+    try {
+      const timing = wsTiming?.checked ? 'beginning' : 'end';
+      const schedule = generateTVMSchedule({
+        pv: tvm.pv,
+        fv: tvm.fv,
+        pmt: tvm.pmt,
+        rate: periodicRate,
+        periods: Math.min(n, 360),
+        compoundingFrequency: 1,
+        paymentFrequency: 1,
+        timing,
+      });
+      amortBody.innerHTML = schedule.slice(0, 120).map((row) => `
+        <tr class="hover:bg-canvas-soft/50">
+          <td class="p-2.5 font-bold">${row.period}</td>
+          <td class="p-2.5 text-right">${formatNumber(Math.abs(row.beginningBalance), 2)}</td>
+          <td class="p-2.5 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatNumber(Math.abs(row.payment), 2)}</td>
+          <td class="p-2.5 text-right text-amber-600 dark:text-amber-400">${formatNumber(Math.abs(row.interest), 2)}</td>
+          <td class="p-2.5 text-right font-medium">${formatNumber(Math.abs(row.endingBalance), 2)}</td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      amortBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-mute font-mono">Unable to compute amortization schedule.</td></tr>`;
+    }
   }
 
   function syncInputs() {
@@ -241,16 +422,24 @@ const faqs = [
     if (wsPv) wsPv.value = String(tvm.pv);
     if (wsPmt) wsPmt.value = String(tvm.pmt.toFixed(2));
     if (wsFv) wsFv.value = String(tvm.fv);
+    if (wsPpy) wsPpy.value = String(tvm.ppy);
 
-    const total = Math.abs(tvm.pmt * tvm.n);
-    if (resPmt) resPmt.textContent = `$${Math.abs(tvm.pmt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    if (resTotal) resTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const totalPaid = Math.abs(tvm.pmt * tvm.n);
+    const totalInterest = Math.max(0, totalPaid - Math.abs(tvm.pv));
+    if (resPmt) resPmt.textContent = formatCurrency(Math.abs(tvm.pmt));
+    if (resTotal) resTotal.textContent = formatCurrency(totalPaid);
+    if (resInterest) resInterest.textContent = formatCurrency(totalInterest);
+
+    flagBgn?.classList.toggle('hidden', !wsTiming?.checked);
+    updateAmortization();
   }
 
   function runWorksheetSolve(target: 'n' | 'rate' | 'pv' | 'pmt' | 'fv') {
     const timing = wsTiming?.checked ? 'beginning' : 'end';
     const n = parseFloat(wsN?.value || '0');
-    const rate = parseFloat(wsIy?.value || '0') / 100 / 12; // Monthly periodic
+    const ppy = Math.max(1, parseFloat(wsPpy?.value || '12'));
+    const annualRate = parseFloat(wsIy?.value || '0');
+    const rate = (annualRate / 100) / ppy; // Periodic rate
     const pv = parseFloat(wsPv?.value || '0');
     const pmt = parseFloat(wsPmt?.value || '0');
     const fv = parseFloat(wsFv?.value || '0');
@@ -259,24 +448,203 @@ const faqs = [
       if (target === 'pmt') {
         const solved = calculateTVM('pmt', { pv, fv, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
         tvm.pmt = solved;
-        updateLcd(solved.toFixed(2));
+        updateLcd(formatDisplay(solved));
       } else if (target === 'pv') {
         const solved = calculateTVM('pv', { fv, pmt, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
         tvm.pv = solved;
-        updateLcd(solved.toFixed(2));
+        updateLcd(formatDisplay(solved));
       } else if (target === 'fv') {
         const solved = calculateTVM('fv', { pv, pmt, rate, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
         tvm.fv = solved;
-        updateLcd(solved.toFixed(2));
+        updateLcd(formatDisplay(solved));
       } else if (target === 'n') {
         const solved = calculateTVM('periods', { pv, fv, pmt, rate, compoundingFrequency: 1, paymentFrequency: 1, timing });
-        tvm.n = solved;
-        updateLcd(solved.toFixed(0));
+        tvm.n = Math.round(solved);
+        updateLcd(String(tvm.n));
+      } else if (target === 'rate') {
+        const periodicSolved = calculateTVM('rate', { pv, fv, pmt, periods: n, compoundingFrequency: 1, paymentFrequency: 1, timing });
+        const solvedAnnual = periodicSolved * ppy * 100;
+        tvm.iy = parseFloat(solvedAnnual.toFixed(4));
+        updateLcd(solvedAnnual.toFixed(2));
       }
       syncInputs();
-    } catch (e) {}
+    } catch (e) {
+      updateLcd('Error 5');
+    }
   }
 
+  function executePendingOp(nextVal: number) {
+    if (pendingOp !== null && pendingOperand !== null) {
+      let res = 0;
+      if (pendingOp === '+') res = pendingOperand + nextVal;
+      else if (pendingOp === '-') res = pendingOperand - nextVal;
+      else if (pendingOp === '*') res = pendingOperand * nextVal;
+      else if (pendingOp === '/') res = nextVal !== 0 ? pendingOperand / nextVal : NaN;
+      pendingOperand = res;
+      pendingOp = null;
+      return res;
+    }
+    return nextVal;
+  }
+
+  function handleKey(key: string) {
+    if (key >= '0' && key <= '9') {
+      if (isNewNum) {
+        currentInput = key;
+        isNewNum = false;
+      } else {
+        if (currentInput.length < 12) currentInput += key;
+      }
+      updateLcd(currentInput);
+      return;
+    }
+
+    if (key === '.') {
+      if (isNewNum) {
+        currentInput = '0.';
+        isNewNum = false;
+      } else if (!currentInput.includes('.')) {
+        currentInput += '.';
+      }
+      updateLcd(currentInput);
+      return;
+    }
+
+    if (key === 'CHS') {
+      const val = parseFloat(currentInput || tiLcd?.textContent?.replace(/[^0-9.-]/g, '') || '0');
+      const negated = -val;
+      currentInput = String(negated);
+      updateLcd(currentInput);
+      return;
+    }
+
+    if (key === '2ND') {
+      is2nd = !is2nd;
+      flag2nd?.classList.toggle('hidden', !is2nd);
+      return;
+    }
+
+    if (key === 'CPT') {
+      isCpt = true;
+      flagCpt?.classList.remove('hidden');
+      return;
+    }
+
+    if (['+', '-', '*', '/'].includes(key)) {
+      const cur = parseFloat(currentInput || tiLcd?.textContent?.replace(/[^0-9.-]/g, '') || '0');
+      if (pendingOp !== null && pendingOperand !== null && !isNewNum) {
+        const res = executePendingOp(cur);
+        updateLcd(formatDisplay(res));
+        pendingOperand = res;
+      } else {
+        pendingOperand = cur;
+      }
+      pendingOp = key;
+      isNewNum = true;
+      currentInput = '';
+      return;
+    }
+
+    if (key === '=' || key === 'ENTER') {
+      const cur = parseFloat(currentInput || tiLcd?.textContent?.replace(/[^0-9.-]/g, '') || '0');
+      if (pendingOp !== null && pendingOperand !== null) {
+        const res = executePendingOp(cur);
+        updateLcd(formatDisplay(res));
+      }
+      pendingOp = null;
+      pendingOperand = null;
+      isNewNum = true;
+      currentInput = '';
+      return;
+    }
+
+    if (['N', 'IY', 'PV', 'PMT', 'FV'].includes(key)) {
+      if (is2nd) {
+        // 2ND Shortcuts
+        if (key === 'FV') {
+          // CLR TVM
+          tvm.n = 0; tvm.iy = 0; tvm.pv = 0; tvm.pmt = 0; tvm.fv = 0;
+          updateLcd('0.00');
+          syncInputs();
+        } else if (key === 'PMT') {
+          // BGN mode toggle
+          if (wsTiming) {
+            wsTiming.checked = !wsTiming.checked;
+            flagBgn?.classList.toggle('hidden', !wsTiming.checked);
+            updateLcd(wsTiming.checked ? 'BGN' : 'END');
+          }
+        } else if (key === 'IY') {
+          // P/Y
+          if (!isNewNum && currentInput) {
+            tvm.ppy = parseInt(currentInput, 10) || 12;
+            if (wsPpy) wsPpy.value = String(tvm.ppy);
+          }
+          updateLcd(`P/Y = ${tvm.ppy}`);
+        } else if (key === 'PV') {
+          // AMORT table toggle
+          amortWrapper?.classList.toggle('hidden');
+        }
+        is2nd = false;
+        flag2nd?.classList.add('hidden');
+        isNewNum = true;
+        currentInput = '';
+        return;
+      }
+
+      const prop = key.toLowerCase() === 'iy' ? 'rate' : (key.toLowerCase() as any);
+      if (isCpt) {
+        runWorksheetSolve(prop);
+        isCpt = false;
+        flagCpt?.classList.add('hidden');
+      } else {
+        const val = parseFloat(currentInput || tiLcd?.textContent?.replace(/[^0-9.-]/g, '') || '0');
+        if (key === 'N') tvm.n = val;
+        if (key === 'IY') tvm.iy = val;
+        if (key === 'PV') tvm.pv = val;
+        if (key === 'PMT') tvm.pmt = val;
+        if (key === 'FV') tvm.fv = val;
+        updateLcd(formatDisplay(val));
+        syncInputs();
+      }
+      isNewNum = true;
+      currentInput = '';
+      return;
+    }
+
+    if (key === 'CF' || key === 'NPV') {
+      updateLcd(`${key} = 0.00`);
+      isNewNum = true;
+      currentInput = '';
+      return;
+    }
+
+    if (key === 'CLR') {
+      currentInput = '0';
+      isNewNum = true;
+      isCpt = false;
+      is2nd = false;
+      pendingOp = null;
+      pendingOperand = null;
+      flagCpt?.classList.add('hidden');
+      flag2nd?.classList.add('hidden');
+      updateLcd('0.00');
+      return;
+    }
+  }
+
+  function handleBackspace() {
+    if (!isNewNum && currentInput.length > 0) {
+      currentInput = currentInput.slice(0, -1);
+      if (currentInput === '-' || currentInput === '') currentInput = '0';
+      updateLcd(currentInput);
+    } else {
+      updateLcd('0.00');
+      isNewNum = true;
+      currentInput = '';
+    }
+  }
+
+  // Event Listeners
   document.querySelectorAll('.solve-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.getAttribute('data-target') as any;
@@ -287,92 +655,49 @@ const faqs = [
   document.querySelectorAll('.ti-key').forEach((btn) => {
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-key');
-      if (!key) return;
-
-      if (key >= '0' && key <= '9') {
-        if (isNewNum) {
-          currentInput = key;
-          isNewNum = false;
-        } else {
-          currentInput += key;
-        }
-        updateLcd(currentInput);
-        return;
-      }
-
-      if (key === '.') {
-        if (isNewNum) {
-          currentInput = '0.';
-          isNewNum = false;
-        } else if (!currentInput.includes('.')) {
-          currentInput += '.';
-        }
-        updateLcd(currentInput);
-        return;
-      }
-
-      if (key === 'CHS') {
-        const val = parseFloat(currentInput || tiLcd?.textContent || '0');
-        currentInput = String(-val);
-        updateLcd(currentInput);
-        return;
-      }
-
-      if (key === '2ND') {
-        is2nd = !is2nd;
-        flag2nd?.classList.toggle('hidden', !is2nd);
-        return;
-      }
-
-      if (key === 'CPT') {
-        isCpt = true;
-        flagCpt?.classList.remove('hidden');
-        return;
-      }
-
-      if (['N', 'IY', 'PV', 'PMT', 'FV'].includes(key)) {
-        const prop = key.toLowerCase() === 'iy' ? 'rate' : (key.toLowerCase() as any);
-        if (isCpt) {
-          runWorksheetSolve(prop);
-          isCpt = false;
-          flagCpt?.classList.add('hidden');
-        } else {
-          const val = parseFloat(currentInput || tiLcd?.textContent || '0');
-          if (key === 'N') tvm.n = val;
-          if (key === 'IY') tvm.iy = val;
-          if (key === 'PV') tvm.pv = val;
-          if (key === 'PMT') tvm.pmt = val;
-          if (key === 'FV') tvm.fv = val;
-          syncInputs();
-        }
-        isNewNum = true;
-        currentInput = '';
-        return;
-      }
-
-      if (key === 'CLR') {
-        currentInput = '0';
-        isNewNum = true;
-        isCpt = false;
-        is2nd = false;
-        flagCpt?.classList.add('hidden');
-        flag2nd?.classList.add('hidden');
-        updateLcd('0.00');
-        return;
-      }
+      if (key) handleKey(key);
     });
   });
 
-  [wsN, wsIy, wsPv, wsPmt, wsFv, wsTiming].forEach((el) => {
+  toggleAmortBtn?.addEventListener('click', () => {
+    if (amortWrapper) {
+      const isHidden = amortWrapper.classList.toggle('hidden');
+      toggleAmortBtn.textContent = isHidden ? 'View Payment Schedule' : 'Hide Schedule';
+    }
+  });
+
+  [wsN, wsIy, wsPv, wsPmt, wsFv, wsPpy, wsTiming].forEach((el) => {
     el?.addEventListener('input', () => {
       tvm.n = parseFloat(wsN?.value || '0');
       tvm.iy = parseFloat(wsIy?.value || '0');
       tvm.pv = parseFloat(wsPv?.value || '0');
       tvm.pmt = parseFloat(wsPmt?.value || '0');
       tvm.fv = parseFloat(wsFv?.value || '0');
+      tvm.ppy = parseFloat(wsPpy?.value || '12');
       syncInputs();
     });
   });
 
+  window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) return;
+
+    if (e.key >= '0' && e.key <= '9') handleKey(e.key);
+    else if (e.key === '.') handleKey('.');
+    else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); handleKey('='); }
+    else if (e.key === '+') handleKey('+');
+    else if (e.key === '-') handleKey('-');
+    else if (e.key === '*') handleKey('*');
+    else if (e.key === '/') { e.preventDefault(); handleKey('/'); }
+    else if (e.key === 'Backspace') { e.preventDefault(); handleBackspace(); }
+    else if (e.key === 'Escape') handleKey('CLR');
+    else if (e.key === 'c' || e.key === 'C') handleKey('CPT');
+    else if (e.key === 'n' || e.key === 'N') handleKey('N');
+    else if (e.key === 'i' || e.key === 'I') handleKey('IY');
+    else if (e.key === 'p' || e.key === 'P') handleKey('PV');
+    else if (e.key === 'm' || e.key === 'M') handleKey('PMT');
+    else if (e.key === 'v' || e.key === 'V') handleKey('FV');
+  });
+
   syncInputs();
+  window.addEventListener('currency-change', syncInputs);
 </script>

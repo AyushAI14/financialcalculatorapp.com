@@ -12,7 +12,8 @@ const faqs = getCalculatorFaqs('apr');
 
 <CalculatorLayout 
   title="APR Calculator" 
-  description="Determine the true Annual Percentage Rate (APR) of a loan by factoring in closing costs, points, and lender fees alongside the nominal interest rate."
+  seoTitle="APR Calculator: Compare Annual Percentage Rate vs. Interest | financialcalculatorapp.com"
+  description="Calculate real Annual Percentage Rate (APR) by factoring in upfront lender fees, closing costs, and discount points against your nominal rate."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -95,7 +96,7 @@ const faqs = getCalculatorFaqs('apr');
 
       <!-- Comparison Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Rate vs. APR Comparison</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Rate vs. APR Comparison')}</h4>
         <div class="h-56 relative">
           <canvas id="apr-chart"></canvas>
         </div>
@@ -105,26 +106,26 @@ const faqs = getCalculatorFaqs('apr');
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Calculation Steps & Formulas</span>
+            <span>{t('Calculation Steps & Formulas')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
             <div>
-              <p class="font-semibold text-ink mb-1">1. Base Monthly Payment (P&I)</p>
+              <p class="font-semibold text-ink mb-1">{t('1. Base Monthly Payment (P&I)')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-base-formula">
                 PMT = Principal × [r(1 + r)^n] / [(1 + r)^n - 1]
               </code>
             </div>
             <div>
-              <p class="font-semibold text-ink mb-1">2. Adjusted Net Loan Balance</p>
-              <p class="mb-1 leading-relaxed">Fees are deducted from the principal to find the actual net money received by the borrower.</p>
+              <p class="font-semibold text-ink mb-1">{t('2. Adjusted Net Loan Balance')}</p>
+              <p class="mb-1 leading-relaxed">{t('Fees are deducted from the principal to find the actual net money received by the borrower.')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-net-loan">
                 Net Principal = Principal - Fees
               </code>
             </div>
             <div>
-              <p class="font-semibold text-ink mb-1">3. Solving for APR (r_apr)</p>
-              <p class="mb-1 leading-relaxed">The APR is the interest rate that equates the Net Principal with the base monthly payments (P&I) over the loan term.</p>
+              <p class="font-semibold text-ink mb-1">{t('3. Solving for APR (r_apr)')}</p>
+              <p class="mb-1 leading-relaxed">{t('The APR is the interest rate that equates the Net Principal with the base monthly payments (P&I) over the loan term.')}</p>
               <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-solve-apr">
                 Net Principal = PMT × [1 - (1 + r_apr)^-n] / r_apr
               </code>
@@ -136,7 +137,7 @@ const faqs = getCalculatorFaqs('apr');
       <!-- CSV Export Trigger -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>
@@ -145,6 +146,8 @@ const faqs = getCalculatorFaqs('apr');
 
 <script>
   import type { Chart } from 'chart.js';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('apr-chart');
   import { calculateAPR, calculateLoanPMT } from '../../lib/math/loan';
   import { formatCurrency, formatPercentage } from '../../lib/utils';
   import { validateForm, validateField } from '../../lib/validation';

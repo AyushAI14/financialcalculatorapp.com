@@ -33,7 +33,8 @@ const faqs = [
 
 <CalculatorLayout 
   title="Mortgage Calculator" 
-  description="Calculate your monthly mortgage payments including principal and interest, property taxes, homeowners insurance, HOA fees, and private mortgage insurance (PMI)."
+  seoTitle="Mortgage Calculator: Estimate Monthly Payments & PMI | financialcalculatorapp.com"
+  description="Calculate your monthly mortgage payment including principal, interest, taxes, home insurance, and PMI. View full amortization breakdown for free."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -103,7 +104,7 @@ const faqs = [
 
       <!-- Payment Breakdown Chart -->
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Monthly Payment Breakdown</h4>
+        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Monthly Payment Breakdown')}</h4>
         <div class="h-64 relative">
           <canvas id="mortgage-chart"></canvas>
         </div>
@@ -113,7 +114,7 @@ const faqs = [
       <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
         <details class="group">
           <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
-            <span>Formula Breakdown</span>
+            <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
@@ -143,7 +144,7 @@ const faqs = [
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download Results CSV
+          <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>
     </div>
@@ -157,6 +158,8 @@ const faqs = [
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
   import Chart from 'chart.js/auto';
+  import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+  enhanceChartCanvas('mortgage-chart');
 
   // DOM Elements
   const form = document.getElementById('mortgage-form') as HTMLFormElement;

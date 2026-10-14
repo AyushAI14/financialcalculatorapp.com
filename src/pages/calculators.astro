@@ -9,16 +9,11 @@ const translatePath = useTranslatedPath(lang);
 
 const categories = getLocalizedCategories(t);
 const allCalculatorsFlat = getAllCalculatorsFlat(t);
-
-const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
-  acc[cat.key] = cat.count;
-  return acc;
-}, {} as Record<string, number>);
 ---
 
 <Layout
-  title={`${t('nav.calculators', 'Financial Calculators Directory')} - financialcalculatorapp.com`}
-  description={t('calculators.pageDescription', 'Browse our complete suite of 38 free financial calculators, loan planners, retirement estimators, and hardware emulators. 100% private in your browser.')}
+  title={t('calculators.pageTitle', 'All 38 Free Financial Calculators & Planners | financialcalculatorapp.com')}
+  description={t('calculators.pageDescription', 'Explore all 38 free financial tools. Loan amortization, paycheck taxes, retirement models, and CFA financial calculator emulators in one place.')}
   lang={lang}
 >
   <!-- Directory Header -->
@@ -33,13 +28,23 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
     <div class="space-y-3">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/40 text-[11px] font-mono font-bold text-ink shadow-[var(--control-shadow)]">
         <span class="text-input-accent">✦</span>
-        <span>{allCalculatorsFlat.length} Financial Engines · 100% Private</span>
+        <span>{t('calculators.badge', '38 Financial Engines · 100% Private')}</span>
       </div>
       <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-ink leading-tight">
-        All <span class="text-input-accent">Financial</span> Calculators
+        {lang === 'es' ? (
+          <>Todas las <span class="text-input-accent">Calculadoras</span> Financieras</>
+        ) : lang === 'de' ? (
+          <>Alle <span class="text-input-accent">Finanzrechner</span> im Überblick</>
+        ) : lang === 'ja' ? (
+          <>すべての<span class="text-input-accent">金融計算機</span>・シミュレーター一覧</>
+        ) : lang === 'pt' ? (
+          <>Todas as <span class="text-input-accent">Calculadoras</span> Financeiras</>
+        ) : (
+          <>{t('calculators.h1Main', 'All')} <span class="text-input-accent">{t('calculators.h1Accent', 'Financial')}</span> {t('nav.calculators', 'Calculators')}</>
+        )}
       </h1>
       <p class="text-sm sm:text-base text-muted font-sans max-w-xl mx-auto">
-        Complete catalog of professional calculation engines, loan schedules, retirement models, and CFA emulators. Free and computed instantly.
+        {t('calculators.subheading', 'Complete catalog of professional calculation engines, loan schedules, retirement models, and CFA emulators. Free and computed instantly.')}
       </p>
     </div>
   </header>
@@ -48,13 +53,13 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
   <section class="max-w-2xl mx-auto mb-6" aria-label="Calculator directory search">
     <div class="composer">
       <label for="dir-calc-search" class="block font-mono text-[11px] font-bold uppercase tracking-wider text-muted mb-2">
-        Search all {allCalculatorsFlat.length} calculators
+        {t('calculators.searchLabel', 'Search all 38 calculators')}
       </label>
       <div class="relative flex items-center">
         <input
           type="text"
           id="dir-calc-search"
-          placeholder="Search by name, category, or keyword (e.g. mortgage, 401k, crypto, roi)..."
+          placeholder={t('calculators.searchPlaceholder', 'Search by name, category, or keyword (e.g. mortgage, 401k, crypto, roi)...')}
           autocomplete="off"
           spellcheck="false"
           class="w-full h-14 sm:h-16 bg-canvas text-ink text-base sm:text-xl font-display font-extrabold border-[1.5px] border-input-accent rounded-lg pl-4 pr-24 focus:outline-none focus:ring-2 focus:ring-input-accent transition-all placeholder:text-muted/50"
@@ -62,15 +67,15 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
         <button
           id="dir-clear-search-btn"
           type="button"
-          class="card-action absolute right-3 px-3 py-1.5 text-xs font-mono font-bold uppercase"
+          class="card-action absolute right-3 px-3.5 py-1.5 text-xs font-mono font-bold uppercase"
           aria-label="Clear search"
         >
-          Clear
+          {t('search.clear', 'Clear')}
         </button>
       </div>
       <div class="flex items-center justify-between mt-2.5 px-1 font-mono text-xs text-muted">
-        <span>🔒 Zero server transmission · Browser calculation</span>
-        <span id="dir-result-count-label" class="font-bold text-ink">{allCalculatorsFlat.length} calculators</span>
+        <span>🔒 {t('calculators.privacyNote', 'Zero server transmission · Browser calculation')}</span>
+        <span id="dir-result-count-label" class="font-bold text-ink" data-template={t('search.counterTemplate', '{count} calculators')}>{allCalculatorsFlat.length} {t('search.calculators', 'calculators')}</span>
       </div>
     </div>
 
@@ -86,7 +91,7 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
     <div class="filter-list flex items-center gap-2 justify-center flex-wrap" role="group">
       <button class="dir-filter-btn filter-button is-active" type="button" data-filter="all">
         <span class="font-mono text-xs">✦</span>
-        <span>All</span>
+        <span>{t('filter.all', 'All')}</span>
         <span class="filter-count">{allCalculatorsFlat.length}</span>
       </button>
       {categories.map(cat => (
@@ -100,17 +105,17 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
   </div>
 
   <!-- Results Section Heading -->
-  <div class="max-w-6xl mx-auto flex items-end justify-between gap-4 mb-4">
+  <div class="w-full flex items-end justify-between gap-4 mb-4">
     <h2 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-ink" id="dir-results-heading">
-      Available Calculators
+      {t('calculators.availableHeading', 'Available Calculators')}
     </h2>
     <p class="text-xs font-mono text-muted whitespace-nowrap">
-      <span id="dir-visible-cards-count">{allCalculatorsFlat.length}</span> calculators · click to open
+      <span id="dir-visible-cards-count">{allCalculatorsFlat.length}</span> {t('calculators.clickToOpen', 'calculators · click to open')}
     </p>
   </div>
 
   <!-- Style Grid of Calculators -->
-  <section id="directory-cards-section" class="max-w-6xl mx-auto style-grid mb-16" aria-label="Calculators directory list">
+  <section id="directory-cards-section" class="w-full style-grid mb-16" aria-label="Calculators directory list">
     {allCalculatorsFlat.map(calc => (
       <a
         href={translatePath(calc.url)}
@@ -144,7 +149,7 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
           <span
             class="card-action px-3 py-1.5 text-[11px] font-mono font-bold text-ink group-hover:text-canvas group-hover:bg-ink transition-colors rounded-full"
           >
-            Open →
+            {t('card.open', 'Open →')}
           </span>
         </div>
       </a>
@@ -156,25 +161,25 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
     <div class="w-12 h-12 rounded-full border border-ink flex items-center justify-center mx-auto mb-4 text-xl bg-paper">
       🔍
     </div>
-    <h3 class="font-display font-bold text-lg text-ink mb-1">No calculators found</h3>
-    <p class="text-xs text-muted mb-4">No financial tools match your current search criteria.</p>
+    <h3 class="font-display font-bold text-lg text-ink mb-1">{t('search.noResultsTitle', 'No calculators found')}</h3>
+    <p class="text-xs text-muted mb-4">{t('calculators.noResultsDesc', 'No financial tools match your current search criteria.')}</p>
     <button
       id="dir-reset-filter-btn"
       type="button"
       class="px-4 py-2 bg-paper border border-ink text-xs font-mono font-bold text-ink rounded-full hover:bg-soft transition-colors cursor-pointer"
     >
-      Clear Search & Reset Filters
+      {t('calculators.resetFilters', 'Clear Search & Reset Filters')}
     </button>
   </div>
 
   <!-- Category Breakdown Overview (SEO & Fast Browsing) -->
-  <section class="max-w-6xl mx-auto pt-8 border-t-2 border-line/20 mb-16 space-y-8" aria-label="Calculators by category">
+  <section class="w-full pt-8 border-t-2 border-line/20 mb-16 space-y-8" aria-label="Calculators by category">
     <div class="text-left">
       <h2 class="font-display font-extrabold text-xl sm:text-2xl text-ink tracking-tight mb-2">
-        Browse by Category
+        {t('calculators.browseCategory', 'Browse by Category')}
       </h2>
       <p class="text-xs font-sans text-muted">
-        Comprehensive financial calculation modules organized by financial specialization.
+        {t('calculators.categorySub', 'Comprehensive financial calculation modules organized by financial specialization.')}
       </p>
     </div>
 
@@ -187,7 +192,7 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
               <span>{cat.name}</span>
             </h3>
             <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-soft text-muted">
-              {cat.count} tools
+              {cat.count} {t('calculators.tools', 'tools')}
             </span>
           </div>
           <ul class="space-y-1.5 font-mono text-xs">
@@ -246,7 +251,12 @@ const categoryCounts: Record<string, number> = categories.reduce((acc, cat) => {
     });
 
     if (resultCountLabel) {
-      resultCountLabel.textContent = `${visibleCount} calculator${visibleCount === 1 ? '' : 's'}`;
+      const template = resultCountLabel.getAttribute('data-template');
+      if (template) {
+        resultCountLabel.textContent = template.replace('{count}', String(visibleCount));
+      } else {
+        resultCountLabel.textContent = `${visibleCount} calculator${visibleCount === 1 ? '' : 's'}`;
+      }
     }
     if (visibleCardsCount) {
       visibleCardsCount.textContent = String(visibleCount);

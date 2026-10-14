@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+src/test-sim.js
 
 # environment variables
 .env
@@ -34,5 +35,7 @@ pnpm-debug.log*
 .idea/
 .vscode/
 .vercel
+.wrangler/
+.unlighthouse/
 *.mp4
 src/data/

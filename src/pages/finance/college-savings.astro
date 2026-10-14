@@ -2,17 +2,23 @@
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import Input from '../../components/ui/Input.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
+import CollegeSavingsChart from '../../components/charts/CollegeSavingsChart';
+import { generateCollegeSavingsSchedule } from '../../lib/math/finance';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 const faqs = getCalculatorFaqs('college-savings');
+
+// Initial baseline projection schedule (Public 4-Year preset)
+const initialSchedule = generateCollegeSavingsSchedule(5, 18, 25000, 0.05, 5000, 200, 0.065);
 ---
 
 <CalculatorLayout 
   title="College Savings (529) Calculator" 
-  description="Forecast future college tuition costs and determine the monthly 529 plan savings needed to cover your child's higher education."
+  seoTitle="529 College Savings Calculator: Estimate Tuition Growth | financialcalculatorapp.com"
+  description="Forecast 4-year university costs and calculate monthly 529 plan contributions needed to fund higher education without heavy student debt."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -24,8 +30,8 @@ const faqs = getCalculatorFaqs('college-savings');
             <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Education & Savings Settings')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="5" data-rage="18" data-cost="25000" data-inf="5.0" data-saved="5000" data-contrib="200" data-rate="6.5">Public 4-Year</button>
-              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="2" data-rage="18" data-cost="55000" data-inf="4.5" data-saved="10000" data-contrib="400" data-rate="7.0">Private 4-Year</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="5" data-rage="18" data-cost="25000" data-inf="5.0" data-saved="5000" data-contrib="200" data-rate="6.5">{t('Public 4-Year')}</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-cage="2" data-rage="18" data-cost="55000" data-inf="4.5" data-saved="10000" data-contrib="400" data-rate="7.0">{t('Private 4-Year')}</button>
             </div>
           </div>
 
@@ -79,10 +85,19 @@ const faqs = getCalculatorFaqs('college-savings');
         </div>
       </div>
 
+      <!-- College Savings Projection Chart -->
+      <CollegeSavingsChart
+        client:load
+        title={t('College Savings Projection')}
+        subtitle={t("529 portfolio accumulation vs. 4-year tuition target over child's timeline")}
+        initialSchedule={initialSchedule}
+        initialEnrollmentAge={18}
+      />
+
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
         <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
-          <span>📊</span> Download College Plan CSV
+          <span>📊</span> {t('Download College Plan CSV')}
         </button>
       </div>
     </div>
@@ -90,7 +105,7 @@ const faqs = getCalculatorFaqs('college-savings');
 </CalculatorLayout>
 
 <script>
-  import { calculateCollegeSavings } from '../../lib/math/finance';
+  import { calculateCollegeSavings, generateCollegeSavingsSchedule } from '../../lib/math/finance';
   import { formatCurrency } from '../../lib/utils';
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
@@ -162,13 +177,36 @@ const faqs = getCalculatorFaqs('college-savings');
     if (resBalance) resBalance.querySelector('.font-mono')!.textContent = formatCurrency(result.endingBalance);
     if (resShortfall) resShortfall.querySelector('.font-mono')!.textContent = formatCurrency(result.shortfall);
     if (resContribNeeded) resContribNeeded.querySelector('.font-mono')!.textContent = formatCurrency(result.pmtNeeded);
+
+    // Generate and dispatch dynamic projection schedule to Recharts component
+    const schedule = generateCollegeSavingsSchedule(
+      cage,
+      rage,
+      currentCost,
+      costInflation,
+      saved,
+      contribution,
+      returnRate
+    );
+
+    window.dispatchEvent(
+      new CustomEvent('college-savings-data-updated', {
+        detail: {
+          schedule,
+          enrollmentAge: rage
+        }
+      })
+    );
   }
 
-  // Bind input listeners
+  // Bind input listeners with real-time dynamic updates
   [currentAgeInput, enrollmentAgeInput, costInput, inflationInput, savedInput, contributionInput, returnInput].forEach(el => {
-    el.addEventListener('input', () => {
+    const handleInput = () => {
       validateField(el.id, validationRules[el.id as keyof typeof validationRules]);
-    });
+      performCalculation();
+    };
+    el.addEventListener('input', handleInput);
+    el.addEventListener('change', handleInput);
   });
 
   // Preset scenarios click handlers
@@ -188,6 +226,7 @@ const faqs = getCalculatorFaqs('college-savings');
         const errEl = document.getElementById(`${el.id}-error`);
         if (errEl) errEl.classList.add('hidden');
       });
+      performCalculation();
     });
   });
 

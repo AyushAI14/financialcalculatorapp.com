@@ -35,6 +35,10 @@ export function syncInputsWithURL(formId: string, onUpdate: () => void) {
     }
   });
 
+  if (params.size > 0 && typeof onUpdate === 'function') {
+    onUpdate();
+  }
+
   // 2. Add submit listener to push updates to the URL when calculating
   const handleUpdateUrl = () => {
     const newParams = new URLSearchParams();

@@ -14,7 +14,6 @@ const sessionSecret = CORRECT_PASSCODE || (import.meta.env.DEV ? 'dev-fallback-s
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
 
 // Stateless session: token = randHex.expiryHex.hmac(secret, randHex.expiryHex)
-// Random per login, expires after 24h, verifiable without server-side storage.
 function issueSessionToken(): string {
   if (!sessionSecret) return '';
   const rand = crypto.randomBytes(32).toString('hex');
@@ -41,7 +40,7 @@ function verifySessionToken(token: string): boolean {
   }
 }
 
-// Login brute-force guard: max 5 attempts per IP per 5 minutes (per-instance best effort)
+// Login brute-force guard: max 5 attempts per IP per 5 minutes
 const loginAttemptMap = new Map<string, { count: number; resetTime: number }>();
 function isLoginRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -89,7 +88,6 @@ if (sessionCookie) {
 // 2. Handle POST Actions (Login, Clear, Logout) with CSRF validation
 if (Astro.request.method === 'POST') {
   try {
-    // CSRF Check: Verify Origin / Referer host against request host
     const origin = Astro.request.headers.get('origin');
     const host = Astro.request.headers.get('host');
     if (origin) {
@@ -146,7 +144,6 @@ if (Astro.request.method === 'POST') {
         }
       }
     } else if (action === 'clear' && authenticated) {
-      // Clear local JSON
       if (import.meta.env.DEV) {
         const filePath = path.resolve(process.cwd(), 'src/data/feedback-submissions.json');
         if (fs.existsSync(filePath)) {
@@ -154,7 +151,6 @@ if (Astro.request.method === 'POST') {
         }
       }
 
-      // Clear Vercel KV
       const kvUrl = process.env.KV_REST_API_URL;
       const kvToken = process.env.KV_REST_API_TOKEN;
       if (kvUrl && kvToken) {
@@ -181,7 +177,6 @@ if (Astro.request.method === 'POST') {
 
 // 3. Load feedbacks if authenticated
 if (authenticated) {
-  // Load from local file
   const filePath = path.resolve(process.cwd(), 'src/data/feedback-submissions.json');
   let localFeedbacks = [];
   if (fs.existsSync(filePath)) {
@@ -190,7 +185,6 @@ if (authenticated) {
     } catch (e) {}
   }
 
-  // Load from Vercel KV
   let kvFeedbacks = [];
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
@@ -208,7 +202,6 @@ if (authenticated) {
     } catch (e) {}
   }
 
-  // Merge & Sort
   const mergedMap = new Map();
   [...localFeedbacks, ...kvFeedbacks].forEach(item => {
     const key = `${item.timestamp}-${item.url}`;
@@ -218,28 +211,61 @@ if (authenticated) {
   feedbacks = Array.from(mergedMap.values()).sort((a, b) => b.timestamp - a.timestamp);
 }
 
+// Overall Metrics
 const totalRatings = feedbacks.length;
-const yesCount = feedbacks.filter(item => item.rating === 'yes').length;
-const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0;
+
+// Monthly Filter & Metrics
+const currentMonthIso = new Date().toISOString().slice(0, 7);
+const monthParam = Astro.url.searchParams.get('month') || currentMonthIso;
+
+const availableMonths = Array.from(
+  new Set([currentMonthIso, ...feedbacks.map(f => new Date(f.timestamp).toISOString().slice(0, 7))])
+).sort().reverse();
+
+const monthlyFeedbacks = feedbacks.filter(f => {
+  if (monthParam === 'all') return true;
+  return new Date(f.timestamp).toISOString().slice(0, 7) === monthParam;
+});
+
+const monthlyTotal = monthlyFeedbacks.length;
+const monthlyYes = monthlyFeedbacks.filter(f => f.rating === 'yes').length;
+const monthlyNo = monthlyFeedbacks.filter(f => f.rating === 'no').length;
+const monthlyRatio = monthlyTotal > 0 ? Math.round((monthlyYes / monthlyTotal) * 100) : 0;
+const monthlyComments = monthlyFeedbacks.filter(f => Boolean(f.message));
+
+// Group by calculator for monthly breakdown
+const monthlyCalcMap = new Map<string, { name: string; url: string; yes: number; no: number; commentsCount: number }>();
+monthlyFeedbacks.forEach(f => {
+  const existing = monthlyCalcMap.get(f.url) || { name: f.name, url: f.url, yes: 0, no: 0, commentsCount: 0 };
+  if (f.rating === 'yes') existing.yes++;
+  else existing.no++;
+  if (f.message) existing.commentsCount++;
+  monthlyCalcMap.set(f.url, existing);
+});
+const monthlyCalcBreakdown = Array.from(monthlyCalcMap.values()).map(c => ({
+  ...c,
+  total: c.yes + c.no,
+  ratio: c.yes + c.no > 0 ? Math.round((c.yes / (c.yes + c.no)) * 100) : 0
+})).sort((a, b) => b.total - a.total);
 ---
 
 <Layout 
-  title="Feedback Dashboard - financialcalculatorapp.com" 
-  description="View user helpfulness feedback ratings and submissions collected across all calculators."
+  title="Monthly Feedback Report & Dashboard | financialcalculatorapp.com" 
+  description="Monthly feedback metrics, Yes/No helpfulness ratings, user suggestions, and CSV reports."
   noindex={true}
 >
   { !authenticated ? (
-    /* Passcode Unlock Overlay (Server Rendered) */
+    /* Passcode Unlock Overlay */
     <div class="max-w-md mx-auto py-16 px-4">
-      <div class="bg-canvas border border-hairline rounded-xl p-8 shadow-md">
-        <div class="w-12 h-12 rounded-full bg-canvas-soft border border-hairline flex items-center justify-center text-xl mb-4 mx-auto">
+      <div class="bg-paper border border-line rounded-2xl p-8 shadow-[var(--control-shadow)]">
+        <div class="w-12 h-12 rounded-full bg-soft border border-line flex items-center justify-center text-xl mb-4 mx-auto">
           🔒
         </div>
-        <h2 class="text-xl font-semibold text-center text-ink tracking-tight mb-2">Admin Dashboard</h2>
-        <p class="text-xs text-mute text-center mb-6">Enter the master administrative passcode to view feedback submissions.</p>
+        <h2 class="text-xl font-bold text-center text-ink tracking-tight mb-2 font-display">Feedback Admin Portal</h2>
+        <p class="text-xs text-muted text-center mb-6">Enter administrative passcode to view feedback metrics and monthly reports.</p>
 
         {errorMsg && (
-          <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-md text-center font-medium">
+          <div class="mb-4 p-3 bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs rounded-lg text-center font-medium">
             {errorMsg}
           </div>
         )}
@@ -254,12 +280,12 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
               id="passcode" 
               placeholder="Enter passcode..." 
               required
-              class="w-full px-3.5 py-2.5 bg-canvas-soft border border-hairline rounded-lg text-sm text-ink focus:outline-none focus:border-hairline-strong transition-colors"
+              class="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-lg text-sm text-ink focus:outline-none focus:ring-2 focus:ring-input-accent transition-all font-mono"
             />
           </div>
           <button 
             type="submit" 
-            class="w-full py-2.5 bg-primary text-on-primary font-medium text-xs rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
+            class="w-full py-2.5 bg-ink text-canvas font-mono font-bold text-xs rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
           >
             Authenticate
           </button>
@@ -267,90 +293,276 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
       </div>
     </div>
   ) : (
-    /* Feedback Table & Insights (Authenticated) */
-    <div class="max-w-5xl mx-auto py-8 space-y-8">
-      {/* Top Header & Actions */}
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-hairline pb-6">
+    /* Authenticated Dashboard */
+    <div class="max-w-5xl mx-auto py-6 space-y-10">
+      <!-- Top Navigation & Global Controls -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-6">
         <div>
-          <h1 class="text-2xl font-bold tracking-tight text-ink">User Feedback & Helpfulness</h1>
-          <p class="text-xs text-mute mt-1">Live aggregated feedback logs from users across all calculators.</p>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-soft text-[10px] font-mono font-bold text-ink mb-1.5">
+            <span class="text-input-accent">●</span> Live Reporting Center
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink font-display">Monthly Feedback Report</h1>
+          <p class="text-xs text-muted mt-1">Aggregates Yes/No helpfulness ratings, user comments, and automated monthly dispatch to hello@financialcalculatorapp.com</p>
         </div>
         <div class="flex items-center gap-3">
-          <form method="POST" onsubmit="return confirm('Are you sure you want to permanently clear all feedback submissions?');">
+          <form method="POST" onsubmit="return confirm('Are you sure you want to permanently clear all feedback data?');">
             <input type="hidden" name="action" value="clear" />
-            <button type="submit" class="px-3.5 py-1.5 bg-canvas border border-hairline hover:border-red-300 hover:text-red-600 text-mute text-xs rounded-lg transition-colors cursor-pointer font-medium">
+            <button type="submit" class="px-3.5 py-1.5 bg-paper border border-line hover:border-red-400 hover:text-red-500 text-muted text-xs rounded-lg transition-colors cursor-pointer font-mono font-bold">
               Clear All Data
             </button>
           </form>
           <form method="POST">
             <input type="hidden" name="action" value="logout" />
-            <button type="submit" class="px-3.5 py-1.5 bg-canvas-soft border border-hairline hover:bg-canvas-soft-2 text-ink text-xs rounded-lg transition-colors cursor-pointer font-medium">
+            <button type="submit" class="px-3.5 py-1.5 bg-soft border border-line hover:bg-canvas text-ink text-xs rounded-lg transition-colors cursor-pointer font-mono font-bold">
               Sign Out
             </button>
           </form>
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
-          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Total Submissions</h4>
-          <p class="text-3xl font-bold text-ink mt-1 font-mono">{totalRatings}</p>
-        </div>
-        <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
-          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Found Helpful 👍</h4>
-          <p class="text-3xl font-bold text-green-700 dark:text-green-400 mt-1 font-mono">{yesCount}</p>
-        </div>
-        <div class="border border-hairline p-5 rounded-lg bg-canvas shadow-sm">
-          <h4 class="text-[10px] font-mono uppercase tracking-wider text-mute">Helpfulness Ratio</h4>
-          <p class="text-3xl font-bold text-link mt-1 font-mono">{ratio}%</p>
+      <!-- Month Selector Bar & Quick Actions -->
+      <div class="p-4 rounded-xl border border-line bg-paper shadow-[var(--control-shadow)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <form method="GET" class="flex items-center gap-3">
+          <label for="month-select" class="text-xs font-mono font-bold uppercase text-muted">Select Reporting Month:</label>
+          <select 
+            id="month-select" 
+            name="month" 
+            class="px-3 py-1.5 rounded-lg border border-line bg-canvas text-xs font-mono font-bold text-ink focus:outline-none focus:ring-1 focus:ring-input-accent cursor-pointer"
+          >
+            <option value="all" selected={monthParam === 'all'}>All Time ({totalRatings} total)</option>
+            {availableMonths.map(m => (
+              <option value={m} selected={monthParam === m}>{m}</option>
+            ))}
+          </select>
+        </form>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- CSV Export Button -->
+          <a
+            href={`/api/feedback/monthly-report?month=${encodeURIComponent(monthParam)}&format=csv`}
+            download
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-line bg-canvas hover:bg-soft text-xs font-mono font-bold text-ink transition-colors shadow-xs"
+          >
+            <span>📥</span>
+            <span>Download CSV ({monthParam})</span>
+          </a>
+
+          <!-- Send Email Trigger Button -->
+          <button
+            type="button"
+            id="send-report-btn"
+            data-month={monthParam}
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-ink text-canvas hover:opacity-90 text-xs font-mono font-bold transition-opacity cursor-pointer shadow-xs"
+          >
+            <span>✉️</span>
+            <span>Dispatch to hello@financialcalculatorapp.com</span>
+          </button>
         </div>
       </div>
 
-      {/* Feedbacks Table/List */}
-      <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm">
-        <div class="px-5 py-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
-          <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">Submission Log</h3>
+      <!-- Dispatch Status Banner (Dynamic) -->
+      <div id="dispatch-status-banner" class="hidden p-3.5 rounded-xl border text-xs font-mono"></div>
+
+      <!-- Monthly KPI Metrics Cards -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-muted">
+            Performance Metrics · <span class="text-ink">{monthParam === 'all' ? 'All Time' : monthParam}</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <div class="border border-line p-4 rounded-xl bg-paper shadow-[var(--control-shadow)]">
+            <h4 class="text-[10px] font-mono uppercase tracking-wider text-muted font-bold">Submissions</h4>
+            <p class="text-2xl sm:text-3xl font-extrabold text-ink mt-1 font-mono">{monthlyTotal}</p>
+          </div>
+          <div class="border border-line p-4 rounded-xl bg-paper shadow-[var(--control-shadow)]">
+            <h4 class="text-[10px] font-mono uppercase tracking-wider text-muted font-bold">Helpful 👍</h4>
+            <p class="text-2xl sm:text-3xl font-extrabold text-green-600 dark:text-green-400 mt-1 font-mono">{monthlyYes}</p>
+          </div>
+          <div class="border border-line p-4 rounded-xl bg-paper shadow-[var(--control-shadow)]">
+            <h4 class="text-[10px] font-mono uppercase tracking-wider text-muted font-bold">Not Helpful 👎</h4>
+            <p class="text-2xl sm:text-3xl font-extrabold text-red-600 dark:text-red-400 mt-1 font-mono">{monthlyNo}</p>
+          </div>
+          <div class="border border-line p-4 rounded-xl bg-paper shadow-[var(--control-shadow)]">
+            <h4 class="text-[10px] font-mono uppercase tracking-wider text-muted font-bold">Approval %</h4>
+            <p class="text-2xl sm:text-3xl font-extrabold text-input-accent mt-1 font-mono">{monthlyRatio}%</p>
+          </div>
+          <div class="border border-line p-4 rounded-xl bg-paper shadow-[var(--control-shadow)] col-span-2 lg:col-span-1">
+            <h4 class="text-[10px] font-mono uppercase tracking-wider text-muted font-bold">Comments 💬</h4>
+            <p class="text-2xl sm:text-3xl font-extrabold text-ink mt-1 font-mono">{monthlyComments.length}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calculator Breakdown Table -->
+      <div class="border border-line rounded-2xl overflow-hidden bg-paper shadow-[var(--control-shadow)]">
+        <div class="px-5 py-3.5 border-b border-line bg-soft flex items-center justify-between">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-ink font-bold">
+            Breakdown by Calculator ({monthlyCalcBreakdown.length} active tools)
+          </h3>
+          <span class="text-[10px] font-mono text-muted">Ranked by volume</span>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-left text-xs">
-            <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+          <table class="w-full border-collapse text-left text-xs font-sans">
+            <thead class="bg-canvas border-b border-line font-mono uppercase text-[10px] text-muted">
               <tr>
                 <th class="px-5 py-3">Calculator</th>
-                <th class="px-5 py-3">Rating</th>
-                <th class="px-5 py-3">Date Submitted</th>
+                <th class="px-4 py-3 text-center">Total</th>
+                <th class="px-4 py-3 text-center">👍 Yes</th>
+                <th class="px-4 py-3 text-center">👎 No</th>
+                <th class="px-4 py-3 text-center">Approval Rate</th>
+                <th class="px-4 py-3 text-center">Feedback Notes</th>
               </tr>
             </thead>
-            <tbody id="feedback-tbody" class="divide-y divide-hairline text-body text-ink">
-              { feedbacks.length === 0 ? (
+            <tbody class="divide-y divide-line text-ink">
+              {monthlyCalcBreakdown.length === 0 ? (
                 <tr>
-                  <td colspan="3" class="px-5 py-8 text-center text-mute">No feedback submissions recorded on the server yet.</td>
+                  <td colspan="6" class="px-5 py-8 text-center text-muted font-mono">
+                    No submissions recorded for {monthParam}.
+                  </td>
                 </tr>
               ) : (
-                feedbacks.map((item) => {
-                  const dateStr = new Date(item.timestamp).toLocaleString();
-                  const isSafeUrl = isValidRelativeUrl(item.url);
+                monthlyCalcBreakdown.map((item) => {
+                  const isSafe = isValidRelativeUrl(item.url);
                   return (
-                    <tr class="hover:bg-canvas-soft transition-colors text-ink">
-                      <td class="px-5 py-3 font-semibold text-body">
-                        <a href={isSafeUrl ? item.url : '#'} rel="noopener noreferrer" class="hover:underline text-link">{item.name}</a>
-                        <span class="text-[10px] font-mono text-mute block mt-0.5">{item.url}</span>
-                        {item.message && (
-                          <div class="mt-2 text-xs font-normal text-body bg-canvas-soft-2 p-2.5 rounded border border-hairline max-w-xl whitespace-pre-wrap">
-                            💬 "{item.message}"
-                          </div>
-                        )}
-                      </td>
+                    <tr class="hover:bg-soft transition-colors">
                       <td class="px-5 py-3">
-                        {item.rating === 'yes' ? (
-                          <span class="px-2 py-0.5 bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400 border border-green-200 dark:border-green-900 rounded text-[10px] font-medium">👍 Helpful</span>
+                        <a href={isSafe ? item.url : '#'} class="font-bold text-ink hover:text-input-accent transition-colors">
+                          {item.name}
+                        </a>
+                        <span class="text-[10px] font-mono text-muted block">{item.url}</span>
+                      </td>
+                      <td class="px-4 py-3 text-center font-mono font-bold">{item.total}</td>
+                      <td class="px-4 py-3 text-center font-mono text-green-600 dark:text-green-400 font-bold">{item.yes}</td>
+                      <td class="px-4 py-3 text-center font-mono text-red-600 dark:text-red-400 font-bold">{item.no}</td>
+                      <td class="px-4 py-3 text-center font-mono font-bold">
+                        <span class:list={[
+                          "px-2 py-0.5 rounded text-[10px]",
+                          item.ratio >= 80 ? "bg-green-500/10 text-green-600 dark:text-green-400" :
+                          item.ratio >= 50 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" :
+                          "bg-red-500/10 text-red-600 dark:text-red-400"
+                        ]}>
+                          {item.ratio}%
+                        </span>
+                      </td>
+                      <td class="px-4 py-3 text-center font-mono">
+                        {item.commentsCount > 0 ? (
+                          <span class="px-2 py-0.5 rounded-full bg-soft font-bold text-ink">
+                            💬 {item.commentsCount}
+                          </span>
                         ) : (
-                          <span class="px-2 py-0.5 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-400 border border-red-200 dark:border-red-900 rounded text-[10px] font-medium">👎 Not Helpful</span>
+                          <span class="text-muted/50">—</span>
                         )}
                       </td>
-                      <td class="px-5 py-3 font-mono text-mute">{dateStr}</td>
                     </tr>
-                  )
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Written Comments & Suggestions Stream -->
+      {monthlyComments.length > 0 && (
+        <div class="border border-line rounded-2xl overflow-hidden bg-paper shadow-[var(--control-shadow)] space-y-4 p-5">
+          <div class="border-b border-line pb-3 flex items-center justify-between">
+            <h3 class="text-xs font-mono uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+              <span>💬</span>
+              <span>User Written Comments & Improvement Suggestions ({monthlyComments.length})</span>
+            </h3>
+            <span class="text-[10px] font-mono text-muted">Sent to hello@financialcalculatorapp.com</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {monthlyComments.map((item) => {
+              const isSafe = isValidRelativeUrl(item.url);
+              const dateStr = new Date(item.timestamp).toLocaleString();
+              return (
+                <div class="p-4 rounded-xl border border-line bg-canvas space-y-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <a href={isSafe ? item.url : '#'} class="font-bold text-xs text-ink hover:underline truncate">
+                      {item.name}
+                    </a>
+                    {item.rating === 'yes' ? (
+                      <span class="px-2 py-0.5 bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-mono font-bold rounded shrink-0">
+                        👍 Helpful
+                      </span>
+                    ) : (
+                      <span class="px-2 py-0.5 bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-mono font-bold rounded shrink-0">
+                        👎 Not Helpful
+                      </span>
+                    )}
+                  </div>
+                  <blockquote class="text-xs text-ink/90 bg-soft p-3 rounded-lg border border-line/20 font-sans leading-relaxed whitespace-pre-wrap">
+                    "{item.message}"
+                  </blockquote>
+                  <div class="text-[10px] font-mono text-muted text-right">
+                    {dateStr}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <!-- Raw Activity Log (Chronological) -->
+      <div class="border border-line rounded-2xl overflow-hidden bg-paper shadow-[var(--control-shadow)]">
+        <div class="px-5 py-3.5 border-b border-line bg-soft flex items-center justify-between">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-ink font-bold">
+            Raw Submissions Log ({monthlyFeedbacks.length} records)
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-xs font-sans">
+            <thead class="bg-canvas border-b border-line font-mono uppercase text-[10px] text-muted">
+              <tr>
+                <th class="px-5 py-3">Tool</th>
+                <th class="px-4 py-3">Rating</th>
+                <th class="px-4 py-3">Feedback Message</th>
+                <th class="px-5 py-3 text-right">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-line text-ink">
+              {monthlyFeedbacks.length === 0 ? (
+                <tr>
+                  <td colspan="4" class="px-5 py-8 text-center text-muted font-mono">
+                    No submissions recorded.
+                  </td>
+                </tr>
+              ) : (
+                monthlyFeedbacks.map((item) => {
+                  const dateStr = new Date(item.timestamp).toLocaleString();
+                  const isSafe = isValidRelativeUrl(item.url);
+                  return (
+                    <tr class="hover:bg-soft transition-colors">
+                      <td class="px-5 py-3 font-semibold">
+                        <a href={isSafe ? item.url : '#'} class="text-ink hover:underline">
+                          {item.name}
+                        </a>
+                        <span class="text-[10px] font-mono text-muted block mt-0.5">{item.url}</span>
+                      </td>
+                      <td class="px-4 py-3 font-mono">
+                        {item.rating === 'yes' ? (
+                          <span class="px-2 py-0.5 bg-green-500/10 text-green-600 dark:text-green-400 rounded text-[10px] font-bold">👍 Yes</span>
+                        ) : (
+                          <span class="px-2 py-0.5 bg-red-500/10 text-red-600 dark:text-red-400 rounded text-[10px] font-bold">👎 No</span>
+                        )}
+                      </td>
+                      <td class="px-4 py-3 max-w-md">
+                        {item.message ? (
+                          <span class="text-xs text-ink/90 font-sans">"{item.message}"</span>
+                        ) : (
+                          <span class="text-muted/40 font-mono text-[10px]">No comment</span>
+                        )}
+                      </td>
+                      <td class="px-5 py-3 font-mono text-[11px] text-muted text-right whitespace-nowrap">
+                        {dateStr}
+                      </td>
+                    </tr>
+                  );
                 })
               )}
             </tbody>
@@ -360,3 +572,51 @@ const ratio = totalRatings > 0 ? Math.round((yesCount / totalRatings) * 100) : 0
     </div>
   )}
 </Layout>
+
+<script>
+  const monthSelect = document.getElementById('month-select') as HTMLSelectElement | null;
+  if (monthSelect) {
+    monthSelect.addEventListener('change', () => {
+      monthSelect.closest('form')?.submit();
+    });
+  }
+
+  const sendBtn = document.getElementById('send-report-btn') as HTMLButtonElement | null;
+  const statusBanner = document.getElementById('dispatch-status-banner');
+
+  if (sendBtn && statusBanner) {
+    sendBtn.addEventListener('click', async () => {
+      const month = sendBtn.getAttribute('data-month') || new Date().toISOString().slice(0, 7);
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span>⏳</span><span>Dispatching Report...</span>';
+      statusBanner.className = 'p-3.5 rounded-xl border text-xs font-mono bg-soft text-ink border-line';
+      statusBanner.textContent = 'Generating monthly report metrics and contacting dispatch handler...';
+      statusBanner.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/feedback/monthly-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ month })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          statusBanner.className = 'p-3.5 rounded-xl border text-xs font-mono bg-green-500/10 text-green-700 dark:text-green-300 border-green-500/30';
+          statusBanner.innerHTML = `<strong>✓ Success:</strong> Monthly Report for <strong>${data.month}</strong> compiled. ` +
+            `Aggregated ${data.metrics.total} ratings (${data.metrics.yesCount} Yes / ${data.metrics.noCount} No) ` +
+            `with ${data.metrics.commentsCount} user comments. Sent to <strong>${data.recipient}</strong>.`;
+        } else {
+          statusBanner.className = 'p-3.5 rounded-xl border text-xs font-mono bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30';
+          statusBanner.textContent = `Report compilation note: ${data.error || 'Failed to dispatch'}`;
+        }
+      } catch (err) {
+        statusBanner.className = 'p-3.5 rounded-xl border text-xs font-mono bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30';
+        statusBanner.textContent = 'Network error while generating monthly report.';
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<span>✉️</span><span>Dispatch to hello@financialcalculatorapp.com</span>';
+      }
+    });
+  }
+</script>

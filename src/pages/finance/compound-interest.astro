@@ -5,17 +5,38 @@ import Select from '../../components/ui/Select.astro';
 import ResultCard from '../../components/ui/ResultCard.astro';
 import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
 import RangeSlider from '../../components/ui/RangeSlider.astro';
+import CompoundInterestChart from '../../components/charts/CompoundInterestChart';
+import { generateCompoundInterestSchedule, generateCompoundingComparison } from '../../lib/math/finance';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 const faqs = getCalculatorFaqs('compound-interest');
+
+// Initial baseline projection schedule & multi-frequency comparison ($10k initial, $200/mo, 7.5%, 20y)
+const initialSchedule = generateCompoundInterestSchedule({
+  principal: 10000,
+  monthlyContribution: 200,
+  rate: 0.075,
+  years: 20,
+  compoundingFrequency: 12,
+  timing: 'end'
+});
+
+const initialComparison = generateCompoundingComparison({
+  principal: 10000,
+  monthlyContribution: 200,
+  rate: 0.075,
+  years: 20,
+  timing: 'end'
+});
 ---
 
 <CalculatorLayout 
   title="Compound Interest Calculator" 
-  description="Calculate how your money can grow over time with compound interest. Adjust starting principal, monthly additions, rates, and compounding terms."
+  seoTitle="Compound Interest Calculator: Monthly Investment Growth | financialcalculatorapp.com"
+  description="Free compound interest calculator. Calculate future portfolio growth with monthly contributions, compound frequency, and visual growth charts."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -105,13 +126,15 @@ const faqs = getCalculatorFaqs('compound-interest');
       <div id="compound-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
       </div>
 
-      <!-- Growth Chart Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">Investment Growth Chart</h4>
-        <div class="h-80 relative">
-          <canvas id="growth-chart"></canvas>
-        </div>
-      </div>
+      <!-- Compound Interest Growth Chart (Recharts) -->
+      <CompoundInterestChart
+        client:load
+        title={t('Compound Interest Growth Chart')}
+        subtitle={t('Cumulative deposits vs. exponential compound returns over your investment horizon')}
+        initialSchedule={initialSchedule}
+        initialComparison={initialComparison}
+        initialCompoundingFrequency={12}
+      />
     </div>
   </div>
 
@@ -119,14 +142,14 @@ const faqs = getCalculatorFaqs('compound-interest');
   <div class="mt-12 border-t border-hairline pt-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">Yearly Growth Breakdowns</h3>
-        <p class="text-sm text-body mt-1">Detailed growth of your principal and compound interest accrued annually.</p>
+        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Yearly Growth Breakdowns')}</h3>
+        <p class="text-sm text-body mt-1">{t('Detailed growth of your principal and compound interest accrued annually.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
         class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
       >
-        Show Yearly Table
+        {t('Show Yearly Table')}
       </button>
     </div>
 
@@ -153,9 +176,8 @@ const faqs = getCalculatorFaqs('compound-interest');
 </CalculatorLayout>
 
 <script>
-  import { generateCompoundInterestSchedule } from '../../lib/math/finance';
-  import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
-  import Chart from 'chart.js/auto';
+  import { generateCompoundInterestSchedule, generateCompoundingComparison } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
 
   // DOM Elements
   const form = document.getElementById('compound-form') as HTMLFormElement;
@@ -179,15 +201,14 @@ const faqs = getCalculatorFaqs('compound-interest');
   const scheduleWrapper = document.getElementById('schedule-wrapper');
   const scheduleBody = document.getElementById('schedule-body');
 
-  let chartInstance: Chart | null = null;
-
-  // Sync Input and Sliders
+  // Sync Input and Sliders with instant dynamic recalculation
   function setupSyncedInputs(inp: HTMLInputElement, sli: HTMLInputElement) {
     // Sync slider -> input
     sli.addEventListener('input', (e: any) => {
       inp.value = e.target.value;
       const displayVal = document.getElementById(`${sli.id}-val`);
       if (displayVal) displayVal.textContent = sli.value;
+      performCalculation();
     });
 
     // Sync input -> slider
@@ -195,9 +216,9 @@ const faqs = getCalculatorFaqs('compound-interest');
       const val = parseFloat(inp.value) || 0;
       sli.value = Math.min(Math.max(val, parseFloat(sli.min)), parseFloat(sli.max)).toString();
       
-      // Update RangeSlider's label value directly
       const displayVal = document.getElementById(`${sli.id}-val`);
       if (displayVal) displayVal.textContent = sli.value;
+      performCalculation();
     });
   }
 
@@ -206,7 +227,23 @@ const faqs = getCalculatorFaqs('compound-interest');
   setupSyncedInputs(rateInput, rateSlider);
   setupSyncedInputs(yearsInput, yearsSlider);
 
-  // Perform Calculation
+  // Instantly recalculate on compounding interval or payment timing changes
+  compoundingSelect.addEventListener('change', () => {
+    performCalculation();
+  });
+  timingCheckbox.addEventListener('change', () => {
+    performCalculation();
+  });
+
+  // Listen for compounding convention change from chart toggle pills
+  window.addEventListener('compound-frequency-changed' as any, (e: CustomEvent) => {
+    if (e.detail?.frequency) {
+      compoundingSelect.value = e.detail.frequency.toString();
+      performCalculation();
+    }
+  });
+
+  // Perform Calculation & Synchronize All Views
   function performCalculation() {
     const principal = Math.max(0, parseFloat(principalInput.value) || 0);
     const monthlyContribution = Math.max(0, parseFloat(contributionInput.value) || 0);
@@ -221,6 +258,14 @@ const faqs = getCalculatorFaqs('compound-interest');
       rate,
       years,
       compoundingFrequency: compounding,
+      timing
+    });
+
+    const comparison = generateCompoundingComparison({
+      principal,
+      monthlyContribution,
+      rate,
+      years,
       timing
     });
 
@@ -249,8 +294,18 @@ const faqs = getCalculatorFaqs('compound-interest');
       `;
     }
 
-    // Update Chart & Schedule
-    updateChart(schedule);
+    // Dispatch update to Recharts component
+    window.dispatchEvent(
+      new CustomEvent('compound-interest-data-updated', {
+        detail: {
+          schedule,
+          comparison,
+          compoundingFrequency: compounding
+        }
+      })
+    );
+
+    // Update Schedule Table
     updateScheduleTable(schedule);
   }
 
@@ -270,92 +325,6 @@ const faqs = getCalculatorFaqs('compound-interest');
     if (rootInterest) {
       rootInterest.querySelector('.font-mono')!.textContent = formatCurrency(res.totalInterest);
       rootInterest.querySelector('.font-mono')!.setAttribute('title', formatCurrency(res.totalInterest));
-    }
-  }
-
-  function updateChart(schedule: any[]) {
-    const canvas = document.getElementById('growth-chart') as HTMLCanvasElement;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const labels = schedule.map(e => `Year ${e.year}`);
-    const principalData = schedule.map(e => e.totalContributions);
-    const interestData = schedule.map(e => e.totalInterest);
-
-    if (chartInstance) {
-      chartInstance.data.labels = labels;
-      chartInstance.data.datasets[0].data = principalData;
-      chartInstance.data.datasets[1].data = interestData;
-      chartInstance.update();
-    } else {
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Total Deposits',
-              data: principalData,
-              backgroundColor: '#3b82f6',
-              borderColor: '#3b82f6',
-              borderWidth: 1,
-              stack: 'stack0'
-            },
-            {
-              label: 'Accrued Interest',
-              data: interestData,
-              backgroundColor: '#10b981',
-              borderColor: '#10b981',
-              borderWidth: 1,
-              stack: 'stack0'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-              labels: {
-                boxWidth: 8,
-                padding: 12,
-                font: { family: 'Geist, sans-serif', size: 10 }
-              }
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              callbacks: {
-                label: function(context) {
-                  return `${context.dataset.label}: ${formatCurrency(context.raw as number)}`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              stacked: true,
-              ticks: {
-                maxTicksLimit: 12,
-                font: { family: 'Geist Mono, monospace', size: 9 }
-              }
-            },
-            y: {
-              stacked: true,
-              ticks: {
-                font: { family: 'Geist Mono, monospace', size: 9 },
-                callback: function(value) {
-                  return formatCurrencyTick(value);
-                }
-              }
-            }
-          }
-        }
-      });
     }
   }
 
@@ -379,28 +348,21 @@ const faqs = getCalculatorFaqs('compound-interest');
     scheduleBody.innerHTML = html;
   }
 
-  // Listeners
+  // Form Submit Handler
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     performCalculation();
   });
 
+  // Form Reset Handler
   form.addEventListener('reset', () => {
     setTimeout(() => {
-      const rootTotal = document.getElementById('res-total');
-      const rootPrincipal = document.getElementById('res-principal');
-      const rootInterest = document.getElementById('res-interest');
-      if (rootTotal) rootTotal.querySelector('.font-mono')!.textContent = '--';
-      if (rootPrincipal) rootPrincipal.querySelector('.font-mono')!.textContent = '--';
-      if (rootInterest) rootInterest.querySelector('.font-mono')!.textContent = '--';
-      const takeawayEl = document.getElementById('compound-takeaway');
-      if (takeawayEl) takeawayEl.classList.add('hidden');
-      if (scheduleBody) scheduleBody.innerHTML = '';
-      if (chartInstance) {
-        chartInstance.destroy();
-        chartInstance = null;
-      }
-    }, 0);
+      [principalSlider, contributionSlider, rateSlider, yearsSlider].forEach(sli => {
+        const displayVal = document.getElementById(`${sli.id}-val`);
+        if (displayVal) displayVal.textContent = sli.value;
+      });
+      performCalculation();
+    }, 10);
   });
 
   // Table toggle logic
@@ -417,11 +379,11 @@ const faqs = getCalculatorFaqs('compound-interest');
     });
   }
 
+  // Initial Calculation on load to populate table, cards & chart in sync
+  performCalculation();
+
   // Listen for currency changes
   window.addEventListener('currency-change', () => {
-    const rootTotal = document.getElementById('res-total');
-    if (rootTotal && rootTotal.querySelector('.font-mono')?.textContent !== '--') {
-      performCalculation();
-    }
+    performCalculation();
   });
 </script>
