@@ -44,4 +44,4 @@ SAVE replaced the older REPAYE plan and is the most generous IDR plan:
 ## Which plan is right for you?
 Monthly payment requirements vary dramatically based on your income, family size, and student loan balances. 
 
-To calculate your exact payment schedules, interest subsidies, and forgiveness timelines across SAVE, PAYE, and IBR, use our interactive [Student Loan IDR Calculator](/loan/student-loan).
+To calculate your exact payment schedules, interest subsidies, and forgiveness timelines across SAVE, PAYE, and IBR, use our interactive [Student Loan IDR Calculator](/loan/student-loan/).

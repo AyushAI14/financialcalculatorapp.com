@@ -11,9 +11,9 @@ const faqs = getCalculatorFaqs('401k');
 ---
 
 <CalculatorLayout 
-  title="401k Calculator: Retirement Growth, Employer Match & By Age" 
-  seoTitle="401k Calculator with Match – By Age, Growth & Payout Estimator | financialcalculatorapp.com"
-  description="Free 401(k) retirement calculator. Calculate your 401k growth by age with employer match, compare Roth vs Traditional, estimate monthly retirement payout, tax savings, and early withdrawal rules."
+  title="401k Calculator with Match: Retirement Growth & Employer Contribution" 
+  seoTitle="401k Calculator with Match – By Age, Growth & Payout Estimator"
+  description="Free 401(k) calculator with match. Calculate your 401k retirement growth with employer matching contributions, estimate balance by age, monthly payout, and tax savings."
   faqs={faqs}
 >
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -335,7 +335,7 @@ const faqs = getCalculatorFaqs('401k');
         <div class="text-xs text-mute">
           Want to compare individual retirement accounts outside employer plans? Review income phaseouts and backdoor rules:
         </div>
-        <a href="/compare/roth-vs-traditional-ira" class="px-4 py-2 bg-canvas border border-hairline hover:bg-canvas-soft rounded-lg text-xs font-mono font-semibold text-ink transition-colors whitespace-nowrap">
+        <a href="/compare/roth-vs-traditional-ira/" class="px-4 py-2 bg-canvas border border-hairline hover:bg-canvas-soft rounded-lg text-xs font-mono font-semibold text-ink transition-colors whitespace-nowrap">
           Compare Roth vs Traditional IRA →
         </a>
       </div>
@@ -512,8 +512,17 @@ const faqs = getCalculatorFaqs('401k');
 <script>
   import { simulate401KPath } from '../../lib/math/retirement';
   import { formatCurrency, formatCurrencyTick } from '../../lib/utils';
-  import Chart from 'chart.js/auto';
+  import type { Chart } from 'chart.js';
   import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
+
+  let ChartClass: any = null;
+  async function getChartClass() {
+    if (!ChartClass) {
+      const module = await import('chart.js/auto');
+      ChartClass = module.default;
+    }
+    return ChartClass;
+  }
 
   enhanceChartCanvas('four-oh-one-k-chart', { filename: '401k-retirement-growth-chart' });
 
@@ -787,11 +796,13 @@ const faqs = getCalculatorFaqs('401k');
     }
   }
 
-  function updateChart(schedule: any[], initial: number, currentAge: number) {
+  async function updateChart(schedule: any[], initial: number, currentAge: number) {
     const canvas = document.getElementById('four-oh-one-k-chart') as HTMLCanvasElement | null;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const Chart = await getChartClass();
 
     const labels = schedule.map(e => `Age ${currentAge + e.year}`);
     const totalBalances = schedule.map(e => e.endingBalance);
@@ -819,7 +830,7 @@ const faqs = getCalculatorFaqs('401k');
     const targetType = currentChartType === 'area' ? 'line' : 'bar';
     const needsRecreate = !chartInstance || 
                           existingChart !== chartInstance || 
-                          chartInstance.config.type !== targetType;
+                          (chartInstance.config as any).type !== targetType;
 
     if (needsRecreate) {
       if (existingChart) {
@@ -925,7 +936,7 @@ const faqs = getCalculatorFaqs('401k');
               y: {
                 ticks: {
                   font: { family: 'Geist Mono, monospace', size: 9 },
-                  callback: function(value) {
+                  callback: function(value: any) {
                     return formatCurrencyTick(value);
                   }
                 }
@@ -1012,7 +1023,7 @@ const faqs = getCalculatorFaqs('401k');
                 stacked: true,
                 ticks: {
                   font: { family: 'Geist Mono, monospace', size: 9 },
-                  callback: function(value) {
+                  callback: function(value: any) {
                     return formatCurrencyTick(value);
                   }
                 }
@@ -1117,7 +1128,7 @@ const faqs = getCalculatorFaqs('401k');
         updateCardValue(resMatchingCard, '--');
         updateCardValue(resContributionsCard, '--');
         updateCardValue(resTaxCard, '--');
-        const existingChart = Chart.getChart('four-oh-one-k-chart');
+        const existingChart = ChartClass ? ChartClass.getChart('four-oh-one-k-chart') : null;
         if (existingChart) {
           existingChart.destroy();
         }

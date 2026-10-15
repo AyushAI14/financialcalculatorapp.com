@@ -33,7 +33,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Because these fees are factored into the APR, <strong>the APR is almost always higher than the nominal rate</strong>.</p>
 <h2>How APR is Calculated</h2>
 <p>To calculate APR, the lender determines the standard monthly payment based on the nominal interest rate and the full loan principal. However, the borrower does not actually receive the full principal amount; they receive the principal <strong>minus the closing fees</strong>. By setting the monthly payment against this lower net proceeds amount, we solve for a new, higher effective interest rate. That rate is the APR.</p>
-<p>Use our <a href="/loan/apr">APR Calculator</a> to plug in your numbers and see the true cost of your next loan!</p>
+<p>Use our <a href="/loan/apr/">APR Calculator</a> to plug in your numbers and see the true cost of your next loan!</p>
 `
     },
     es: {
@@ -58,7 +58,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Debido a que estos cargos se integran en el cálculo, <strong>la TAE / APR es prácticamente siempre superior al tipo nominal</strong>.</p>
 <h2>Cómo se calcula la TAE / APR</h2>
 <p>Para determinar la TAE, la entidad calcula la cuota mensual a partir del capital solicitado y el TIN. Sin embargo, el prestatario no recibe la totalidad del dinero, sino el capital <strong>menos los gastos y comisiones iniciales</strong>. Al calcular la tasa que iguala esa suma neta recibida con las cuotas futuras, se obtiene la tasa efectiva real.</p>
-<p>¡Utiliza nuestra <a href="/es/loan/apr">Calculadora de APR / TAE</a> para conocer el coste real de tu próxima financiación!</p>
+<p>¡Utiliza nuestra <a href="/es/loan/apr/">Calculadora de APR / TAE</a> para conocer el coste real de tu próxima financiación!</p>
 `
     },
     de: {
@@ -82,7 +82,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Da diese Kosten eingerechnet werden, liegt <strong>der Effektivzins fast immer über dem Sollzins</strong>.</p>
 <h2>Berechnung des Effektivzinses</h2>
 <p>Für die Berechnung wird die Monatsrate ermittelt und dem tatsächlich ausgezahlten Nettodarlehensbetrag (Darlehen abzüglich Nebenkosten) gegenübergestellt. Der so ermittelte interne Zinsfuß ist der Effektivzins.</p>
-<p>Nutzen Sie unseren <a href="/de/loan/apr">Effektivzins-Rechner</a>, um die tatsächlichen Kosten Ihres nächsten Kredits zu prüfen!</p>
+<p>Nutzen Sie unseren <a href="/de/loan/apr/">Effektivzins-Rechner</a>, um die tatsächlichen Kosten Ihres nächsten Kredits zu prüfen!</p>
 `
     },
     ja: {
@@ -106,7 +106,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>これらの費用が上乗せされるため、<strong>実質年率はほぼ必ず表面金利よりも高くなります</strong>。</p>
 <h2>実質年率の算出ロジック</h2>
 <p>実質年率は、毎月の返済額と「実際に手元に入った金額（元金から初期費用を引いた額）」を比較し、真の利回りを逆算して求めます。</p>
-<p>当サイトの <a href="/ja/loan/apr">実質年率（APR）計算機</a> を使って、ローンの本当のコストをシミュレーションしてみましょう！</p>
+<p>当サイトの <a href="/ja/loan/apr/">実質年率（APR）計算機</a> を使って、ローンの本当のコストをシミュレーションしてみましょう！</p>
 `
     },
     fr: {
@@ -130,7 +130,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Puisque ces éléments sont comptabilisés, <strong>le TAEG est systématiquement supérieur au taux nominal</strong>.</p>
 <h2>Comment est calculé le TAEG ?</h2>
 <p>Le calcul compare l'échéance mensuelle globale au montant net réellement perçu après déduction des frais initiaux, afin de déterminer le rendement actuariel réel.</p>
-<p>Testez dès maintenant notre <a href="/fr/loan/apr">Calculateur de TAEG</a> pour obtenir le coût exact de votre futur crédit !</p>
+<p>Testez dès maintenant notre <a href="/fr/loan/apr/">Calculateur de TAEG</a> pour obtenir le coût exact de votre futur crédit !</p>
 `
     },
     pt: {
@@ -154,7 +154,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Por somar todos os encargos, <strong>o CET é invariavelmente mais elevado que a taxa nominal</strong>.</p>
 <h2>Como calcular o CET</h2>
 <p>O cálculo compara o valor líquido liberado em conta com as parcelas mensais devidas ao longo do prazo de amortização.</p>
-<p>Confira nossa <a href="/pt/loan/apr">Calculadora de CET / APR</a> e descubra o real impacto das taxas antes de assinar contrato!</p>
+<p>Confira nossa <a href="/pt/loan/apr/">Calculadora de CET / APR</a> e descubra o real impacto das taxas antes de assinar contrato!</p>
 `
     },
   },
@@ -192,7 +192,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>Which Wins?</h2>
 <p>Mathematically, the Avalanche method wins every single time because it minimizes interest paid. However, human psychology is not always driven by math. Many savers fail to stay motivated during the long periods it takes to pay off a large, high-rate balance first. If you need behavioral reinforcement, the Snowball is a great fit. If you want to optimize your savings, choose the Avalanche.</p>
-<p>Run your own scenarios on our <a href="/loan/debt-payoff">Debt Payoff Calculator</a> to compare timelines and total interest paid under both models!</p>
+<p>Run your own scenarios on our <a href="/loan/debt-payoff/">Debt Payoff Calculator</a> to compare timelines and total interest paid under both models!</p>
 `
     },
     es: {
@@ -227,7 +227,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>¿Cuál deberías elegir?</h2>
 <p>Matemáticamente, la Avalancha siempre resulta ganadora porque minimiza los costes financieros. Sin embargo, las finanzas son conductuales: si necesitas motivación visible para no abandonar, la Bola de Nieve es excelente. Si buscas la máxima rentabilidad, elige la Avalancha.</p>
-<p>¡Simula tu plan con nuestra <a href="/es/loan/debt-payoff">Calculadora Bola de Nieve vs. Avalancha</a> y comprueba cuánto dinero puedes ahorrar!</p>
+<p>¡Simula tu plan con nuestra <a href="/es/loan/debt-payoff/">Calculadora Bola de Nieve vs. Avalancha</a> y comprueba cuánto dinero puedes ahorrar!</p>
 `
     },
     de: {
@@ -262,7 +262,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>Fazit: Welche Methode ist die richtige?</h2>
 <p>Rein rechnerisch gewinnt die Lawinen-Methode immer. In der Verhaltensökonomie zeigt sich jedoch: Wer schnelle Erfolgserlebnisse braucht, bleibt mit dem Schneeball-System eher am Ball.</p>
-<p>Nutzen Sie unseren interaktiven <a href="/de/loan/debt-payoff">Schuldentilgungs-Rechner</a>, um beide Wege direkt mit Ihren eigenen Zahlen zu vergleichen!</p>
+<p>Nutzen Sie unseren interaktiven <a href="/de/loan/debt-payoff/">Schuldentilgungs-Rechner</a>, um beide Wege direkt mit Ihren eigenen Zahlen zu vergleichen!</p>
 `
     },
     ja: {
@@ -297,7 +297,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>どちらを選ぶべきか？</h2>
 <p>数字上はアバランチ方式が常に勝利します。しかし、何ヶ月も成果が見えないと挫折しやすい性格の方には、目に見える進捗が得られるスノーボール方式が適しています。</p>
-<p>当サイトの <a href="/ja/loan/debt-payoff">借金返済シミュレーター</a> で、自分にとって最適なプランを試算してみましょう！</p>
+<p>当サイトの <a href="/ja/loan/debt-payoff/">借金返済シミュレーター</a> で、自分にとって最適なプランを試算してみましょう！</p>
 `
     },
     fr: {
@@ -332,7 +332,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>Laquelle est faite pour vous ?</h2>
 <p>Sur le plan comptable, l'Avalanche bat la Boule de Neige à tous les coups. Mais la finance personnelle est avant tout comportementale : si vous avez besoin de victoires rapides pour garder le cap, la Boule de Neige est idéale. Si vous voulez économiser le plus d'argent possible, foncez sur l'Avalanche.</p>
-<p>Calculez vos gains avec notre <a href="/fr/loan/debt-payoff">Calculateur Boule de Neige vs. Avalanche</a> !</p>
+<p>Calculez vos gains avec notre <a href="/fr/loan/debt-payoff/">Calculateur Boule de Neige vs. Avalanche</a> !</p>
 `
     },
     pt: {
@@ -367,7 +367,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 <h2>Qual estratégia escolher?</h2>
 <p>Pela matemática pura, a Avalanche sempre vence. Mas se você precisa de incentivo psicológico imediato para não desistir no meio do caminho, a Bola de Neve é a melhor pedida.</p>
-<p>Calcule seu cronograma ideal com a nossa <a href="/pt/loan/debt-payoff">Calculadora Bola de Neve vs. Avalanche</a>!</p>
+<p>Calcule seu cronograma ideal com a nossa <a href="/pt/loan/debt-payoff/">Calculadora Bola de Neve vs. Avalanche</a>!</p>
 `
     },
   },
@@ -400,7 +400,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Current Rate < Future Rate:</strong> Roth wins. You pay low taxes now and enjoy tax-free withdrawals later.</li>
   <li><strong>Current Rate = Future Rate:</strong> Mathematically identical, though Roth offers perks like no Required Minimum Distributions (RMDs).</li>
 </ul>
-<p>Run your personalized tax projections with our <a href="/retirement/ira-comparison">Roth vs Traditional IRA Calculator</a>!</p>
+<p>Run your personalized tax projections with our <a href="/retirement/ira-comparison/">Roth vs Traditional IRA Calculator</a>!</p>
 `
     },
     es: {
@@ -429,7 +429,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Tipo Actual > Tipo Futuro:</strong> Conviene el modelo Tradicional para ahorrar hoy en el tramo más caro.</li>
   <li><strong>Tipo Actual < Tipo Futuro:</strong> Conviene el modelo tipo Roth para evitar una carga tributaria mayor en el futuro.</li>
 </ul>
-<p>¡Proyecta tu pensión neta con nuestra <a href="/es/retirement/ira-comparison">Calculadora de Comparación Fiscal de Jubilación</a>!</p>
+<p>¡Proyecta tu pensión neta con nuestra <a href="/es/retirement/ira-comparison/">Calculadora de Comparación Fiscal de Jubilación</a>!</p>
 `
     },
     de: {
@@ -451,7 +451,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Vorteil:</strong> Sämtliche Kursgewinne und Dividenden wachsen über Jahrzehnte ohne steuerliche Einbußen heran.</li>
 </ul>
 <p><strong>Ideal für:</strong> Jüngere Sparer und Berufseinsteiger in niedrigeren Steuerklassen.</p>
-<p>Prüfen Sie Ihre persönliche Steuerersparnis mit unserem <a href="/de/retirement/ira-comparison">Vorsorge-Steuer-Rechner</a>!</p>
+<p>Prüfen Sie Ihre persönliche Steuerersparnis mit unserem <a href="/de/retirement/ira-comparison/">Vorsorge-Steuer-Rechner</a>!</p>
 `
     },
     ja: {
@@ -473,7 +473,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>メリット：</strong> 何十年もの間に生まれた複利運用益・配当金が<strong>100%非課税</strong>で手に入ります。</li>
 </ul>
 <p><strong>向いている人：</strong> 20代〜30代の若年層や、現在の税率が低めで長期の運用期間を確保できる方。</p>
-<p>当サイトの <a href="/ja/retirement/ira-comparison">老後資金・年金税制比較計算機</a> でシミュレーションしてみましょう！</p>
+<p>当サイトの <a href="/ja/retirement/ira-comparison/">老後資金・年金税制比較計算機</a> でシミュレーションしてみましょう！</p>
 `
     },
     fr: {
@@ -490,7 +490,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p><strong>Recommandé pour :</strong> Les contribuables fortement imposés (TMI à 30%, 41% ou 45%).</p>
 <h2>2. L'exonération totale des plus-values à la sortie</h2>
 <p>Vous investissez des sommes déjà fiscalisées, mais profitez d'une exonération d'impôt sur les plus-values au moment du rachat.</p>
-<p>Comparez vos gains nets avec notre <a href="/fr/retirement/ira-comparison">Calculateur Fiscal Épargne Retraite</a> !</p>
+<p>Comparez vos gains nets avec notre <a href="/fr/retirement/ira-comparison/">Calculateur Fiscal Épargne Retraite</a> !</p>
 `
     },
     pt: {
@@ -499,7 +499,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       content: `
 <p>Ao planejar a previdência privada, a dúvida crucial é: <strong>escolher dedução tributária agora ou isenção sobre o principal lá na frente?</strong></p>
 <p>A escolha depende da sua declaração do Imposto de Renda (Completa ou Simplificada) e da sua faixa de renda atual versus futura.</p>
-<p>Calcule o saldo líquido com a nossa <a href="/pt/retirement/ira-comparison">Calculadora Tributária de Aposentadoria</a>!</p>
+<p>Calcule o saldo líquido com a nossa <a href="/pt/retirement/ira-comparison/">Calculadora Tributária de Aposentadoria</a>!</p>
 `
     },
   },
@@ -522,7 +522,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Borrower Request (80% LTV):</strong> You can request PMI cancellation once your balance drops to 80% equity.</li>
   <li><strong>Re-appraisal:</strong> If your home's market value has surged, a new appraisal can prove your equity exceeds 20%.</li>
 </ul>
-<p>Calculate your exact mortgage breakdown and PMI drop-off schedule using our interactive <a href="/loan/mortgage">Mortgage Calculator</a>!</p>
+<p>Calculate your exact mortgage breakdown and PMI drop-off schedule using our interactive <a href="/loan/mortgage/">Mortgage Calculator</a>!</p>
 `
     },
     es: {
@@ -540,7 +540,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Petición formal (80% LTV):</strong> Puedes solicitar la eliminación tan pronto amortices el 20% del valor de la vivienda.</li>
   <li><strong>Nueva tasación:</strong> Si el mercado inmobiliario ha subido y tu vivienda vale más, una nueva tasación puede certificar que ya cuentas con más del 20% de patrimonio neto.</li>
 </ul>
-<p>¡Consulta las cuotas exactas y el ahorro en nuestra <a href="/es/loan/mortgage">Calculadora de Hipotecas</a>!</p>
+<p>¡Consulta las cuotas exactas y el ahorro en nuestra <a href="/es/loan/mortgage/">Calculadora de Hipotecas</a>!</p>
 `
     },
     de: {
@@ -552,7 +552,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Sie schützt die finanzierende Bank vor Mietausfall oder Zahlungsunfähigkeit des Darlehensnehmers.</p>
 <h2>2. Höhe der Kosten</h2>
 <p>Je nach Beleihungsauslauf betragen die Aufschläge 0,5 % bis 1,5 % der Darlehenssumme pro Jahr.</p>
-<p>Prüfen Sie Ihre Konditionen mit unserem <a href="/de/loan/mortgage">Baufinanzierungs-Rechner</a>!</p>
+<p>Prüfen Sie Ihre Konditionen mit unserem <a href="/de/loan/mortgage/">Baufinanzierungs-Rechner</a>!</p>
 `
     },
     ja: {
@@ -564,7 +564,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>保証料は借入人ではなく、万が一の債務不履行時に金融機関を保護するための費用です。</p>
 <h2>2. 負担を減らすには</h2>
 <p>繰り上げ返済によって元金を減らし、担保評価額に対する借入比率を下げることで、保証料の戻しや金利優遇を得られるケースがあります。</p>
-<p>当サイトの <a href="/ja/loan/mortgage">住宅ローン返済計算機</a> で最適な頭金プランを比較してください！</p>
+<p>当サイトの <a href="/ja/loan/mortgage/">住宅ローン返済計算機</a> で最適な頭金プランを比較してください！</p>
 `
     },
     fr: {
@@ -574,7 +574,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Lors d'un achat immobilier avec un apport personnel faible, l'assurance de prêt représente une part majeure de votre mensualité globale.</p>
 <h2>1. Rôle de l'assurance</h2>
 <p>Elle garantit à l'établissement bancaire le remboursement du capital restant dû en cas d'aléa de la vie.</p>
-<p>Faites vos calculs avec notre <a href="/fr/loan/mortgage">Calculateur de Prêt Immobilier</a> !</p>
+<p>Faites vos calculs avec notre <a href="/fr/loan/mortgage/">Calculateur de Prêt Immobilier</a> !</p>
 `
     },
     pt: {
@@ -582,7 +582,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       description: "Entenda a cobrança do seguro obrigatório (MIP/DFI) e como o valor da entrada reduz o custo total do imóvel.",
       content: `
 <p>Ao financiar um imóvel com entrada inferior a 20%, o valor das apólices e taxas adicionais encarece a parcela mensal.</p>
-<p>Faça a simulação completa na nossa <a href="/pt/loan/mortgage">Calculadora de Financiamento Imobiliário</a>!</p>
+<p>Faça a simulação completa na nossa <a href="/pt/loan/mortgage/">Calculadora de Financiamento Imobiliário</a>!</p>
 `
     },
   },
@@ -602,7 +602,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>PAYE Plan:</strong> Protects 150% of the poverty line, caps payments at 10%, with forgiveness after 20 years.</li>
   <li><strong>IBR Plan:</strong> Caps payments at 10% or 15% with forgiveness after 20 to 25 years.</li>
 </ul>
-<p>Test your exact repayment schedule with our <a href="/loan/student-loan">Student Loan IDR Calculator</a>!</p>
+<p>Test your exact repayment schedule with our <a href="/loan/student-loan/">Student Loan IDR Calculator</a>!</p>
 `
     },
     es: {
@@ -617,7 +617,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong>Plan SAVE:</strong> La opción más ventajosa, que reduce la cuota hasta el 5%-10% del ingreso disponible y elimina los intereses que superen la mensualidad.</li>
   <li><strong>Planes PAYE e IBR:</strong> Limitan el pago al 10%-15% con condonación total de la deuda restante tras 20 o 25 años de pagos regulares.</li>
 </ul>
-<p>¡Calcula tus cuotas con nuestra <a href="/es/loan/student-loan">Calculadora de Préstamos Estudiantiles</a>!</p>
+<p>¡Calcula tus cuotas con nuestra <a href="/es/loan/student-loan/">Calculadora de Préstamos Estudiantiles</a>!</p>
 `
     },
     de: {
@@ -626,7 +626,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       content: `
 <p>Einkommensabhängige Rückzahlungsmodelle passen die monatliche Kreditbelastung an das tatsächliche Gehalt von Berufseinsteigern an.</p>
 <p>Übersteigt das Einkommen das Existenzminimum, wird nur der darüber liegende Betrag prozentual für die Darlehenstilgung herangezogen.</p>
-<p>Prüfen Sie Ihre Raten in unserem <a href="/de/loan/student-loan">Studienkredit-Rechner</a>!</p>
+<p>Prüfen Sie Ihre Raten in unserem <a href="/de/loan/student-loan/">Studienkredit-Rechner</a>!</p>
 `
     },
     ja: {
@@ -634,7 +634,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       description: "卒業後の収入水準に合わせて月々の返済額が変動する所得連動返済方式のメリットと計算方法を解説します。",
       content: `
 <p>所得連動型返済方式は、新社会人の生活を圧迫しないよう、手取り収入から最低生活費を控除した可処分所得に応じて月々の返済額を決定する仕組みです。</p>
-<p>無理のない返済スケジュールを当サイトの <a href="/ja/loan/student-loan">奨学金返済計算機</a> でシミュレーションしてください。</p>
+<p>無理のない返済スケジュールを当サイトの <a href="/ja/loan/student-loan/">奨学金返済計算機</a> でシミュレーションしてください。</p>
 `
     },
     fr: {
@@ -642,7 +642,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       description: "Comprendre les dispositifs de modulation des mensualités de crédit étudiant selon votre salaire de début de carrière.",
       content: `
 <p>Les plans de remboursement liés aux revenus ajustent automatiquement les échéances mensuelles au salaire net réellement perçu.</p>
-<p>Estimez vos mensualités sur notre <a href="/fr/loan/student-loan">Calculateur de Prêt Étudiant</a> !</p>
+<p>Estimez vos mensualités sur notre <a href="/fr/loan/student-loan/">Calculateur de Prêt Étudiant</a> !</p>
 `
     },
     pt: {
@@ -650,7 +650,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
       description: "Entenda como funcionam os modelos de amortização vinculados ao salário dos recém-formados.",
       content: `
 <p>Modelos de amortização atrelados à renda evitam que o pagamento de mensalidades comprometa a subsistência de recém-formados.</p>
-<p>Simule seus pagamentos na <a href="/pt/loan/student-loan">Calculadora de Financiamento Estudantil</a>!</p>
+<p>Simule seus pagamentos na <a href="/pt/loan/student-loan/">Calculadora de Financiamento Estudantil</a>!</p>
 `
     },
   },

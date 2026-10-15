@@ -42,4 +42,4 @@ It comes down to a comparison of your **Current Tax Bracket** versus your **Reti
 ---
 
 ## Compare Your Scenarios
-To run a personalized tax projection and see exactly which plan leaves you with more cash at retirement, try our [Roth vs Traditional IRA Calculator](/retirement/ira-comparison).
+To run a personalized tax projection and see exactly which plan leaves you with more cash at retirement, try our [Roth vs Traditional IRA Calculator](/retirement/ira-comparison/).

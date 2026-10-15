@@ -12,7 +12,7 @@ const isPt = lang === 'pt';
 ---
 
 <Layout 
-  title={isEs ? "Roth IRA vs. IRA Tradicional: ¿Cuál es Mejor en 2026? | financialcalculatorapp.com" : (isDe ? "Roth IRA vs. Traditionelle IRA: Was ist 2026 besser? | financialcalculatorapp.com" : (isJa ? "Roth IRA vs. Traditional IRA: 2026年の選び方と税制比較 | financialcalculatorapp.com" : (isPt ? "Roth IRA vs. IRA Tradicional: Qual é Melhor em 2026? | financialcalculatorapp.com" : "Roth IRA vs. Traditional IRA: Which is Better in 2026? | financialcalculatorapp.com")))} 
+  title={isEs ? "Roth IRA vs. IRA Tradicional: ¿Cuál es Mejor en 2026?" : (isDe ? "Roth IRA vs. Traditionelle IRA: Was ist 2026 besser?" : (isJa ? "Roth IRA vs. Traditional IRA: 2026年の選び方と税制比較" : (isPt ? "Roth IRA vs. IRA Tradicional: Qual é Melhor em 2026?" : "Roth IRA vs. Traditional IRA: Which is Better in 2026?")))} 
   description={isEs ? "Comprende las diferencias exactas entre cuentas Roth e IRA Tradicional: deducciones ahora vs. ingresos libres de impuestos después, límites y retiros." : (isDe ? "Verstehen Sie die genauen Unterschiede zwischen Roth und traditioneller IRA: Sofortige Steuerabzüge vs. steuerfreie Auszahlungen, Einkommensgrenzen und RMDs." : (isJa ? "Roth IRAとTraditional IRAの違いを徹底比較。現時点の所得控除 vs. 将来の非課税引出、年収制限、73歳以降の最低引出義務（RMD）のシミュレーション。" : (isPt ? "Entenda as diferenças exatas entre contas Roth e IRA Tradicional: dedução fiscal agora vs. resgate isento de impostos no futuro, limites e regras." : "Understand the exact differences between Roth and Traditional IRAs: tax deductions now vs. tax-free income later, income caps, and RMDs.")))}
   lang={lang}
 >
@@ -197,6 +197,8 @@ const isPt = lang === 'pt';
   import Chart from 'chart.js/auto';
   import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
   enhanceChartCanvas('ira-chart');
+
+  const docLang = document.documentElement.lang || 'en';
 
   const form = document.getElementById('ira-form') as HTMLFormElement;
 

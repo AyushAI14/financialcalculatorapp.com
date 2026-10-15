@@ -1,0 +1,405 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('salary-increase');
+---
+
+<CalculatorLayout 
+  title="Salary Increase Calculator: Pay Raise & New Wage Estimator" 
+  seoTitle="Salary Increase Calculator – Pay Raise & New Salary Estimator"
+  description="Free salary increase calculator. Calculate your pay raise, new salary, hourly wage conversion, and take-home pay boost after an annual or percentage raise."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="salary-raise-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Current Compensation')}</h3>
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pay="75000" data-type="annual" data-raise="3" data-raisetype="pct">3% COLA</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pay="85000" data-type="annual" data-raise="7" data-raisetype="pct">7% Merit</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pay="100000" data-type="annual" data-raise="15" data-raisetype="pct">15% Promo</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pay="35" data-type="hourly" data-raise="3" data-raisetype="flat">+$3/hr Raise</button>
+            </div>
+          </div>
+
+          <!-- Pay Frequency Basis -->
+          <div>
+            <label class="block text-xs font-mono uppercase text-mute mb-2">Compensation Format</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="pay-basis" value="annual" checked class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Annual Salary</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="pay-basis" value="hourly" class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Hourly Wage</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input id="current-pay" label="Current Salary / Wage" type="number" prefix="$" value="75000" placeholder="75000" />
+            <Input id="hours-per-week" label="Hours Worked Per Week" type="number" suffix="hrs" value="40" min="1" max="100" />
+          </div>
+
+          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Salary Increase Details')}</h3>
+
+          <!-- Raise Mode -->
+          <div>
+            <label class="block text-xs font-mono uppercase text-mute mb-2">Raise Calculation Mode</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="raise-mode" value="percent" checked class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Percentage Raise (%)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+                <input type="radio" name="raise-mode" value="flat" class="text-primary focus:ring-primary h-4 w-4" />
+                <span class="text-xs font-medium text-ink">Flat Dollar Increase ($)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div id="raise-input-wrapper">
+              <Input id="raise-val" label="Salary Increase Rate" type="number" suffix="%" value="5.0" step="0.1" />
+            </div>
+            <Input id="tax-rate" label="Estimated Tax Rate" type="number" suffix="%" value="24" tooltip="Combined federal and state marginal tax bracket to estimate take-home pay boost." />
+          </div>
+
+          <RangeSlider id="raise-slider" label="Adjust Salary Increase" min={0.5} max={30} step={0.5} value={5.0} />
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            {t('Calculate Pay Raise')}
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-new-salary">
+          <ResultCard 
+            title="New Annual Salary" 
+            value="--" 
+            highlight={true} 
+            description="Total projected annual earnings after pay increase."
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-annual-raise">
+            <ResultCard 
+              title="Annual Increase" 
+              value="--" 
+              description="Gross annual pay raise."
+            />
+          </div>
+          <div id="res-hourly-rate">
+            <ResultCard 
+              title="New Hourly Rate" 
+              value="--" 
+              description="Equivalent rate based on weekly hours."
+            />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-biweekly-boost">
+            <ResultCard 
+              title="Bi-Weekly Paycheck Boost" 
+              value="--" 
+              description="Gross increase per 2-week paycheck."
+            />
+          </div>
+          <div id="res-net-monthly">
+            <ResultCard 
+              title="Estimated Monthly Net Boost" 
+              value="--" 
+              description="Take-home cash in pocket after estimated tax."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Compensation Frequency Table -->
+      <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Pay Frequency Breakdown</h4>
+          <span class="text-[10px] font-mono text-mute">Before vs. After Raise</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-hairline font-mono text-[10px] text-mute uppercase bg-canvas-soft/50">
+                <th class="py-2.5 px-4">Pay Period</th>
+                <th class="py-2.5 px-4 text-right">Current Pay</th>
+                <th class="py-2.5 px-4 text-right">Gross Increase</th>
+                <th class="py-2.5 px-4 text-right font-bold text-ink">New Gross Pay</th>
+              </tr>
+            </thead>
+            <tbody id="breakdown-body" class="divide-y divide-hairline font-mono">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Guide -->
+  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+    <div class="max-w-3xl space-y-4">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">How to Calculate a Salary Increase</h2>
+      <p class="text-sm text-mute leading-relaxed">
+        Calculating a pay raise involves determining the percentage increase relative to your baseline earnings, or converting a flat wage increase across all common payroll cycles (hourly, weekly, bi-weekly, semi-monthly, and annual).
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 not-prose">
+        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">1. Percentage Raise Formula</h3>
+          <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline">
+            New Salary = Old Salary × (1 + Raise% / 100)
+          </p>
+          <p class="text-xs text-mute leading-relaxed">
+            For example, a 6% raise on a $75,000 base salary is: $75,000 × 1.06 = $79,500/year (an increase of $4,500).
+          </p>
+        </div>
+
+        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">2. Dollar Increase to Percentage</h3>
+          <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline">
+            Raise % = ((New Salary - Old Salary) / Old Salary) × 100
+          </p>
+          <p class="text-xs text-mute leading-relaxed">
+            If your salary increases from $80,000 to $88,000, your raise percentage is: (($88,000 - $80,000) / $80,000) × 100 = 10%.
+          </p>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Understanding Your Take-Home Pay Boost</h3>
+      <p class="text-sm text-mute leading-relaxed">
+        Gross salary increases do not convert 1:1 into take-home pay. Because United States payroll taxes utilize progressive marginal tax brackets, your raise is taxed at your highest applicable marginal federal bracket plus state taxes and FICA (6.2% Social Security + 1.45% Medicare). For example, if you are in the 24% federal tax bracket and pay 5% state tax plus 7.65% FICA, each additional $1,000 of raise delivers roughly $633.50 in take-home cash.
+      </p>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Average Salary Increase Benchmarks (2026)</h3>
+      <ul class="text-sm text-mute space-y-2 list-disc pl-5">
+        <li><strong>Cost of Living Adjustment (COLA):</strong> 2.5% to 3.5% annually to protect purchasing power against baseline inflation.</li>
+        <li><strong>Performance / Merit Raise:</strong> 4.0% to 7.0% for solid contributors meeting or exceeding target benchmarks.</li>
+        <li><strong>Internal Promotion:</strong> 8.0% to 15.0% when taking on expanded scope, title, or managerial duties.</li>
+        <li><strong>External Job Switch:</strong> 10.0% to 25.0%+ when moving to a new employer in competitive industries.</li>
+      </ul>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('salary-raise-form') as HTMLFormElement;
+  const currentPayInput = document.getElementById('current-pay') as HTMLInputElement;
+  const hoursInput = document.getElementById('hours-per-week') as HTMLInputElement;
+  const raiseValInput = document.getElementById('raise-val') as HTMLInputElement;
+  const taxRateInput = document.getElementById('tax-rate') as HTMLInputElement;
+  const raiseSlider = document.getElementById('raise-slider') as HTMLInputElement;
+  const raiseInputWrapper = document.getElementById('raise-input-wrapper');
+
+  const resNewSalary = document.getElementById('res-new-salary')?.querySelector('[data-result-value]');
+  const resAnnualRaise = document.getElementById('res-annual-raise')?.querySelector('[data-result-value]');
+  const resHourlyRate = document.getElementById('res-hourly-rate')?.querySelector('[data-result-value]');
+  const resBiweeklyBoost = document.getElementById('res-biweekly-boost')?.querySelector('[data-result-value]');
+  const resNetMonthly = document.getElementById('res-net-monthly')?.querySelector('[data-result-value]');
+  const breakdownBody = document.getElementById('breakdown-body');
+
+  function getRadioValue(name: string): string {
+    const radio = document.querySelector(`input[name="${name}"]:checked`) as HTMLInputElement | null;
+    return radio ? radio.value : '';
+  }
+
+  function updateRaiseInputUI() {
+    const raiseMode = getRadioValue('raise-mode');
+    const payBasis = getRadioValue('pay-basis');
+    const label = raiseInputWrapper?.querySelector('label');
+
+    if (raiseMode === 'percent') {
+      if (label) label.textContent = 'Salary Increase Rate';
+      if (raiseSlider) raiseSlider.style.display = 'block';
+    } else {
+      if (label) label.textContent = payBasis === 'hourly' ? 'Hourly Dollar Raise' : 'Annual Dollar Raise';
+      if (raiseSlider) raiseSlider.style.display = 'none';
+    }
+  }
+
+  function calculateRaise() {
+    const payBasis = getRadioValue('pay-basis');
+    const raiseMode = getRadioValue('raise-mode');
+    const currentPay = Math.abs(parseFloat(currentPayInput.value)) || 0;
+    const hoursPerWeek = Math.max(1, Math.abs(parseFloat(hoursInput.value)) || 40);
+    const raiseVal = Math.abs(parseFloat(raiseValInput.value)) || 0;
+    const taxRate = Math.min(60, Math.max(0, Math.abs(parseFloat(taxRateInput.value)) || 0)) / 100;
+
+    const annualHours = hoursPerWeek * 52;
+
+    let baselineAnnual = 0;
+    let baselineHourly = 0;
+
+    if (payBasis === 'hourly') {
+      baselineHourly = currentPay;
+      baselineAnnual = currentPay * annualHours;
+    } else {
+      baselineAnnual = currentPay;
+      baselineHourly = annualHours > 0 ? baselineAnnual / annualHours : 0;
+    }
+
+    let annualIncrease = 0;
+    let raisePercent = 0;
+
+    if (raiseMode === 'percent') {
+      raisePercent = raiseVal;
+      annualIncrease = baselineAnnual * (raisePercent / 100);
+    } else {
+      if (payBasis === 'hourly') {
+        annualIncrease = raiseVal * annualHours;
+        raisePercent = baselineAnnual > 0 ? (annualIncrease / baselineAnnual) * 100 : 0;
+      } else {
+        annualIncrease = raiseVal;
+        raisePercent = baselineAnnual > 0 ? (annualIncrease / baselineAnnual) * 100 : 0;
+      }
+    }
+
+    const newAnnual = baselineAnnual + annualIncrease;
+    const newHourly = annualHours > 0 ? newAnnual / annualHours : 0;
+    const hourlyIncrease = newHourly - baselineHourly;
+    const biweeklyBoost = annualIncrease / 26;
+    const monthlyGrossBoost = annualIncrease / 12;
+    const monthlyNetBoost = monthlyGrossBoost * (1 - taxRate);
+
+    // Update result cards
+    if (resNewSalary) resNewSalary.textContent = formatCurrency(newAnnual);
+    if (resAnnualRaise) resAnnualRaise.textContent = `+${formatCurrency(annualIncrease)} (${raisePercent.toFixed(1)}%)`;
+    if (resHourlyRate) resHourlyRate.textContent = formatCurrency(newHourly) + '/hr';
+    if (resBiweeklyBoost) resBiweeklyBoost.textContent = `+${formatCurrency(biweeklyBoost)}`;
+    if (resNetMonthly) resNetMonthly.textContent = `+${formatCurrency(monthlyNetBoost)}/mo`;
+
+    // Populate comparison table
+    const periods = [
+      { label: 'Hourly', mult: 1 / annualHours },
+      { label: 'Weekly (52x)', mult: 1 / 52 },
+      { label: 'Bi-Weekly (26x)', mult: 1 / 26 },
+      { label: 'Semi-Monthly (24x)', mult: 1 / 24 },
+      { label: 'Monthly (12x)', mult: 1 / 12 },
+      { label: 'Annual Total', mult: 1 }
+    ];
+
+    if (breakdownBody) {
+      breakdownBody.innerHTML = periods.map(p => {
+        const cur = baselineAnnual * p.mult;
+        const inc = annualIncrease * p.mult;
+        const nxt = newAnnual * p.mult;
+        return `
+          <tr class="hover:bg-canvas-soft transition-colors">
+            <td class="py-2 px-4 font-medium text-ink">${p.label}</td>
+            <td class="py-2 px-4 text-right text-mute">${formatCurrency(cur)}</td>
+            <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(inc)}</td>
+            <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(nxt)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // Radio button listeners
+  document.querySelectorAll('input[name="pay-basis"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const isHourly = (r as HTMLInputElement).value === 'hourly';
+      if (isHourly && parseFloat(currentPayInput.value) > 500) {
+        currentPayInput.value = '35.00';
+      } else if (!isHourly && parseFloat(currentPayInput.value) < 500) {
+        currentPayInput.value = '75000';
+      }
+      updateRaiseInputUI();
+      calculateRaise();
+    });
+  });
+
+  document.querySelectorAll('input[name="raise-mode"]').forEach(r => {
+    r.addEventListener('change', () => {
+      updateRaiseInputUI();
+      calculateRaise();
+    });
+  });
+
+  // Sliders and inputs sync
+  if (raiseSlider) {
+    raiseSlider.addEventListener('input', (e: any) => {
+      raiseValInput.value = e.target.value;
+      calculateRaise();
+    });
+  }
+
+  raiseValInput.addEventListener('input', () => {
+    const val = parseFloat(raiseValInput.value) || 0;
+    if (raiseSlider) raiseSlider.value = String(Math.min(30, Math.max(0.5, val)));
+    calculateRaise();
+  });
+
+  currentPayInput.addEventListener('input', calculateRaise);
+  hoursInput.addEventListener('input', calculateRaise);
+  taxRateInput.addEventListener('input', calculateRaise);
+
+  // Preset buttons
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pay = btn.getAttribute('data-pay');
+      const type = btn.getAttribute('data-type');
+      const raise = btn.getAttribute('data-raise');
+      const raiseType = btn.getAttribute('data-raisetype');
+
+      if (type) {
+        const radio = document.querySelector(`input[name="pay-basis"][value="${type}"]`) as HTMLInputElement | null;
+        if (radio) radio.checked = true;
+      }
+      if (raiseType) {
+        const radio = document.querySelector(`input[name="raise-mode"][value="${raiseType === 'pct' ? 'percent' : 'flat'}"]`) as HTMLInputElement | null;
+        if (radio) radio.checked = true;
+      }
+      if (pay) currentPayInput.value = pay;
+      if (raise) {
+        raiseValInput.value = raise;
+        if (raiseSlider) raiseSlider.value = raise;
+      }
+
+      updateRaiseInputUI();
+      calculateRaise();
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateRaise();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      updateRaiseInputUI();
+      calculateRaise();
+    }, 10);
+  });
+
+  // Initial calculation
+  calculateRaise();
+</script>

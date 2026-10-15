@@ -6,6 +6,7 @@ export interface CalculatorDefinition {
   defaultDesc: string;
   calcKey?: string;
   badge?: string;
+  keywords?: string[];
 }
 
 export interface CategoryDefinition {
@@ -30,7 +31,8 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         descKey: 'calc.hp12c.desc',
         defaultDesc: 'Interactive simulation of the classic HP 12C with RPN logic and amortization tables.',
         calcKey: 'hp-12c',
-        badge: 'Classic RPN'
+        badge: 'Classic RPN',
+        keywords: ['hp 12c', 'hp-12c emulator', 'rpn financial calculator', 'online financial calculator']
       },
       {
         url: '/emulators/ti-ba-ii-plus',
@@ -39,7 +41,8 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         descKey: 'calc.tiba2.desc',
         defaultDesc: 'Full emulator for CFA and finance students to compute TVM, cash flows, and IRR.',
         calcKey: 'ti-ba-ii-plus',
-        badge: 'CFA Exam'
+        badge: 'CFA Exam',
+        keywords: ['ti ba ii plus', 'ti ba 2 plus simulator', 'cfa financial calculator', 'tvm emulator']
       }
     ]
   },
@@ -55,15 +58,37 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         defaultName: 'Compound Interest Calculator',
         descKey: 'calc.compound.desc',
         defaultDesc: 'See how your money multiplies over time with recurring contributions and compound growth.',
-        calcKey: 'compound-interest'
+        calcKey: 'compound-interest',
+        keywords: ['compound interest calculator', 'compound interest', 'investment calculator', 'future value calculator', 'compound growth']
       },
       {
-        url: '/finance/daily-compound-interest',
-        nameKey: 'calc.dailycompound.name',
-        defaultName: 'Daily Compound Interest',
-        descKey: 'calc.dailycompound.desc',
-        defaultDesc: 'Calculate how daily compounding accelerates your savings balance and annual yield.',
-        calcKey: 'daily-compound-interest'
+        url: '/finance/investment',
+        nameKey: 'calc.investment.name',
+        defaultName: 'Investment Calculator',
+        descKey: 'calc.investment.desc',
+        defaultDesc: 'Project portfolio growth and investment returns across stocks, index funds, and recurring deposits.',
+        calcKey: 'investment',
+        badge: 'Portfolio',
+        keywords: ['investment calculator', 'investing calculator', 'portfolio growth', 'stock return calculator', 'finance calculator']
+      },
+      {
+        url: '/finance/future-value',
+        nameKey: 'calc.futurevalue.name',
+        defaultName: 'Future Value Calculator',
+        descKey: 'calc.futurevalue.desc',
+        defaultDesc: 'Calculate the future value (FV) of lump sums and regular cash flow deposits with compound growth.',
+        calcKey: 'future-value',
+        keywords: ['future value calculator', 'fv calculator', 'future value of money', 'future value', 'tvm']
+      },
+      {
+        url: '/finance/salary-increase',
+        nameKey: 'calc.salaryincrease.name',
+        defaultName: 'Salary Increase Calculator',
+        descKey: 'calc.salaryincrease.desc',
+        defaultDesc: 'Calculate your pay raise, new salary across all pay frequencies, and estimated take-home pay boost.',
+        calcKey: 'salary-increase',
+        badge: 'Career',
+        keywords: ['salary increase calculator', 'pay raise calculator', 'wage increase calculator', 'raise calculator', 'salary raise']
       },
       {
         url: '/finance/tvm',
@@ -71,7 +96,9 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         defaultName: 'TVM Calculator',
         descKey: 'calc.tvm.desc',
         defaultDesc: 'Solve for present value, future value, interest rate, payments, or time periods in seconds.',
-        calcKey: 'tvm'
+        calcKey: 'tvm',
+        badge: 'Core Engine',
+        keywords: ['tvm calculator', 'time value of money calculator', 'financial calculator online', 'pv fv calculator', 'tvm equation']
       },
       {
         url: '/finance/savings-goal',
@@ -293,10 +320,12 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
       {
         url: '/retirement/401k',
         nameKey: 'calc.401k.name',
-        defaultName: '401(k) Contribution Planner',
+        defaultName: '401(k) Calculator with Match',
         descKey: 'calc.401k.desc',
-        defaultDesc: 'Maximize your employer match and project how paycheck contributions grow your nest egg.',
-        calcKey: '401k'
+        defaultDesc: 'Maximize employer match and calculate retirement wealth compounding with paycheck deferrals.',
+        calcKey: '401k',
+        badge: 'Employer Match',
+        keywords: ['401k calculator with match', '401k calculator', '401k match', 'employer matching 401k', '401k match calculator', 'retirement match']
       },
       {
         url: '/retirement/social-security',
@@ -384,6 +413,7 @@ export interface LocalizedCalculatorItem {
   icon: string;
   badge?: string;
   calcKey?: string;
+  keywords?: string[];
 }
 
 export interface LocalizedCategory {
@@ -407,7 +437,8 @@ export function getLocalizedCategories(t: (key: string, fallback?: string) => st
       categoryName,
       icon: cat.icon,
       badge: c.badge,
-      calcKey: c.calcKey
+      calcKey: c.calcKey,
+      keywords: c.keywords
     }));
 
     return {

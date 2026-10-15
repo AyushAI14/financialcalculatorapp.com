@@ -243,8 +243,8 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
       answer: "Most financial advisors recommend contributing at least 15% of your gross annual salary toward retirement (including employer matching). At a minimum, always contribute enough to capture your employer's full matching contribution—missing the match is walking away from free money and an instant 50% to 100% return. For 2024, the IRS employee elective deferral limit is $23,000 per year, or $30,500 if you are age 50 or older."
     },
     {
-      question: "How does an employer 401(k) match work?",
-      answer: "An employer match is additional money contributed by your company based on your payroll deferrals. A common formula is a 50% match up to 6% of your salary: if you earn $95,000 and contribute 6% ($5,700), your company deposits an additional $2,850 into your account. Always meet your employer's matching ceiling to maximize compensation."
+      question: "How does this 401(k) calculator with match calculate employer contributions?",
+      answer: "The 401k calculator with match applies your employer's matching formula (e.g., 50% or 100%) up to your company's matching ceiling (e.g., up to 6% of salary). For example, on a $95,000 salary with a 6% contribution ($5,700), a 50% match adds an extra $2,850/year in employer deposits. The calculator projects both your personal deferrals and employer matching contributions compounded across your entire retirement horizon."
     },
     {
       question: "How much should I have in my 401(k) by age?",
@@ -332,15 +332,19 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
   'tvm': [
     {
       question: "What is the Time Value of Money (TVM)?",
-      answer: "The Time Value of Money principle states that a dollar today is worth more than a dollar in the future because today's dollar can be invested and earn interest."
+      answer: "The Time Value of Money principle states that a dollar today is worth more than a dollar in the future because today's dollar can be invested and earn interest over time."
     },
     {
-      question: "What are the core components of TVM calculations?",
-      answer: "The five core variables are Present Value (PV), Future Value (FV), Interest Rate per Period (Rate), Total Number of Periods (Nper), and Periodic Payment (PMT)."
+      question: "How does this online TVM calculator solve Time Value of Money equations?",
+      answer: "This financial TVM calculator uses standard compound interest and discounted cash flow formulas to solve for any of the five core TVM variables: Present Value (PV), Future Value (FV), Periodic Payment (PMT), Annual Interest Rate (I/Y), and Number of Compounding Periods (N)."
+    },
+    {
+      question: "How do I use this as a Future Value calculator?",
+      answer: "Select 'Future Value (FV)' as the solve-for target. Input your current principal balance (PV), planned recurring periodic deposits (PMT), interest rate, and duration. The calculator computes the total compounded ending balance instantly."
     },
     {
       question: "What is the difference between an ordinary annuity and annuity due?",
-      answer: "In an ordinary annuity, payments occur at the end of each period. In an annuity due, payments occur at the beginning of each period, earning an extra compounding cycle of interest."
+      answer: "In an ordinary annuity, payments occur at the end of each period (standard for loans and mortgages). In an annuity due, payments occur at the beginning of each period (common in lease and insurance contracts), earning an extra compounding cycle of interest."
     }
   ],
 
@@ -625,6 +629,66 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
     {
       question: "Is sales tax applied before or after store discounts?",
       answer: "In most jurisdictions, sales tax is calculated on the discounted post-sale price, meaning you pay sales tax only on the actual money spent."
+    }
+  ],
+
+  // 31. Salary Increase Calculator
+  'salary-increase': [
+    {
+      question: "What is a good salary increase percentage?",
+      answer: "Historically, standard annual cost-of-living adjustments (COLA) range from 3% to 4%, strong performance or merit raises average 4% to 7%, and promotions or job changes typically command a 10% to 20%+ increase in base compensation."
+    },
+    {
+      question: "How do I calculate a salary increase percentage?",
+      answer: "Subtract your old salary from your new salary to determine the dollar raise, divide that difference by your old salary, and multiply by 100: Raise % = ((New Salary - Old Salary) / Old Salary) × 100%."
+    },
+    {
+      question: "How do I convert an hourly pay raise into an annual salary increase?",
+      answer: "Assuming a standard 40-hour work week and 52 weeks per year (2,080 working hours annually), multiply your hourly raise by 2,080. For example, a $2.50/hour raise equals an annual gross increase of $5,200 ($2.50 × 2,080)."
+    },
+    {
+      question: "Will a pay raise push me into a higher tax bracket and reduce my take-home pay?",
+      answer: "No. United States federal income taxes use progressive marginal tax brackets. Only the dollars earned above each tax bracket threshold are taxed at the higher marginal rate; income below the threshold remains taxed at the lower previous rates. A pay raise will always increase your net take-home pay."
+    }
+  ],
+
+  // 32. Future Value Calculator
+  'future-value': [
+    {
+      question: "What is Future Value (FV)?",
+      answer: "Future Value (FV) is the monetary value of a current asset, lump sum, or cash flow stream at a specified date in the future, based on an assumed rate of growth or compounding interest."
+    },
+    {
+      question: "What is the formula for calculating Future Value with regular contributions?",
+      answer: "For a lump sum with regular periodic additions: FV = PV × (1 + r/m)^(m×t) + PMT × [((1 + r/m)^(m×t) - 1) / (r/m)], where PV is present value, r is annual interest rate, m is compounding frequency per year, t is time in years, and PMT is periodic contribution."
+    },
+    {
+      question: "What is the difference between an ordinary annuity and annuity due for future value?",
+      answer: "In an ordinary annuity, contributions are deposited at the end of each period. In an annuity due, contributions are made at the beginning of each period, which gives every contribution an extra period to compound and results in a higher ending future value."
+    },
+    {
+      question: "How does compounding frequency impact the future value of an investment?",
+      answer: "More frequent compounding cycles (such as monthly or daily versus annually) result in higher future values because interest earned in earlier cycles begins generating its own interest sooner."
+    }
+  ],
+
+  // 33. Investment Calculator
+  'investment': [
+    {
+      question: "What is a realistic annual rate of return for an investment calculator?",
+      answer: "Historically, the broad US stock market (S&P 500) has generated an average nominal return of approximately 10% annually over long multi-decade horizons (or roughly 7% after adjusting for inflation). A diversified portfolio of stocks and bonds typically targets 6% to 8% nominal annual return."
+    },
+    {
+      question: "How do regular recurring investments compare to a one-time lump sum?",
+      answer: "Regular recurring investments (Dollar-Cost Averaging) reduce timing risk and volatility by consistently purchasing shares at both market highs and lows. While lump-sum investing mathematically outperforms about 68% of the time due to long-term market upward trends, recurring monthly deposits instill discipline and build substantial wealth steadily."
+    },
+    {
+      question: "What is the difference between nominal return and real return?",
+      answer: "Nominal return is the raw percentage gain generated by your investments before inflation. Real return is the purchasing power gain after subtracting the rate of inflation (Real Return ≈ Nominal Return - Inflation Rate)."
+    },
+    {
+      question: "How does compound interest multiply investment portfolios over time?",
+      answer: "Compound growth creates exponential portfolio expansion. In the early years, personal contributions make up the majority of your balance; however, after 10 to 20 years, investment returns and compounded earnings account for over 60% to 80% of total portfolio value."
     }
   ]
 };

@@ -6,7 +6,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 ---
 
-<Layout title={t('about.title', 'About Us | financialcalculatorapp.com')} description={t('about.intro')} lang={lang}>
+<Layout title={t('about.title', 'About Us')} description={t('about.intro')} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('about.heading', 'About Us.')}</h1>
 

@@ -17,10 +17,10 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
   <section class="text-center pt-8 pb-6 max-w-3xl mx-auto space-y-3">
     <div class="space-y-3">
       <h1 class="font-display font-black text-4xl sm:text-5xl md:text-6xl tracking-tight text-ink leading-tight">
-        <span class="text-input-accent">{t('hero.accent', 'Financial')}</span> {t('hero.main', 'calculators')}
+        <span class="text-input-accent">{t('hero.accent', 'Financial Calculator')}</span> {t('hero.main', 'Online & Free Finance Tools')}
       </h1>
       <p class="text-sm sm:text-base text-muted font-sans max-w-xl mx-auto">
-        {t('hero.desc', 'Fast, accurate financial calculators that run 100% in your browser. Private, free, and zero sign-up required.')}
+        {t('hero.desc', 'Fast, accurate online financial calculators that run 100% in your browser. Free, private, and calculated instantly with zero sign-up.')}
       </p>
     </div>
   </section>
@@ -29,13 +29,13 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
   <section class="max-w-2xl mx-auto mb-6" aria-label="Calculator search">
     <div class="composer">
       <label for="calc-search" class="block font-mono text-[11px] font-bold uppercase tracking-wider text-muted mb-2">
-        {t('search.findLabel', 'Find a calculator')}
+        {t('search.findLabel', 'Find an online financial calculator')}
       </label>
       <div class="relative flex items-center">
         <input
           type="text"
           id="calc-search"
-          placeholder={t('search.placeholder', 'Type to search (e.g. mortgage, 401k, compound interest, loan)...')}
+          placeholder={t('search.placeholder', 'Search financial calculators (e.g. mortgage, 401k with match, tvm calculator, salary increase, investment)...')}
           autocomplete="off"
           spellcheck="false"
           class="w-full h-16 sm:h-20 bg-canvas text-ink text-lg sm:text-2xl font-display font-extrabold border-[1.5px] border-input-accent rounded-lg pl-5 pr-24 focus:outline-none focus:ring-2 focus:ring-input-accent transition-all placeholder:text-muted/50"
@@ -109,6 +109,7 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
         data-name={calc.name.toLowerCase()}
         data-category-name={calc.categoryName.toLowerCase()}
         data-snippet={calc.snippet.toLowerCase()}
+        data-keywords={(calc.keywords || []).join(' ').toLowerCase()}
         data-calc-id={calc.id}
       >
         <div class="flex items-start justify-between gap-2">
@@ -251,6 +252,41 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
       </a>
     </div>
   </section>
+
+  <!-- Structured Data for Financial Calculator & Finance Calculator Search Queries -->
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://financialcalculatorapp.com/#website",
+        "url": "https://financialcalculatorapp.com/",
+        "name": "Financial Calculator Online",
+        "alternateName": [
+          "Finance Calculator",
+          "Financial Calculator",
+          "Online Financial Calculator",
+          "Free Financial Calculator Online"
+        ],
+        "description": "Free online financial calculator suite with 40+ private browser-based finance calculators for loans, mortgages, retirement, TVM, and investments."
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://financialcalculatorapp.com/#webapp",
+        "name": "Financial Calculator Online",
+        "url": "https://financialcalculatorapp.com/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Comprehensive suite of 40+ free online financial calculators and finance calculation tools running 100% privately in the browser."
+      }
+    ]
+  })} />
 </Layout>
 
 <script>
@@ -304,8 +340,9 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
       const category = card.dataset.category || '';
       const categoryName = card.dataset.categoryName || '';
       const snippet = card.dataset.snippet || '';
+      const keywords = card.dataset.keywords || '';
 
-      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query);
+      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query) || keywords.includes(query);
       const matchesCategory = activeFilter === 'all' || category === activeFilter;
 
       if (matchesQuery && matchesCategory) {

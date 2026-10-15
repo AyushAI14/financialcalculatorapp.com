@@ -33,7 +33,7 @@ const faqs = [
 
 <CalculatorLayout 
   title="Mortgage Calculator" 
-  seoTitle="Mortgage Calculator: Estimate Monthly Payments & PMI | financialcalculatorapp.com"
+  seoTitle="Mortgage Calculator: Estimate Monthly Payments & PMI"
   description="Calculate your monthly mortgage payment including principal, interest, taxes, home insurance, and PMI. View full amortization breakdown for free."
   faqs={faqs}
 >
@@ -157,9 +157,18 @@ const faqs = [
   import { validateForm, validateField } from '../../lib/validation';
   import { syncInputsWithURL } from '../../lib/shareable';
   import { downloadDataAsCSV } from '../../lib/csv-exporter';
-  import Chart from 'chart.js/auto';
+  import type { Chart } from 'chart.js';
   import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
   enhanceChartCanvas('mortgage-chart');
+
+  let ChartClass: any = null;
+  async function getChartClass() {
+    if (!ChartClass) {
+      const module = await import('chart.js/auto');
+      ChartClass = module.default;
+    }
+    return ChartClass;
+  }
 
   // DOM Elements
   const form = document.getElementById('mortgage-form') as HTMLFormElement;
@@ -278,11 +287,13 @@ const faqs = [
     updateChart(pmtPI, taxMonthly, insuranceMonthly, pmiMonthly, hoaMonthly);
   }
 
-  function updateChart(pi: number, tax: number, ins: number, pmi: number, hoa: number) {
+  async function updateChart(pi: number, tax: number, ins: number, pmi: number, hoa: number) {
     const canvas = document.getElementById('mortgage-chart') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const Chart = await getChartClass();
 
     if (chartInstance) {
       chartInstance.data.datasets[0].data = [pi, tax, ins, pmi, hoa];

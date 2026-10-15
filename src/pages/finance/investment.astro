@@ -1,0 +1,364 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('investment');
+---
+
+<CalculatorLayout 
+  title="Investment Calculator: Portfolio Growth & Compound Returns" 
+  seoTitle="Investment Calculator – Portfolio Growth & Return Estimator"
+  description="Free online investment calculator. Project portfolio growth, compound investment returns, and wealth accumulation across stocks, index funds, and monthly contributions."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="investment-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Strategy')}</h3>
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">{t('Asset Benchmarks:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="25000" data-mo="500" data-rate="10" data-years="20">S&P 500 (10%)</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="15000" data-mo="350" data-rate="7" data-years="25">Balanced (7%)</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="50000" data-mo="1000" data-rate="12" data-years="15">Growth (12%)</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="10000" data-mo="200" data-rate="4.5" data-years="10">Bonds (4.5%)</button>
+            </div>
+          </div>
+
+          <!-- Initial Principal -->
+          <div class="space-y-2">
+            <Input id="initial-inv" label="Initial Investment Capital" type="number" prefix="$" value="25000" />
+            <RangeSlider id="initial-inv-slider" label="Adjust Initial Capital" min={0} max={250000} step={2500} value={25000} />
+          </div>
+
+          <!-- Recurring Contributions -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input id="contribution" label="Recurring Contribution" type="number" prefix="$" value="500" />
+              <Select id="contrib-freq" label="Deposit Frequency" options={[
+                { value: '12', label: 'Monthly' },
+                { value: '26', label: 'Bi-Weekly' },
+                { value: '1', label: 'Annually' }
+              ]} value="12" />
+            </div>
+            <RangeSlider id="contribution-slider" label="Adjust Recurring Deposit" min={0} max={5000} step={50} value={500} />
+          </div>
+
+          <!-- Return Rate & Horizon -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <div class="space-y-2">
+              <Input id="return-rate" label="Expected Return Rate" type="number" suffix="%" value="9.0" step="0.1" />
+              <RangeSlider id="return-rate-slider" label="Adjust Return" min={1} max={20} step={0.5} value={9.0} />
+            </div>
+            <div class="space-y-2">
+              <Input id="years" label="Investment Horizon" type="number" suffix="years" value="20" min="1" max="50" />
+              <RangeSlider id="years-slider" label="Adjust Time Horizon" min={1} max={40} step={1} value={20} />
+            </div>
+          </div>
+
+          <!-- Inflation Adjustment -->
+          <div class="pt-2 border-t border-hairline/60 flex items-center justify-between gap-4">
+            <div class="flex-1">
+              <ToggleSwitch 
+                id="adjust-inflation" 
+                label="Adjust for Inflation (Real Purchasing Power)" 
+                checked={false} 
+                description="Estimates portfolio values in today's purchasing power assuming 2.5% inflation."
+              />
+            </div>
+            <div class="w-28 shrink-0">
+              <Input id="inflation-rate" label="Inflation" type="number" suffix="%" value="2.5" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            {t('Calculate Investment Growth')}
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-total-value">
+          <ResultCard 
+            title="Ending Investment Value" 
+            value="--" 
+            highlight={true} 
+            description="Projected total portfolio balance at the end of the investment horizon."
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-principal-paid">
+            <ResultCard 
+              title="Total Out-of-Pocket Invested" 
+              value="--" 
+              description="Initial capital + personal contributions."
+            />
+          </div>
+          <div id="res-compound-earnings">
+            <ResultCard 
+              title="Total Investment Returns" 
+              value="--" 
+              description="Compound interest and market appreciation."
+            />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-purchasing-power">
+            <ResultCard 
+              title="Real Purchasing Power" 
+              value="--" 
+              description="Ending value adjusted for inflation."
+            />
+          </div>
+          <div id="res-passive-income">
+            <ResultCard 
+              title="Annual 4% Cash Flow" 
+              value="--" 
+              description="Sustainable annual retirement withdrawal."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Breakdown Table -->
+      <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Annual Growth Trajectory</h4>
+          <span class="text-[10px] font-mono text-mute">Invested vs. Returns</span>
+        </div>
+        <div class="overflow-x-auto max-h-[380px]">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] text-mute uppercase z-10">
+              <tr>
+                <th class="py-2.5 px-4">Year</th>
+                <th class="py-2.5 px-4 text-right">Start Bal</th>
+                <th class="py-2.5 px-4 text-right">Deposits</th>
+                <th class="py-2.5 px-4 text-right">Returns</th>
+                <th class="py-2.5 px-4 text-right font-bold text-ink">Ending Portfolio</th>
+              </tr>
+            </thead>
+            <tbody id="invest-schedule-body" class="divide-y divide-hairline font-mono">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Guide -->
+  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+    <div class="max-w-3xl space-y-4">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">How an Investment Calculator Projects Wealth</h2>
+      <p class="text-sm text-mute leading-relaxed">
+        Building long-term wealth through investing relies on three primary variables: your <strong>initial capital</strong>, your <strong>regular recurring contributions</strong>, and the <strong>annual rate of return</strong> generated by your asset allocation. Compounding returns create exponential growth because the returns earned each year are reinvested to produce their own returns.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 not-prose">
+        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">Historical Stock Returns (S&P 500)</h3>
+          <p class="text-xs text-mute leading-relaxed">
+            Over the past 50+ years, the broad US stock index has averaged approximately 10% nominal annual return (or roughly 7% real return after inflation). Equities have consistently outperformed cash and fixed income over 15+ year holding periods.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">The Power of Dollar-Cost Averaging</h3>
+          <p class="text-xs text-mute leading-relaxed">
+            Investing fixed recurring amounts (e.g. $500/month) eliminates the risk of trying to time market tops and bottoms. When stock prices drop, your fixed monthly deposit automatically acquires more shares at a discount.
+          </p>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Nominal Returns vs. Real Inflation-Adjusted Returns</h3>
+      <p class="text-sm text-mute leading-relaxed">
+        When evaluating 20 or 30-year projections, it is vital to account for inflation. A portfolio of $1,000,000 thirty years from now will not purchase the same basket of goods as $1,000,000 today. By toggling our inflation adjustment feature, you can see your true purchasing power expressed in today's dollars using the Fisher equation: (1 + Real Rate) = (1 + Nominal Rate) / (1 + Inflation Rate).
+      </p>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Related Financial Calculators</h3>
+      <p class="text-sm text-mute leading-relaxed">
+        Examine other dimensions of your financial portfolio with our <a href="/finance/compound-interest/" class="text-primary font-semibold underline">Compound Interest Calculator</a>, model early financial independence with the <a href="/retirement/fire-calculator/" class="text-primary font-semibold underline">FIRE Calculator</a>, or forecast dividends with our <a href="/finance/dividend/" class="text-primary font-semibold underline">Dividend Reinvestment Calculator</a>.
+      </p>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateTVM } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('investment-form') as HTMLFormElement;
+  const initialInvInput = document.getElementById('initial-inv') as HTMLInputElement;
+  const initialInvSlider = document.getElementById('initial-inv-slider') as HTMLInputElement;
+  const contribInput = document.getElementById('contribution') as HTMLInputElement;
+  const contribSlider = document.getElementById('contribution-slider') as HTMLInputElement;
+  const contribFreqSelect = document.getElementById('contrib-freq') as HTMLSelectElement;
+  const returnRateInput = document.getElementById('return-rate') as HTMLInputElement;
+  const returnRateSlider = document.getElementById('return-rate-slider') as HTMLInputElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  const yearsSlider = document.getElementById('years-slider') as HTMLInputElement;
+  const adjustInflationToggle = document.getElementById('adjust-inflation') as HTMLInputElement;
+  const inflationRateInput = document.getElementById('inflation-rate') as HTMLInputElement;
+
+  const resTotalValue = document.getElementById('res-total-value')?.querySelector('[data-result-value]');
+  const resPrincipalPaid = document.getElementById('res-principal-paid')?.querySelector('[data-result-value]');
+  const resCompoundEarnings = document.getElementById('res-compound-earnings')?.querySelector('[data-result-value]');
+  const resPurchasingPower = document.getElementById('res-purchasing-power')?.querySelector('[data-result-value]');
+  const resPassiveIncome = document.getElementById('res-passive-income')?.querySelector('[data-result-value]');
+  const scheduleBody = document.getElementById('invest-schedule-body');
+
+  function calculateInvestment() {
+    const init = Math.abs(parseFloat(initialInvInput.value)) || 0;
+    const contrib = Math.abs(parseFloat(contribInput.value)) || 0;
+    const freq = parseInt(contribFreqSelect.value) || 12;
+    const nominalRate = (Math.abs(parseFloat(returnRateInput.value)) || 0) / 100;
+    const years = Math.max(1, Math.abs(parseInt(yearsInput.value)) || 1);
+    const inflation = (Math.abs(parseFloat(inflationRateInput.value)) || 2.5) / 100;
+    const adjustInflation = adjustInflationToggle.checked;
+
+    const totalPeriods = years * freq;
+    const totalDeposited = init + (contrib * totalPeriods);
+
+    let endingBalance = 0;
+    try {
+      const solved = calculateTVM('fv', {
+        pv: -init,
+        pmt: -contrib,
+        rate: nominalRate,
+        periods: totalPeriods,
+        compoundingFrequency: 12,
+        paymentFrequency: freq,
+        timing: 'end'
+      });
+      endingBalance = Math.abs(solved);
+    } catch {
+      endingBalance = totalDeposited;
+    }
+
+    const totalEarnings = Math.max(0, endingBalance - totalDeposited);
+    const realFactor = Math.pow(1 + inflation, years);
+    const realValue = realFactor > 0 ? endingBalance / realFactor : endingBalance;
+    const passiveAnnual = endingBalance * 0.04;
+
+    const displayBalance = adjustInflation ? realValue : endingBalance;
+
+    if (resTotalValue) resTotalValue.textContent = formatCurrency(displayBalance);
+    if (resPrincipalPaid) resPrincipalPaid.textContent = formatCurrency(totalDeposited);
+    if (resCompoundEarnings) resCompoundEarnings.textContent = `+${formatCurrency(totalEarnings)}`;
+    if (resPurchasingPower) resPurchasingPower.textContent = formatCurrency(realValue);
+    if (resPassiveIncome) resPassiveIncome.textContent = `${formatCurrency(passiveAnnual)}/yr`;
+
+    // Year-by-year schedule
+    const rows: string[] = [];
+    let currentBal = init;
+
+    for (let yr = 1; yr <= years; yr++) {
+      const startBal = currentBal;
+      const annualContrib = contrib * freq;
+
+      let endBal = 0;
+      try {
+        const solvedYr = calculateTVM('fv', {
+          pv: -init,
+          pmt: -contrib,
+          rate: nominalRate,
+          periods: yr * freq,
+          compoundingFrequency: 12,
+          paymentFrequency: freq,
+          timing: 'end'
+        });
+        endBal = Math.abs(solvedYr);
+      } catch {
+        endBal = startBal + annualContrib;
+      }
+
+      const yrEarnings = Math.max(0, endBal - startBal - annualContrib);
+      currentBal = endBal;
+
+      const yrRealFactor = Math.pow(1 + inflation, yr);
+      const yrDisplay = adjustInflation && yrRealFactor > 0 ? endBal / yrRealFactor : endBal;
+
+      rows.push(`
+        <tr class="hover:bg-canvas-soft transition-colors">
+          <td class="py-2 px-4 font-medium text-ink">Year ${yr}</td>
+          <td class="py-2 px-4 text-right text-mute">${formatCurrency(startBal)}</td>
+          <td class="py-2 px-4 text-right text-mute">+${formatCurrency(annualContrib)}</td>
+          <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yrEarnings)}</td>
+          <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(yrDisplay)}</td>
+        </tr>
+      `);
+    }
+
+    if (scheduleBody) {
+      scheduleBody.innerHTML = rows.join('');
+    }
+  }
+
+  // Synced sliders
+  function sync(inp: HTMLInputElement, sli: HTMLInputElement) {
+    sli.addEventListener('input', (e: any) => {
+      inp.value = e.target.value;
+      calculateInvestment();
+    });
+    inp.addEventListener('input', () => {
+      const val = parseFloat(inp.value) || 0;
+      sli.value = String(Math.min(parseFloat(sli.max), Math.max(parseFloat(sli.min), val)));
+      calculateInvestment();
+    });
+  }
+
+  sync(initialInvInput, initialInvSlider);
+  sync(contribInput, contribSlider);
+  sync(returnRateInput, returnRateSlider);
+  sync(yearsInput, yearsSlider);
+
+  contribFreqSelect.addEventListener('change', calculateInvestment);
+  adjustInflationToggle.addEventListener('change', calculateInvestment);
+  inflationRateInput.addEventListener('input', calculateInvestment);
+
+  // Benchmarks / presets
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const init = btn.getAttribute('data-init');
+      const mo = btn.getAttribute('data-mo');
+      const rate = btn.getAttribute('data-rate');
+      const years = btn.getAttribute('data-years');
+
+      if (init) { initialInvInput.value = init; initialInvSlider.value = init; }
+      if (mo) { contribInput.value = mo; contribSlider.value = mo; }
+      if (rate) { returnRateInput.value = rate; returnRateSlider.value = rate; }
+      if (years) { yearsInput.value = years; yearsSlider.value = years; }
+
+      calculateInvestment();
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateInvestment();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(calculateInvestment, 10);
+  });
+
+  calculateInvestment();
+</script>

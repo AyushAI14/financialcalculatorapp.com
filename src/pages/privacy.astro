@@ -6,7 +6,7 @@ const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 ---
 
-<Layout title={t('privacy.title', 'Privacy Policy | financialcalculatorapp.com')} description={t('privacy.intro')} lang={lang}>
+<Layout title={t('privacy.title', 'Privacy Policy')} description={t('privacy.intro')} lang={lang}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('privacy.heading', 'Privacy Policy.')}</h1>
     <p class="text-xs text-mute font-mono uppercase tracking-wider">{t('privacy.lastUpdated', 'Last updated: October 2026')}</p>

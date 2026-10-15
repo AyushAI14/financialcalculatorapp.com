@@ -18,7 +18,7 @@ const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
 const localizedData = getLocalizedBlogPost(post.id, lang);
-const pageTitle = `${localizedData.title || post.data.title} | financialcalculatorapp.com`;
+const pageTitle = `${localizedData.title || post.data.title}`;
 const pageDesc = localizedData.description || post.data.description;
 const contentHtml = localizedData.content;
 

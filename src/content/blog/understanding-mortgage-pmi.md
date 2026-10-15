@@ -48,4 +48,4 @@ If home values in your neighborhood have risen significantly, your equity may no
 ---
 
 ## Ready to run the numbers?
-To see exactly how much PMI will cost you monthly and compare payments with 5%, 10%, or 20% down, use our interactive [Mortgage Calculator](/loan/mortgage). It automatically calculates when your PMI will drop off!
+To see exactly how much PMI will cost you monthly and compare payments with 5%, 10%, or 20% down, use our interactive [Mortgage Calculator](/loan/mortgage/). It automatically calculates when your PMI will drop off!

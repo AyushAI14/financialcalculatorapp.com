@@ -12,8 +12,8 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
 ---
 
 <Layout
-  title={t('calculators.pageTitle', 'All 38 Free Financial Calculators & Planners | financialcalculatorapp.com')}
-  description={t('calculators.pageDescription', 'Explore all 38 free financial tools. Loan amortization, paycheck taxes, retirement models, and CFA financial calculator emulators in one place.')}
+  title={t('calculators.pageTitle', 'Financial Calculator Online: All 40+ Free Finance Calculators')}
+  description={t('calculators.pageDescription', 'Explore all 40+ free online financial calculators. Loan amortization, paycheck taxes, retirement models, TVM, salary increase, and CFA financial calculator emulators.')}
   lang={lang}
 >
   <!-- Directory Header -->
@@ -28,7 +28,7 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
     <div class="space-y-3">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/40 text-[11px] font-mono font-bold text-ink shadow-[var(--control-shadow)]">
         <span class="text-input-accent">✦</span>
-        <span>{t('calculators.badge', '38 Financial Engines · 100% Private')}</span>
+        <span>{t('calculators.badge', '40+ Online Financial Engines · 100% Private')}</span>
       </div>
       <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-ink leading-tight">
         {lang === 'es' ? (
@@ -40,7 +40,7 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
         ) : lang === 'pt' ? (
           <>Todas as <span class="text-input-accent">Calculadoras</span> Financeiras</>
         ) : (
-          <>{t('calculators.h1Main', 'All')} <span class="text-input-accent">{t('calculators.h1Accent', 'Financial')}</span> {t('nav.calculators', 'Calculators')}</>
+          <>{t('calculators.h1Main', 'All')} <span class="text-input-accent">{t('calculators.h1Accent', 'Financial Calculators')}</span> {t('calculators.h1Online', 'Online')}</>
         )}
       </h1>
       <p class="text-sm sm:text-base text-muted font-sans max-w-xl mx-auto">
@@ -53,13 +53,13 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
   <section class="max-w-2xl mx-auto mb-6" aria-label="Calculator directory search">
     <div class="composer">
       <label for="dir-calc-search" class="block font-mono text-[11px] font-bold uppercase tracking-wider text-muted mb-2">
-        {t('calculators.searchLabel', 'Search all 38 calculators')}
+        {t('calculators.searchLabel', 'Search all online financial calculators')}
       </label>
       <div class="relative flex items-center">
         <input
           type="text"
           id="dir-calc-search"
-          placeholder={t('calculators.searchPlaceholder', 'Search by name, category, or keyword (e.g. mortgage, 401k, crypto, roi)...')}
+          placeholder={t('calculators.searchPlaceholder', 'Search by name, category, or keyword (e.g. mortgage, 401k with match, tvm calculator, salary increase, investment)...')}
           autocomplete="off"
           spellcheck="false"
           class="w-full h-14 sm:h-16 bg-canvas text-ink text-base sm:text-xl font-display font-extrabold border-[1.5px] border-input-accent rounded-lg pl-4 pr-24 focus:outline-none focus:ring-2 focus:ring-input-accent transition-all placeholder:text-muted/50"
@@ -124,6 +124,7 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
         data-name={calc.name.toLowerCase()}
         data-category-name={calc.categoryName.toLowerCase()}
         data-snippet={calc.snippet.toLowerCase()}
+        data-keywords={(calc.keywords || []).join(' ').toLowerCase()}
         data-calc-id={calc.id}
       >
         <div class="flex items-start justify-between gap-2">
@@ -238,8 +239,9 @@ const allCalculatorsFlat = getAllCalculatorsFlat(t);
       const category = card.dataset.category || '';
       const categoryName = card.dataset.categoryName || '';
       const snippet = card.dataset.snippet || '';
+      const keywords = card.dataset.keywords || '';
 
-      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query);
+      const matchesQuery = !query || name.includes(query) || categoryName.includes(query) || snippet.includes(query) || keywords.includes(query);
       const matchesCategory = activeFilter === 'all' || category === activeFilter;
 
       if (matchesQuery && matchesCategory) {

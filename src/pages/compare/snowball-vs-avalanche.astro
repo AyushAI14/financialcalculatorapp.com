@@ -11,7 +11,7 @@ const isPt = lang === 'pt';
 ---
 
 <Layout 
-  title={isEs ? "Método Bola de Nieve vs. Avalancha de Deudas: ¿Cuál es Mejor? | financialcalculatorapp.com" : (isDe ? "Schneeball- vs. Lawinen-Methode: Welche Strategie gewinnt? | financialcalculatorapp.com" : (isJa ? "スノーボール法 vs. アバランチ法（雪だるま vs. 雪崩方式）借金返済比較 | financialcalculatorapp.com" : (isPt ? "Método Bola de Neve vs. Avalancha de Dívidas: Qual é Melhor? | financialcalculatorapp.com" : "Debt Snowball vs. Avalanche: Which Payoff Method Wins? | financialcalculatorapp.com")))} 
+  title={isEs ? "Método Bola de Nieve vs. Avalancha de Deudas: ¿Cuál es Mejor?" : (isDe ? "Schneeball- vs. Lawinen-Methode: Welche Strategie gewinnt?" : (isJa ? "スノーボール法 vs. アバランチ法（雪だるま vs. 雪崩方式）借金返済比較" : (isPt ? "Método Bola de Neve vs. Avalancha de Dívidas: Qual é Melhor?" : "Debt Snowball vs. Avalanche: Which Payoff Method Wins?")))} 
   description={isEs ? "Compara el impulso psicológico del método Bola de Nieve frente al ahorro en intereses del método Avalancha con matemáticas paso a paso." : (isDe ? "Vergleichen Sie psychologische Motivation mit Zinsersparnis: Schneeball- vs. Lawinen-Methode im direkten mathematischen Vergleich." : (isJa ? "スノーボール法（心理的モチベーション重視）とアバランチ法（利息最小化重視）の借金返済戦略を徹底シミュレーション比較。" : (isPt ? "Compare o impulso psicológico do método Bola de Neve com a economia de juros do método Avalancha em simulações passo a passo." : "Compare the psychological wins of the Debt Snowball method against the interest savings of the Debt Avalanche method with side-by-side math.")))}
   lang={lang}
 >
@@ -226,6 +226,8 @@ const isPt = lang === 'pt';
   import Chart from 'chart.js/auto';
   import { enhanceChartCanvas } from '../../lib/chart-canvas-actions';
   enhanceChartCanvas('debt-chart');
+
+  const docLang = document.documentElement.lang || 'en';
 
   const form = document.getElementById('debt-form') as HTMLFormElement;
 

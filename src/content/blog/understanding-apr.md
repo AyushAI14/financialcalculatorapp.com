@@ -32,4 +32,4 @@ To calculate APR, the lender determines the standard monthly payment based on th
 
 However, the borrower does not actually receive the full principal amount. Instead, they receive the principal **minus the closing fees**. By setting the monthly payment against this lower "net proceeds" amount, we solve for a new, higher effective interest rate. That rate is the APR.
 
-Use our [APR Calculator](/loan/apr) to plug in your numbers and see the true cost of your next loan!
+Use our [APR Calculator](/loan/apr/) to plug in your numbers and see the true cost of your next loan!

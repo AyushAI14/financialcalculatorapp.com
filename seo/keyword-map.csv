@@ -1,0 +1,20 @@
+query,intent,monthly_volume,difficulty,target_url,status,current_position,last_checked
+hp 12c online calculator,transactional,40500,medium,/emulators/hp-12c/,live,,2026-10-15
+hp 12c simulator,transactional,18100,low,/emulators/hp-12c/,live,,2026-10-15
+calculadora hp 12c online,transactional,22200,low,/pt/emulators/hp-12c/,live,,2026-10-15
+ti ba ii plus online calculator,transactional,14800,low,/emulators/ti-ba-ii-plus/,live,,2026-10-15
+cfa exam calculator online,commercial,6600,low,/emulators/ti-ba-ii-plus/,live,,2026-10-15
+daily compound interest calculator,transactional,33100,medium,/finance/daily-compound-interest/,live,,2026-10-15
+compound interest calculator,transactional,450000,high,/finance/compound-interest/,live,,2026-10-15
+mortgage calculator with pmi,commercial,74000,high,/loan/mortgage/,live,,2026-10-15
+tvm calculator online,transactional,27100,medium,/finance/tvm/,live,,2026-10-15
+debt snowball vs avalanche calculator,comparison,12100,low,/loan/debt-payoff/,live,,2026-10-15
+student loan save plan calculator,transactional,49500,medium,/loan/student-loan/,live,,2026-10-15
+401k calculator with employer match,commercial,60500,high,/retirement/401k/,live,,2026-10-15
+apr calculator vs interest rate,informational,18100,medium,/loan/apr/,live,,2026-10-15
+rent vs buy calculator,commercial,90500,high,/loan/rent-vs-buy/,live,,2026-10-15
+free financial calculators,commercial,14800,medium,/,live,,2026-10-15
+hp 12c vs ti ba ii plus,comparison,4400,low,/compare/hp-12c-vs-ti-ba-ii-plus/,gap,,2026-10-15
+financialcalculatorapp vs fncalculator,comparison,1200,low,/compare/financialcalculatorapp-vs-fncalculator/,gap,,2026-10-15
+how to calculate pmi,informational,22200,medium,/blog/understanding-mortgage-pmi/,live,,2026-10-15
+what is discretionary income student loans,informational,9900,low,/blog/student-loan-idr-save/,live,,2026-10-15

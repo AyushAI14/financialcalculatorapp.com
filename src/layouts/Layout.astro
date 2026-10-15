@@ -18,6 +18,7 @@ interface Props {
   canonicalUrl?: string;
   lang?: Lang;
   noindex?: boolean;
+  schemas?: object[];
 }
 
 const detectedLang = getLangFromUrl(Astro.url, Astro.currentLocale);
@@ -33,7 +34,8 @@ const {
   title, 
   description = t("site.description"),
   canonicalUrl,
-  noindex = false
+  noindex = false,
+  schemas = []
 } = Astro.props;
 
 const localizedPageTitle = t(title, title);
@@ -46,6 +48,32 @@ const resolvedCanonical = canonicalUrl || `${siteOrigin}${formattedPath}`;
 const hreflangList = getHreflangList(Astro.url, siteOrigin);
 // og:locale requires BCP47 with underscore (e.g. en_US)
 const ogLocale = (lang as string).replace('-', '_');
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "financialcalculatorapp.com",
+  "alternateName": ["Financial Calculator App", "FinancialCalculatorApp"],
+  "url": `${siteOrigin}/`,
+  "description": localizedPageDescription,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": `${siteOrigin}/?search={search_term_string}`
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "financialcalculatorapp.com",
+  "url": `${siteOrigin}/`,
+  "logo": `${siteOrigin}/logo.png`,
+  "description": "Fast, private, browser-based financial calculators for loans, mortgages, retirement, and investments."
+};
 ---
 
 <!doctype html>
@@ -87,13 +115,32 @@ const ogLocale = (lang as string).replace('-', '_');
     <meta name="twitter:description" content={localizedPageDescription} />
     <meta name="twitter:image" content={`${siteOrigin}/og-image.png`} />
     
-    <!-- Preconnect to Google Fonts for Plus Jakarta Sans -->
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationSchema)} />
+    {schemas && schemas.map((s) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(s)} />
+    ))}
+    <slot name="head" />
+    
+    <!-- Preconnect to Google Fonts and jsDelivr CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+    <!-- Non-blocking Plus Jakarta Sans font loading -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" />
+    </noscript>
     
-    <!-- Add Geist Mono Font -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
+    <!-- Non-blocking Geist Mono Font -->
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css" />
+    </noscript>
 
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-Y242ERQRLW"></script>

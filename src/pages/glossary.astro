@@ -242,9 +242,21 @@ const glossaryPt = [
 
 const glossary = lang === 'es' ? glossaryEs : (lang === 'de' ? glossaryDe : (lang === 'ja' ? glossaryJa : (lang === 'pt' ? glossaryPt : glossaryEn)));
 const sortedGlossary = glossary.sort((a, b) => a.term.localeCompare(b.term));
+
+const definedTermSetSchema = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "name": "Financial Terminology Glossary",
+  "description": "Clear definitions for essential financial terms, formulas, and abbreviations.",
+  "hasDefinedTerm": sortedGlossary.map(item => ({
+    "@type": "DefinedTerm",
+    "name": item.term,
+    "description": item.definition
+  }))
+};
 ---
 
-<Layout title={t('glossary.title', 'Financial Glossary: APR, APY, DTI & Loan Terms Defined | financialcalculatorapp.com')} description={t('glossary.description', 'Clear definitions for essential financial terms, formulas, and abbreviations. Learn what APR, APY, PMI, TVM, and FICA mean for your wallet.')} lang={lang}>
+<Layout title={t('glossary.title', 'Financial Glossary: APR, APY, DTI & Key Loan Terms')} description={t('glossary.description', 'Clear definitions for essential financial terms, formulas, and abbreviations. Learn what APR, APY, PMI, TVM, and FICA mean for your wallet.')} lang={lang} schemas={[definedTermSetSchema]}>
   <div class="max-w-4xl mx-auto py-8 px-4">
     <header class="mb-10 border-b border-hairline pb-6">
       <h1 class="text-4xl font-extrabold tracking-tight text-ink">{t('glossary.h1', 'Financial Glossary')}</h1>

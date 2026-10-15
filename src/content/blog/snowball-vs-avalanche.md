@@ -35,4 +35,4 @@ The **Debt Avalanche** method focuses strictly on **interest rates**:
 ## Which Wins?
 Mathematically, the Avalanche method wins every single time because it minimizes interest paid. However, human psychology is not always driven by math. Many savers fail to stay motivated during the long periods it takes to pay off a large, high-rate balance first. If you need behavioral reinforcement, the Snowball is a great fit. If you want to optimize your savings, choose the Avalanche.
 
-Run your own scenarios on our [Debt Payoff Calculator](/loan/debt-payoff) to compare timelines and total interest paid under both models!
+Run your own scenarios on our [Debt Payoff Calculator](/loan/debt-payoff/) to compare timelines and total interest paid under both models!

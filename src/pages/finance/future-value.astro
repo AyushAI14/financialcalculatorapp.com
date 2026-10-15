@@ -1,0 +1,356 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import ToggleSwitch from '../../components/ui/ToggleSwitch.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('future-value');
+---
+
+<CalculatorLayout 
+  title="Future Value Calculator (FV): Lump Sum & Annuity Growth" 
+  seoTitle="Future Value Calculator (FV) – Investment & Cash Flow Growth"
+  description="Free future value calculator. Calculate the future value (FV) of an investment, lump-sum deposit, or recurring cash flow annuity with compound interest."
+  faqs={faqs}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column (Inputs) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="fv-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
+            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Parameters')}</h3>
+            <div class="flex flex-wrap items-center gap-1.5 no-print">
+              <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pv="10000" data-pmt="500" data-rate="8" data-years="10">Index Fund (8%)</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pv="25000" data-pmt="0" data-rate="9" data-years="20">Lump Sum (9%)</button>
+              <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pv="5000" data-pmt="250" data-rate="4.5" data-years="5">HYSA (4.5%)</button>
+            </div>
+          </div>
+
+          <!-- Present Value -->
+          <div class="space-y-2">
+            <Input id="pv" label="Initial Principal / Present Value (PV)" type="number" prefix="$" value="10000" />
+            <RangeSlider id="pv-slider" label="Adjust Present Value" min={0} max={200000} step={1000} value={10000} />
+          </div>
+
+          <!-- Periodic Contribution -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="pmt" label="Periodic Contribution (PMT)" type="number" prefix="$" value="500" />
+            <RangeSlider id="pmt-slider" label="Adjust Periodic Payment" min={0} max={5000} step={50} value={500} />
+          </div>
+
+          <!-- Rate & Time -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <Input id="rate" label="Annual Interest Rate (r)" type="number" suffix="%" value="8.0" step="0.1" />
+            <Input id="years" label="Time Duration (Years)" type="number" suffix="years" value="10" min="1" max="50" />
+          </div>
+
+          <!-- Compounding & Timing -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-hairline/60">
+            <Select id="compounding" label="Compounding Frequency" options={[
+              { value: '1', label: 'Annually' },
+              { value: '2', label: 'Semi-Annually' },
+              { value: '4', label: 'Quarterly' },
+              { value: '12', label: 'Monthly' },
+              { value: '365', label: 'Daily' }
+            ]} value="12" />
+
+            <Select id="pmt-frequency" label="Contribution Frequency" options={[
+              { value: '12', label: 'Monthly' },
+              { value: '4', label: 'Quarterly' },
+              { value: '1', label: 'Annually' }
+            ]} value="12" />
+          </div>
+
+          <div class="pt-2 border-t border-hairline/60">
+            <ToggleSwitch 
+              id="timing" 
+              label="Deposit at Beginning of Period (Annuity Due)" 
+              checked={false} 
+              description="Contributions earn interest during the current cycle"
+            />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-4">
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+            {t('Calculate Future Value')}
+          </button>
+          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column (Results) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="flex flex-col gap-3">
+        <div id="res-fv">
+          <ResultCard 
+            title="Total Future Value (FV)" 
+            value="--" 
+            highlight={true} 
+            description="Compounded value of principal plus all contributions."
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-total-invested">
+            <ResultCard 
+              title="Total Out-of-Pocket Invested" 
+              value="--" 
+              description="Initial balance + cumulative deposits."
+            />
+          </div>
+          <div id="res-total-interest">
+            <ResultCard 
+              title="Total Interest Earned" 
+              value="--" 
+              description="Compound growth generated by money."
+            />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="res-multiplier">
+            <ResultCard 
+              title="Capital Multiplier" 
+              value="--" 
+              description="Ending FV divided by total invested."
+            />
+          </div>
+          <div id="res-annuity-growth">
+            <ResultCard 
+              title="Interest Share of Total" 
+              value="--" 
+              description="Percentage of ending wealth from interest."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Year-by-Year Growth Table -->
+      <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Future Value Schedule</h4>
+          <span class="text-[10px] font-mono text-mute">Annual Growth Trajectory</span>
+        </div>
+        <div class="overflow-x-auto max-h-[380px]">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] text-mute uppercase z-10">
+              <tr>
+                <th class="py-2.5 px-4">Year</th>
+                <th class="py-2.5 px-4 text-right">Start Bal</th>
+                <th class="py-2.5 px-4 text-right">Deposits</th>
+                <th class="py-2.5 px-4 text-right">Interest</th>
+                <th class="py-2.5 px-4 text-right font-bold text-ink">Ending FV</th>
+              </tr>
+            </thead>
+            <tbody id="fv-schedule-body" class="divide-y divide-hairline font-mono">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Guide -->
+  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+    <div class="max-w-3xl space-y-4">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">What is Future Value (FV)?</h2>
+      <p class="text-sm text-mute leading-relaxed">
+        Future Value (FV) measures how much a current sum of money (Present Value, or PV) or a series of periodic cash inflows (Annuity, or PMT) will be worth at a specific date in the future, given an assumed compound interest rate. It forms the foundation of modern finance and personal investment planning.
+      </p>
+
+      <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-3 not-prose my-6">
+        <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">The Mathematical Future Value Formula</h3>
+        <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline overflow-x-auto">
+          FV = PV × (1 + r/m)^(m×t) + PMT × [ ((1 + r/m)^(m×t) - 1) / (r/m) ] × (1 + r/m)^timing
+        </p>
+        <div class="text-xs text-mute space-y-1">
+          <p><strong>PV:</strong> Present Value (initial starting balance)</p>
+          <p><strong>PMT:</strong> Periodic recurring contribution</p>
+          <p><strong>r:</strong> Annual nominal interest rate (decimal)</p>
+          <p><strong>m:</strong> Compounding frequency per year (12 for monthly, 365 for daily)</p>
+          <p><strong>t:</strong> Time in years</p>
+          <p><strong>timing:</strong> 1 if deposited at beginning of period (annuity due), 0 if at end (ordinary annuity)</p>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Ordinary Annuity vs. Annuity Due</h3>
+      <p class="text-sm text-mute leading-relaxed">
+        When you deposit money into an account, timing matters. With an <em>ordinary annuity</em>, deposits occur at the end of each period (e.g. at the end of the month). With an <em>annuity due</em>, deposits occur at the beginning of each period. Because annuity due deposits spend an extra period compounding in the account, they generate a slightly higher total Future Value over long time horizons.
+      </p>
+
+      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Explore Companion Financial Tools</h3>
+      <p class="text-sm text-mute leading-relaxed">
+        Looking to solve for other variables like Present Value (PV), interest rate, or time periods? Explore our full <a href="/finance/tvm/" class="text-primary font-semibold underline">TVM Calculator</a>, forecast portfolio allocation with our <a href="/finance/investment/" class="text-primary font-semibold underline">Investment Calculator</a>, or examine daily yields on our <a href="/finance/daily-compound-interest/" class="text-primary font-semibold underline">Daily Compound Interest Calculator</a>.
+      </p>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import { calculateTVM } from '../../lib/math/finance';
+  import { formatCurrency } from '../../lib/utils';
+
+  const form = document.getElementById('fv-form') as HTMLFormElement;
+  const pvInput = document.getElementById('pv') as HTMLInputElement;
+  const pvSlider = document.getElementById('pv-slider') as HTMLInputElement;
+  const pmtInput = document.getElementById('pmt') as HTMLInputElement;
+  const pmtSlider = document.getElementById('pmt-slider') as HTMLInputElement;
+  const rateInput = document.getElementById('rate') as HTMLInputElement;
+  const yearsInput = document.getElementById('years') as HTMLInputElement;
+  const compoundingSelect = document.getElementById('compounding') as HTMLSelectElement;
+  const pmtFreqSelect = document.getElementById('pmt-frequency') as HTMLSelectElement;
+  const timingCheckbox = document.getElementById('timing') as HTMLInputElement;
+
+  const resFV = document.getElementById('res-fv')?.querySelector('[data-result-value]');
+  const resTotalInvested = document.getElementById('res-total-invested')?.querySelector('[data-result-value]');
+  const resTotalInterest = document.getElementById('res-total-interest')?.querySelector('[data-result-value]');
+  const resMultiplier = document.getElementById('res-multiplier')?.querySelector('[data-result-value]');
+  const resAnnuityGrowth = document.getElementById('res-annuity-growth')?.querySelector('[data-result-value]');
+  const scheduleBody = document.getElementById('fv-schedule-body');
+
+  function calculateFV() {
+    const pv = Math.abs(parseFloat(pvInput.value)) || 0;
+    const pmt = Math.abs(parseFloat(pmtInput.value)) || 0;
+    const rate = (Math.abs(parseFloat(rateInput.value)) || 0) / 100;
+    const years = Math.max(1, Math.abs(parseInt(yearsInput.value)) || 1);
+    const compounding = parseInt(compoundingSelect.value) || 12;
+    const pFreq = parseInt(pmtFreqSelect.value) || 12;
+    const isBeginning = timingCheckbox.checked;
+
+    const totalPeriods = years * pFreq;
+    const totalDeposits = pv + (pmt * totalPeriods);
+
+    let fv = 0;
+    try {
+      // PV is cash outflow (-pv), PMT is cash outflow (-pmt)
+      const solved = calculateTVM('fv', {
+        pv: -pv,
+        pmt: -pmt,
+        rate,
+        periods: totalPeriods,
+        compoundingFrequency: compounding,
+        paymentFrequency: pFreq,
+        timing: isBeginning ? 'beginning' : 'end'
+      });
+      fv = Math.abs(solved);
+    } catch {
+      fv = totalDeposits;
+    }
+
+    const totalInterest = Math.max(0, fv - totalDeposits);
+    const multiplier = totalDeposits > 0 ? fv / totalDeposits : 1;
+    const interestShare = fv > 0 ? (totalInterest / fv) * 100 : 0;
+
+    if (resFV) resFV.textContent = formatCurrency(fv);
+    if (resTotalInvested) resTotalInvested.textContent = formatCurrency(totalDeposits);
+    if (resTotalInterest) resTotalInterest.textContent = `+${formatCurrency(totalInterest)}`;
+    if (resMultiplier) resMultiplier.textContent = `${multiplier.toFixed(2)}x`;
+    if (resAnnuityGrowth) resAnnuityGrowth.textContent = `${interestShare.toFixed(1)}%`;
+
+    // Year-by-year schedule
+    const scheduleRows: string[] = [];
+    let currentBalance = pv;
+    let cumulativeDeposits = pv;
+
+    for (let yr = 1; yr <= years; yr++) {
+      const yearStart = currentBalance;
+      const annualAdditions = pmt * pFreq;
+      cumulativeDeposits += annualAdditions;
+
+      let yearEnd = 0;
+      try {
+        const solvedYear = calculateTVM('fv', {
+          pv: -pv,
+          pmt: -pmt,
+          rate,
+          periods: yr * pFreq,
+          compoundingFrequency: compounding,
+          paymentFrequency: pFreq,
+          timing: isBeginning ? 'beginning' : 'end'
+        });
+        yearEnd = Math.abs(solvedYear);
+      } catch {
+        yearEnd = yearStart + annualAdditions;
+      }
+
+      const yearInterest = Math.max(0, yearEnd - yearStart - annualAdditions);
+      currentBalance = yearEnd;
+
+      scheduleRows.push(`
+        <tr class="hover:bg-canvas-soft transition-colors">
+          <td class="py-2 px-4 font-medium text-ink">Year ${yr}</td>
+          <td class="py-2 px-4 text-right text-mute">${formatCurrency(yearStart)}</td>
+          <td class="py-2 px-4 text-right text-mute">+${formatCurrency(annualAdditions)}</td>
+          <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yearInterest)}</td>
+          <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(yearEnd)}</td>
+        </tr>
+      `);
+    }
+
+    if (scheduleBody) {
+      scheduleBody.innerHTML = scheduleRows.join('');
+    }
+  }
+
+  // Sliders and inputs sync
+  function syncInput(inp: HTMLInputElement, sli: HTMLInputElement) {
+    sli.addEventListener('input', (e: any) => {
+      inp.value = e.target.value;
+      calculateFV();
+    });
+    inp.addEventListener('input', () => {
+      const val = parseFloat(inp.value) || 0;
+      sli.value = String(Math.min(parseFloat(sli.max), Math.max(parseFloat(sli.min), val)));
+      calculateFV();
+    });
+  }
+
+  syncInput(pvInput, pvSlider);
+  syncInput(pmtInput, pmtSlider);
+
+  rateInput.addEventListener('input', calculateFV);
+  yearsInput.addEventListener('input', calculateFV);
+  compoundingSelect.addEventListener('change', calculateFV);
+  pmtFreqSelect.addEventListener('change', calculateFV);
+  timingCheckbox.addEventListener('change', calculateFV);
+
+  // Presets
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pv = btn.getAttribute('data-pv');
+      const pmt = btn.getAttribute('data-pmt');
+      const rate = btn.getAttribute('data-rate');
+      const years = btn.getAttribute('data-years');
+
+      if (pv) { pvInput.value = pv; pvSlider.value = pv; }
+      if (pmt) { pmtInput.value = pmt; pmtSlider.value = pmt; }
+      if (rate) { rateInput.value = rate; }
+      if (years) { yearsInput.value = years; }
+
+      calculateFV();
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateFV();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(calculateFV, 10);
+  });
+
+  // Initial calculation
+  calculateFV();
+</script>

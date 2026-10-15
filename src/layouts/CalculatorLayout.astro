@@ -48,7 +48,7 @@ if (seoTitle) {
   if (trSeo !== seoTitle) {
     localizedSeoTitle = trSeo;
   } else if (lang === 'ja' || lang === 'pt') {
-    localizedSeoTitle = `${localizedTitle} | financialcalculatorapp.com`;
+    localizedSeoTitle = localizedTitle;
   } else {
     localizedSeoTitle = trSeo;
   }
@@ -81,17 +81,23 @@ const resolvedCalcKey = calcKey || pathToCalcKey[cleanPath] || pathToCalcKey[cle
 // Schema creation
 const webAppSchema = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": ["WebApplication", "SoftwareApplication"],
   "name": localizedTitle,
   "description": localizedDescription,
-  "applicationCategory": "FinancialApplication",
-  "applicationSubCategory": "FinanceApplication",
+  "applicationCategory": "FinanceApplication",
   "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
-  }
+  },
+  "featureList": [
+    "100% Client-Side Privacy",
+    "Zero Account Required",
+    "Multi-Currency Support",
+    "Instant Visual Charts"
+  ]
 };
 
 const faqSchema = localizedFaqs.length > 0 ? {
@@ -132,12 +138,10 @@ const breadcrumbSchema = {
     }
   ]
 };
+
+const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumbSchema];
 ---
-<Layout title={localizedSeoTitle} description={localizedDescription} lang={lang}>
-  <!-- Inject Structured Data -->
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(webAppSchema)} />
-  {faqSchema && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />}
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbSchema)} />
+<Layout title={localizedSeoTitle} description={localizedDescription} lang={lang} schemas={pageSchemas}>
   
 
   <div class="page-shell py-6 lg:py-8 flex flex-col lg:flex-row gap-8 items-start">
