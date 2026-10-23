@@ -850,6 +850,621 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 <p>Experience the authentic HP 12C right in your browser with our <a href="/emulators/hp-12c/">Free Online HP 12C Calculator Emulator</a>!</p>
 `
     }
+  },
+
+  "what-is-p-y-on-financial-calculator": {
+    en: {
+      title: "What is P/Y on a Financial Calculator? (And How to Set It Right)",
+      description: "Learn what P/Y (Payments per Year) and C/Y (Compounding per Year) mean on financial calculators like the TI BA II Plus, how to change them, and how to avoid the #1 TVM trap.",
+      content: `
+<p>If you have ever used a financial calculator—such as the <strong>Texas Instruments TI BA II Plus</strong>, <strong>TI BA II Plus Professional</strong>, or <strong>HP 10bII+</strong>—you have likely encountered the setting <strong>P/Y</strong>.</p>
+<p>For university finance students, CFA candidates, and real estate professionals, <strong>P/Y is the single most common reason financial calculations produce completely wrong answers</strong>. A simple setting mismatch can turn an easy Time Value of Money (TVM) exam problem or loan amortization schedule into a costly calculation mistake.</p>
+<p>Here is everything you need to know about what P/Y means, how it interacts with C/Y, how to set it correctly, and how to avoid the hidden default trap.</p>
+
+<h2>What Does P/Y Mean?</h2>
+<p><strong>P/Y</strong> stands for <strong>Payments per Year</strong> (or Periods per Year). It informs the calculator's internal processor how many cash flow payments occur within a single 12-month calendar year:</p>
+<ul>
+  <li><strong>P/Y = 12:</strong> Monthly payments (the standard for mortgages, auto loans, credit cards, and personal loans).</li>
+  <li><strong>P/Y = 1:</strong> Annual payments (lump-sum investments, annual pension deposits, and traditional finance textbook problems).</li>
+  <li><strong>P/Y = 2:</strong> Semi-annual payments (standard for US Treasury and corporate bonds).</li>
+  <li><strong>P/Y = 4:</strong> Quarterly payments (quarterly stock dividends, corporate bond disbursements).</li>
+  <li><strong>P/Y = 26 or 52:</strong> Bi-weekly or weekly loan payments.</li>
+</ul>
+<p>When you enter an annual interest rate into <strong>I/Y</strong> (Interest per Year), the calculator automatically divides that annual percentage by the <strong>P/Y</strong> value to determine the interest applied to each individual payment period.</p>
+
+<h2>What is C/Y (Compounding Periods per Year)?</h2>
+<p>Directly paired with P/Y is <strong>C/Y</strong>, which stands for <strong>Compounding Periods per Year</strong>.</p>
+<p>While P/Y controls how often <em>you make or receive a payment</em>, C/Y controls how often the financial institution <em>calculates and adds accumulated interest</em> to the principal balance:</p>
+<ul>
+  <li>On most consumer loans in the United States and international markets, interest compounds with each payment: <strong>P/Y = 12 and C/Y = 12</strong>.</li>
+  <li>On the Texas Instruments BA II Plus, <strong>when you enter a number for P/Y, the calculator automatically updates C/Y to the same value</strong>.</li>
+  <li>In certain jurisdictions and financial products, P/Y and C/Y differ. For instance, <strong>Canadian residential mortgages</strong> legally compound semi-annually (C/Y = 2) while payments are made monthly (P/Y = 12).</li>
+</ul>
+
+<h2>The #1 Trap: Why P/Y Ruins Student & Investor Calculations</h2>
+<p>The single greatest source of errors on financial calculators is the <strong>Factory Default Trap</strong>.</p>
+<p>When you unpack a new TI BA II Plus, change its battery, or reset its memory, <strong>the calculator defaults to P/Y = 12 and C/Y = 12</strong>.</p>
+<h3>The Scenario That Fails:</h3>
+<p>Imagine a standard introductory finance question: <em>"You deposit $5,000 today into an investment yielding 8% compounded annually for 5 years. What is its Future Value (FV)?"</em></p>
+<p>If you enter:</p>
+<ul>
+  <li><code>N = 5</code> (5 years)</li>
+  <li><code>I/Y = 8</code> (8% annual interest)</li>
+  <li><code>PV = -5000</code> (initial deposit)</li>
+  <li><code>PMT = 0</code></li>
+  <li>Compute <code>FV</code></li>
+</ul>
+<p>If your calculator is set to <strong>P/Y = 12</strong>, it assumes your 5 periods are <strong>5 months</strong>, and it converts your 8% annual rate into a monthly rate of <strong>0.667% per period</strong>.</p>
+<ul>
+  <li><strong>What the calculator gives you (WRONG):</strong> $5,168.91</li>
+  <li><strong>The true mathematical answer (CORRECT):</strong> $7,346.64</li>
+</ul>
+<p>Because of this hidden setting, thousands of exam questions and investment analyses are botched every year.</p>
+
+<h2>The Two Industry Standards: Which Setting Should You Use?</h2>
+<p>In financial modeling and professional practice, two different schools of thought exist:</p>
+<h3>Approach A: The "Always P/Y = 1" Rule (Recommended for CFA/FRM & Students)</h3>
+<p>Top CFA prep programs (such as Kaplan Schweser) and university professors overwhelmingly recommend setting <strong>P/Y = 1 and C/Y = 1 permanently</strong>.</p>
+<p>Under this method:</p>
+<ol>
+  <li>You keep <code>P/Y = 1</code> forever.</li>
+  <li>For annual problems: enter years as <code>N</code> and annual rate as <code>I/Y</code>.</li>
+  <li>For monthly problems: you manually enter <code>N = years × 12</code> and <code>I/Y = annual rate / 12</code>.</li>
+</ol>
+<p><strong>Why this wins:</strong> You never have to worry about an invisible internal setting altering your math. What you type on the keypad is exactly what the formula calculates.</p>
+
+<h3>Approach B: The "P/Y = 12" Rule (Common for Mortgage & Auto Bankers)</h3>
+<p>Loan officers who exclusively write 30-year mortgages or 60-month auto loans often keep <code>P/Y = 12</code> and <code>C/Y = 12</code>.</p>
+<p>Under this method:</p>
+<ol>
+  <li><code>N</code> is entered as total months (e.g., <code>360</code> for a 30-year loan).</li>
+  <li><code>I/Y</code> is entered as the unadjusted annual nominal rate (e.g., <code>6.5</code> for 6.5%).</li>
+  <li>The calculator handles the division internally.</li>
+</ol>
+
+<h2>Step-by-Step Keystrokes to Check and Change P/Y</h2>
+<h3>On the Texas Instruments TI BA II Plus & Professional:</h3>
+<ol>
+  <li>Press <code>[2nd]</code> then press <code>[I/Y]</code> (this opens the secondary <code>P/Y</code> menu).</li>
+  <li>The LCD screen will display <code>P/Y = </code> along with the active setting (e.g., <code>12.00</code>).</li>
+  <li>Type your desired frequency (e.g., press <code>1</code> or <code>12</code>).</li>
+  <li><strong>CRITICAL STEP:</strong> Press <code>[ENTER]</code>. If you do not press <code>[ENTER]</code>, your change is not saved!</li>
+  <li>Press the down arrow key <code>[↓]</code> to inspect <code>C/Y</code>. Ensure it matches your scenario.</li>
+  <li>Press <code>[2nd]</code> then <code>[CPT]</code> (QUIT) to exit back to standard calculator mode.</li>
+</ol>
+
+<h3>On the HP 10bII+:</h3>
+<ol>
+  <li>Type the desired number (e.g., <code>12</code> or <code>1</code>).</li>
+  <li>Press the orange <code>[Shift]</code> key.</li>
+  <li>Press <code>[PMT]</code> (which has <code>P/YR</code> printed above it in orange).</li>
+</ol>
+
+<h3>What About the HP 12C?</h3>
+<p>The classic <strong>HP 12C</strong> does not have a P/Y menu. It relies strictly on Reverse Polish Notation (RPN) and periodic inputs:</p>
+<ul>
+  <li>For monthly calculations on the HP 12C, enter total months into <code>n</code> (or press <code>g</code> then <code>12X</code>).</li>
+  <li>Enter the annual interest rate divided by 12 into <code>i</code> (or press <code>g</code> then <code>12÷</code>).</li>
+</ul>
+
+<h2>Worked Example: Calculating a Car Loan Payment</h2>
+<p>Let's calculate the monthly payment on a <strong>$25,000 auto loan</strong> at <strong>6% APR</strong> over <strong>5 years</strong> (60 monthly payments):</p>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Key / Variable</th>
+      <th class="p-2.5 font-bold text-ink">Approach A (P/Y = 1)</th>
+      <th class="p-2.5 font-bold text-ink">Approach B (P/Y = 12)</th>
+      <th class="p-2.5 font-bold text-ink">Common Mistake (P/Y = 12 with manual divide)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">P/Y Setting</td>
+      <td class="p-2.5 font-mono">1</td>
+      <td class="p-2.5 font-mono">12</td>
+      <td class="p-2.5 font-mono">12</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">N</td>
+      <td class="p-2.5 font-mono">60 (5 × 12)</td>
+      <td class="p-2.5 font-mono">60</td>
+      <td class="p-2.5 font-mono">60</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">I/Y</td>
+      <td class="p-2.5 font-mono">0.5 (6% / 12)</td>
+      <td class="p-2.5 font-mono">6.0 (Annual APR)</td>
+      <td class="p-2.5 font-mono">0.5 (Divided twice!)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">PV</td>
+      <td class="p-2.5 font-mono">25,000</td>
+      <td class="p-2.5 font-mono">25,000</td>
+      <td class="p-2.5 font-mono">25,000</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">FV</td>
+      <td class="p-2.5 font-mono">0</td>
+      <td class="p-2.5 font-mono">0</td>
+      <td class="p-2.5 font-mono">0</td>
+    </tr>
+    <tr class="bg-canvas-soft/50 font-bold">
+      <td class="p-2.5">Compute PMT</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-mono">-$483.32 ✅</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-mono">-$483.32 ✅</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-mono">-$422.09 ❌</td>
+    </tr>
+  </tbody>
+</table>
+<p>Notice how in the third column, dividing the interest rate manually while leaving <code>P/Y = 12</code> caused the calculator to divide the rate <em>twice</em>, producing an incorrect payment of -$422.09 instead of -$483.32!</p>
+
+<h2>Test It Online Without Buying Hardware</h2>
+<p>Want to practice changing P/Y and testing TVM keystrokes without risking exam errors?</p>
+<ul>
+  <li>Practice on our authentic <a href="/emulators/ti-ba-ii-plus/">TI BA II Plus Online Simulator</a> with real-time worksheet synchronization.</li>
+  <li>Run instant multi-variable scenarios on our <a href="/finance/tvm/">TVM Calculator</a>.</li>
+  <li>Compare loan options on our <a href="/loan/calculator/">Loan Payment Calculator</a> with complete amortization breakdowns.</li>
+  <li>If you prefer RPN keystrokes, try our free <a href="/emulators/hp-12c/">HP 12C Calculator Emulator</a>.</li>
+</ul>
+`
+    },
+    es: {
+      title: "¿Qué es P/Y en una calculadora financiera y cómo configurarlo?",
+      description: "Descubre el significado de P/Y (pagos por año) y C/Y (capitalizaciones por año) en calculadoras financieras como la TI BA II Plus, cómo ajustarlos y cómo evitar errores en TVM.",
+      content: `
+<p>Si alguna vez has utilizado una calculadora financiera —como la <strong>Texas Instruments TI BA II Plus</strong>, la <strong>TI BA II Plus Professional</strong> o la <strong>HP 10bII+</strong>— seguro te has encontrado con el parámetro <strong>P/Y</strong>.</p>
+<p>Para estudiantes universitarios de finanzas, candidatos al CFA y profesionales inmobiliarios, <strong>el ajuste incorrecto de P/Y es la causa principal de cálculos erróneos</strong>. Un desajuste en este valor puede arruinar un examen de Valor del Dinheiro en el Tiempo (TVM) o generar cuadros de amortización con cifras completamente equivocadas.</p>
+<p>A continuación te explicamos qué significa P/Y, su relación con C/Y, cómo configurarlo paso a paso y qué regla de oro seguir para no equivocarte nunca.</p>
+
+<h2>¿Qué significa P/Y?</h2>
+<p><strong>P/Y</strong> son las siglas de <strong>Payments per Year</strong> (Pagos o Periodos por Año). Indica al procesador interno de la calculadora cuántos pagos o cuotas se realizan a lo largo de un año calendario (12 meses):</p>
+<ul>
+  <li><strong>P/Y = 12:</strong> Pagos mensuales (el estándar en hipotecas, préstamos personales, tarjetas de crédito y créditos de auto).</li>
+  <li><strong>P/Y = 1:</strong> Pagos anuales (inversiones a tanto alzado, depósitos anuales y la mayoría de ejercicios teóricos de libros de texto).</li>
+  <li><strong>P/Y = 2:</strong> Pagos semestrales (habitual en bonos corporativos y deuda soberana).</li>
+  <li><strong>P/Y = 4:</strong> Pagos trimestrales (dividendos de acciones o cupones trimestrales).</li>
+  <li><strong>P/Y = 26 o 52:</strong> Pagos quincenales o semanales.</li>
+</ul>
+<p>Cuando introduces la tasa de interés anual en <strong>I/Y</strong> (Interest per Year), la calculadora divide automáticamente ese porcentaje entre el valor configurado en <strong>P/Y</strong> para aplicar el interés correspondiente a cada cuota.</p>
+
+<h2>¿Qué es C/Y (Periodos de Capitalización por Año)?</h2>
+<p>Estrechamente vinculado a P/Y está <strong>C/Y</strong> (Compounding Periods per Year / Periodos de Capitalización por Año).</p>
+<p>Mientras que P/Y define la frecuencia con la que <em>tú pagas o cobras</em>, C/Y indica cada cuánto tiempo la entidad financiera <em>liquida y capitaliza los intereses devengados</em> sumándolos al capital:</p>
+<ul>
+  <li>En la mayoría de préstamos bancarios, la capitalización coincide con el pago: <strong>P/Y = 12 y C/Y = 12</strong>.</li>
+  <li>En la Texas Instruments BA II Plus, <strong>al modificar P/Y, la calculadora actualiza automáticamente C/Y con el mismo valor</strong>.</li>
+  <li>En algunos mercados internacionales existen diferencias: por ejemplo, las hipotecas en Canadá capitalizan por ley semestralmente (C/Y = 2) aunque las cuotas sean mensuales (P/Y = 12).</li>
+</ul>
+
+<h2>El Error Nº 1: La trampa de la configuración de fábrica</h2>
+<p>El error más recurrente ocurre por la <strong>configuración predeterminada de fábrica</strong>.</p>
+<p>Al estrenar una TI BA II Plus, sustituir su batería o restablecer su memoria, <strong>el dispositivo viene por defecto con P/Y = 12 y C/Y = 12</strong>.</p>
+<h3>El ejemplo donde todo falla:</h3>
+<p>Imagina una pregunta clásica de examen: <em>"Inviertes 5.000 € hoy al 8% de interés anual compuesto durante 5 años. ¿Cuál es el Valor Futuro (FV)?"</em></p>
+<p>Si introduces:</p>
+<ul>
+  <li><code>N = 5</code> (5 años)</li>
+  <li><code>I/Y = 8</code> (8% de interés anual)</li>
+  <li><code>PV = -5000</code> (depósito inicial)</li>
+  <li><code>PMT = 0</code></li>
+  <li>Calculas <code>FV</code></li>
+</ul>
+<p>Si la calculadora sigue en <strong>P/Y = 12</strong>, interpretará que 5 no son 5 años sino <strong>5 meses</strong>, y dividirá el 8% anual entre 12 (0,667% mensual):</p>
+<ul>
+  <li><strong>Resultado de la calculadora (INCORRECTO):</strong> 5.168,91 €</li>
+  <li><strong>Resultado matemático real (CORRECTO):</strong> 7.346,64 €</li>
+</ul>
+
+<h2>Los dos métodos de trabajo: ¿Cuál deberías utilizar?</h2>
+<h3>Método A: La regla de "Mantener siempre P/Y = 1" (Recomendado para exámenes CFA y universitarios)</h3>
+<p>Las principales academias de preparación para certificaciones financieras internacionales recomiendan dejar <strong>P/Y = 1 y C/Y = 1 de forma permanente</strong>.</p>
+<p>Bajo este esquema:</p>
+<ol>
+  <li>Mantienes <code>P/Y = 1</code> siempre.</li>
+  <li>Para problemas anuales: introduces los años en <code>N</code> y la tasa anual en <code>I/Y</code>.</li>
+  <li>Para préstamos mensuales: conviertes manualmente <code>N = años × 12</code> e <code>I/Y = tasa anual / 12</code>.</li>
+</ol>
+<p><strong>Ventaja:</strong> Eliminas por completo el riesgo de que una variable oculta altere tus cálculos. Lo que digitas es exactamente lo que se calcula.</p>
+
+<h3>Método B: La regla de "P/Y = 12" (Habitual en banca e hipotecas)</h3>
+<p>Los analistas hipotecarios que calculan préstamos a 30 años configuran <code>P/Y = 12</code> y <code>C/Y = 12</code>:</p>
+<ol>
+  <li>Introducen <code>N</code> en meses totales (ej. <code>360</code>).</li>
+  <li>Introducen <code>I/Y</code> con la tasa nominal anual directa (ej. <code>6.5</code>).</li>
+  <li>La máquina realiza la conversión periódica internamente.</li>
+</ol>
+
+<h2>Cómo cambiar el valor de P/Y paso a paso</h2>
+<h3>En la Texas Instruments TI BA II Plus & Professional:</h3>
+<ol>
+  <li>Presiona la tecla amarilla <code>[2nd]</code> y luego <code>[I/Y]</code> (accedes al menú secundario <code>P/Y</code>).</li>
+  <li>La pantalla mostrará <code>P/Y = </code> con el valor actual (ej. <code>12.00</code>).</li>
+  <li>Escribe el nuevo número deseado (ej. presiona <code>1</code> o <code>12</code>).</li>
+  <li><strong>PASO VITAL:</strong> Presiona la tecla <code>[ENTER]</code>. ¡Si no presionas ENTER, el cambio no se guardará!</li>
+  <li>Pulsa la flecha abajo <code>[↓]</code> para verificar <code>C/Y</code>.</li>
+  <li>Pulsa <code>[2nd]</code> y después <code>[CPT]</code> (QUIT) para regresar a la pantalla de cálculo habitual.</li>
+</ol>
+
+<h3>En la HP 10bII+:</h3>
+<ol>
+  <li>Escribe el número deseado (ej. <code>12</code> o <code>1</code>).</li>
+  <li>Presiona la tecla naranja <code>[Shift]</code>.</li>
+  <li>Presiona la tecla <code>[PMT]</code> (que tiene serigrafiado <code>P/YR</code> en naranja).</li>
+</ol>
+
+<h3>¿Y en la clásica HP 12C?</h3>
+<p>La emblemática <strong>HP 12C</strong> no tiene menú de P/Y, ya que opera bajo Notación Polaca Inversa (RPN) y lógica periódica directa:</p>
+<ul>
+  <li>Para operaciones mensuales, introduce los meses en <code>n</code> (o pulsa <code>g</code> seguido de <code>12X</code>).</li>
+  <li>Divide el interés anual entre 12 antes de pulsar <code>i</code> (o pulsa <code>g</code> seguido de <code>12÷</code>).</li>
+</ul>
+
+<h2>Prueba tus cálculos online gratis</h2>
+<p>¿Quieres practicar cambios de P/Y y funciones de TVM sin depender de un dispositivo físico?</p>
+<ul>
+  <li>Prueba nuestro <a href="/es/emulators/ti-ba-ii-plus/">Simulador TI BA II Plus Online</a> con sincronización en tiempo real.</li>
+  <li>Resuelve incógnitas de capital y ahorro con la <a href="/es/finance/tvm/">Calculadora TVM (Valor del Dinero en el Tiempo)</a>.</li>
+  <li>Calcula cuotas y amortizaciones completas con la <a href="/es/loan/calculator/">Calculadora de Préstamos</a>.</li>
+  <li>Si prefieres el sistema RPN, utiliza nuestro <a href="/es/emulators/hp-12c/">Emulador Virtual HP 12C</a>.</li>
+</ul>
+`
+    },
+    de: {
+      title: "Was bedeutet P/Y auf dem Finanzrechner? Erklärung & richtige Einstellung",
+      description: "Erfahren Sie, was P/Y (Zahlungen pro Jahr) und C/Y (Zinsperioden pro Jahr) auf Finanzrechnern wie dem TI BA II Plus bedeuten, wie man sie einstellt und typische TVM-Fehler vermeidet.",
+      content: `
+<p>Wer mit einem Finanzrechner arbeitet – wie dem <strong>Texas Instruments TI BA II Plus</strong>, dem <strong>TI BA II Plus Professional</strong> oder dem <strong>HP 10bII+</strong> – stößt unweigerlich auf den Menüpunkt <strong>P/Y</strong>.</p>
+<p>Für Wirtschaftsstudenten, CFA-Kandidaten und Immobilieninvestoren ist <strong>eine falsche P/Y-Einstellung die häufigste Ursache für fehlerhafte Rechenergebnisse</strong>. Eine fehlerhafte Periodeneinstellung kann selbst einfache TVM-Aufgaben (Time Value of Money) oder Tilgungspläne komplett verfälschen.</p>
+<p>In diesem Leitfaden erfahren Sie, was P/Y bedeutet, wie es mit C/Y zusammenhängt, wie Sie den Rechner korrekt programmieren und typische Fallen sicher umgehen.</p>
+
+<h2>Was bedeutet P/Y genau?</h2>
+<p><strong>P/Y</strong> steht für <strong>Payments per Year</strong> (Zahlungen pro Kalenderjahr). Diese Variable definiert, wie viele Zahlungen oder Raten innerhalb eines 12-monatigen Jahreszyklus anfallen:</p>
+<ul>
+  <li><strong>P/Y = 12:</strong> Monatliche Raten (Standard bei Annuitätendarlehen, Ratenkrediten und Autofinanzierungen).</li>
+  <li><strong>P/Y = 1:</strong> Jährliche Zahlungen (Einmalanlagen, jährliche Sparraten und typische universitäre Prüfungsaufgaben).</li>
+  <li><strong>P/Y = 2:</strong> Halbjährliche Zahlungen (üblich bei US-Treasuries und festverzinslichen Industrieanleihen).</li>
+  <li><strong>P/Y = 4:</strong> Quartalsweise Zahlungen (vierteljährliche Dividendenausschüttungen).</li>
+  <li><strong>P/Y = 26 oder 52:</strong> Zweiwöchentliche bzw. wöchentliche Tilgungsmodelle.</li>
+</ul>
+<p>Wenn Sie den Jahreszins unter <strong>I/Y</strong> (Interest per Year) eingeben, dividiert der interne Prozessor diesen Nominalzins durch den Wert von <strong>P/Y</strong>, um den Zinsanspruch pro Zahlungsperiode zu ermitteln.</p>
+
+<h2>Was bedeutet C/Y (Compounding Periods per Year)?</h2>
+<p>Direkt mit P/Y gekoppelt ist <strong>C/Y</strong> (Zinseszins- bzw. Kapitalisierungsperioden pro Jahr).</p>
+<p>Während P/Y angibt, wie oft <em>Zahlungen fließen</em>, bestimmt C/Y, wie häufig <em>Zinsen berechnet und dem Kapital zugeschlagen</em> werden:</p>
+<ul>
+  <li>Bei den meisten europäischen und US-Konsumentenkrediten fallen Zahlung und Zinseszinsperiode zusammen: <strong>P/Y = 12 und C/Y = 12</strong>.</li>
+  <li>Beim TI BA II Plus passt der Rechner beim Ändern von P/Y den Wert von C/Y <strong>automatisch auf dieselbe Zahl</strong> an.</li>
+  <li>Bei speziellen Produkten weichen die Werte ab: So werden kanadische Wohnbauhypotheken gesetzlich halbjährlich verzinst (C/Y = 2), die Tilgung erfolgt jedoch monatlich (P/Y = 12).</li>
+</ul>
+
+<h2>Die häufigste Falle: Die Werkseinstellung des Rechners</h2>
+<p>Die häufigste Fehlerquelle ist die <strong>Werkseinstellung nach dem Zurücksetzen</strong>.</p>
+<p>Nach einem Batteriewechsel, Neukauf oder RAM-Reset steht der TI BA II Plus standardmäßig auf <strong>P/Y = 12 und C/Y = 12</strong>.</p>
+<h3>Klassisches Fehlerszenario:</h3>
+<p>Aufgabe: <em>„Sie legen heute 5.000 € zu 8 % Jahreszins für 5 Jahre an. Wie hoch ist der Endwert (FV)?“</em></p>
+<p>Eingabe:</p>
+<ul>
+  <li><code>N = 5</code> (5 Jahre)</li>
+  <li><code>I/Y = 8</code> (8 % Jahreszins)</li>
+  <li><code>PV = -5000</code> (Anfangsinvestition)</li>
+  <li><code>PMT = 0</code></li>
+  <li>Berechnung von <code>FV</code></li>
+</ul>
+<p>Bleibt der Rechner auf <strong>P/Y = 12</strong>, interpretiert er die Zahl 5 als <strong>5 Monate</strong> und rechnet intern mit 0,667 % Monatszins:</p>
+<ul>
+  <li><strong>Falsche Rechnerausgabe:</strong> 5.168,91 €</li>
+  <li><strong>Mathematisch korrektes Ergebnis:</strong> 7.346,64 €</li>
+</ul>
+
+<h2>Die zwei Vorgehensweisen in der Praxis</h2>
+<h3>Methode A: Die „Immer P/Y = 1“-Regel (Empfehlung für Prüfungen & CFA)</h3>
+<p>Renommierte Prüfungsvorbereiter (wie Kaplan Schweser) und Hochschuldozenten empfehlen, <strong>P/Y = 1 und C/Y = 1 dauerhaft beizubehalten</strong>.</p>
+<p>Die Spielregeln:</p>
+<ol>
+  <li><code>P/Y = 1</code> bleibt dauerhaft aktiv.</li>
+  <li>Bei Jahresaufgaben: Jahre in <code>N</code> und Jahreszins in <code>I/Y</code> eintragen.</li>
+  <li>Bei Monatsaufgaben: Manuelle Umrechnung mit <code>N = Jahre × 12</code> und <code>I/Y = Jahreszins / 12</code>.</li>
+</ol>
+<p><strong>Großer Vorteil:</strong> Keine versteckten internen Menüeinstellungen verfälschen Ihre Rechnungen. Was Sie eingeben, wird direkt berechnet.</p>
+
+<h3>Methode B: Die „P/Y = 12“-Regel (Banken- & Maklerpraxis)</h3>
+<p>Darlehensberater mit Fokus auf langfristige Immobilienfinanzierungen nutzen <code>P/Y = 12</code>:</p>
+<ol>
+  <li><code>N</code> wird in Gesamtmonaten eingegeben (z. B. <code>360</code> für 30 Jahre).</li>
+  <li><code>I/Y</code> wird als unveränderter Jahresnominalzins eingetragen (z. B. <code>4.5</code>).</li>
+  <li>Der Rechner führt die Monatsumrechnung automatisch im Hintergrund aus.</li>
+</ol>
+
+<h2>Schritt-für-Schritt-Anleitung: P/Y richtig einstellen</h2>
+<h3>Auf dem Texas Instruments TI BA II Plus & Professional:</h3>
+<ol>
+  <li>Drücken Sie <code>[2nd]</code> gefolgt von <code>[I/Y]</code> (öffnet das Menü <code>P/Y</code>).</li>
+  <li>Das Display zeigt <code>P/Y = </code> und den aktuellen Wert (z. B. <code>12.00</code>).</li>
+  <li>Tippen Sie den gewünschten Wert ein (z. B. <code>1</code> oder <code>12</code>).</li>
+  <li><strong>WICHTIGSTER SCHRITT:</strong> Drücken Sie die Taste <code>[ENTER]</code>. Ohne ENTER wird die Änderung nicht übernommen!</li>
+  <li>Drücken Sie den Pfeil nach unten <code>[↓]</code>, um <code>C/Y</code> zu prüfen.</li>
+  <li>Drücken Sie <code>[2nd]</code> und dann <code>[CPT]</code> (QUIT), um das Menü zu verlassen.</li>
+</ol>
+
+<h3>Auf dem HP 10bII+:</h3>
+<ol>
+  <li>Geben Sie die Zahl ein (z. B. <code>12</code> oder <code>1</code>).</li>
+  <li>Drücken Sie die orangefarbene Taste <code>[Shift]</code>.</li>
+  <li>Drücken Sie <code>[PMT]</code> (darüber steht in Orange <code>P/YR</code>).</li>
+</ol>
+
+<h3>Wie verhält sich der HP 12C?</h3>
+<p>Der klassische <strong>HP 12C</strong> besitzt kein P/Y-Menü, da er auf der Umgekehrten Polnischen Notation (RPN) basiert:</p>
+<ul>
+  <li>Monatsberechnungen erfolgen über direkte Periodeneingabe: Monate in <code>n</code> (oder <code>g</code> und <code>12X</code>).</li>
+  <li>Monatszins in <code>i</code> eintragen (oder <code>g</code> und <code>12÷</code>).</li>
+</ul>
+
+<h2>Finanzrechner kostenlos im Browser testen</h2>
+<p>Möchten Sie TVM-Berechnungen und Tastenfolgen ohne teure Hardware üben?</p>
+<ul>
+  <li>Nutzen Sie unseren originalgetreuen <a href="/de/emulators/ti-ba-ii-plus/">Online TI BA II Plus Simulator</a> mit Live-Worksheet-Abgleich.</li>
+  <li>Lösen Sie Zins- und Sparpläne mit unserem <a href="/de/finance/tvm/">TVM-Rechner (Zeitwert des Geldes)</a>.</li>
+  <li>Erstellen Sie vollständige Tilgungspläne mit dem <a href="/de/loan/calculator/">Kreditrechner</a>.</li>
+  <li>Für RPN-Liebhaber steht unser <a href="/de/emulators/hp-12c/">Kostenloser HP 12C Simulator</a> bereit.</li>
+</ul>
+`
+    },
+    ja: {
+      title: "金融電卓の「P/Y」とは？意味と設定方法（TI BA II Plus対応）",
+      description: "TI BA II Plusなどの金融電卓にある「P/Y（年間支払回数）」と「C/Y（年間複利回数）」の意味、正しい設定手順、試験や実務で頻発する計算ミスの防ぎ方を徹底解説。",
+      content: `
+<p><strong>Texas Instruments TI BA II Plus</strong>、<strong>TI BA II Plus Professional</strong>、または<strong>HP 10bII+</strong>などの金融電卓を使用する際、必ず遭遇するのが<strong>「P/Y」</strong>という設定項目です。</p>
+<p>CFA（米国証券アナリスト）受験生、ファイナンス専攻の大学生、不動産投資家にとって、<strong>P/Yの設定不一致は金融電卓で最も多い誤答原因</strong>となっています。この設定を誤ると、時間価値（TVM）や元利均等返済の計算がすべて狂ってしまいます。</p>
+<p>ここでは、P/Yの意味、C/Yとの関連性、設定変更のキー操作手順、そして試験で失敗しないためのベストプラクティスを分かりやすく解説します。</p>
+
+<h2>P/Y（Payments per Year）とは？</h2>
+<p><strong>P/Y</strong>とは、<strong>「年間支払回数（Payments per Year）」</strong>の略称です。1年間（12ヶ月）の間にキャッシュフローの支払いや受け取りが何回発生するかを計算機に指示します。</p>
+<ul>
+  <li><strong>P/Y = 12:</strong> 毎月払い（住宅ローン、自動車ローン、クレジットカード返済の標準）。</li>
+  <li><strong>P/Y = 1:</strong> 年1回払い（一括投資、年金積立、大学講義の年次計算問題）。</li>
+  <li><strong>P/Y = 2:</strong> 半年ごと払い（米国債や事業債の利払い）。</li>
+  <li><strong>P/Y = 4:</strong> 四半期ごと払い（配当金受取など）。</li>
+  <li><strong>P/Y = 26 または 52:</strong> 隔週払い・週払い。</li>
+</ul>
+<p>年利率を<strong>［I/Y］</strong>に入力すると、電卓内部でその数値を<strong>P/Y</strong>の値で自動的に割り算し、1期あたりの実質適用金利を算出します。</p>
+
+<h2>C/Y（年間複利回数）との違い</h2>
+<p>P/Yと常にセットになっているのが<strong>C/Y（Compounding Periods per Year: 年間複利計算回数）</strong>です。</p>
+<ul>
+  <li><strong>P/Y:</strong> あなたが「支払う（または受け取る）頻度」。</li>
+  <li><strong>C/Y:</strong> 金融機関が「利息を計算して元本に組み入れる（複利化する）頻度」。</li>
+</ul>
+<p>日米の一般的な個人ローンでは、毎月返済かつ毎月複利となるため<strong>P/Y = 12、C/Y = 12</strong>に設定します。TI BA II Plusでは、P/Yに数値を入力して［ENTER］を押すと、<strong>C/Yも自動的に同じ数値に更新</strong>されます。</p>
+
+<h2>最も危険な落とし穴：初期設定（デフォルト）の罠</h2>
+<p>金融電卓を新品で購入した直後や、電池交換、リセット操作を行った直後は、<strong>自動的に「P/Y = 12、C/Y = 12」に設定</strong>されます。</p>
+<h3>よくある失敗例：</h3>
+<p>問題：<em>「現在500万円を年利8%（年1回複利）で5年間運用した場合の将来価値（FV）はいくらか？」</em></p>
+<p>入力手順：</p>
+<ul>
+  <li><code>N = 5</code>（5年間）</li>
+  <li><code>I/Y = 8</code>（年利8%）</li>
+  <li><code>PV = -5000000</code>（現在価値）</li>
+  <li><code>PMT = 0</code></li>
+  <li><code>FV</code>を計算（CPT FV）</li>
+</ul>
+<p>もし電卓が<strong>P/Y = 12</strong>のままになっていると、電卓は「5」を5年ではなく<strong>「5ヶ月」</strong>と認識し、年利8%を12で割った月利（0.667%）で計算してしまいます。</p>
+<ul>
+  <li><strong>電卓の誤った表示:</strong> 約516.9万円（大間違い）</li>
+  <li><strong>正しい数学的解:</strong> 約734.7万円（正解）</li>
+</ul>
+
+<h2>推奨される2つの運用方針</h2>
+<h3>方針A：「常に P/Y = 1」固定ルール（CFA受験生・学生に推奨）</h3>
+<p>Kaplan Schweserなどの大手CFA受験指導校では、<strong>電卓を常に「P/Y = 1、C/Y = 1」に固定</strong>することを強く推奨しています。</p>
+<ol>
+  <li>P/Yは常に「1」のまま触りません。</li>
+  <li>年次計算の場合：年数をそのまま［N］に、年利を［I/Y］に入力。</li>
+  <li>毎月払いの場合：期間を<code>年数 × 12</code>、金利を<code>年利 ÷ 12</code>と自分で計算して入力。</li>
+</ol>
+<p><strong>メリット:</strong> 内部設定による予期せぬ計算ミスを100%排除できます。画面に入力した数値の通りに数式が実行されます。</p>
+
+<h3>方針B：「P/Y = 12」ルール（住宅ローン・実務担当者向け）</h3>
+<p>日常的に住宅ローンやカーローンを取り扱う実務では、最初から<code>P/Y = 12</code>にしておくことで、金利を毎回12で割る手間を省けます。</p>
+
+<h2>P/Yの確認・変更キー操作手順</h2>
+<h3>Texas Instruments TI BA II Plus の場合：</h3>
+<ol>
+  <li>黄色い［2nd］キーを押してから、［I/Y］キーを押します（P/Yメニューが開きます）。</li>
+  <li>画面に「P/Y = 12.00」のように現在の設定値が表示されます。</li>
+  <li>変更したい数値（例: 「1」または「12」）を入力します。</li>
+  <li><strong>【極めて重要】［ENTER］キーを押します。ENTERを押さないと設定は反映されません！</strong></li>
+  <li>下矢印キー［↓］を押して、C/Yも意図した数値になっているか確認します。</li>
+  <li>［2nd］を押してから［CPT］（QUIT）を押して通常画面に戻ります。</li>
+</ol>
+
+<h3>HP 10bII+ の場合：</h3>
+<ol>
+  <li>設定したい数値（「12」または「1」）を入力。</li>
+  <li>オレンジの［Shift］キーを押す。</li>
+  <li>［PMT］（キーの上にP/YRと記載）を押す。</li>
+</ol>
+
+<h3>名機 HP 12C の場合は？</h3>
+<p>ロングセラーの<strong>HP 12C</strong>にはP/Yメニューが存在しません。RPN（逆ポーランド記法）による月単位計算を採用しているため、月数を直接［n］に入れ、月利を直接［i］に入力（または［g］［12X］、［g］［12÷］キーを利用）します。</p>
+
+<h2>ブラウザ上で今すぐ試せる無料シミュレーター</h2>
+<p>高価な実機を購入しなくても、当サイトで正確な金融計算キー操作をシミュレーションできます：</p>
+<ul>
+  <li>リアルタイムワークシート連動の<a href="/ja/emulators/ti-ba-ii-plus/">TI BA II Plus オンラインシミュレーター</a></li>
+  <li>時間価値と積立利息を可視化する<a href="/ja/finance/tvm/">TVM計算機（Time Value of Money）</a></li>
+  <li>毎月の返済額と元利償還表を算出する<a href="/ja/loan/calculator/">ローン返済計算ツール</a></li>
+  <li>RPN記法に対応した<a href="/ja/emulators/hp-12c/">HP 12C オンラインエミュレーター</a></li>
+</ul>
+`
+    },
+    fr: {
+      title: "Que signifie P/Y sur une calculatrice financière ? Guide et réglages",
+      description: "Comprenez la signification de P/Y (paiements par an) et C/Y (capitalisations par an) sur les calculatrices financières comme la TI BA II Plus, et évitez l'erreur TVM la plus fréquente.",
+      content: `
+<p>Si vous utilisez une calculatrice financière telle que la <strong>Texas Instruments TI BA II Plus</strong>, la <strong>TI BA II Plus Professional</strong> ou la <strong>HP 10bII+</strong>, vous avez obligatoirement rencontré la variable <strong>P/Y</strong>.</p>
+<p>Pour les étudiants en finance, les candidats aux examens du CFA et les professionnels de l'immobilier, <strong>un mauvais réglage de P/Y est la source numéro un de résultats erronés</strong>. Une incohérence dans ce paramètre peut compromettre l'intégralité d'un tableau d'amortissement ou d'un calcul de valeur temporelle de l'argent (TVM).</p>
+<p>Découvrez ce que signifie P/Y, sa relation avec C/Y, la manipulation exacte des touches et la méthode recommandée pour fiabiliser vos calculs.</p>
+
+<h2>Que signifie P/Y ?</h2>
+<p><strong>P/Y</strong> est l'abréviation de <strong>Payments per Year</strong> (Paiements par An). Ce paramètre indique au processeur de la calculatrice combien de flux périodiques ont lieu au cours d'une année civile de 12 mois :</p>
+<ul>
+  <li><strong>P/Y = 12 :</strong> Échéances mensuelles (la norme pour les crédits immobiliers, les prêts automobiles et les cartes bancaires).</li>
+  <li><strong>P/Y = 1 :</strong> Versements annuels (placements forfaitaires, cotisations de retraite annuelles et exercices académiques).</li>
+  <li><strong>P/Y = 2 :</strong> Versements semestriels (obligations d'État et obligations d'entreprises).</li>
+  <li><strong>P/Y = 4 :</strong> Versements trimestriels (dividendes d'actions).</li>
+  <li><strong>P/Y = 26 ou 52 :</strong> Remboursements bimensuels ou hebdomadaires.</li>
+</ul>
+<p>Lorsque vous saisissez un taux d'intérêt annuel sous <strong>I/Y</strong> (Interest per Year), la calculatrice divise automatiquement ce taux par la valeur de <strong>P/Y</strong> pour appliquer l'intérêt exact à chaque échéance.</p>
+
+<h2>Quelle est la différence avec C/Y (Capitalisations par an) ?</h2>
+<p>Étroitement associé à P/Y se trouve <strong>C/Y</strong> (Compounding Periods per Year / Périodes de capitalisation par an).</p>
+<ul>
+  <li><strong>P/Y :</strong> La cadence à laquelle <em>vous payez ou recevez</em> de l'argent.</li>
+  <li><strong>C/Y :</strong> La cadence à laquelle l'établissement financier <em>calcule et intègre les intérêts</em> au capital restant dû.</li>
+</ul>
+<p>Sur la TI BA II Plus, <strong>dès que vous modifiez la valeur de P/Y, la calculatrice synchronise automatiquement C/Y sur le même montant</strong>. Sur la plupart des crédits à la consommation, paiements et capitalisations sont mensuels (P/Y = 12 et C/Y = 12).</p>
+
+<h2>Le piège n° 1 : La configuration d'usine par défaut</h2>
+<p>La source d'erreur la plus fréquente découle de la <strong>réinitialisation par défaut</strong> de l'appareil.</p>
+<p>Lors d'un changement de pile ou d'une remise à zéro (Reset), <strong>la calculatrice se repositionne automatiquement sur P/Y = 12 et C/Y = 12</strong>.</p>
+<h3>Exemple typique d'erreur :</h3>
+<p>Question : <em>« Vous placez 5 000 € au taux annuel de 8 % composé annuellement pendant 5 ans. Quelle est la valeur future (FV) ? »</em></p>
+<p>Si vous saisissez <code>N = 5</code>, <code>I/Y = 8</code>, <code>PV = -5000</code> et <code>PMT = 0</code> alors que votre calculatrice est réglée sur <strong>P/Y = 12</strong>, l'appareil considérera que 5 correspond à <strong>5 mois</strong> et divisera le taux de 8 % par 12 (soit 0,667 % par mois) :</p>
+<ul>
+  <li><strong>Résultat affiché (FAUX) :</strong> 5 168,91 €</li>
+  <li><strong>Valeur mathématique exacte (CORRECT) :</strong> 7 346,64 €</li>
+</ul>
+
+<h2>Les deux méthodes d'utilisation : Laquelle adopter ?</h2>
+<h3>Méthode A : La règle du « P/Y = 1 permanent » (Recommandée pour le CFA et les examens)</h3>
+<p>Les organismes de préparation aux concours financiers préconisent de <strong>conserver P/Y = 1 et C/Y = 1 en permanence</strong>.</p>
+<ol>
+  <li>Vous laissez <code>P/Y = 1</code> en tout temps.</li>
+  <li>Pour les problèmes annuels : vous saisissez directement les années sous <code>N</code> et le taux sous <code>I/Y</code>.</li>
+  <li>Pour les prêts mensuels : vous convertissez manuellement avec <code>N = années × 12</code> et <code>I/Y = taux / 12</code>.</li>
+</ol>
+<p><strong>Avantage :</strong> Aucun paramètre interne caché ne peut altérer votre raisonnement.</p>
+
+<h3>Méthode B : La règle « P/Y = 12 » (Pratique courante en agence de crédit)</h3>
+<p>Les spécialistes du prêt immobilier conservent <code>P/Y = 12</code> pour renseigner directement le taux nominal annuel sans division préalable.</p>
+
+<h2>Comment modifier P/Y pas à pas sur votre calculatrice</h2>
+<h3>Sur la Texas Instruments TI BA II Plus & Professional :</h3>
+<ol>
+  <li>Appuyez sur la touche jaune <code>[2nd]</code> puis sur <code>[I/Y]</code> (ouvre le menu secondaire <code>P/Y</code>).</li>
+  <li>L'écran LCD affiche <code>P/Y = </code> suivi de la valeur actuelle (ex. <code>12.00</code>).</li>
+  <li>Tapez la nouvelle valeur souhaitée (ex. appuyez sur <code>1</code> ou <code>12</code>).</li>
+  <li><strong>ÉTAPE INDISPENSABLE :</strong> Appuyez sur la touche <code>[ENTER]</code>. Si vous oubliez d'appuyer sur ENTER, la modification est ignorée !</li>
+  <li>Appuyez sur la flèche vers le bas <code>[↓]</code> pour vérifier <code>C/Y</code>.</li>
+  <li>Appuyez sur <code>[2nd]</code> puis sur <code>[CPT]</code> (QUIT) pour revenir au mode de calcul normal.</li>
+</ol>
+
+<h3>Sur la HP 10bII+ :</h3>
+<ol>
+  <li>Tapez le chiffre souhaité (ex. <code>12</code> ou <code>1</code>).</li>
+  <li>Appuyez sur la touche orange <code>[Shift]</code>.</li>
+  <li>Appuyez sur <code>[PMT]</code> (portant la mention <code>P/YR</code> en orange).</li>
+</ol>
+
+<h2>Testez vos calculs en ligne sans matériel</h2>
+<p>Entraînez-vous à manipuler les fonctions TVM directement dans votre navigateur :</p>
+<ul>
+  <li>Pratiquez sur notre <a href="/fr/emulators/ti-ba-ii-plus/">Simulateur TI BA II Plus en ligne</a> avec synchronisation de feuille de calcul.</li>
+  <li>Évaluez vos projets d'épargne avec le <a href="/fr/finance/tvm/">Calculateur TVM (Valeur Temporelle de l'Argent)</a>.</li>
+  <li>Simulez vos remboursements avec notre <a href="/fr/loan/calculator/">Calculateur de Prêt et Tableau d'Amortissement</a>.</li>
+  <li>Pour les adeptes de la notation RPN, découvrez l'<a href="/fr/emulators/hp-12c/">Émulateur HP 12C en ligne</a>.</li>
+</ul>
+`
+    },
+    pt: {
+      title: "O que é P/Y na calculadora financeira? Significado e configuração correta",
+      description: "Entenda o que significam P/Y (pagamentos por ano) e C/Y (capitalizações por ano) em calculadoras como a TI BA II Plus, como ajustar e como evitar o principal erro em TVM.",
+      content: `
+<p>Se você já utilizou uma calculadora financeira — como a <strong>Texas Instruments TI BA II Plus</strong>, a <strong>TI BA II Plus Professional</strong> ou a <strong>HP 10bII+</strong> — certamente já se deparou com a configuração <strong>P/Y</strong>.</p>
+<p>Para estudantes universitários, candidatos à certificação CFA e corretores de imóveis, <strong>o ajuste inadequado de P/Y é o erro mais comum em cálculos financeiros</strong>. Uma simples divergência nesse parâmetro pode arruinar uma questão de Valor do Dinheiro no Tempo (TVM) ou distorcer totalmente o valor de uma parcela de financiamento.</p>
+<p>Aqui você confere o significado exato de P/Y, sua relação com C/Y, como alterar essa função no teclado e qual estratégia adotar para nunca mais errar.</p>
+
+<h2>O que significa P/Y?</h2>
+<p><strong>P/Y</strong> é a abreviação de <strong>Payments per Year</strong> (Pagamentos ou Períodos por Ano). Esse comando informa ao processador da calculadora financeira quantas parcelas ou fluxos de caixa ocorrem dentro de um período de 12 meses:</p>
+<ul>
+  <li><strong>P/Y = 12:</strong> Pagamentos mensais (padrão em financiamentos imobiliários, crédito automotivo e empréstimos pessoais).</li>
+  <li><strong>P/Y = 1:</strong> Pagamentos anuais (aportes únicos, previdência privada com depósitos anuais e a grande maioria dos enunciados acadêmicos).</li>
+  <li><strong>P/Y = 2:</strong> Pagamentos semestrais (comum em títulos de renda fixa e títulos públicos federais).</li>
+  <li><strong>P/Y = 4:</strong> Pagamentos trimestrais (distribuição periódica de proventos e dividendos).</li>
+  <li><strong>P/Y = 26 ou 52:</strong> Pagamentos quinzenais ou semanais.</li>
+</ul>
+<p>Ao inserir uma taxa anual na tecla <strong>I/Y</strong> (Interest per Year), a calculadora divide essa taxa pelo valor de <strong>P/Y</strong> para apurar a taxa de juros exata aplicada a cada prestação.</p>
+
+<h2>O que é C/Y (Capitalizações por Ano)?</h2>
+<p>Diretamente conectado a P/Y está o <strong>C/Y</strong> (Compounding Periods per Year / Períodos de Capitalização por Ano).</p>
+<ul>
+  <li><strong>P/Y:</strong> A frequência com que <em>você efetua ou recebe os pagamentos</em>.</li>
+  <li><strong>C/Y:</strong> A frequência com que a instituição financeira <em>calcula e incorpora os juros ao saldo devedor</em>.</li>
+</ul>
+<p>Na Texas Instruments BA II Plus, <strong>ao alterar o valor de P/Y, a calculadora atualiza automaticamente C/Y com o mesmo número</strong>. Na maioria das operações de crédito comercial, pagamentos e capitalizações são mensais (P/Y = 12 e C/Y = 12).</p>
+
+<h2>A Armadilha Nº 1: O padrão de fábrica</h2>
+<p>A falha mais recorrente ocorre devido à <strong>configuração original de fábrica</strong>.</p>
+<p>Ao tirar uma TI BA II Plus da embalagem, trocar suas baterias ou acionar o botão de Reset, <strong>o sistema é reiniciado com P/Y = 12 e C/Y = 12</strong>.</p>
+<h3>Exemplo de erro clássico:</h3>
+<p>Questão: <em>"Você aplica R$ 5.000 hoje a uma taxa de 8% ao ano com capitalização anual durante 5 anos. Qual o Valor Futuro (FV)?"</em></p>
+<p>Se você digitar <code>N = 5</code>, <code>I/Y = 8</code>, <code>PV = -5000</code> e <code>PMT = 0</code>, mas a calculadora estiver configurada em <strong>P/Y = 12</strong>, ela assumirá que 5 corresponde a <strong>5 meses</strong> e dividirá a taxa anual por 12 (0,667% ao mês):</p>
+<ul>
+  <li><strong>Resultado retornado pela máquina (ERRADO):</strong> R$ 5.168,91</li>
+  <li><strong>Resultado matemático real (CORRETO):</strong> R$ 7.346,64</li>
+</ul>
+
+<h2>Os dois métodos operacionais: Qual você deve escolher?</h2>
+<h3>Método A: Manter sempre P/Y = 1 (Regra de Ouro para Exames CFA e Estudantes)</h3>
+<p>Cursos preparatórios internacionais para o exame CFA recomendam <strong>manter permanentemente P/Y = 1 e C/Y = 1</strong>.</p>
+<ol>
+  <li>Você deixa <code>P/Y = 1</code> fixo.</li>
+  <li>Para problemas com períodos anuais: digita os anos em <code>N</code> e a taxa anual em <code>I/Y</code>.</li>
+  <li>Para problemas com parcelas mensais: converte manualmente <code>N = anos × 12</code> e <code>I/Y = taxa anual / 12</code>.</li>
+</ol>
+<p><strong>Vantagem:</strong> Elimina riscos de variáveis ocultas interferirem no seu resultado.</p>
+
+<h3>Método B: Manter P/Y = 12 (Prática comum em crédito imobiliário)</h3>
+<p>Correspondentes bancários e analistas que trabalham exclusivamente com crédito habitacional deixam <code>P/Y = 12</code> para inserir a taxa nominal anual sem precisar efetuar divisões a cada proposta.</p>
+
+<h2>Como alterar o P/Y passo a passo</h2>
+<h3>Na Texas Instruments TI BA II Plus & Professional:</h3>
+<ol>
+  <li>Pressione a tecla amarela <code>[2nd]</code> e em seguida <code>[I/Y]</code> (abre o menu <code>P/Y</code>).</li>
+  <li>O visor exibirá <code>P/Y = </code> junto ao valor ativo (ex: <code>12.00</code>).</li>
+  <li>Digite o número pretendido (ex: pressione <code>1</code> ou <code>12</code>).</li>
+  <li><strong>PASSO OBRIGATÓRIO:</strong> Pressione a tecla <code>[ENTER]</code>. Sem pressionar ENTER, a configuração não é salva!</li>
+  <li>Pressione a seta para baixo <code>[↓]</code> para conferir <code>C/Y</code>.</li>
+  <li>Pressione <code>[2nd]</code> e depois <code>[CPT]</code> (QUIT) para retornar ao visor comum de cálculo.</li>
+</ol>
+
+<h3>Na HP 10bII+:</h3>
+<ol>
+  <li>Digite o número desejado (ex: <code>12</code> ou <code>1</code>).</li>
+  <li>Pressione a tecla laranja <code>[Shift]</code>.</li>
+  <li>Pressione <code>[PMT]</code> (com a inscrição <code>P/YR</code> em laranja).</li>
+</ol>
+
+<h3>E na tradicional HP 12C?</h3>
+<p>A clássica <strong>HP 12C</strong> não possui menu de P/Y, pois funciona em Notação Polonesa Reversa (RPN) e lógica periódica pura:</p>
+<ul>
+  <li>Para cálculos mensais, informe os meses em <code>n</code> (ou pressione <code>g</code> seguido de <code>12X</code>).</li>
+  <li>Divida a taxa anual por 12 antes de pressionar <code>i</code> (ou pressione <code>g</code> seguido de <code>12÷</code>).</li>
+</ul>
+
+<h2>Pratique online sem precisar comprar o aparelho</h2>
+<p>Quer treinar as teclas financeiras e cálculos de TVM direto no seu navegador?</p>
+<ul>
+  <li>Acesse nosso <a href="/pt/emulators/ti-ba-ii-plus/">Simulador Online TI BA II Plus</a> com sincronização em tempo real.</li>
+  <li>Projete seus rendimentos com a <a href="/pt/finance/tvm/">Calculadora TVM (Valor do Dinheiro no Tempo)</a>.</li>
+  <li>Simule prestações e cronogramas de amortização na <a href="/pt/loan/calculator/">Calculadora de Financiamentos</a>.</li>
+  <li>Para entusiastas da notação RPN, experimente o <a href="/pt/emulators/hp-12c/">Emulador Virtual HP 12C</a>.</li>
+</ul>
+`
+    }
   }
 };
 

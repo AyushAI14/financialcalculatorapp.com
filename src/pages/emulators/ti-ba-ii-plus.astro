@@ -9,6 +9,7 @@ const isEs = lang === 'es';
 const isDe = lang === 'de';
 const isJa = lang === 'ja';
 const isPt = lang === 'pt';
+const isFr = lang === 'fr';
 
 const faqsEn = [
   {
@@ -26,6 +27,10 @@ const faqsEn = [
   {
     question: "Why does my answer have a negative sign?",
     answer: "Financial calculators strictly enforce cash flow conventions. Money paid out (outflow/deposit/investment) is negative; money received (inflow/loan proceeds/future payout) is positive."
+  },
+  {
+    question: "What is P/Y and how do I change it on the TI BA II Plus?",
+    answer: "P/Y stands for Payments per Year (Periods per Year). Press [2nd] [I/Y] to view the active setting, enter the desired number (e.g. 12 for monthly or 1 for annual), and press [ENTER]. For an in-depth breakdown and worked examples, read our complete guide: <a href=\"/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">What is P/Y on a Financial Calculator</a>."
   }
 ];
 
@@ -45,6 +50,10 @@ const faqsEs = [
   {
     question: "¿Por qué mi resultado tiene signo negativo?",
     answer: "Las calculadoras financieras aplican estrictamente la convención de flujos de efectivo. El dinero que sale de tu bolsillo (inversión/depósito/cuota pagada) se registra como negativo; el dinero recibido (préstamo concedido/rendimiento futuro) es positivo."
+  },
+  {
+    question: "¿Qué es P/Y y cómo se cambia en la TI BA II Plus?",
+    answer: "P/Y significa Pagos por Año (Payments per Year). Presiona [2nd] [I/Y] para consultar el valor activo, introduce el número deseado (ej. 12 para mensual o 1 para anual) y pulsa [ENTER]. Consulta nuestra guía detallada: <a href=\"/es/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">¿Qué es P/Y en una calculadora financiera?</a>."
   }
 ];
 
@@ -64,6 +73,10 @@ const faqsDe = [
   {
     question: "Warum hat mein Ergebnis ein negatives Vorzeichen?",
     answer: "Finanzrechner folgen strengen Cashflow-Konventionen: Geldabflüsse (Investitionen, Auszahlungen, Tilgungsraten) sind negativ; Geldzuflüsse (Darlehensauszahlung, Erlöse, Endwert) sind positiv."
+  },
+  {
+    question: "Was bedeutet P/Y und wie stelle ich es beim TI BA II Plus ein?",
+    answer: "P/Y steht für Payments per Year (Zahlungen pro Jahr). Drücken Sie [2nd] [I/Y], tippen Sie den gewünschten Wert ein (z. B. 12 für monatlich oder 1 für jährlich) und bestätigen Sie mit [ENTER]. Ausführliche Beispiele finden Sie in unserem Ratgeber: <a href=\"/de/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">Was bedeutet P/Y auf dem Finanzrechner?</a>."
   }
 ];
 
@@ -83,6 +96,10 @@ const faqsJa = [
   {
     question: "計算結果がマイナス符号（負数）で表示されるのはなぜですか？",
     answer: "金融電卓はキャッシュフローの方向（符号規約）を厳密に区別します。手元から出ていくお金（出金・投資・支払額）はマイナス、手元に入ってくるお金（受取額・借入金・将来価値）はプラスで扱われます。"
+  },
+  {
+    question: "TI BA II Plusの「P/Y」とは何ですか？設定変更方法は？",
+    answer: "P/Yは年間支払回数（Payments per Year）を指します。［2nd］［I/Y］を押して設定画面を開き、数値を入力して必ず［ENTER］を押します。詳細な解説と試験対策は<a href=\"/ja/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">金融電卓のP/Y解説ガイド</a>をご覧ください。"
   }
 ];
 
@@ -102,10 +119,37 @@ const faqsPt = [
   {
     question: "Por que o resultado do meu cálculo aparece com sinal negativo?",
     answer: "As calculadoras financeiras aplicam com rigor a convenção de fluxo de caixa. O dinheiro desembolsado (saída, aporte, investimento ou pagamento de parcela) é registrado como negativo; o dinheiro recebido (entrada, liberação do empréstimo ou resgate futuro) é registrado como positivo."
+  },
+  {
+    question: "O que é P/Y e como alterar na TI BA II Plus?",
+    answer: "P/Y significa Pagamentos por Ano (Payments per Year). Pressione [2nd] [I/Y] para ver o valor ativo, digite o número desejado (ex: 12 para mensal ou 1 para anual) e aperte [ENTER]. Leia nosso guia completo: <a href=\"/pt/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">O que é P/Y na calculadora financeira</a>."
   }
 ];
 
-const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : faqsEn)));
+const faqsFr = [
+  {
+    question: "La calculatrice TI BA II Plus est-elle autorisée aux examens CFA et CFP ?",
+    answer: "Oui ! La Texas Instruments BA II Plus (y compris le modèle Professional) est l'une des deux seules calculatrices officiellement homologuées par le CFA Institute, GARP (FRM) et le CFP Board pour les examens de certification."
+  },
+  {
+    question: "Comment calculer une variable TVM (comme PV ou PMT) sur la TI BA II Plus ?",
+    answer: "Saisissez les valeurs connues en tapant le chiffre suivi de la touche de variable correspondante (ex. [1][0] [N], [8] [I/Y], [5][0][0] [CHS] [PMT]). Pour résoudre l'inconnue, appuyez sur [CPT] puis sur la touche de la variable recherchée (ex. [CPT] [PV])."
+  },
+  {
+    question: "Quelle est la différence entre le mode BGN et le mode END ?",
+    answer: "Le mode END applique les flux financiers en fin de période (remboursements de prêts ordinaires, rentes ordinaires). Le mode BGN applique les flux en début de période (loyers de leasing, rentes d'avance)."
+  },
+  {
+    question: "Pourquoi mon résultat comporte-t-il un signe négatif ?",
+    answer: "Les calculatrices financières respectent strictement la convention des flux de trésorerie. Tout montant décaissé (sortie, versement, remboursement) est négatif ; tout montant perçu (entrée, déblocage du prêt, valeur finale) est positif."
+  },
+  {
+    question: "Que signifie P/Y et comment le régler sur la TI BA II Plus ?",
+    answer: "P/Y désigne les paiements par an (Payments per Year). Appuyez sur [2nd] [I/Y] pour afficher le réglage en cours, saisissez la valeur voulue (ex. 12 pour mensuel ou 1 pour annuel) et appuyez sur [ENTER]. Retrouvez notre guide complet avec exemples : <a href=\"/fr/blog/what-is-p-y-on-financial-calculator/\" class=\"text-primary underline font-medium\">Que signifie P/Y sur une calculatrice financière ?</a>."
+  }
+];
+
+const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : (isFr ? faqsFr : faqsEn))));
 ---
 
 <CalculatorLayout 
