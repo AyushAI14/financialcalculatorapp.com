@@ -144,9 +144,9 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
 <Layout title={localizedSeoTitle} description={localizedDescription} lang={lang} schemas={pageSchemas}>
   
 
-  <div class="page-shell py-6 lg:py-8 flex flex-col lg:flex-row gap-8 items-start">
+  <div class="page-shell py-6 lg:py-8 flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
     <!-- Sidebar / Navigation -->
-    <aside class="w-full lg:w-72 flex-shrink-0">
+    <aside class="w-full lg:w-64 xl:w-72 flex-shrink-0">
       <!-- Mobile Collapsible Menu -->
       <details id="mobile-nav-details" class="group lg:hidden mb-4 border border-ink rounded-lg bg-paper shadow-[var(--control-shadow)]">
         <summary class="flex items-center justify-between px-4 py-3 text-xs font-mono font-bold uppercase tracking-wider text-ink cursor-pointer select-none">
@@ -233,7 +233,7 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
     </aside>
 
     <!-- Main Calculator Content Section -->
-    <section class="flex-1 bg-paper border border-ink rounded-lg p-6 lg:p-10 shadow-[var(--control-shadow)] min-h-[600px] relative w-full">
+    <section class="flex-1 min-w-0 bg-paper border border-ink rounded-lg p-4 sm:p-6 lg:p-8 xl:p-10 shadow-[var(--control-shadow)] min-h-[600px] relative w-full">
 
       <!-- Breadcrumbs -->
       <nav class="flex items-center gap-2 text-xs font-mono text-muted mb-4 flex-wrap" aria-label="Breadcrumb">

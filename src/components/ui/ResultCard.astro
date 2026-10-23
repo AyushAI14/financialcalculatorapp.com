@@ -7,25 +7,140 @@ interface Props {
   description?: string;
   highlight?: boolean;
   id?: string;
+  layout?: 'auto' | 'vertical' | 'horizontal';
 }
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
 
-const { title, value = "--", description, highlight = false, id } = Astro.props;
+const { title, value = "--", description, highlight = false, id, layout = 'auto' } = Astro.props;
 
 const localizedTitle = t(title, title);
 const localizedDescription = description ? t(description, description) : undefined;
 ---
-<div id={id} class:list={[
-  "px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[76px] w-full transition-all",
-  highlight ? "bg-paper border-2 border-input-accent shadow-[var(--control-shadow-hover)]" : "bg-paper border border-ink/40 shadow-[var(--control-shadow)]"
-]}>
-  <div class="flex-1 min-w-0 text-left pr-2">
-    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted">{localizedTitle}</h4>
-    {localizedDescription && <p class="text-xs text-muted mt-0.5 leading-normal max-w-md hidden sm:block">{localizedDescription}</p>}
+<div 
+  id={id} 
+  class:list={[
+    "result-card p-4 sm:p-5 rounded-lg w-full transition-all relative",
+    highlight 
+      ? "bg-paper border-2 border-input-accent shadow-[var(--control-shadow-hover)] highlight-card" 
+      : "bg-paper border border-ink/40 shadow-[var(--control-shadow)]",
+    localizedDescription ? "has-desc" : "no-desc",
+    `layout-${layout}`
+  ]}
+>
+  <div class="result-card-header min-w-0">
+    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted leading-tight">{localizedTitle}</h4>
   </div>
-  <div class="text-xl sm:text-2xl font-mono font-black tracking-tight text-ink whitespace-nowrap text-right shrink-0" data-result-value title={String(value)}>
+  <div 
+    class="result-card-value text-xl sm:text-2xl font-mono font-black tracking-tight text-ink tabular-nums" 
+    data-result-value 
+    title={String(value)}
+  >
     {value}
   </div>
+  {localizedDescription && (
+    <div class="result-card-desc min-w-0">
+      <p class="text-xs text-muted leading-relaxed">
+        {localizedDescription}
+      </p>
+    </div>
+  )}
 </div>
+
+<style>
+  .result-card {
+    container-type: inline-size;
+    min-height: 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .result-card-header {
+    width: 100%;
+  }
+
+  .result-card-value {
+    word-break: break-word;
+    line-height: 1.15;
+  }
+
+  .result-card-desc {
+    width: 100%;
+  }
+
+  /* When card has no description: horizontal layout if container width >= 260px */
+  @container (min-width: 260px) {
+    .result-card.no-desc:not(.layout-vertical) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .result-card.no-desc:not(.layout-vertical) .result-card-header {
+      width: auto;
+      flex: 1;
+    }
+    .result-card.no-desc:not(.layout-vertical) .result-card-value {
+      text-align: right;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+
+  /* When card has description: switch to horizontal layout with grid if container width >= 420px */
+  @container (min-width: 420px) {
+    .result-card.has-desc:not(.layout-vertical) {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "header value"
+        "desc value";
+      align-items: center;
+      column-gap: 1.25rem;
+      row-gap: 0.25rem;
+    }
+    .result-card.has-desc:not(.layout-vertical) .result-card-header {
+      grid-area: header;
+    }
+    .result-card.has-desc:not(.layout-vertical) .result-card-desc {
+      grid-area: desc;
+    }
+    .result-card.has-desc:not(.layout-vertical) .result-card-value {
+      grid-area: value;
+      text-align: right;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+
+  /* Explicit vertical layout */
+  .result-card.layout-vertical {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.35rem !important;
+  }
+  .result-card.layout-vertical .result-card-value {
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  /* Explicit horizontal layout */
+  .result-card.layout-horizontal {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+  }
+  .result-card.layout-horizontal .result-card-value {
+    text-align: right !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+</style>

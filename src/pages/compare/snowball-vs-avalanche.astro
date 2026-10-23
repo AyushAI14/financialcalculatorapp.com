@@ -119,7 +119,7 @@ const isPt = lang === 'pt';
                   <span class="w-2 h-2 rounded-full bg-link"></span>
                   {isEs ? "Deuda 1 (ej. Tarjeta de Crédito)" : (isDe ? "Schuld 1 (z. B. Kreditkarte)" : (isJa ? "債務 1（例: クレジットカード・リボ）" : (isPt ? "Dívida 1 (ex.: Cartão de Crédito)" : "Debt 1 (e.g. Credit Card)")))}
                 </h4>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <Input id="debt1-balance" label={isEs ? "Saldo" : (isDe ? "Restbetrag" : (isJa ? "残高" : (isPt ? "Saldo Devedor" : (isPt ? "Saldo Devedor" : "Balance"))))} type="number" prefix="$" value="5000" />
                   <Input id="debt1-rate" label={isEs ? "Tasa TAE" : (isDe ? "Sollzins (APR)" : (isJa ? "金利（年利）" : (isPt ? "Taxa Anual (CET)" : (isPt ? "Taxa Anual (CET)" : "APR Rate"))))} type="number" suffix="%" value="19.9" />
                   <Input id="debt1-min" label={isEs ? "Pago Mínimo" : (isDe ? "Mindestrate" : (isJa ? "最低返済額" : (isPt ? "Pagamento Mínimo" : (isPt ? "Pagamento Mínimo" : "Min Payment"))))} type="number" prefix="$" value="150" />
@@ -132,7 +132,7 @@ const isPt = lang === 'pt';
                   <span class="w-2 h-2 rounded-full bg-violet-600"></span>
                   {isEs ? "Deuda 2 (ej. Préstamo de Coche)" : (isDe ? "Schuld 2 (z. B. Autokredit)" : (isJa ? "債務 2（例: マイカーローン）" : (isPt ? "Dívida 2 (ex.: Financiamento de Veículo)" : "Debt 2 (e.g. Car Loan)")))}
                 </h4>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <Input id="debt2-balance" label={isEs ? "Saldo" : (isDe ? "Restbetrag" : (isJa ? "残高" : (isPt ? "Saldo Devedor" : (isPt ? "Saldo Devedor" : "Balance"))))} type="number" prefix="$" value="12000" />
                   <Input id="debt2-rate" label={isEs ? "Tasa TAE" : (isDe ? "Sollzins (APR)" : (isJa ? "金利（年利）" : (isPt ? "Taxa Anual (CET)" : (isPt ? "Taxa Anual (CET)" : "APR Rate"))))} type="number" suffix="%" value="6.0" />
                   <Input id="debt2-min" label={isEs ? "Pago Mínimo" : (isDe ? "Mindestrate" : (isJa ? "最低返済額" : (isPt ? "Pagamento Mínimo" : (isPt ? "Pagamento Mínimo" : "Min Payment"))))} type="number" prefix="$" value="280" />
@@ -145,7 +145,7 @@ const isPt = lang === 'pt';
                   <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
                   {isEs ? "Deuda 3 (ej. Préstamo Estudiantil)" : (isDe ? "Schuld 3 (z. B. Studienkredit)" : (isJa ? "債務 3（例: 奨学金・教育ローン）" : (isPt ? "Dívida 3 (ex.: Financiamento Estudantil)" : "Debt 3 (e.g. Student Loan)")))}
                 </h4>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <Input id="debt3-balance" label={isEs ? "Saldo" : (isDe ? "Restbetrag" : (isJa ? "残高" : (isPt ? "Saldo Devedor" : (isPt ? "Saldo Devedor" : "Balance"))))} type="number" prefix="$" value="25000" />
                   <Input id="debt3-rate" label={isEs ? "Tasa TAE" : (isDe ? "Sollzins (APR)" : (isJa ? "金利（年利）" : (isPt ? "Taxa Anual (CET)" : (isPt ? "Taxa Anual (CET)" : "APR Rate"))))} type="number" suffix="%" value="4.5" />
                   <Input id="debt3-min" label={isEs ? "Pago Mínimo" : (isDe ? "Mindestrate" : (isJa ? "最低返済額" : (isPt ? "Pagamento Mínimo" : (isPt ? "Pagamento Mínimo" : "Min Payment"))))} type="number" prefix="$" value="260" />
