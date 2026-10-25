@@ -169,6 +169,10 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
     {
       question: "What is the opportunity cost of buying a home?",
       answer: "The money spent on down payment, closing costs, and ongoing property maintenance could otherwise remain invested in liquid assets like index funds that compound over time."
+    },
+    {
+      question: "What is the 5% rule for renting vs. buying?",
+      answer: "The 5% rule estimates that homeownership costs roughly 5% of a property's value annually in unrecoverable expenses (1% property tax, 1% maintenance, and 3% cost of capital). Divide by 12 to find your break-even monthly rent. If you can rent an equivalent home for less, renting plus investing the savings builds greater wealth. For detailed math and worked case studies, read our complete guide: <a href=\"/blog/how-to-decide-rent-vs-buy/\" class=\"text-primary underline font-medium\">How to Decide: Rent vs. Buy Your Home</a>."
     }
   ],
 

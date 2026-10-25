@@ -1465,6 +1465,567 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 `
     }
+  },
+
+  "how-to-decide-rent-vs-buy": {
+    en: {
+      title: "How to Decide: Rent vs. Buy Your Home (The Real Math Nobody Explains)",
+      description: "Is renting really throwing money away? Learn how to calculate the 5% rule, evaluate unrecoverable owning costs, and discover your true rent vs. buy break-even point.",
+      content: `
+<p><em>"Renting is just paying your landlord's mortgage."</em><br />
+<em>"Why throw away money on rent when you could build home equity?"</em></p>
+<p>If you are trying to decide whether to rent or buy a home, you have undoubtedly heard these lines from well-meaning family, friends, and real estate professionals. For decades, homeownership has been championed as the undisputed rite of passage into financial adulthood.</p>
+<p><strong>Yet in today's housing market—with elevated property prices and mortgage interest rates hovering between 6% and 7%—that conventional wisdom is dangerously obsolete.</strong></p>
+<p>In many metropolitan markets, buying a median-priced home today costs <strong>30% to 60% more per month</strong> than renting an equivalent property. Does that mean buying is always a bad financial decision? Absolutely not. But it means buying a home is <strong>no longer an automatic financial victory</strong>.</p>
+<p>Here is the exact mathematical framework, unrecoverable cost model, and decision checklist to help you determine whether renting or buying builds greater long-term wealth for your specific situation.</p>
+
+<h2>The 30-Second Decision Test</h2>
+<p>If you only have half a minute, these three rules of thumb will give you an immediate baseline:</p>
+<ol>
+  <li><strong>The 5-Year Horizon Rule:</strong> If there is any realistic chance you will relocate, switch careers, or outgrow the home within the next <strong>5 to 7 years</strong>, <strong>RENT</strong>. Buying and selling real estate incurs transaction friction (closing costs of 2%–5% when buying, plus agent commissions and transfer fees of 6%–10% when selling) that requires 5 to 7 years of typical appreciation just to break even.</li>
+  <li><strong>The 5% Rule:</strong> Multiply your target purchase price by <strong>5%</strong>, then divide by 12. If you can rent an equivalent home for <strong>less</strong> than that figure, renting and investing the difference will mathematically build greater net worth.</li>
+  <li><strong>The Liquidity Rule:</strong> If buying leaves you with less than 3 to 6 months of living expenses in an emergency fund, <strong>RENT</strong>. Remember: a mortgage payment is the <em>minimum</em> you will pay each month; rent is the <em>maximum</em>.</li>
+</ol>
+
+<h2>Debunking the Myth: "Renting is Throwing Money Away"</h2>
+<p>The entire emotional argument in favor of homeownership relies on the premise that rent is a 100% loss, whereas mortgage payments accumulate equity.</p>
+<p>This is a classic accounting fallacy. <strong>Homeownership is loaded with enormous "unrecoverable costs" that vanish just like rent:</strong></p>
+<ul>
+  <li><strong>Mortgage Interest:</strong> During the first 7 to 10 years of a standard 30-year mortgage, <strong>65% to 80% of every monthly payment goes strictly to bank interest</strong>, not principal reduction.</li>
+  <li><strong>Property Taxes:</strong> You will surrender 1% to 2.5% of your home's assessed valuation each year to municipal government. This money generates zero personal equity.</li>
+  <li><strong>Homeowners Hazard Insurance:</strong> Thousands of dollars annually protecting against storm, fire, and structural perils.</li>
+  <li><strong>Maintenance and Capital Expenditures (CapEx):</strong> Roofs leak, air conditioners fail, and foundations crack. The standard industry rule is budgeting <strong>1% to 2% of the total property value every year</strong> for upkeep and major replacements.</li>
+  <li><strong>HOA / Condominium Dues:</strong> Mandatory monthly dues that contribute nothing to property equity.</li>
+</ul>
+
+<h3>The Sunk Cost Comparison</h3>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Housing Category</th>
+      <th class="p-2.5 font-bold text-ink">When You Rent</th>
+      <th class="p-2.5 font-bold text-ink">When You Buy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Unrecoverable Monthly Cost</td>
+      <td class="p-2.5">Monthly Rent Check</td>
+      <td class="p-2.5 font-mono">Interest + Taxes + Insurance + Maintenance + HOA</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Wealth Building Engine</td>
+      <td class="p-2.5">Surplus Cash & Down Payment invested in Index Funds (S&P 500)</td>
+      <td class="p-2.5">Principal Amortization + Real Estate Appreciation</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Repair / Surprise Liabilities</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-bold">$0 (Landlord's legal duty)</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">100% on you ($5k–$25k surprises)</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Mobility & Flexibility</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-bold">High (30-day notice or 1-yr lease)</td>
+      <td class="p-2.5 text-amber-600 dark:text-amber-400 font-bold">Low (Requires selling & 6–10% friction)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>The 5% Rule: How to Calculate Your Break-Even Rent in Seconds</h2>
+<p>Developed by portfolio manager Ben Felix, the <strong>5% Rule</strong> provides an intuitive way to calculate the monthly unrecoverable cost of owning any home.</p>
+<p>Owning a home incurs three fundamental unrecoverable expenses each year:</p>
+<ol>
+  <li><strong>Property Tax:</strong> ~1.0% of property value</li>
+  <li><strong>Maintenance & Repairs:</strong> ~1.0% of property value</li>
+  <li><strong>Cost of Capital (Mortgage Interest & Equity Opportunity Cost):</strong> ~3.0%</li>
+</ol>
+<p>Summing these: <strong>1% + 1% + 3% = 5%</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Monthly Break-Even Rent = (Home Purchase Price × 0.05) ÷ 12</strong>
+</p>
+
+<h3>Worked Example:</h3>
+<p>Suppose you are evaluating a <strong>$450,000 home</strong>:</p>
+<ul>
+  <li>Multiply $450,000 × 0.05 = <strong>$22,500/year</strong> in unrecoverable expenses.</li>
+  <li>Divide by 12 = <strong>$1,875/month</strong>.</li>
+</ul>
+<p><strong>The Takeaway:</strong> If you can rent an equivalent home for <strong>less than $1,875 per month</strong>, renting is mathematically superior—provided you invest the down payment and monthly savings in a diversified stock portfolio. If comparable rent is <strong>greater than $1,875 per month</strong>, buying has the mathematical advantage.</p>
+
+<h2>The Opportunity Cost: The Hidden Million-Dollar Difference</h2>
+<p>When you purchase a $400,000 home with 20% down, you lock <strong>$80,000 cash</strong> plus approximately <strong>$10,000 in closing fees</strong> into the physical walls of the property.</p>
+<ul>
+  <li><strong>Long-Term Real Estate Appreciation:</strong> Over the last century, residential real estate in developed markets has appreciated at roughly <strong>3.5% to 4.5% per year</strong> (about 1% above inflation).</li>
+  <li><strong>Long-Term Stock Market Returns:</strong> Broad-market equity index funds (like the S&P 500 or MSCI World) have historically delivered annualized returns of <strong>9% to 10% nominal</strong> (~7% after inflation).</li>
+</ul>
+<p>If a disciplined renter takes that initial $90,000 and invests it in a broad index fund compounding at 7.5%, that capital grows to <strong>$266,299 in 15 years</strong>—completely liquid, without paying a single dollar in roofing repairs, property taxes, or closing commissions.</p>
+
+<h2>10-Year Case Study: Buyer vs. Renter in a 6.5% Rate Environment</h2>
+<p>Let's examine what happens to two individuals with identical salaries and an initial $90,000 in savings over 10 years:</p>
+<ul>
+  <li><strong>Home Purchase:</strong> $400,000 price, 20% down ($80,000) + $10,000 closing costs. 30-year fixed rate at 6.5%.</li>
+  <li><strong>Buyer Total Monthly Expense:</strong> $2,022 (P&I) + $400 (Taxes) + $125 (Insurance) + $333 (Maintenance reserve) = <strong>$2,880/month</strong>.</li>
+  <li><strong>Renter Monthly Expense:</strong> $2,100/month rent (increasing at 3.0% annually).</li>
+  <li><strong>Renter Savings:</strong> Renter invests the $780/month cash difference + their $90,000 initial capital at a 7.5% annualized return.</li>
+  <li><strong>Home Appreciation:</strong> 3.8% annually; Selling fees at year 10: 7.0%.</li>
+</ul>
+
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Metric at Year 10</th>
+      <th class="p-2.5 font-bold text-ink">The Homebuyer</th>
+      <th class="p-2.5 font-bold text-ink">The Disciplined Renter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Initial Capital Outlay</td>
+      <td class="p-2.5">$90,000 (Down payment + closing)</td>
+      <td class="p-2.5">$0 ($90k remains invested)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Total 10-Year Housing Payments</td>
+      <td class="p-2.5 font-mono">~$345,600</td>
+      <td class="p-2.5 font-mono">~$288,500</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Asset Valuation (Home / Portfolio)</td>
+      <td class="p-2.5 font-mono">$580,780 (Home value)</td>
+      <td class="p-2.5 font-mono">$328,400 (Liquid Portfolio)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Remaining Mortgage Debt</td>
+      <td class="p-2.5 font-mono">-$271,850</td>
+      <td class="p-2.5 font-mono">$0</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Transaction Cost to Liquidate</td>
+      <td class="p-2.5 font-mono">-$40,650 (7% selling fees)</td>
+      <td class="p-2.5 font-mono">$0 (Instant liquidity)</td>
+    </tr>
+    <tr class="bg-canvas-soft/50 font-bold">
+      <td class="p-2.5">Estimated Net Wealth</td>
+      <td class="p-2.5 font-mono text-ink">~$268,280</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400">~$328,400 (+$60k ahead) ✅</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>The Decision Checklist: When to Buy vs. When to Rent</h2>
+<h3>You Should BUY When:</h3>
+<ul>
+  <li>You plan to stay in the home for at least <strong>7 to 10 years</strong>.</li>
+  <li>You want fixed, predictable monthly principal and interest payments for peace of mind.</li>
+  <li>You value full autonomy to renovate, decorate, and landscape without landlord restrictions.</li>
+  <li>You know you lack the self-discipline to invest surplus cash every month (the mortgage acts as forced savings).</li>
+  <li>You maintain a 3- to 6-month cash reserve <em>after</em> paying down payment and closing costs.</li>
+</ul>
+
+<h3>You Should RENT When:</h3>
+<ul>
+  <li>Your career, marital status, or city could change in the next <strong>3 to 5 years</strong>.</li>
+  <li>The price-to-rent ratio in your local market is high (renting is substantially cheaper than owning).</li>
+  <li>You prefer compounding your capital in liquid, hands-off global stock portfolios.</li>
+  <li>You dislike unpredictable maintenance bills and property management tasks.</li>
+  <li>You are paying down higher-interest consumer debt or rebuilding your credit profile.</li>
+</ul>
+
+<h2>Run Your Own Numbers Privately</h2>
+<p>Every local market and family situation is different. Plug your exact numbers into our free, 100% private financial calculators to see your customized break-even timeline:</p>
+<ul>
+  <li>Compare 5- to 30-year wealth trajectories with our <a href="/loan/rent-vs-buy/">Rent vs. Buy Calculator</a>.</li>
+  <li>Calculate principal, interest, taxes, and PMI on our <a href="/loan/mortgage/">Mortgage Calculator</a>.</li>
+  <li>Determine your safe borrowing limit on our <a href="/loan/home-affordability/">Home Affordability Calculator</a>.</li>
+  <li>See how your invested down payment compounds over time with our <a href="/finance/compound-interest/">Compound Interest Calculator</a>.</li>
+</ul>
+`
+    },
+    es: {
+      title: "¿Alquilar o comprar casa? La fórmula matemática para decidir sin errores",
+      description: "¿Alquilar es realmente tirar el dinero? Descubre la regla del 5%, los costes irrecuperables de la propiedad y cómo calcular tu punto de equilibrio entre alquiler y compra.",
+      content: `
+<p><em>«Alquilar es tirar el dinero a la basura.»</em><br />
+<em>«¿Por qué pagarle la hipoteca al casero cuando podrías crear patrimonio propio?»</em></p>
+<p>Si estás evaluando si te conviene alquilar o comprar una vivienda, habrás escuchado estas frases una y otra vez. Durante décadas, comprar casa se ha considerado el pilar indiscutible del éxito financiero personal.</p>
+<p><strong>Sin embargo, en el mercado actual —con precios de vivienda en máximos históricos y tipos de interés hipotecarios elevados— esa recomendación tradicional ha quedado desfasada.</strong></p>
+<p>En muchas ciudades modernas, la cuota hipotecaria más los gastos de comunidad y mantenimiento supera entre un <strong>30% y un 50% el coste mensual de un alquiler equivalente</strong>. ¿Significa esto que comprar siempre es un error? Por supuesto que no. Pero demuestra que comprar una casa <strong>ya no es un éxito financiero garantizado por defecto</strong>.</p>
+
+<h2>La regla rápida en 30 segundos</h2>
+<p>Si necesitas una orientación inmediata, aplica estos tres criterios fundamentales:</p>
+<ol>
+  <li><strong>La regla del horizonte temporal (5 a 7 años):</strong> Si existe cualquier probabilidad de mudarte de ciudad, cambiar de empleo o necesitar más espacio en los próximos <strong>5 a 7 años</strong>, <strong>ALQUILA</strong>. Comprar y vender inmuebles acarrea costes de transacción (impuestos de transmisiones ITP/IVA, notaría, tasación y comisión de agencia del 8% al 12%) que exigen varios años de revalorización sólo para recuperar gastos.</li>
+  <li><strong>La regla del 5%:</strong> Multiplica el precio de la vivienda por el <strong>5%</strong> y divide entre 12. Si puedes alquilar una casa equivalente por <strong>menos de esa cifra</strong>, alquilar e invertir el dinero sobrante genera matemáticamente mayor patrimonio neto.</li>
+  <li><strong>La regla de la liquidez:</strong> Si la entrada de la hipoteca consume tu fondo de emergencia por debajo de 6 meses de gastos corrientes, <strong>ALQUILA</strong>. La hipoteca es el importe <em>mínimo</em> que pagarás cada mes; el alquiler es el <em>máximo</em>.</li>
+</ol>
+
+<h2>Desmontando el mito: «Alquilar es tirar el dinero»</h2>
+<p>El argumento a favor de comprar asume falsamente que el alquiler es una pérdida total al 100%, mientras que la cuota hipotecaria crea patrimonio.</p>
+<p>En la realidad contable, <strong>la propiedad inmobiliaria está repleta de costes irrecuperables que se esfuman exactamente igual que un alquiler:</strong></p>
+<ul>
+  <li><strong>Intereses bancarios:</strong> En los primeros años de una hipoteca, entre el <strong>60% y el 75% de cada cuota son intereses puros</strong> para el banco, no amortización de capital.</li>
+  <li><strong>Impuestos municipales (IBI):</strong> Gravámenes anuales sobre el valor catastral que no generan un solo euro de patrimonio.</li>
+  <li><strong>Seguros obligatorios y vinculados:</strong> Seguros de hogar, vida y protección de pagos exigidos por el banco.</li>
+  <li><strong>Mantenimiento y derramas (1% al 2% anual):</strong> Averías de calderas, tejados, fontanería y derramas comunitarias. La regla empírica aconseja reservar del 1% al 2% del valor de la casa cada año.</li>
+  <li><strong>Gastos de comunidad:</strong> Cuotas mensuales no amortizables.</li>
+</ul>
+
+<h2>La Regla del 5% explicada paso a paso</h2>
+<p>Popularizada por analistas financieros, la <strong>Regla del 5%</strong> permite calcular el coste irrecuperable anual de ser propietario:</p>
+<ul>
+  <li><strong>Impuesto sobre bienes inmuebles:</strong> ~1,0%</li>
+  <li><strong>Mantenimiento y reparaciones:</strong> ~1,0%</li>
+  <li><strong>Coste de capital (interés hipotecario + coste de oportunidad de la entrada):</strong> ~3,0%</li>
+</ul>
+<p>Total: <strong>1% + 1% + 3% = 5% anual</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Alquiler mensual de equilibrio = (Precio de la vivienda × 0,05) ÷ 12</strong>
+</p>
+
+<h3>Ejemplo práctico:</h3>
+<p>Imagina una vivienda valorada en <strong>300.000 €</strong>:</p>
+<ul>
+  <li>300.000 € × 0,05 = <strong>15.000 € al año</strong> en costes irrecuperables.</li>
+  <li>Dividido entre 12 meses = <strong>1.250 € al mes</strong>.</li>
+</ul>
+<p><strong>Conclusión:</strong> Si puedes alquilar una vivienda similar por <strong>menos de 1.250 € al mes</strong>, el alquiler resulta más ventajoso financieramente, siempre que inviertas la entrada (ahorros) y el diferencial mensual en un fondo indexado diversificado. Si el alquiler supera los 1.250 €, la compra empieza a tener ventaja matemática.</p>
+
+<h2>El coste de oportunidad del dinero de la entrada</h2>
+<p>El mayor coste oculto de comprar casa es el <strong>coste de oportunidad</strong>.</p>
+<p>Al comprar un inmueble de 300.000 € aportando el 20% de entrada más un 10% en gastos e impuestos, inmovilizas <strong>90.000 € en liquidez</strong> dentro de cuatro paredes.</p>
+<ul>
+  <li><strong>Rentabilidad inmobiliaria histórica:</strong> Los inmuebles residenciales se revalorizan a largo plazo en torno a la inflación más un 1% o 2% anual (~3,5% a 4% nominal).</li>
+  <li><strong>Rentabilidad bursátil histórica:</strong> Los fondos indexados globales (como el MSCI World o el S&P 500) han ofrecido históricamente entre un <strong>8% y un 10% anual nominal</strong> reinvirtiendo dividendos.</li>
+</ul>
+
+<h2>¿Cuándo te conviene COMPRAR? (Señales positivas)</h2>
+<ul>
+  <li>Planeas vivir en la misma localidad y vecindario al menos <strong>7 a 10 años</strong>.</li>
+  <li>Valoras la estabilidad y la tranquilidad de tener una vivienda propia sin riesgo de rescisión de contrato.</li>
+  <li>Deseas libertad para reformar y adaptar la vivienda a tu gusto sin pedir permiso.</li>
+  <li>Sabes que no eres disciplinado invirtiendo mes a mes (la hipoteca actúa como ahorro forzoso).</li>
+  <li>Conservas un fondo de emergencia para imprevistos tras desembolsar la entrada y los gastos.</li>
+</ul>
+
+<h2>¿Cuándo te conviene ALQUILAR? (Señales positivas)</h2>
+<ul>
+  <li>Prevé cambios de trabajo, ciudad o situación familiar en los próximos <strong>3 a 5 años</strong>.</li>
+  <li>El precio de compra en tu zona es muy elevado en comparación con los alquileres disponibles.</li>
+  <li>Prefieres que tus ahorros crezcan con liquidez en mercados financieros globales.</li>
+  <li>No deseas asumir responsabilidades de mantenimiento, derramas ni problemas de comunidad.</li>
+</ul>
+
+<h2>Calcula tu situación exacta gratis y en privado</h2>
+<p>Comprueba los números reales de tu ciudad en nuestras calculadoras financieras gratuitas y privadas en tu navegador:</p>
+<ul>
+  <li>Simula la comparativa patrimonial con la <a href="/es/loan/rent-vs-buy/">Calculadora de Alquilar vs. Comprar</a>.</li>
+  <li>Calcula cuotas y amortizaciones en la <a href="/es/loan/mortgage/">Calculadora de Hipotecas</a>.</li>
+  <li>Descubre tu presupuesto máximo en la <a href="/es/loan/home-affordability/">Calculadora de Asequibilidad de Vivienda</a>.</li>
+  <li>Comprueba el crecimiento de tus ahorros en la <a href="/es/finance/compound-interest/">Calculadora de Interés Compuesto</a>.</li>
+</ul>
+`
+    },
+    de: {
+      title: "Mieten oder Kaufen? Die ehrliche Vermögensrechnung für Ihre Entscheidung",
+      description: "Ist Miete wirklich verlorenes Geld? Erfahren Sie, wie Sie mit der 5%-Regel und der Zinseszins-Opportunität objektiv berechnen, ob Mieten oder Kaufen mehr Vermögen aufbaut.",
+      content: `
+<p><em>„Miete ist rausgeschmissenes Geld.“</em><br />
+<em>„Warum dem Vermieter die Wohnung abbezahlen, wenn man selbst Eigentum bilden kann?“</em></p>
+<p>Wer vor der Entscheidung steht, eine Immobilie zu kaufen oder weiterhin zur Miete zu wohnen, kennt diese Glaubenssätze. Seit Generationen gilt das Eigenheim im deutschsprachigen Raum als Inbegriff von finanzieller Solidität und Altersvorsorge.</p>
+<p><strong>Doch im aktuellen Marktumfeld – mit gestiegenen Bauzinsen und hohen Immobilienpreisen – ist diese pauschale Weisheit mathematisch überholt.</strong></p>
+<p>In vielen Ballungsräumen übersteigt die monatliche Belastung aus Zins, Tilgung und Instandhaltung die Kaltmiete einer vergleichbaren Wohnung um <strong>30 % bis 60 %</strong>. Bedeutet das, dass Kaufen immer falsch ist? Keineswegs. Aber es beweist, dass Wohneigentum <strong>kein automatischer finanzieller Selbstläufer mehr ist</strong>.</p>
+
+<h2>Der 30-Sekunden-Entscheidungstest</h2>
+<p>Diese drei praxisnahen Faustregeln liefern eine verlässliche erste Orientierung:</p>
+<ol>
+  <li><strong>Die 7-Jahres-Horizont-Regel:</strong> Wenn die Wahrscheinlichkeit hoch ist, dass Sie innerhalb der nächsten <strong>5 bis 7 Jahre</strong> umziehen oder den Job wechseln, sollten Sie <strong>MIETEN</strong>. Kaufnebenkosten (Grunderwerbsteuer, Notar, Grundbuchamt und Maklercourtage) betragen 8 % bis 12 % des Kaufpreises und sind unwiederbringlich verloren, sofern nicht viele Jahre Wertsteigerung folgen.</li>
+  <li><strong>Die 5%-Regel:</strong> Multiplizieren Sie den Kaufpreis mit <strong>5 %</strong> und teilen Sie das Ergebnis durch 12. Liegt eine vergleichbare Kaltmiete <strong>unter diesem Betrag</strong>, baut Mieten mit konsequenter Geldanlage am Kapitalmarkt statistisch mehr Vermögen auf.</li>
+  <li><strong>Die Notgroschen-Regel:</strong> Wenn der Eigenkapitaleinsatz Ihre liquiden Reserven unter 6 Monatsausgaben drückt, sollten Sie <strong>MIETEN</strong>. Die Kreditrate ist das <em>Minimum</em>, das Sie monatlich zahlen; die Miete ist das <em>Maximum</em>.</li>
+</ol>
+
+<h2>Der Mythos vom „verlorenen Geld“</h2>
+<p>Das Argument für den Kauf basiert auf dem Trugschluss, die Miete sei zu 100 % verloren, während die Kreditrate reines Vermögen schaffe.</p>
+<p>Tatsächlich entstehen beim Immobilienkauf erhebliche <strong>unwiederbringliche Kosten</strong>:</p>
+<ul>
+  <li><strong>Kreditzinsen:</strong> In den ersten Jahren eines Annuitätendarlehens fließt der Löwenanteil jeder Rate rein an die Bank, ohne Schulden abzutragen.</li>
+  <li><strong>Grundsteuer:</strong> Eine laufende Abgabe an die Kommune ohne Gegenwert im Vermögen.</li>
+  <li><strong>Wohngebäude- und Haftpflichtversicherungen:</strong> Regelmäßige Fixkosten zur Risikoabsicherung.</li>
+  <li><strong>Instandhaltungsrücklage (1 % bis 2 % p. a.):</strong> Heizung, Dach, Fassade und Fenster altern. Fachleute kalkulieren jährlich 1 % bis 2 % des Gebäudewerts für Instandhaltung ein.</li>
+  <li><strong>Nicht umlagefähige Nebenkosten:</strong> Verwaltungskosten und Instandhaltungsbeiträge der WEG.</li>
+</ul>
+
+<h2>Die 5%-Regel als Rechenmodell</h2>
+<p>Das Modell beziffert die unwiederbringlichen jährlichen Eigenheimkosten:</p>
+<ul>
+  <li><strong>Grundsteuer & Abgaben:</strong> ~1,0 %</li>
+  <li><strong>Instandhaltung & Sanierung:</strong> ~1,0 %</li>
+  <li><strong>Kapitalkosten (Zinsaufwand + Opportunitätskosten des Eigenkapitals):</strong> ~3,0 %</li>
+</ul>
+<p>Summe: <strong>5 % pro Jahr</strong> bezogen auf den Gesamtkaufpreis.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Monatliche Grenz-Kaltmiete = (Kaufpreis × 0,05) ÷ 12</strong>
+</p>
+
+<h3>Beispielrechnung:</h3>
+<p>Bei einer Immobilie für <strong>400.000 €</strong>:</p>
+<ul>
+  <li>400.000 € × 0,05 = <strong>20.000 € jährliche unwiederbringliche Kosten</strong>.</li>
+  <li>Geteilt durch 12 = <strong>1.667 € monatlich</strong>.</li>
+</ul>
+<p><strong>Ergebnis:</strong> Beträgt die Monatsmiete für ein vergleichbares Objekt <strong>weniger als 1.667 €</strong>, ist Mieten und das Investieren der Differenz in ein weltweit gestreutes ETF-Portfolio finanziell vorteilhafter.</p>
+
+<h2>Wann sollten Sie KAUFEN?</h2>
+<ul>
+  <li>Sie möchten nachweislich mindestens <strong>7 bis 10 Jahre</strong> im Objekt wohnen.</li>
+  <li>Sie schätzen die emotionale Sicherheit, nicht durch Eigenbedarfskündigungen verdrängt werden zu können.</li>
+  <li>Sie möchten Wohnraum nach eigenen Vorstellungen umbauen und gestalten.</li>
+  <li>Sie benötigen die feste monatliche Tilgung als automatischen Sparzwang.</li>
+</ul>
+
+<h2>Wann sollten Sie MIETEN?</h2>
+<ul>
+  <li>Ihre berufliche oder familiäre Lebensplanung erfordert Flexibilität in den nächsten <strong>3 bis 5 Jahren</strong>.</li>
+  <li>Die Kaufpreise in Ihrer Region stehen in einem ungünstigen Verhältnis zu den Mieten (hoher Kaufpreisfaktor).</li>
+  <li>Sie bevorzugen liquide, weltweit gestreute Kapitalanlagen (Aktien-ETFs).</li>
+  <li>Sie möchten unvorhersehbare Handwerkerkosten und Sanierungspflichten vermeiden.</li>
+</ul>
+
+<h2>Berechnen Sie Ihr Szenario kostenfrei</h2>
+<p>Nutzen Sie unsere kostenlosen, datenschutzfreundlichen Online-Rechner direkt im Browser:</p>
+<ul>
+  <li>Vergleichen Sie Vermögensverläufe im <a href="/de/loan/rent-vs-buy/">Mieten-oder-Kaufen-Rechner</a>.</li>
+  <li>Ermitteln Sie Monatsrate und Zinsanteil mit dem <a href="/de/loan/mortgage/">Hypothekenrechner</a>.</li>
+  <li>Prüfen Sie Ihr maximales Budget im <a href="/de/loan/home-affordability/">Budget- & Erschwinglichkeitsrechner</a>.</li>
+  <li>Berechnen Sie langfristiges Zinseszinswachstum mit dem <a href="/de/finance/compound-interest/">Zinseszinsrechner</a>.</li>
+</ul>
+`
+    },
+    ja: {
+      title: "【徹底検証】賃貸 vs 持ち家 どっちが得？損益分岐点と「5%ルール」で導く最適解",
+      description: "「家賃を払うのは現金を捨てるのと同じ」は本当か？固定資産税・修繕積立金・機会費用を踏まえた客観的な数理モデルと損益分岐点をわかりやすく解説。",
+      content: `
+<p><em>「家賃を払い続けるのは大家の住宅ローンを肩代わりしているだけ。」</em><br />
+<em>「どうせ毎月お金を払うなら、資産として手元に残る持ち家を買うべき。」</em></p>
+<p>住宅購入を巡る議論で、誰もが一度は耳にするフレーズです。長年にわたり「持ち家＝一人前の証・確実な資産形成」という固定観念が広く浸透してきました。</p>
+<p><strong>しかし、物件価格が高騰し、金利環境も変動を見せる現代において、その単純な二者択一は非常に危険です。</strong></p>
+<p>都市部では、同水準の住居に住む場合、住宅ローンの返済額や維持管理費の合計が<strong>賃貸物件の家賃を30%〜60%上回るケース</strong>が一般的になっています。「家賃＝掛け捨て」「持ち家＝資産」という素朴な比較は、数理的に正しいとは言えません。</p>
+
+<h2>30秒でわかる判断チェックシート</h2>
+<ol>
+  <li><strong>5〜7年の居住期間ルール:</strong> 今後<strong>5〜7年以内</strong>に転職、転勤、結婚、家族構成の変化などで転居する可能性があるなら、<strong>「賃貸」</strong>が圧倒的に有利です。不動産の売買には仲介手数料、登記費用、不動産取得税など6%〜10%の諸費用（摩擦コスト）が発生するため、早期売却はほぼ確実に元本割れを招きます。</li>
+  <li><strong>5%ルール（サンクコストの比較）:</strong> 物件価格の<strong>5%を12で割った金額</strong>を算出してください。同等クラスの物件がその金額<strong>未満の家賃</strong>で借りられるなら、賃貸を選んで頭金や余剰資金をインデックス投資に回す方が、長期的な純資産は大きくなります。</li>
+  <li><strong>流動性ルール:</strong> 頭金や諸費用の支払いで手元の生活防衛資金が半年分未満に減少してしまうなら、<strong>「賃貸」</strong>を継続すべきです。住宅ローンの返済は毎月支払う「最低額」ですが、家賃は毎月支払う「最高額」です。</li>
+</ol>
+
+<h2>「賃貸は掛け捨て」という誤解の正体</h2>
+<p>持ち家派が掲げる最大論点は「家賃はいくら払っても手元に残らない」という点です。しかし、<strong>持ち家にも手元に残らない「掛け捨てコスト（回収不能コスト）」が大量に存在します：</strong></p>
+<ul>
+  <li><strong>住宅ローンの利息負担:</strong> 30年〜35年の長期ローンでは、当初数年間は毎月の返済額のうち利息部分が大きな割合を占めます。</li>
+  <li><strong>固定資産税・都市計画税:</strong> 所有している限り毎年自治体へ納付する税金であり、1円も資産形成にはなりません。</li>
+  <li><strong>修繕費・リフォーム費用（年1%〜2%）:</strong> 給湯器、外壁、屋根、水回りの老朽化修繕。マンションの場合は管理費と修繕積立金が毎月徴収されます。</li>
+  <li><strong>火災保険・地震保険料:</strong> 建物を保全するための経常的費用。</li>
+</ul>
+
+<h2>誰でも計算できる「5%ルール」とは</h2>
+<p>住宅を保有することに伴う年間コストは、概ね次の3要素に集約されます：</p>
+<ul>
+  <li><strong>固定資産税・公租公課:</strong> 約1.0%</li>
+  <li><strong>修繕・維持管理費:</strong> 約1.0%</li>
+  <li><strong>資本コスト（金利と頭金の機会費用）:</strong> 約3.0%</li>
+</ul>
+<p>合計：<strong>物件価格の約5%が年間の回収不能コスト</strong>となります。</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>損益分岐点の月額家賃 ＝（物件価格 × 0.05）÷ 12ヶ月</strong>
+</p>
+
+<h3>計算例（4,000万円の物件の場合）：</h3>
+<ul>
+  <li>4,000万円 × 0.05 ＝ <strong>年間200万円</strong>の回収不能コスト</li>
+  <li>200万円 ÷ 12 ＝ <strong>月額 約16.7万円</strong></li>
+</ul>
+<p><strong>判断基準:</strong> 同等の住まいを<strong>月16.7万円未満</strong>で賃貸できるなら、賃貸＋株式投資の組み合わせが経済的に合理的です。家賃が16.7万円を超える場合は、持ち家購入に経済的メリットが生じ始めます。</p>
+
+<h2>頭金の「機会費用（オポチュニティ・コスト）」</h2>
+<p>頭金800万円と諸費用200万円の計1,000万円を不動産に投入することは、その1,000万円を<strong>世界株式インデックスファンド等で長期運用する機会を放棄したこと</strong>を意味します。</p>
+<p>仮に1,000万円を年利7%で15年間運用した場合、元利合計は約<strong>2,759万円</strong>（約1,759万円の利益）に成長します。住宅の値上がり益がこの運用益と維持費の合計を上回らなければ、実質的な資産形成スピードは賃貸＋投資に軍配が上がります。</p>
+
+<h2>「持ち家」を選ぶべき人の条件</h2>
+<ul>
+  <li>同一地域に<strong>最低7年〜10年以上</strong>定住する確信がある。</li>
+  <li>大家の意向による退去リスクを完全に排除し、心理的安心感を得たい。</li>
+  <li>リノベーションや間取り変更を自由に行いたい。</li>
+  <li>毎月の余剰資金を投資に回す規律が弱く、住宅ローンを「強制的貯蓄」として活用したい。</li>
+</ul>
+
+<h2>「賃貸」を選ぶべき人の条件</h2>
+<ul>
+  <li>数年以内にキャリア変更、転勤、結婚などのライフイベントが見込まれる。</li>
+  <li>都市部で物件価格に対して家賃相場が割安である。</li>
+  <li>資産を不動産という単一の現物に固定化させず、流動性の高い金融資産で増やしたい。</li>
+  <li>設備の故障修理や近隣トラブルの対応を管理会社に一任したい。</li>
+</ul>
+
+<h2>あなたの条件でシミュレーションを試す</h2>
+<p>当サイトの金融シミュレーター（完全無料・個人情報送信なし）で具体的な損益を今すぐ検証できます：</p>
+<ul>
+  <li>資産の推移を比較する <a href="/ja/loan/rent-vs-buy/">賃貸 vs. 購入シミュレーター</a></li>
+  <li>元利均等返済と利息総額を計算する <a href="/ja/loan/mortgage/">住宅ローン計算機</a></li>
+  <li>安全な借入可能額を調べる <a href="/ja/loan/home-affordability/">借入可能額シミュレーター</a></li>
+  <li>頭金の運用複利効果を計算する <a href="/ja/finance/compound-interest/">複利計算シミュレーター</a></li>
+</ul>
+`
+    },
+    fr: {
+      title: "Louer ou acheter sa résidence principale ? La méthode mathématique pour bien choisir",
+      description: "Louer, est-ce vraiment jeter l'argent par les fenêtres ? Découvrez la règle des 5 %, les coûts irrécupérables des propriétaires et le point de rentabilité achat vs location.",
+      content: `
+<p><em>« Être locataire, c'est jeter son argent par les fenêtres. »</em><br />
+<em>« Pourquoi rembourser le prêt d'un propriétaire alors qu'on pourrait se constituer un patrimoine ? »</em></p>
+<p>Toute personne hésitant entre la location et l'achat immobilier a déjà entendu ces arguments. Depuis des générations, la propriété immobilière est présentée comme le symbole ultime de la réussite patrimoniale.</p>
+<p><strong>Pourtant, dans l'environnement économique actuel — avec des prix immobiliers élevés et des taux de crédit entre 3,5 % et 4,5 % —, cette règle empirique est mathématiquement obsolète.</strong></p>
+<p>Dans de nombreuses métropoles, le coût mensuel d'un crédit immobilier et des charges de copropriété dépasse de <strong>30 % à 50 % le loyer d'un logement identique</strong>. Cela signifie-t-il qu'acheter est toujours une erreur ? Non. Mais cela prouve qu'acheter n'est <strong>plus une victoire financière automatique</strong>.</p>
+
+<h2>Le test de décision en 30 secondes</h2>
+<ol>
+  <li><strong>La règle des 5 à 7 ans :</strong> Si vous risquez de déménager, de changer de poste ou d'agrandir votre famille d'ici <strong>5 à 7 ans</strong>, <strong>LOUEZ</strong>. Les frais de notaire, droits de mutation et commissions d'agence (8 % à 10 % du prix) imposent plusieurs années de valorisation pour simplement amortir ces coûts d'entrée.</li>
+  <li><strong>La règle des 5 % :</strong> Multipliez le prix du bien convoité par <strong>5 %</strong>, puis divisez par 12. Si vous pouvez louer un bien équivalent pour <strong>moins que cette somme</strong>, la location couplée à l'investissement de votre épargne sur les marchés financiers générera davantage de patrimoine net.</li>
+  <li><strong>La règle de précaution :</strong> Si votre apport personnel réduit votre épargne de sécurité à moins de 6 mois de dépenses courantes, <strong>LOUEZ</strong>. La mensualité de crédit est le <em>minimum</em> que vous paierez chaque mois ; le loyer est le <em>maximum</em>.</li>
+</ol>
+
+<h2>Le mythe de l'argent « jeté par les fenêtres »</h2>
+<p>L'argument en faveur de l'achat repose sur l'idée reçue que le loyer est une perte pure, tandis que le crédit capitalise du patrimoine.</p>
+<p>En réalité, <strong>le statut de propriétaire génère d'immenses coûts irrécupérables qui disparaissent sans créer le moindre euro de patrimoine :</strong></p>
+<ul>
+  <li><strong>Les intérêts d'emprunt :</strong> Durant les premières années d'un crédit, plus de 60 % de chaque mensualité est absorbée par les intérêts bancaires.</li>
+  <li><strong>La taxe foncière :</strong> Un prélèvement obligatoire sans contrepartie patrimoniale.</li>
+  <li><strong>L'entretien et les travaux (1 % à 2 % par an) :</strong> Ravalement, toiture, chaudière et plomberie incombent au propriétaire.</li>
+  <li><strong>Les charges de copropriété non récupérables :</strong> Frais de gestion et fonds de travaux.</li>
+</ul>
+
+<h2>La Règle des 5 % en pratique</h2>
+<p>Les dépenses annuelles à fonds perdu d'un bien immobilier se résument à :</p>
+<ul>
+  <li><strong>Taxe foncière :</strong> ~1,0 %</li>
+  <li><strong>Entretien et gros travaux :</strong> ~1,0 %</li>
+  <li><strong>Coût du capital (intérêts et manque à gagner sur l'apport) :</strong> ~3,0 %</li>
+</ul>
+<p>Total : <strong>5 % de la valeur du bien chaque année</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Loyer mensuel d'équilibre = (Prix d'achat × 0,05) ÷ 12</strong>
+</p>
+
+<h3>Exemple concret :</h3>
+<p>Pour un appartement de <strong>300 000 €</strong> :</p>
+<ul>
+  <li>300 000 € × 0,05 = <strong>15 000 € par an</strong> de coûts irrécupérables.</li>
+  <li>Divisé par 12 mois = <strong>1 250 € par mois</strong>.</li>
+</ul>
+<p><strong>Verdict :</strong> Si vous pouvez vous loger dans un bien équivalent pour <strong>moins de 1 250 € par mois</strong>, la location est financièrement plus rentable si vous investissez la différence en bourse (ETF indiciels). Au-delà de 1 250 €, l'achat redevient attractif.</p>
+
+<h2>Quand devez-vous ACHETER ?</h2>
+<ul>
+  <li>Vous êtes certain de rester dans le bien au moins <strong>7 à 10 ans</strong>.</li>
+  <li>Vous privilégiez la stabilité et souhaitez vous prémunir d'un congé délivré par un bailleur.</li>
+  <li>Vous désirez la liberté totale d'aménager et rénover votre espace.</li>
+  <li>Vous manquez de discipline pour épargner chaque mois (le crédit fait office d'épargne forcée).</li>
+</ul>
+
+<h2>Quand devez-vous LOUER ?</h2>
+<ul>
+  <li>Votre vie professionnelle ou familiale peut évoluer dans les <strong>3 à 5 ans</strong>.</li>
+  <li>Le ratio prix/loyer de votre secteur géographique est particulièrement défavorable aux acheteurs.</li>
+  <li>Vous préférez faire fructifier votre capital sur des supports financiers liquides et performants.</li>
+  <li>Vous ne souhaitez pas supporter la gestion des imprévus techniques et des assemblées de copropriété.</li>
+</ul>
+
+<h2>Faites vos propres simulations en ligne</h2>
+<p>Testez gratuitement vos hypothèses financières sans aucune transmission de données :</p>
+<ul>
+  <li>Comparez vos perspectives de patrimoine avec le <a href="/fr/loan/rent-vs-buy/">Calculateur Acheter ou Louer</a>.</li>
+  <li>Calculez vos mensualités et le coût du crédit avec le <a href="/fr/loan/mortgage/">Simulateur de Crédit Immobilier</a>.</li>
+  <li>Évaluez votre capacité d'emprunt sur notre <a href="/fr/loan/home-affordability/">Calculateur de Capacité d'Achat</a>.</li>
+  <li>Visualisez la puissance des intérêts réinvestis sur le <a href="/fr/finance/compound-interest/">Calculateur d'Intérêts Composés</a>.</li>
+</ul>
+`
+    },
+    pt: {
+      title: "Alugar ou Comprar Imóvel? O cálculo real e o custo de oportunidade explicado",
+      description: "Pagar aluguel é mesmo rasgar dinheiro? Conheça a regra dos 5%, os custos irrecuperáveis do financiamento e como descobrir se vale mais a pena comprar ou alugar.",
+      content: `
+<p><em>"Pagar aluguel é jogar dinheiro no lixo."</em><br />
+<em>"Por que pagar as parcelas do imóvel de outra pessoa quando você poderia construir patrimônio próprio?"</em></p>
+<p>Se você está diante do dilema de alugar ou comprar um imóvel, certamente já ouviu essas frases repetidas à exaustão por parentes, amigos e corretores. Durante décadas, a casa própria foi tratada como o troféu definitivo de maturidade financeira.</p>
+<p><strong>Contudo, no cenário imobiliário atual — com preços elevados e taxas de financiamento em patamares expressivos —, esse conselho popular tornou-se matematicamente questionável.</strong></p>
+<p>Em grande parte das capitais e cidades desenvolvidas, a soma da parcela do financiamento, condomínio e manutenção chega a ser <strong>30% a 60% maior do que o aluguel de um imóvel idêntico</strong>. Comprar imóvel é sempre um erro? De forma alguma. Mas significa que comprar <strong>não é uma vitória financeira automática garantida</strong>.</p>
+
+<h2>O teste prático em 30 segundos</h2>
+<ol>
+  <li><strong>A regra do horizonte temporal (5 a 7 anos):</strong> Se existe chance concreta de você mudar de emprego, de cidade ou de tamanho familiar nos próximos <strong>5 a 7 anos</strong>, <strong>ALUGUE</strong>. Os custos de transação imobiliária (ITBI, escritura, registro cartorário e corretagem de 6% a 10%) demandam vários anos de valorização apenas para empatar os custos iniciais.</li>
+  <li><strong>A regra dos 5%:</strong> Multiplique o valor venal do imóvel por <strong>5%</strong> e divida por 12. Se você puder alugar uma casa equivalente por <strong>menos do que esse valor</strong>, alugar e aplicar a diferença em investimentos líquidos produzirá um patrimônio líquido maior no longo prazo.</li>
+  <li><strong>A regra da reserva de emergência:</strong> Se a entrada e os custos de transferência deixarem você com menos de 6 meses de custo de vida na conta, <strong>ALUGUE</strong>. A prestação do financiamento é o valor <em>mínimo</em> que você desembolsa no mês; o aluguel é o <em>máximo</em>.</li>
+</ol>
+
+<h2>Desmistificando o conceito de "jogar dinheiro fora"</h2>
+<p>O apelo emocional a favor da compra parte do pressuposto de que o aluguel é 100% perdido, enquanto a parcela do financiamento constrói patrimônio.</p>
+<p>Isso ignora a realidade dos <strong>custos irrecuperáveis do proprietário, que evaporam tanto quanto o aluguel:</strong></p>
+<ul>
+  <li><strong>Juros do financiamento bancário:</strong> Nos primeiros anos (tabela SAC ou Price), a maior fatia de cada prestação é composta estritamente de juros pagos ao banco.</li>
+  <li><strong>IPTU:</strong> Tributo municipal anual que não agrega um único centavo ao seu patrimônio líquido.</li>
+  <li><strong>Seguro habitacional e predial:</strong> Despesas compulsórias para proteger a operação.</li>
+  <li><strong>Manutenção preventiva e corretiva (1% a 2% ao ano):</strong> Infiltrações, pintura, telhados, sistemas elétricos e hidráulicos. A regra de mercado orienta separar anualmente de 1% a 2% do valor do imóvel.</li>
+  <li><strong>Taxas de condomínio não recuperáveis:</strong> Despesas operacionais e fundos de reserva da administração predial.</li>
+</ul>
+
+<h2>Como funciona a Regra dos 5%</h2>
+<p>A regra quantifica os três custos anuais irrecuperáveis de um imóvel próprio:</p>
+<ul>
+  <li><strong>IPTU e taxas públicas:</strong> ~1,0%</li>
+  <li><strong>Manutenção e depreciação física:</strong> ~1,0%</li>
+  <li><strong>Custo de capital (juros do crédito e custo de oportunidade da entrada):</strong> ~3,0%</li>
+</ul>
+<p>Soma: <strong>5% ao ano sobre o valor do imóvel</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Ponto de Equilíbrio do Aluguel Mensal = (Preço do Imóvel × 0,05) ÷ 12</strong>
+</p>
+
+<h3>Exemplo com números reais:</h3>
+<p>Considere um apartamento avaliado em <strong>R$ 500.000</strong>:</p>
+<ul>
+  <li>R$ 500.000 × 0,05 = <strong>R$ 25.000 ao ano</strong> em custos que não viram patrimônio.</li>
+  <li>Dividido por 12 meses = <strong>R$ 2.083 por mês</strong>.</li>
+</ul>
+<p><strong>Critério decisório:</strong> Se você conseguir alugar um apartamento equivalente por <strong>menos de R$ 2.083 mensais</strong>, permanecer no aluguel e investir a entrada e a folga mensal em renda fixa ou fundos diversificados é a escolha matematicamente mais rentável. Acima de R$ 2.083, a aquisição passa a ser mais atrativa.</p>
+
+<h2>O custo de oportunidade da entrada</h2>
+<p>Ao adquirir um imóvel de R$ 500.000 e dar R$ 100.000 de entrada mais R$ 25.000 em documentação, você imobiliza <strong>R$ 125.000 em tijolos</strong>.</p>
+<p>Se esses R$ 125.000 forem investidos a uma taxa real de 7% ao ano (já descontada a inflação), após 15 anos o montante atinge cerca de <strong>R$ 344.800</strong> em patrimônio 100% líquido, sem despesas com reformas ou impostos de transmissão.</p>
+
+<h2>Quando vale a pena COMPRAR?</h2>
+<ul>
+  <li>Você tem certeza de que permanecerá no imóvel e na região por <strong>pelo menos 7 a 10 anos</strong>.</li>
+  <li>Você valoriza a previsibilidade e a tranquilidade de não correr risco de despejo ou rescisão contratual.</li>
+  <li>Você faz questão de reformar, pintar paredes e alterar ambientes com total liberdade.</li>
+  <li>Você reconhece que não possui disciplina para investir todos os meses (o financiamento vira uma poupança forçada).</li>
+</ul>
+
+<h2>Quando vale a pena ALUGAR?</h2>
+<ul>
+  <li>Você pode mudar de emprego, de cidade ou de planos familiares nos próximos <strong>3 a 5 anos</strong>.</li>
+  <li>Na sua cidade, os aluguéis estão baratos em comparação com o preço de venda dos imóveis.</li>
+  <li>Você prefere ver seu patrimônio render com liquidez em aplicações financeiras seguras e diversificadas.</li>
+  <li>Você prefere transferir riscos de reformas e manutenção estrutural para o proprietário.</li>
+</ul>
+
+<h2>Faça as contas do seu cenário com nossas ferramentas</h2>
+<p>Compare seus dados de forma 100% gratuita, instantânea e privada no seu navegador:</p>
+<ul>
+  <li>Compare as curvas de riqueza na <a href="/pt/loan/rent-vs-buy/">Calculadora Alugar vs. Comprar</a>.</li>
+  <li>Simule parcelas e juros na <a href="/pt/loan/mortgage/">Calculadora de Financiamento Imobiliário</a>.</li>
+  <li>Descubra seu limite seguro de parcela na <a href="/pt/loan/home-affordability/">Calculadora de Capacidade de Compra</a>.</li>
+  <li>Projete o rendimento do seu dinheiro na <a href="/pt/finance/compound-interest/">Calculadora de Juros Compostos</a>.</li>
+</ul>
+`
+    }
   }
 };
 
