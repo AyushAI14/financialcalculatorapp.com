@@ -276,7 +276,7 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
     },
     {
       question: "How long will my 401(k) last in retirement?",
-      answer: "If you follow the 4% safe withdrawal rule and maintain a balanced portfolio (e.g. 60% equities and 40% fixed income), historical market data from the Trinity Study indicates a 95%+ probability that your savings will last at least 30 years. Withdrawing at a higher rate (such as 6% or 7% annually) significantly increases the risk of exhausting funds within 15 to 20 years during market downturns."
+      answer: "If you follow the 4% safe withdrawal rule and maintain a balanced portfolio (e.g. 60% equities and 40% fixed income), historical market data from the Trinity Study indicates a 95%+ probability that your savings will last at least 30 years. Withdrawing at a higher rate (such as 6% or 7% annually) significantly increases the risk of exhausting funds within 15 to 20 years during market downturns. Read our complete guide: <a href=\"/blog/how-much-401k-reduces-taxes-pays-monthly-lasts/\" class=\"text-primary underline font-medium\">401(k) Taxes, Monthly Payouts, and Longevity Guide</a>."
     },
     {
       question: "How much tax and penalty do I pay on early 401(k) withdrawals?",

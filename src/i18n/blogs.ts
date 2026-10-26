@@ -2026,6 +2026,496 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 `
     }
+  },
+
+  "how-much-401k-reduces-taxes-pays-monthly-lasts": {
+    en: {
+      title: "401(k) Calculator Guide: Tax Savings, Monthly Payouts, and How Long It Will Last",
+      description: "Calculate how much your 401(k) contributions reduce your taxes today, estimate your monthly retirement paycheck, and determine how long your nest egg will last.",
+      content: `
+<p>When planning for retirement, three fundamental questions dominate almost every worker's mind:</p>
+<ol>
+  <li><strong>"How much will my 401(k) contribution reduce my taxes this year?"</strong></li>
+  <li><strong>"How much will my 401(k) actually pay me per month when I retire?"</strong></li>
+  <li><strong>"How long will my 401(k) money last before it runs out?"</strong></li>
+</ol>
+<p>Whether you are in your 20s starting your first job, in your 40s maximizing employer matching, or in your 60s preparing to transition into retirement, understanding the math behind these three stages is essential to achieving financial security.</p>
+<p>Here is the complete guide and formula breakdown for each calculation, with real-world dollar examples and interactive calculator tools.</p>
+
+<h2>Part 1: How Much Does a 401(k) Contribution Reduce Taxes?</h2>
+<p>A Traditional 401(k) is funded with <strong>pre-tax dollars</strong>. Every dollar you contribute directly reduces your Gross Taxable Income reported on your tax return.</p>
+
+<h3>The Tax Savings Formula</h3>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Immediate Tax Savings = Annual 401(k) Contribution × Marginal Tax Rate (Federal + State)</strong>
+</p>
+<p>Because contributions come off the top of your earnings, they are shielded at your <strong>highest marginal tax bracket</strong>, not your lower effective tax rate.</p>
+
+<h3>The "Discounted Contribution" Effect on Your Paycheck</h3>
+<p>Many workers hesitate to save because they fear a smaller paycheck. However, tax savings soften the blow substantially.</p>
+<p>If you are in the <strong>24% federal tax bracket</strong> and pay <strong>5% state income tax</strong> (29% combined marginal rate):</p>
+<ul>
+  <li>A <strong>$10,000 contribution</strong> saves you <strong>$2,900 in taxes</strong>.</li>
+  <li>Your take-home paycheck drops by only <strong>$7,100</strong>, while a full <strong>$10,000</strong> goes to work compounding in your retirement account.</li>
+  <li>That is an immediate <strong>29% return on investment</strong> before market growth!</li>
+</ul>
+
+<h3>Tax Savings by Salary & Contribution Rate</h3>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Annual Salary</th>
+      <th class="p-2.5 font-bold text-ink">Contribution Rate</th>
+      <th class="p-2.5 font-bold text-ink">Annual Deferral</th>
+      <th class="p-2.5 font-bold text-ink">Marginal Tax Bracket</th>
+      <th class="p-2.5 font-bold text-ink">Annual Tax Savings</th>
+      <th class="p-2.5 font-bold text-ink">Take-Home Reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$60,000</td>
+      <td class="p-2.5 font-mono">6%</td>
+      <td class="p-2.5 font-mono">$3,600</td>
+      <td class="p-2.5">12% Fed + 4% State (16%)</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$576</td>
+      <td class="p-2.5 font-mono">$3,024 ($252/mo)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$95,000</td>
+      <td class="p-2.5 font-mono">8%</td>
+      <td class="p-2.5 font-mono">$7,600</td>
+      <td class="p-2.5">22% Fed + 5% State (27%)</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$2,052</td>
+      <td class="p-2.5 font-mono">$5,548 ($462/mo)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$140,000</td>
+      <td class="p-2.5 font-mono">10%</td>
+      <td class="p-2.5 font-mono">$14,000</td>
+      <td class="p-2.5">24% Fed + 6% State (30%)</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$4,200</td>
+      <td class="p-2.5 font-mono">$9,800 ($817/mo)</td>
+    </tr>
+    <tr class="bg-canvas-soft/50 font-bold">
+      <td class="p-2.5 font-medium">$200,000</td>
+      <td class="p-2.5 font-mono">Max ($23,500)</td>
+      <td class="p-2.5 font-mono">$23,500</td>
+      <td class="p-2.5">32% Fed + 6% State (38%)</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$8,930</td>
+      <td class="p-2.5 font-mono">$14,570 ($1,214/mo)</td>
+    </tr>
+  </tbody>
+</table>
+<p><em>Note on Roth 401(k):</em> If you opt for a <strong>Roth 401(k)</strong>, you receive no upfront tax deduction today, but all qualified withdrawals in retirement—including decades of capital gains—are <strong>100% tax-free</strong>.</p>
+
+<h2>Part 2: How Much Will My 401(k) Pay Me Per Month in Retirement?</h2>
+<p>Once you retire, your 401(k) shifts from an accumulation vehicle into your personal <strong>monthly retirement paycheck</strong>.</p>
+
+<h3>The 4% Safe Withdrawal Rule</h3>
+<p>The standard benchmark for converting a nest egg into steady monthly income is the <strong>4% Rule</strong> (originating from the Trinity Study). Withdrawing 4% of your starting retirement balance in year one, adjusted annually for inflation, historically guarantees a 95%+ probability that your savings will last at least 30 years.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Monthly Retirement Paycheck = (Total 401(k) Balance × 0.04) ÷ 12</strong>
+</p>
+
+<h3>401(k) Monthly Paycheck Matrix</h3>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">401(k) Nest Egg</th>
+      <th class="p-2.5 font-bold text-ink">Annual Withdrawal (4%)</th>
+      <th class="p-2.5 font-bold text-ink">Monthly 401(k) Paycheck</th>
+      <th class="p-2.5 font-bold text-ink">Est. Social Security (Couple)</th>
+      <th class="p-2.5 font-bold text-ink">Total Monthly Income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-mono font-medium">$250,000</td>
+      <td class="p-2.5 font-mono">$10,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$833/mo</td>
+      <td class="p-2.5 font-mono">$3,200/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$4,033/mo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-mono font-medium">$500,000</td>
+      <td class="p-2.5 font-mono">$20,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$1,667/mo</td>
+      <td class="p-2.5 font-mono">$3,200/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$4,867/mo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-mono font-medium">$750,000</td>
+      <td class="p-2.5 font-mono">$30,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$2,500/mo</td>
+      <td class="p-2.5 font-mono">$3,500/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$6,000/mo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-mono font-medium">$1,000,000</td>
+      <td class="p-2.5 font-mono">$40,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$3,333/mo</td>
+      <td class="p-2.5 font-mono">$3,800/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$7,133/mo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-mono font-medium">$1,500,000</td>
+      <td class="p-2.5 font-mono">$60,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$5,000/mo</td>
+      <td class="p-2.5 font-mono">$4,000/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$9,000/mo</td>
+    </tr>
+    <tr class="bg-canvas-soft/50 font-bold">
+      <td class="p-2.5 font-mono font-medium">$2,000,000</td>
+      <td class="p-2.5 font-mono">$80,000/yr</td>
+      <td class="p-2.5 font-mono font-bold">$6,667/mo</td>
+      <td class="p-2.5 font-mono">$4,200/mo</td>
+      <td class="p-2.5 font-mono text-emerald-600 dark:text-emerald-400 font-bold">$10,867/mo</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Part 3: How Long Will My 401(k) Last?</h2>
+<p>The lifespan of your retirement portfolio depends on three interdependent levers:</p>
+<ol>
+  <li><strong>Your Initial Withdrawal Rate:</strong> Conservative (3.5%), Standard (4.0%), or Aggressive (5.0%+).</li>
+  <li><strong>Investment Asset Allocation:</strong> Balancing growth equities with capital-preserving bonds and short-term yield.</li>
+  <li><strong>Sequence of Returns Risk:</strong> Suffering an aggressive market downturn in the first 3 to 5 years of withdrawals.</li>
+</ol>
+
+<h3>Portfolio Longevity by Withdrawal Rate</h3>
+<p class="text-xs text-mute">*(Assuming a classic 60/40 balanced portfolio earning 5.5% net annual return with 2.5% inflation)*</p>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Withdrawal Rate</th>
+      <th class="p-2.5 font-bold text-ink">Monthly on $500k</th>
+      <th class="p-2.5 font-bold text-ink">Monthly on $1M</th>
+      <th class="p-2.5 font-bold text-ink">Portfolio Longevity</th>
+      <th class="p-2.5 font-bold text-ink">Depletion Risk</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">3.5% (Conservative)</td>
+      <td class="p-2.5 font-mono">$1,458/mo</td>
+      <td class="p-2.5 font-mono">$2,917/mo</td>
+      <td class="p-2.5 font-bold text-emerald-600 dark:text-emerald-400">35+ Years (Indefinite)</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-medium">Near 0% Risk</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">4.0% (Trinity Rule)</td>
+      <td class="p-2.5 font-mono">$1,667/mo</td>
+      <td class="p-2.5 font-mono">$3,333/mo</td>
+      <td class="p-2.5 font-bold text-emerald-600 dark:text-emerald-400">30 to 33 Years</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-medium">Low Risk (<5%)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">5.0% (Aggressive)</td>
+      <td class="p-2.5 font-mono">$2,083/mo</td>
+      <td class="p-2.5 font-mono">$4,167/mo</td>
+      <td class="p-2.5 font-bold text-amber-600 dark:text-amber-400">21 to 24 Years</td>
+      <td class="p-2.5 text-amber-600 dark:text-amber-400 font-medium">Moderate Risk</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">6.0% (High Risk)</td>
+      <td class="p-2.5 font-mono">$2,500/mo</td>
+      <td class="p-2.5 font-mono">$5,000/mo</td>
+      <td class="p-2.5 font-bold text-rose-600 dark:text-rose-400">15 to 17 Years</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-medium">High Depletion Risk</td>
+    </tr>
+    <tr class="bg-canvas-soft/50 font-bold">
+      <td class="p-2.5 font-medium">7.5%+ (Dangerous)</td>
+      <td class="p-2.5 font-mono">$3,125/mo</td>
+      <td class="p-2.5 font-mono">$6,250/mo</td>
+      <td class="p-2.5 font-bold text-rose-600 dark:text-rose-400">10 to 12 Years</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-medium">Extremely Dangerous</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>3 Rules to Protect Your 401(k) from Running Out</h3>
+<ul>
+  <li><strong>The Dynamic Spending Rule:</strong> In negative market years, freeze your annual inflation adjustment. Research shows this single habit increases portfolio longevity past 98%.</li>
+  <li><strong>The 2-Year Cash Buffer:</strong> Keep 18 to 24 months of living expenses in high-yield cash equivalents or Treasury bills so you never have to sell equities during a market crash.</li>
+  <li><strong>Plan for Required Minimum Distributions (RMDs):</strong> Under current IRS guidelines, mandatory withdrawals begin at <strong>age 73</strong> (rising to <strong>age 75 in 2033</strong>).</li>
+</ul>
+
+<h2>Calculate Your Exact 401(k) Numbers</h2>
+<p>Model your exact salary, employer match, tax rate, and retirement timeline with our free, private online tools:</p>
+<ul>
+  <li>Calculate your balance, employer match, and tax savings on our <a href="/retirement/401k/">401(k) Calculator with Match</a>.</li>
+  <li>Forecast your portfolio longevity and withdrawal rate with the <a href="/retirement/planner/">Retirement Planner</a>.</li>
+  <li>Compare upfront tax deductions vs. tax-free growth with our <a href="/retirement/ira-comparison/">Roth vs. Traditional IRA Comparison</a>.</li>
+  <li>Estimate your guaranteed monthly government benefits on our <a href="/retirement/social-security/">Social Security Calculator</a>.</li>
+</ul>
+`
+    },
+    es: {
+      title: "Calculadora de 401(k): Ahorro en impuestos, pago mensual y cuánto durará tu dinero",
+      description: "Calcula cuánto reducen tus impuestos las aportaciones al 401(k), estima tu sueldo mensual en la jubilación (regla del 4%) y descubre cuántos años durará tu fondo.",
+      content: `
+<p>Al planificar la jubilación, tres grandes preguntas preocupan a cualquier trabajador:</p>
+<ol>
+  <li><strong>«¿Cuánto reducirá mis impuestos aportar al 401(k) o plan de pensiones este año?»</strong></li>
+  <li><strong>«¿Cuánto dinero cobraré al mes cuando me jubile?»</strong></li>
+  <li><strong>«¿Cuántos años durarán mis ahorros antes de agotarse?»</strong></li>
+</ol>
+<p>Tanto si estás empezando tu carrera laboral como si estás en tu etapa de máxima capacidad de ahorro o a punto de jubilarte, entender estas tres fases es clave para garantizar tu tranquilidad financiera.</p>
+
+<h2>Parte 1: ¿Cuánto reducen los impuestos las aportaciones al 401(k)?</h2>
+<p>El 401(k) tradicional se nutre de <strong>dinero antes de impuestos (pre-tax)</strong>. Cada euro o dólar aportado se descuenta directamente de tu base imponible en la declaración de la renta.</p>
+
+<h3>La fórmula del ahorro fiscal</h3>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Ahorro fiscal inmediato = Aportación anual al 401(k) × Tipo impositivo marginal</strong>
+</p>
+<p>Dado que las aportaciones se restan del tramo superior de tus ingresos, el ahorro se calcula sobre tu <strong>tramo marginal más alto</strong>, no sobre tu tipo impositivo medio.</p>
+
+<h3>El impacto real en tu nómina</h3>
+<p>Si te encuentras en un tramo marginal combinado del <strong>29%</strong> (federal + estatal / tramo IRPF):</p>
+<ul>
+  <li>Una aportación de <strong>10.000 $</strong> te ahorra <strong>2.900 $ en impuestos</strong> de forma inmediata.</li>
+  <li>Tu sueldo neto mensual disminuye solo <strong>7.100 $ al año</strong>, mientras que en tu cuenta de jubilación crecen los <strong>10.000 $ íntegros</strong> con interés compuesto.</li>
+</ul>
+
+<h2>Parte 2: ¿Cuánto me pagará el 401(k) al mes en la jubilación?</h2>
+<p>Llegado el retiro, tu fondo de jubilación se transforma en tu <strong>sueldo mensual privado</strong>.</p>
+
+<h3>La Regla del 4% para retiradas seguras</h3>
+<p>El estándar internacional más respetado es la <strong>Regla del 4%</strong> (estudio Trinity). Retirar el 4% del capital acumulado durante el primer año, ajustándolo anualmente por la inflación, garantiza con más de un 95% de probabilidad que el dinero durará al menos 30 años.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Paga mensual estimada = (Fondo total acumulado × 0,04) ÷ 12</strong>
+</p>
+
+<h3>Tabla de ingresos mensuales según tu patrimonio acumulado</h3>
+<ul>
+  <li><strong>250.000 $:</strong> 833 $/mes (10.000 $/año)</li>
+  <li><strong>500.000 $:</strong> 1.667 $/mes (20.000 $/año)</li>
+  <li><strong>750.000 $:</strong> 2.500 $/mes (30.000 $/año)</li>
+  <li><strong>1.000.000 $:</strong> 3.333 $/mes (40.000 $/año)</li>
+  <li><strong>1.500.000 $:</strong> 5.000 $/mes (60.000 $/año)</li>
+</ul>
+
+<h2>Parte 3: ¿Cuánto tiempo durará mi 401(k)?</h2>
+<p>La longevidad de tu fondo de retiro depende de tres variables:</p>
+<ol>
+  <li><strong>Porcentaje de retirada:</strong> 3,5% (muy conservador), 4% (estándar), 5% (arriesgado) o más del 6% (peligro de quiebra).</li>
+  <li><strong>Distribución de activos:</strong> Proporción equilibrada entre renta variable (acciones para combatir la inflación) y renta fija (bonos para amortiguar caídas).</li>
+  <li><strong>Riesgo de secuencia de rendimientos:</strong> El impacto negativo de atravesar un mercado bajista justo en los primeros 3 a 5 años tras la jubilación.</li>
+</ol>
+
+<h2>Calcula tus cifras exactas online gratis</h2>
+<p>Utiliza nuestras herramientas privadas y gratuitas para simular tu plan de jubilación:</p>
+<ul>
+  <li>Simula aportaciones, aportación de la empresa y deducciones con la <a href="/es/retirement/401k/">Calculadora 401(k) con Empresa (Match)</a>.</li>
+  <li>Estima la duración de tus ahorros con el <a href="/es/retirement/planner/">Planificador de Jubilación</a>.</li>
+  <li>Compara planes tradicionales frente a Roth en la <a href="/es/retirement/ira-comparison/">Comparativa Roth vs. Tradicional</a>.</li>
+  <li>Calcula tus ingresos públicos estimados con la <a href="/es/retirement/social-security/">Calculadora de Seguridad Social</a>.</li>
+</ul>
+`
+    },
+    de: {
+      title: "401(k)- & Rentenrechner: Steuervorteile, monatliche Auszahlung & Haltbarkeit des Vermögens",
+      description: "Berechnen Sie, wie stark 401(k)-Beiträge Ihre Steuerlast senken, wie hoch Ihre monatliche Rentenauszahlung (4%-Regel) ist und wie viele Jahre Ihr Altersguthaben reicht.",
+      content: `
+<p>Bei der Altersvorsorgeplanung stehen drei Kernfragen im Mittelpunkt:</p>
+<ol>
+  <li><strong>„Um wie viel senkt meine Einzahlung in die betriebliche Altersvorsorge (401k) meine Steuerlast?“</strong></li>
+  <li><strong>„Wie viel monatliches Einkommen schüttet mein Depot im Ruhestand aus?“</strong></li>
+  <li><strong>„Wie viele Jahre reicht mein Erspartes, bevor das Kapital aufgebraucht ist?“</strong></li>
+</ol>
+<p>Egal ob Berufseinsteiger, Angestellter in der Vermögensaufbauphase oder kurz vor dem Renteneintritt: Das Zusammenspiel dieser drei Phasen entscheidet über Ihren finanziellen Freiraum im Alter.</p>
+
+<h2>Teil 1: Steuerersparnis durch steuerbegünstigte Vorsorge</h2>
+<p>Einzahlungen in traditionelle Altersvorsorgepläne (wie das US-amerikanische 401k-Modell oder die betriebliche Altersvorsorge) erfolgen aus dem <strong>Bruttoeinkommen (vor Steuern)</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Direkte Steuerersparnis = Jährlicher Sparbeitrag × Grenzsteuersatz</strong>
+</p>
+<p>Da die Beiträge von Ihrem Spitzeneinkommen abgezogen werden, sparen Sie Steuern mit Ihrem <strong>Grenzsteuersatz</strong>, nicht mit dem niedrigeren Durchschnittssteuersatz. Bei einem Grenzsteuersatz von 30 % und einem Beitrag von 10.000 € sinkt Ihr Nettoauszahlungsbetrag lediglich um 7.000 €, während die vollen 10.000 € renditestark für Sie arbeiten.</p>
+
+<h2>Teil 2: Monatliche Auszahlung im Ruhestand (Die 4%-Regel)</h2>
+<p>Im Ruhestand wird aus Ihrem angesparten Vermögen eine monatliche <strong>Privatrente</strong>.</p>
+<p>Die international anerkannte <strong>4%-Regel</strong> (Trinity-Studie) besagt: Wer im ersten Rentenjahr 4 % seines Gesamtportfolios entnimmt und diesen Betrag künftig jährlich an die Inflation anpasst, hat eine über 95%ige Wahrscheinlichkeit, dass das Depot mindestens 30 Jahre lang liquide bleibt.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Monatliche Entnahme = (Gesamtersparnisse × 0,04) ÷ 12</strong>
+</p>
+<ul>
+  <li><strong>250.000 € Depot:</strong> ca. 833 € / Monat</li>
+  <li><strong>500.000 € Depot:</strong> ca. 1.667 € / Monat</li>
+  <li><strong>1.000.000 € Depot:</strong> ca. 3.333 € / Monat</li>
+  <li><strong>1.500.000 € Depot:</strong> ca. 5.000 € / Monat</li>
+</ul>
+
+<h2>Teil 3: Wie lange hält das Altersvorsorgeguthaben?</h2>
+<p>Die Lebensdauer Ihres Kapitals hängt von der gewählten Entnahmerate ab:</p>
+<ul>
+  <li><strong>3,5 % Entnahme:</strong> Dauerhafter Vermögenserhalt (35+ Jahre, Erhalt der Substanz).</li>
+  <li><strong>4,0 % Entnahme:</strong> Standard für ca. 30 bis 33 Jahre Ruhestand.</li>
+  <li><strong>5,0 % Entnahme:</strong> Erhöhtes Risiko – das Kapital reicht meist für ca. 20 bis 24 Jahre.</li>
+  <li><strong>6,0 %+ Entnahme:</strong> Hohes Verzehrrisiko – Erschöpfung in unter 18 Jahren wahrscheinlich.</li>
+</ul>
+
+<h2>Berechnen Sie Ihre Vorsorge online</h2>
+<p>Nutzen Sie unsere kostenlosen und diskreten Online-Rechner:</p>
+<ul>
+  <li>Berechnen Sie Sparbeitrag und Arbeitgeberzuschuss mit dem <a href="/de/retirement/401k/">401(k)-Rechner mit Arbeitgeberzuschuss</a>.</li>
+  <li>Testen Sie Ihre Entnahmedauer im <a href="/de/retirement/planner/">Ruhestandsplaner</a>.</li>
+  <li>Vergleichen Sie Vor- und Nachsteuer-Modelle im <a href="/de/retirement/ira-comparison/">IRA / Altersvorsorge-Vergleich</a>.</li>
+  <li>Ermitteln Sie gesetzliche Ansprüche mit dem <a href="/de/retirement/social-security/">Renten- & Sozialversicherungsrechner</a>.</li>
+</ul>
+`
+    },
+    ja: {
+      title: "【401k・確定拠出年金 計算ガイド】節税額・毎月の受取額・資産は何年持つかを徹底解説",
+      description: "401(k)拠出による毎年の節税額、退職後に受け取れる毎月の年金収入（4%ルール）、資産の寿命（何歳まで持つか）の計算方法と数理モデルを詳しく解説。",
+      content: `
+<p>老後資金の計画を立てる際、誰もが知りたい3大疑問があります：</p>
+<ol>
+  <li><strong>「401(k)や確定拠出年金に拠出すると、今年の税金はいくら安くなるのか？」</strong></li>
+  <li><strong>「退職後、毎月いくらの年金（取り崩し収入）を受け取れるのか？」</strong></li>
+  <li><strong>「蓄えた資産は何年間持ちこたえるのか（何歳で底をつくか）？」</strong></li>
+</ol>
+<p>資産形成期から取り崩し期（デキュムレーション）まで、この3つの計算式を正しく把握しておくことで、老後の不安を解消できます。</p>
+
+<h2>第1部：401(k)拠出による節税効果の計算</h2>
+<p>一般的な401(k)や企業型・個人型確定拠出年金（iDeCo）は、<strong>税引き前の給与から拠出</strong>されます。拠出額の全額がその年の課税所得から控除されます。</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>毎年の直接的な節税額 ＝ 年間拠出額 × 限界税率（所得税率 ＋ 住民税率）</strong>
+</p>
+<p>控除は所得の一番高い部分（限界税率）に適用されるため、実質的な手取り減少額よりもはるかに大きな資産が年金口座に積み立てられます。</p>
+
+<h2>第2部：退職後に毎月いくら受け取れるか（4%ルール）</h2>
+<p>退職後は、積み上げた資産を定期的に取り崩して<strong>「毎月の退職給与」</strong>を作ります。</p>
+<p>安全な取り崩し率の世界的基準として知られるのが<strong>「4%ルール（トリニティ・スタディ）」</strong>です。退職初年度に資産総額の4%を取り崩し、翌年以降はインフレ率に合わせて引き出し額を調整すれば、30年以上にわたり資産が枯渇しない確率が95%以上と実証されています。</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>毎月の安全な年金受取額 ＝（退職時資産残高 × 0.04）÷ 12ヶ月</strong>
+</p>
+<ul>
+  <li><strong>残高 3,000万円:</strong> 毎月 約10万円（年間120万円）</li>
+  <li><strong>残高 5,000万円:</strong> 毎月 約16.7万円（年間200万円）</li>
+  <li><strong>残高 1億円:</strong> 毎月 約33.3万円（年間400万円）</li>
+</ul>
+
+<h2>第3部：老後資金は何年間持つか？</h2>
+<p>資産の寿命は「取り崩し率」と「運用利回り」のバランスで決まります：</p>
+<ul>
+  <li><strong>取り崩し率 3.5%（極めて安全）:</strong> 35年以上（元本が減らず実質的に永久維持可能）。</li>
+  <li><strong>取り崩し率 4.0%（標準）:</strong> 30年〜33年間安全に維持。</li>
+  <li><strong>取り崩し率 5.0%（やや過大）:</strong> 20年〜24年程度で枯渇するリスクあり。</li>
+  <li><strong>取り崩し率 6.0%以上（危険）:</strong> 15年〜17年程度で底をつく可能性大。</li>
+</ul>
+
+<h2>シミュレーターで自分の老後資金を試算する</h2>
+<p>当サイトの金融計算ツールを使って、年収や拠出額に応じた詳細なシミュレーションを行えます：</p>
+<ul>
+  <li>会社マッチングと節税額を計算する <a href="/ja/retirement/401k/">401(k)計算シミュレーター</a></li>
+  <li>取り崩し期間と必要額を試算する <a href="/ja/retirement/planner/">リタイアメント・プランナー</a></li>
+  <li>税引き前と税引き後運用の違いを比べる <a href="/ja/retirement/ira-comparison/">確定拠出年金・IRA比較</a></li>
+  <li>公的年金の受給見込額を調べる <a href="/ja/retirement/social-security/">ソーシャル・セキュリティ計算機</a></li>
+</ul>
+`
+    },
+    fr: {
+      title: "Guide 401(k) & Épargne Retraite : Économies d'impôts, rente mensuelle et durée du capital",
+      description: "Calculez l'économie d'impôt immédiate de vos versements 401(k), estimez votre rente mensuelle à la retraite (règle des 4 %) et découvrez combien d'années durera votre capital.",
+      content: `
+<p>Trois questions essentielles guident la préparation financière de la retraite :</p>
+<ol>
+  <li><strong>« Combien d'impôts mes versements sur un plan d'épargne retraite (401k) me font-ils économiser ? »</strong></li>
+  <li><strong>« Quelle rente mensuelle pourrai-je percevoir une fois à la retraite ? »</strong></li>
+  <li><strong>« Combien d'années mon capital durera-t-il avant d'être épuisé ? »</strong></li>
+</ol>
+<p>De la phase d'accumulation active à la phase de décaissement, voici les formules clés et les modèles de simulation pour piloter votre retraite en toute sérénité.</p>
+
+<h2>1. Réduction d'impôts grâce aux versements déductibles</h2>
+<p>Les versements sur un compte de retraite traditionnel (comme le 401k américain ou un plan d'épargne retraite déductible) sont effectués <strong>avant impôt</strong>.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Économie d'impôt immédiate = Versement annuel × Taux marginal d'imposition</strong>
+</p>
+<p>L'économie s'applique sur votre tranche d'imposition la plus élevée. Si votre taux marginal est de 30 %, verser 10 000 € réduit votre revenu imposable et vous fait économiser immédiatement 3 000 € d'impôt. Votre effort net d'épargne n'est que de 7 000 € pour 10 000 € placés !</p>
+
+<h2>2. Estimer sa rente mensuelle : La règle des 4 %</h2>
+<p>Pour convertir un capital accumulé en revenu régulier, la référence financière est la <strong>règle des 4 %</strong> (Trinity Study). Retirer 4 % de son portefeuille la première année, puis indexer ce montant sur l'inflation chaque année, offre plus de 95 % de chances de préserver son capital pendant au moins 30 ans.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Revenu mensuel sécurisé = (Capital total de retraite × 0,04) ÷ 12</strong>
+</p>
+<ul>
+  <li><strong>Capital de 250 000 € :</strong> environ 833 € par mois</li>
+  <li><strong>Capital de 500 000 € :</strong> environ 1 667 € par mois</li>
+  <li><strong>Capital de 1 000 000 € :</strong> environ 3 333 € par mois</li>
+</ul>
+
+<h2>3. Combien de temps vos économies dureront-elles ?</h2>
+<p>La pérennité de votre capital dépend du taux de retrait annuel :</p>
+<ul>
+  <li><strong>Taux de 3,5 % :</strong> Capital préservé indéfiniment (35 ans et plus).</li>
+  <li><strong>Taux de 4,0 % :</strong> Horizon sécurisé de 30 à 33 ans.</li>
+  <li><strong>Taux de 5,0 % :</strong> Durabilité estimée à 21-24 ans (risque d'épuisement).</li>
+  <li><strong>Taux de 6,0 % et plus :</strong> Risque élevé de rupture en moins de 17 ans.</li>
+</ul>
+
+<h2>Simulez vos chiffres réels gratuitement</h2>
+<p>Utilisez nos simulateurs financiers sans enregistrement ni collecte de données :</p>
+<ul>
+  <li>Estimez votre capital futur avec le <a href="/fr/retirement/401k/">Simulateur 401(k) avec abondement employeur</a>.</li>
+  <li>Analysez votre horizon de décaissement sur le <a href="/fr/retirement/planner/">Planificateur de Retraite</a>.</li>
+  <li>Comparez fiscalité immédiate et fiscalité de sortie avec le <a href="/fr/retirement/ira-comparison/">Comparateur Roth vs. Traditionnel</a>.</li>
+  <li>Estimez votre pension publique sur le <a href="/fr/retirement/social-security/">Simulateur de Sécurité Sociale</a>.</li>
+</ul>
+`
+    },
+    pt: {
+      title: "Guia 401(k) e Previdência: Economia de impostos, renda mensal e quanto tempo o dinheiro dura",
+      description: "Calcule quanto as contribuições ao 401(k) reduzem seus impostos hoje, estime sua renda mensal na aposentadoria (regra dos 4%) e saiba quantos anos seu patrimônio vai durar.",
+      content: `
+<p>Ao planejar a aposentadoria, três dúvidas práticas estão no topo das prioridades de qualquer pessoa:</p>
+<ol>
+  <li><strong>"Quanto minhas contribuições para o plano de aposentadoria (401k ou PGBL) reduzem de imposto de renda hoje?"</strong></li>
+  <li><strong>"Quanto meu patrimônio vai me pagar de renda mensal na aposentadoria?"</strong></li>
+  <li><strong>"Por quanto tempo o dinheiro vai durar antes de acabar?"</strong></li>
+</ol>
+<p>Compreender o cálculo de cada uma dessas etapas permite planejar o valor exato a ser investido e ter clareza sobre o futuro financeiro.</p>
+
+<h2>1. Como as contribuições reduzem o imposto de renda</h2>
+<p>Planos como o 401(k) tradicional ou previdência com benefício fiscal utilizam <strong>recursos antes da tributação (pre-tax)</strong>. O valor investido é abatido diretamente da base de cálculo do imposto anual.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Economia Fiscal Imediata = Contribuição Anual × Alíquota Marginal de Imposto</strong>
+</p>
+<p>Como a dedução incide sobre a faixa mais alta da sua renda (alíquota marginal), o benefício tributário é imediato e potencializa o poder dos juros compostos ao longo das décadas.</p>
+
+<h2>2. Quanto o plano vai pagar por mês: A Regra dos 4%</h2>
+<p>Na aposentadoria, o objetivo é transformar o montante acumulado em um <strong>salário mensal estável</strong>.</p>
+<p>O modelo mais adotado no mundo financeiro é a <strong>Regra dos 4%</strong> (Estudo Trinity). Ao resgatar 4% do patrimônio no primeiro ano de aposentadoria e corrigir esse valor anualmente pela inflação, a probabilidade estatística de o dinheiro durar mais de 30 anos supera 95%.</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-3">
+  <strong>Salário Mensal da Aposentadoria = (Patrimônio Total × 0,04) ÷ 12</strong>
+</p>
+<ul>
+  <li><strong>R$ 500.000 acumulados:</strong> R$ 1.667 / mês</li>
+  <li><strong>R$ 1.000.000 acumulados:</strong> R$ 3.333 / mês</li>
+  <li><strong>R$ 2.000.000 acumulados:</strong> R$ 6.667 / mês</li>
+  <li><strong>R$ 3.000.000 acumulados:</strong> R$ 10.000 / mês</li>
+</ul>
+
+<h2>3. Quanto tempo o dinheiro vai durar?</h2>
+<p>A taxa de retirada define diretamente a sobrevivência do seu patrimônio:</p>
+<ul>
+  <li><strong>Retirada de 3,5%:</strong> Preservação permanente (mais de 35 anos, com manutenção do poder de compra).</li>
+  <li><strong>Retirada de 4,0%:</strong> Seguro para um período de 30 a 33 anos.</li>
+  <li><strong>Retirada de 5,0%:</strong> Risco moderado a alto (o dinheiro costuma durar entre 21 e 24 anos).</li>
+  <li><strong>Retirada acima de 6,0%:</strong> Risco crítico de esgotamento prematuro do capital.</li>
+</ul>
+
+<h2>Faça as contas do seu plano na prática</h2>
+<p>Utilize nossas ferramentas gratuitas e 100% privadas no seu navegador:</p>
+<ul>
+  <li>Simule o crescimento e a contrapartida da empresa na <a href="/pt/retirement/401k/">Calculadora 401(k) com Match</a>.</li>
+  <li>Teste a taxa de saque e a duração do patrimônio no <a href="/pt/retirement/planner/">Planejador de Aposentadoria</a>.</li>
+  <li>Compare tributação imediata e diferida na <a href="/pt/retirement/ira-comparison/">Comparação de Planos Previdenciários</a>.</li>
+  <li>Projete seus benefícios do governo na <a href="/pt/retirement/social-security/">Calculadora de Previdência e Benefícios Sociais</a>.</li>
+</ul>
+`
+    }
   }
 };
 
