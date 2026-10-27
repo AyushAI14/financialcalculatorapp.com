@@ -2516,6 +2516,550 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 `
     }
+  },
+  "how-much-house-can-i-afford": {
+    en: {
+      title: "How Much House Can I Afford? (The Real Calculator Math Lenders Use)",
+      description: "Discover how lenders calculate your maximum home purchase price using the 28/36 DTI rule, salary matrices, interest rate impacts, and hidden ownership costs.",
+      content: `
+<p><em>"How much house can I afford?"</em></p>
+<p>It is one of the most consequential financial questions you will ever ask. Yet if you rely solely on a generic pre-approval letter from a mortgage bank, you risk making a catastrophic mistake: <strong>becoming "house poor."</strong></p>
+<p>Commercial mortgage lenders are in the business of selling loans. They will gladly approve you for the <strong>maximum mathematical limit</strong> their underwriting algorithms allow—often pushing your household budget right to the edge of financial stress.</p>
+<p>However, just because a bank says you <em>can</em> borrow $450,000 does not mean you <em>should</em>. To buy with confidence while protecting your retirement savings, emergency fund, and lifestyle, you must understand the exact math mortgage underwriters use.</p>
+
+<h2>The 30-Second Affordability Benchmark: The 28/36 Rule</h2>
+<p>Mortgage underwriters evaluate affordability using two <strong>Debt-to-Income (DTI)</strong> ratios:</p>
+<ol>
+  <li><strong>Front-End DTI Ratio (28% Rule):</strong> Your total monthly housing expense—including <strong>PITI</strong> (Principal, Interest, Property Taxes, and Homeowners Insurance), plus HOA dues and Private Mortgage Insurance (PMI)—should <strong>not exceed 28% of your gross monthly income</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Front-End Budget = Gross Monthly Income × 0.28</strong>
+    </p>
+  </li>
+  <li><strong>Back-End DTI Ratio (36% Rule):</strong> The sum of your monthly housing costs <strong>plus all recurring personal debt payments</strong> (car loans, student loans, minimum credit card payments) should <strong>not exceed 36% of your gross monthly income</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Back-End Housing Budget = (Gross Monthly Income × 0.36) − Monthly Personal Debts</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>The Binding Constraint Principle:</strong> Your true maximum monthly housing budget is always <strong>the lower of the Front-End and Back-End numbers</strong>:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Affordable Housing Budget = min(Front-End Limit, Back-End Limit)</strong>
+</p>
+
+<h2>The True Anatomy of a Housing Payment: PITI + HOA + PMI</h2>
+<p>First-time homebuyers frequently make the costly mistake of calculating affordability using only a basic loan payment formula (Principal + Interest). In reality, your monthly payment consists of up to six separate expenses:</p>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Payment Component</th>
+      <th class="p-2.5 font-bold text-ink">What It Covers</th>
+      <th class="p-2.5 font-bold text-ink">Typical Cost Impact</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">P – Principal</td>
+      <td class="p-2.5">Direct payback of the borrowed balance</td>
+      <td class="p-2.5">Increases gradually over the 30-year amortization schedule</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">I – Interest</td>
+      <td class="p-2.5">The lender's financing charge</td>
+      <td class="p-2.5">Dominates 65%–80% of early payments at 6%–7% mortgage rates</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">T – Property Taxes</td>
+      <td class="p-2.5">Municipal, county, and school district taxes</td>
+      <td class="p-2.5">0.6% to 2.3% of home value annually ($250 to $900/month)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">I – Hazard Insurance</td>
+      <td class="p-2.5">Structural property and casualty insurance</td>
+      <td class="p-2.5">$100 to $300/month depending on location and disaster risk</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">PMI (Private Mortgage Insurance)</td>
+      <td class="p-2.5">Lender insurance required if down payment &lt; 20%</td>
+      <td class="p-2.5">0.3% to 1.5% of loan value per year ($80 to $350/month)</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">HOA / Condo Dues</td>
+      <td class="p-2.5">Association community maintenance and amenities</td>
+      <td class="p-2.5">$0 to $600+/month (non-equity recurring fee)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Salary vs. Maximum Affordable Home Price Matrix</h2>
+<p>Here is what standard underwriting guidelines produce based on a 30-year fixed loan at 6.5%, 10% down payment, 1.2% property taxes, $1,200 annual insurance, and 0.6% PMI:</p>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Annual Gross Salary</th>
+      <th class="p-2.5 font-bold text-ink">Max 28% Housing Budget</th>
+      <th class="p-2.5 font-bold text-ink">Affordable Price ($0 Debts)</th>
+      <th class="p-2.5 font-bold text-ink">Affordable Price ($500/mo Debts)</th>
+      <th class="p-2.5 font-bold text-ink">Purchasing Power Loss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$60,000</td>
+      <td class="p-2.5">$1,400 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$182,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$124,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-31.9%)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$80,000</td>
+      <td class="p-2.5">$1,867 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$248,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$190,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-23.4%)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$100,000</td>
+      <td class="p-2.5">$2,333 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$314,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$256,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-18.5%)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$120,000</td>
+      <td class="p-2.5">$2,800 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$380,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$322,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-15.3%)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">$150,000</td>
+      <td class="p-2.5">$3,500 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$480,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$422,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-12.1%)</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">$200,000</td>
+      <td class="p-2.5">$4,667 / mo</td>
+      <td class="p-2.5 font-bold text-ink">$645,000</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">$587,000</td>
+      <td class="p-2.5 text-rose-600 font-mono">-$58,000 (-9.0%)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>The "Car Payment Penalty":</strong> A $500 monthly personal debt obligation (auto loan, student loan, or credit cards) reduces your home purchasing power by roughly <strong>$58,000 to $65,000</strong> across all income brackets.</p>
+
+<h2>How Mortgage Interest Rates Decimate Affordability</h2>
+<p>Every <strong>1.00% rise in mortgage rates</strong> reduces borrowing power by <strong>9% to 11%</strong> for the exact same monthly budget. On a $2,500/month payment budget:</p>
+<ul>
+  <li><strong>5.00% Interest Rate:</strong> $465,700 loan power</li>
+  <li><strong>6.00% Interest Rate:</strong> $417,000 loan power (-$48,700)</li>
+  <li><strong>7.00% Interest Rate:</strong> $375,800 loan power (-$89,900)</li>
+  <li><strong>8.00% Interest Rate:</strong> $340,700 loan power (-$125,000)</li>
+</ul>
+
+<h2>5 High-Impact Ways to Increase How Much House You Can Afford</h2>
+<ol>
+  <li><strong>Eliminate recurring debts:</strong> Paying off a $300/month car loan or personal loan instantly frees up ~$35,000 to $45,000 in mortgage capacity.</li>
+  <li><strong>Boost your credit score above 760:</strong> Higher credit scores unlock the lowest interest rate tiers, potentially saving 0.5%–0.75% in annual interest and reducing PMI premiums.</li>
+  <li><strong>Save toward 20% down payment:</strong> Reaching 20% equity completely wipes out Private Mortgage Insurance (PMI), redirecting $100 to $300/month directly into your home budget.</li>
+  <li><strong>Compare local property tax districts:</strong> Choosing a home in a municipality with a 1.0% tax rate vs 2.2% adds $40,000+ to your affordable purchase price at the same salary.</li>
+  <li><strong>Get quotes from at least 3 lenders:</strong> Comparing rate quotes saves the average homebuyer thousands over the life of the loan.</li>
+</ol>
+
+<h2>Test Your Real Numbers in Our Free Calculators</h2>
+<p>Run your personal numbers through our fast, 100% private browser tools:</p>
+<ul>
+  <li><a href="/loan/home-affordability/">Home Affordability Calculator</a>: Calculate your exact maximum purchase price and PITI breakdown.</li>
+  <li><a href="/loan/mortgage/">Mortgage Calculator with PMI</a>: View detailed amortization schedules and payment graphs.</li>
+  <li><a href="/loan/dti/">Debt-to-Income (DTI) Calculator</a>: Audit your Front-End and Back-End lending ratios.</li>
+  <li><a href="/loan/rent-vs-buy/">Rent vs. Buy Calculator</a>: Determine whether buying or renting builds greater net worth.</li>
+</ul>
+`
+    },
+    es: {
+      title: "¿Cuánto Puedo Pagar por una Casa? (La Verdadera Matemática de los Bancos)",
+      description: "Descubre cómo calculan los bancos tu capacidad máxima de compra hipotecaria mediante la regla 28/36 de DTI, tablas por salario, impacto de tasas y costes ocultos.",
+      content: `
+<p><em>"¿Cuánto puedo pagar por una casa?"</em></p>
+<p>Es una de las decisiones financieras más importantes de tu vida. Sin embargo, confiar ciegamente en la carta de aprobación previa de un banco puede llevarte a cometer un error crítico: <strong>convertirte en "pobre con casa propia" (house poor)</strong>.</p>
+<p>Las entidades financieras se dedican a vender créditos. Con gusto te aprobarán por el <strong>máximo límite matemático</strong> que permitan sus modelos de riesgo, empujando tu presupuesto mensual al límite de la solvencia.</p>
+<p>Que el banco te preste cierta cantidad no significa que debas aceptarla. Para comprar con tranquilidad y mantener tus ahorros, fondo de emergencia y calidad de vida, necesitas dominar las fórmulas exactas que utilizan los evaluadores de riesgo bancario.</p>
+
+<h2>La Regla de Oro 28/36: Ratios de Endeudamiento (DTI)</h2>
+<p>Los bancos evalúan tu capacidad de endeudamiento mediante dos ratios clave sobre tus ingresos brutos mensuales:</p>
+<ol>
+  <li><strong>Ratio Front-End (Regla del 28%):</strong> La suma total de los costes de vivienda—cuota hipotecaria (capital e intereses), impuestos sobre bienes inmuebles (IBI/predial), seguro del hogar y cuotas de comunidad—<strong>no debe superar el 28% de tus ingresos brutos mensuales</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Límite Front-End = Ingreso Bruto Mensual × 0,28</strong>
+    </p>
+  </li>
+  <li><strong>Ratio Back-End (Regla del 36%):</strong> La suma de los gastos de vivienda <strong>más todas las deudas personales recurrentes</strong> (préstamos de auto, créditos estudiantiles, tarjetas de crédito) <strong>no debe superar el 36% de tus ingresos brutos mensuales</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Límite Back-End = (Ingreso Bruto Mensual × 0,36) − Deudas Personales Mensuales</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>El Principio Restrictivo:</strong> Tu presupuesto hipotecario mensual real siempre es <strong>el menor de los dos ratios</strong>:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Presupuesto de Vivienda = min(Límite Front-End, Límite Back-End)</strong>
+</p>
+
+<h2>La Verdadera Cuota Mensual: PITI + Comunidad + Seguro</h2>
+<p>Muchos compradores cometen el error de calcular únicamente la cuota de amortización e intereses. En la práctica, el pago mensual de vivienda comprende múltiples conceptos:</p>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Componente</th>
+      <th class="p-2.5 font-bold text-ink">Concepto</th>
+      <th class="p-2.5 font-bold text-ink">Impacto Financiero</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Principal (Capital)</td>
+      <td class="p-2.5">Amortización directa de la deuda contraída</td>
+      <td class="p-2.5">Aumenta gradualmente a lo largo del cuadro de amortización</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Intereses</td>
+      <td class="p-2.5">El coste financiero cobrado por la entidad bancaria</td>
+      <td class="p-2.5">Representa entre el 60% y el 80% de las cuotas iniciales con tipos al 6%–7%</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Impuestos Inmobiliarios</td>
+      <td class="p-2.5">Tasas municipales, IBI o impuesto predial</td>
+      <td class="p-2.5">Entre 0,5% y 2,0% del valor del inmueble cada año</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Seguro de Hogar / Daños</td>
+      <td class="p-2.5">Póliza obligatoria contra incendios y siniestros</td>
+      <td class="p-2.5">Coste anual recurrente exigido por el acreedor hipotecario</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Comunidad / HOA</td>
+      <td class="p-2.5">Mantenimiento de zonas comunes y servicios del edificio</td>
+      <td class="p-2.5">Gasto mensual fijo que no genera patrimonio alguno</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Tabla de Ingresos vs. Precio Máximo de Vivienda</h2>
+<p>Bajo condiciones estándar (hipoteca a 30 años al 6,5%, 10% de entrada, 1,2% de impuestos y seguros estándar):</p>
+<ul>
+  <li><strong>Sueldo bruto de 60.000 $/€ al año:</strong> Precio asequible de ~182.000 $ sin deudas (se reduce a ~124.000 $ si tienes 500 $/mes en préstamos de coche o personales).</li>
+  <li><strong>Sueldo bruto de 80.000 $/€ al año:</strong> Precio asequible de ~248.000 $ sin deudas (se reduce a ~190.000 $ con 500 $/mes de deudas).</li>
+  <li><strong>Sueldo bruto de 100.000 $/€ al año:</strong> Precio asequible de ~314.000 $ sin deudas (se reduce a ~256.000 $ con 500 $/mes de deudas).</li>
+  <li><strong>Sueldo bruto de 120.000 $/€ al año:</strong> Precio asequible de ~380.000 $ sin deudas (se reduce a ~322.000 $ con 500 $/mes de deudas).</li>
+  <li><strong>Sueldo bruto de 150.000 $/€ al año:</strong> Precio asequible de ~480.000 $ sin deudas (se reduce a ~422.000 $ con 500 $/mes de deudas).</li>
+</ul>
+<p><strong>El Efecto de las Deudas de Consumo:</strong> Pagar 500 $/mes en préstamos personales o de automóvil destruye aproximadamente <strong>58.000 a 65.000 $/€ de tu capacidad de compra hipotecaria</strong>.</p>
+
+<h2>El Impacto Directo de los Tipos de Interés</h2>
+<p>Por cada <strong>1% que sube la tasa de interés hipotecaria</strong>, tu capacidad de compra se reduce entre un <strong>9% y un 11%</strong> para la misma cuota mensual exacta. Un presupuesto mensual de 2.500 $/€ financia 465.000 $ al 5% de interés, pero solo 395.000 $ al 6,5% y 340.000 $ al 8%.</p>
+
+<h2>Calcula tu Presupuesto Hipotecario en Tiempo Real</h2>
+<p>Aprovecha nuestras herramientas gratuitas, privadas y sin registro:</p>
+<ul>
+  <li><a href="/es/loan/home-affordability/">Calculadora de Asequibilidad de Vivienda</a>: Descubre tu precio máximo y cuota detallada.</li>
+  <li><a href="/es/loan/mortgage/">Calculadora de Hipotecas</a>: Simula amortizaciones y calendarios completos.</li>
+  <li><a href="/es/loan/dti/">Calculadora de Ratio DTI (Endeudamiento)</a>: Conoce tus porcentajes exactos antes de acudir al banco.</li>
+  <li><a href="/es/loan/rent-vs-buy/">Calculadora Alquilar vs. Comprar</a>: Compara la rentabilidad a largo plazo.</li>
+</ul>
+`
+    },
+    de: {
+      title: "Wie viel Haus kann ich mir leisten? (Die echte Banken-Formel)",
+      description: "Erfahre, wie Banken deine maximale Kreditsumme und Kaufpreisgrenze berechnen: 28/36 DTI-Regel, Einkommenstabellen, Zinshebel und versteckte Nebenkosten.",
+      content: `
+<p><em>„Wie viel Haus kann ich mir leisten?“</em></p>
+<p>Diese Frage gehört zu den folgenschwersten Entscheidungen deines finanziellen Lebens. Verlässt du dich jedoch blind auf die Kreditauskunft einer Bank, droht eine gefährliche Falle: <strong>das „House-Poor“-Phänomen (im eigenen Haus finanziell gefangen zu sein)</strong>.</p>
+<p>Kreditinstitute verkaufen Darlehen. Sie berechnen das <strong>mathematische Maximum</strong>, das ihre Risikomodelle erlauben – und schöpfen dein monatliches Budget oft bis zur Belastungsgrenze aus.</p>
+<p>Nur weil dir eine Bank 450.000 Euro leihen würde, heißt das keineswegs, dass du diese Summe auch aufnehmen solltest. Um mit ruhigem Schlaf zu kaufen, musst du die Berechnungslogik der Banken verstehen.</p>
+
+<h2>Die 28/36-Regel: Die Leitplanken der Kreditprüfung</h2>
+<p>Banken und Finanzierungsberater ermitteln die Leistbarkeit anhand von zwei <strong>DTI-Kennzahlen (Debt-to-Income / Verschuldungsgrad)</strong>:</p>
+<ol>
+  <li><strong>Front-End DTI (28 %-Wohnkostenquote):</strong> Die monatliche Gesamtbelastung für das Wohnen – bestehend aus Zins, Tilgung, Grundsteuer, Wohngebäudeversicherung und Hausgeld – sollte <strong>maximal 28 % deines monatlichen Bruttoeinkommens</strong> ausmachen.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Wohnkosten-Budget = Monatliches Bruttoeinkommen × 0,28</strong>
+    </p>
+  </li>
+  <li><strong>Back-End DTI (36 %-Gesamtverschuldungsquote):</strong> Die Summe aus Wohnkosten <strong>und sämtlichen weiteren monatlichen Verbindlichkeiten</strong> (Autokredit, Ratenkredite, Leasing, Kreditkarten) darf <strong>36 % des Bruttoeinkommens nicht überschreiten</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Gesamtbudget = (Monatliches Bruttoeinkommen × 0,36) − Monatliche Konsumkredite</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>Die bindende Budgetgrenze:</strong> Die tatsächlich tragfähige Monatsrate ist stets <strong>das Minimum aus beiden Werten</strong>.</p>
+
+<h2>Die reale Monatsrate: Nicht nur Zins und Tilgung</h2>
+<p>Viele Immobilienkäufer kalkulieren fälschlicherweise nur mit der reinen Darlehensannuität. Zur monatlichen Wohnbelastung gehören jedoch unvermeidbare Positionen:</p>
+<ul>
+  <li><strong>Tilgung:</strong> Der tatsächliche Abbau der Restschuld (Aufbau von Nettovermögen).</li>
+  <li><strong>Zinsen:</strong> Die Gebühr der Bank für das geliehene Kapital (bei 6 %–7 % Zinsen der Löwenanteil der ersten Jahre).</li>
+  <li><strong>Grundsteuer & Abgaben:</strong> Jährliche kommunale Abgaben an die Stadt oder Gemeinde.</li>
+  <li><strong>Wohngebäudeversicherung:</strong> Pflichtabsicherung gegen Brand, Sturm und Elementarschäden.</li>
+  <li><strong>Hausgeld & Instandhaltungsrücklage:</strong> Die Faustregel empfiehlt mindestens <strong>1 % bis 2 % des Gebäudewerts pro Jahr</strong> für Reparaturen (Dach, Heizung, Rohre) zurückzulegen.</li>
+</ul>
+
+<h2>Einkommenstabelle: Maximaler Kaufpreis bei 6,5 % Zinsen</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Bruttojahreseinkommen</th>
+      <th class="p-2.5 font-bold text-ink">Max. 28 % Wohnbudget</th>
+      <th class="p-2.5 font-bold text-ink">Kaufpreis (0 € Schulden)</th>
+      <th class="p-2.5 font-bold text-ink">Kaufpreis (500 €/Monat Schulden)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">60.000 €</td>
+      <td class="p-2.5">1.400 € / Monat</td>
+      <td class="p-2.5 font-bold">~182.000 €</td>
+      <td class="p-2.5 text-rose-600 font-bold">~124.000 €</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">80.000 €</td>
+      <td class="p-2.5">1.867 € / Monat</td>
+      <td class="p-2.5 font-bold">~248.000 €</td>
+      <td class="p-2.5 text-rose-600 font-bold">~190.000 €</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">100.000 €</td>
+      <td class="p-2.5">2.333 € / Monat</td>
+      <td class="p-2.5 font-bold">~314.000 €</td>
+      <td class="p-2.5 text-rose-600 font-bold">~256.000 €</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">120.000 €</td>
+      <td class="p-2.5">2.800 € / Monat</td>
+      <td class="p-2.5 font-bold">~380.000 €</td>
+      <td class="p-2.5 text-rose-600 font-bold">~322.000 €</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">150.000 €</td>
+      <td class="p-2.5">3.500 € / Monat</td>
+      <td class="p-2.5 font-bold">~480.000 €</td>
+      <td class="p-2.5 text-rose-600 font-bold">~422.000 €</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Die Autofallen-Konsequenz:</strong> Eine monatliche Leasing- oder Kreditrate von 500 € vernichtet rund <strong>58.000 € bis 65.000 € deiner Darlehenskapazität</strong>.</p>
+
+<h2>Der 1 %-Zinshebel</h2>
+<p>Ein Anstieg des Bauzinses um nur <strong>1,00 % senkt die finanzierbare Kreditsumme um etwa 10 %</strong> bei unveränderter Monatsrate. Bei 2.500 € Monatsbudget finanziert man bei 5 % Zinsen ca. 465.000 €, bei 6,5 % Zinsen nur noch 395.000 €.</p>
+
+<h2>Berechne deine persönliche Finanzierungsgrenze</h2>
+<p>Nutze unsere 100 % privaten Onlinerechner im Browser:</p>
+<ul>
+  <li><a href="/de/loan/home-affordability/">Budgetrechner für Immobilienkauf</a>: Berechne deinen maximalen Kaufpreis.</li>
+  <li><a href="/de/loan/mortgage/">Baufinanzierungs- & Tilgungsrechner</a>: Tilgungspläne und Gesamtkosten visualisieren.</li>
+  <li><a href="/de/loan/dti/">DTI-Verschuldungsrechner</a>: Überprüfe deine Kreditwürdigkeit vor Bankgesprächen.</li>
+  <li><a href="/de/loan/rent-vs-buy/">Mieten oder Kaufen Rechner</a>: Vergleiche den langfristigen Vermögensaufbau.</li>
+</ul>
+`
+    },
+    fr: {
+      title: "Combien Puis-je Emprunter pour Acheter une Maison ? (Le Calcul Réel des Banques)",
+      description: "Découvrez comment les banques calculent votre budget d'achat immobilier maximal avec la règle 28/36 du taux d'endettement, matrices de salaire et frais annexes.",
+      content: `
+<p><em>« Combien puis-je emprunter pour acheter mon logement ? »</em></p>
+<p>C'est l'une des questions les plus cruciales de votre vie financière. Pourtant, se baser uniquement sur le montant maximal annoncé par un courtier ou une banque présente un risque majeur : <strong>devenir « esclave de son logement » (house poor)</strong>.</p>
+<p>Les établissements bancaires sont des commerçants de crédit. Ils vous accorderont volontiers la somme maximale que leurs algorithmes de risque permettent, quitte à saturer votre capacité d'épargne et vos marges de manœuvre.</p>
+<p>Pour acheter sereinement tout en préservant votre épargne de précaution et vos projets de vie, découvrez les formules de calcul réelles appliquées par les organismes prêteurs.</p>
+
+<h2>La Règle d'Endettement 28/36</h2>
+<p>Les critères bancaires reposent sur deux ratios de solvabilité (taux d'effort) :</p>
+<ol>
+  <li><strong>Le Ratio Logement Front-End (28 %) :</strong> La mensualité totale du logement—incluant le capital emprunté, les intérêts d'emprunt, la taxe foncière, l'assurance emprunteur et habitation, ainsi que les charges de copropriété—<strong>ne doit pas dépasser 28 % de vos revenus bruts mensuels</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Budget Logement = Revenus Bruts Mensuels × 0,28</strong>
+    </p>
+  </li>
+  <li><strong>Le Ratio d'Endettement Global Back-End (36 % / Norme HCSF 35 %) :</strong> La somme des mensualités immobilières <strong>et de l'ensemble de vos crédits à la consommation</strong> (prêt auto, crédits renouvelables, prêts étudiants) ne doit pas dépasser <strong>35 % à 36 % de vos revenus mensuels</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Budget Disponible = (Revenus Bruts × 0,36) − Mensualités de Crédits Conso</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>La Limite Contraignante :</strong> Votre budget réel pour le logement est toujours <strong>le montant le plus bas entre les deux ratios</strong>.</p>
+
+<h2>La Réalité des Coûts Mensuels d'un Propriétaire</h2>
+<p>Beaucoup d'acquéreurs commettent l'erreur de ne calculer que la mensualité brute de crédit. Un logement englobe pourtant plusieurs frais obligatoires :</p>
+<ul>
+  <li><strong>Amortissement du capital :</strong> La part qui rembourse réellement le bien et crée votre patrimoine net.</li>
+  <li><strong>Intérêts d'emprunt :</strong> Le coût de l'argent facturé par la banque (représente 60 % à 80 % des mensualités initiales avec des taux entre 3,5 % et 4,5 %).</li>
+  <li><strong>Assurance emprunteur :</strong> Protection obligatoire en cas de décès, invalidité et incapacité de travail.</li>
+  <li><strong>Taxe foncière :</strong> Impôt local annuel prélevé par les collectivités territoriales.</li>
+  <li><strong>Charges de copropriété et entretien :</strong> Il est recommandé de provisionner <strong>1 % à 2 % de la valeur du bien chaque année</strong> pour les gros travaux (ravalement, toiture, chaudière).</li>
+</ul>
+
+<h2>Capacité d'Emprunt selon vos Revenus</h2>
+<p>Estimation pour un prêt sur 25 ans à 3,8 % avec assurance et apport de 10 % :</p>
+<ul>
+  <li><strong>Salaire brut de 50 000 €/an :</strong> Capacité d'achat d'environ 235 000 € sans autre crédit (chute à 175 000 € avec 350 €/mois de crédit auto).</li>
+  <li><strong>Salaire brut de 80 000 €/an :</strong> Capacité d'achat d'environ 375 000 € sans crédit (chute à 315 000 € avec crédit auto).</li>
+  <li><strong>Salaire brut de 100 000 €/an :</strong> Capacité d'achat d'environ 470 000 € sans crédit (chute à 410 000 € avec crédit auto).</li>
+</ul>
+<p><strong>L'Impact des Crédits à la Consommation :</strong> Un simple crédit auto de 350 €/mois supprime directement près de <strong>60 000 € de capacité d'emprunt immobilier</strong>.</p>
+
+<h2>Simulez votre Projet en Toute Confidentialité</h2>
+<p>Nos outils fonctionnent directement dans votre navigateur sans collecte de données :</p>
+<ul>
+  <li><a href="/fr/loan/home-affordability/">Calculateur de Capacité d'Emprunt Immobilier</a> : Calculez votre prix d'achat maximal.</li>
+  <li><a href="/fr/loan/mortgage/">Calculateur de Prêt Immobilier</a> : Visualisez le tableau d'amortissement complet.</li>
+  <li><a href="/fr/loan/dti/">Calculateur du Taux d'Endettement</a> : Vérifiez votre éligibilité bancaire.</li>
+  <li><a href="/fr/loan/rent-vs-buy/">Simulateur Acheter ou Louer</a> : Comparez l'enrichissement net à 5, 10 et 20 ans.</li>
+</ul>
+`
+    },
+    ja: {
+      title: "いくらの家が買える？住宅ローン借入可能額の計算方法と年収別目安",
+      description: "銀行の審査基準（返済比率 28/36 ルール）に基づき、年収・金利・自己資金から住宅ローンの適正借入可能額と購入予算を正確に計算する方法を徹底解説。",
+      content: `
+<p><em>「自分の年収で、一体いくらの家が買えるのだろう？」</em></p>
+<p>住宅購入は、人生で最も大きなお金が動く決断です。しかし、不動産会社や金融機関から提示される「借入可能限度額」をそのまま鵜呑みにしてしまうと、<strong>「住宅ローン貧乏（住宅ローン破綻予備軍）」</strong>に陥る深刻なリスクがあります。</p>
+<p>金融機関は融資のプロであり、審査基準の<strong>上限ギリギリまで貸し出すこと</strong>を厭いません。しかし、「借りられる額」と「無理なく返せる額」は全くの別物です。</p>
+<p>老後資金や教育費、趣味の余裕を維持しながら安心してマイホームを購入するために、銀行の審査基準と正確な計算ロジックを把握しましょう。</p>
+
+<h2>住宅ローンの審査基準：28/36 ルール（返済比率）</h2>
+<p>金融機関の審査では、年収（総支給額）に対する年間返済額の割合である<strong>返済負担率（返済比率 / DTI）</strong>が用いられます：</p>
+<ol>
+  <li><strong>フロントエンド比率（住居費比率・28%基準）：</strong> 住宅ローン返済額（元利金）に加え、固定資産税・都市計画税、火災保険料、管理費・修繕積立金の合計が、<strong>月収総支給額の28%以下</strong>であること。
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>住居費の安全上限 = 月収（総支給額） × 0.28</strong>
+    </p>
+  </li>
+  <li><strong>バックエンド比率（総負債比率・36%基準）：</strong> 住宅関連費用に加え、<strong>自動車ローン、教育ローン、奨学金、クレジットカードのリボ払いなどすべての負債返済額</strong>を含めた合計が、<strong>月収の36%以下</strong>であること。
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>住宅に回せる最大枠 = (月収 × 0.36) − 他の毎月負債返済額</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>ボトルネックの原則：</strong> 実際の借入可能枠は、<strong>フロントエンドとバックエンドの小さい方</strong>で決定されます。マイカーローンなどを抱えている場合、住宅ローンの借入枠は大幅に削られます。</p>
+
+<h2>住宅にかかる毎月の「真の費用」（PITI）</h2>
+<p>多くの初購入者が「住宅ローンの元金＋利息」の支払いだけを計算しがちですが、実際には以下のランニングコストが加算されます：</p>
+<ul>
+  <li><strong>元金（Principal）：</strong> 借入残高の直接的な返済（純資産の形成）。</li>
+  <li><strong>利息（Interest）：</strong> 金融機関に支払う資金調達コスト。</li>
+  <li><strong>固定資産税・都市計画税（Taxes）：</strong> 年間数十万円規模で課税される地方税。</li>
+  <li><strong>火災・地震保険料（Insurance）：</strong> 災害リスクに備える必須の損害保険料。</li>
+  <li><strong>修繕積立金・管理費：</strong> マンションの共用部管理費や、戸建て住宅の将来の屋根・外壁塗装・給湯器交換のための積立費（年間住宅価格の1〜2%が目安）。</li>
+</ul>
+
+<h2>年収別の借入可能額と購入予算の目安（35年返済・金利1.5%想定）</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">世帯年収（額面）</th>
+      <th class="p-2.5 font-bold text-ink">推奨月額住居費（28%）</th>
+      <th class="p-2.5 font-bold text-ink">適正借入額（他負債0円）</th>
+      <th class="p-2.5 font-bold text-ink">借入可能額（車ローン等月4万円あり）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">500万円</td>
+      <td class="p-2.5">約11.6万円</td>
+      <td class="p-2.5 font-bold">約3,800万円</td>
+      <td class="p-2.5 text-rose-600 font-bold">約2,500万円（−1,300万円）</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">700万円</td>
+      <td class="p-2.5">約16.3万円</td>
+      <td class="p-2.5 font-bold">約5,300万円</td>
+      <td class="p-2.5 text-rose-600 font-bold">約4,000万円（−1,300万円）</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">1,000万円</td>
+      <td class="p-2.5">約23.3万円</td>
+      <td class="p-2.5 font-bold">約7,600万円</td>
+      <td class="p-2.5 text-rose-600 font-bold">約6,300万円（−1,300万円）</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">1,200万円</td>
+      <td class="p-2.5">約28.0万円</td>
+      <td class="p-2.5 font-bold">約9,100万円</td>
+      <td class="p-2.5 text-rose-600 font-bold">約7,800万円（−1,300万円）</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>マイカーローンの落とし穴：</strong> 毎月わずか4万円の自動車ローン返済があるだけで、住宅ローンの借入可能枠は約<strong>1,300万円も消失</strong>します。</p>
+
+<h2>金利変動がもたらす借入力への影響</h2>
+<p>金利が<strong>1.0%上昇すると、同じ毎月返済額で借りられる金額は約10%減少</strong>します。金利上昇局面に備え、固定金利と変動金利のリスク許容度を慎重に見極めることが不可欠です。</p>
+
+<h2>完全無料・登録不要のシミュレーターで試算する</h2>
+<p>ブラウザ上で瞬時に正確な計算ができる当サイトの計算ツールをご活用ください：</p>
+<ul>
+  <li><a href="/ja/loan/home-affordability/">住宅購入可能額計算機</a>：年収・負債から最大予算と月々の内訳を試算。</li>
+  <li><a href="/ja/loan/mortgage/">住宅ローン返済シミュレーター</a>：毎月の返済スケジュールと利息総額を把握。</li>
+  <li><a href="/ja/loan/dti/">返済負担率（DTI）計算機</a>：事前審査前の返済比率チェック。</li>
+  <li><a href="/ja/loan/rent-vs-buy/">賃貸 vs 持ち家 比較計算機</a>: 長期的な資産形成の違いを徹底検証。</li>
+</ul>
+`
+    },
+    pt: {
+      title: "Quanto Posso Pagar por um Imóvel? (O Cálculo Real que os Bancos Utilizam)",
+      description: "Saiba como os bancos calculam seu limite máximo de financiamento imobiliário através da regra 28/36 de DTI, tabelas salariais, impacto dos juros e custos ocultos.",
+      content: `
+<p><em>"Quanto posso pagar por um imóvel ou casa própria?"</em></p>
+<p>Essa é uma das perguntas de maior impacto sobre o seu patrimônio. No entanto, confiar apenas na carta de aprovação de crédito do banco pode levar a uma armadilha perigosa: <strong>tornar-se "escravo da casa própria" (house poor)</strong>.</p>
+<p>Bancos e financeiras lucram com a concessão de crédito. Eles aprovarão você com satisfação no <strong>limite matemático máximo</strong> permitido pelas diretrizes bancárias, esticando seu orçamento familiar até o limite do estresse financeiro.</p>
+<p>O fato de uma instituição financeira dizer que você <em>pode</em> financiar determinado valor não significa que você <em>deva</em> fazê-lo. Para comprar com tranquilidade e manter sua reserva de emergência e investimentos, entenda as fórmulas reais de análise de crédito.</p>
+
+<h2>A Regra 28/36: Comprometimento de Renda e DTI</h2>
+<p>Os analistas de crédito avaliam a solvência do comprador através de dois índices de <strong>DTI (Debt-to-Income / Comprometimento de Renda)</strong>:</p>
+<ol>
+  <li><strong>Índice Front-End (Regra dos 28% de Moradia):</strong> O custo total mensal com a habitação—incluindo a parcela do financiamento (amortização e juros), IPTU, seguro habitacional obrigatório (MIP/DFI) e taxa de condomínio—<strong>não deve ultrapassar 28% da sua renda bruta mensal</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Teto de Moradia = Renda Bruta Mensal × 0,28</strong>
+    </p>
+  </li>
+  <li><strong>Índice Back-End (Regra dos 36% de Endividamento Total):</strong> A soma dos encargos de moradia <strong>mais todas as suas dívidas pessoais recorrentes</strong> (parcelas de automóvel, empréstimos consignados, cartões de crédito) <strong>não deve ultrapassar 36% da sua renda bruta mensal</strong>.
+    <p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+      <strong>Margem para Imóvel = (Renda Bruta × 0,36) − Dívidas Mensais Pré-existentes</strong>
+    </p>
+  </li>
+</ol>
+<p><strong>O Princípio do Menor Valor:</strong> O seu orçamento habitacional real é sempre <strong>o menor valor entre o limite Front-End e o Back-End</strong>.</p>
+
+<h2>A Composição Real da Parcela Mensal: PITI + Condomínio</h2>
+<p>Muitos compradores de primeira viagem erram ao calcular apenas a parcela do financiamento bancário. Na vida real, o custo mensal do imóvel reúne diversos itens obrigatórios:</p>
+<ul>
+  <li><strong>Amortização (Principal):</strong> Valor que efetivamente abate o saldo devedor do imóvel.</li>
+  <li><strong>Juros:</strong> O custo cobrado pelo banco sobre o capital emprestado.</li>
+  <li><strong>IPTU:</strong> Imposto territorial e predial urbano pago anualmente aos municípios.</li>
+  <li><strong>Seguro Habitacional Obrigatório:</strong> Cobertura para Danos Físicos ao Imóvel (DFI) e Morte ou Invalidez Permanente (MIP).</li>
+  <li><strong>Condomínio e Fundo de Reserva:</strong> Custo mensal obrigatório para edifícios e loteamentos fechados.</li>
+  <li><strong>Reserva de Manutenção:</strong> A regra prática do mercado recomenda guardar <strong>1% a 2% do valor do imóvel ao ano</strong> para reformas estruturais, pintura e consertos.</li>
+</ul>
+
+<h2>Faixa de Renda vs. Valor Máximo do Imóvel</h2>
+<p>Com financiamento de 30 anos, taxa de juros de mercado e 20% de entrada:</p>
+<ul>
+  <li><strong>Renda bruta de R$ 10.000 / mês:</strong> Valor máximo do imóvel em torno de R$ 320.000 (cai para ~R$ 240.000 se houver R$ 800/mês em parcelas de financiamento automotivo).</li>
+  <li><strong>Renda bruta de R$ 15.000 / mês:</strong> Valor máximo do imóvel em torno de R$ 480.000 (cai para ~R$ 400.000 com parcelas de auto/empréstimo).</li>
+  <li><strong>Renda bruta de R$ 20.000 / mês:</strong> Valor máximo do imóvel em torno de R$ 640.000 (cai para ~R$ 560.000 com parcelas de auto/empréstimo).</li>
+</ul>
+<p><strong>O Efeito das Parcelas do Carro:</strong> Uma dívida mensal de R$ 800 em financiamento automotivo destrói cerca de <strong>R$ 80.000 da sua capacidade de compra imobiliária</strong>.</p>
+
+<h2>Calcule seu Limite Real nas Nossas Ferramentas Gratuitas</h2>
+<p>Simule seus valores no seu navegador de forma 100% confidencial:</p>
+<ul>
+  <li><a href="/pt/loan/home-affordability/">Calculadora de Poder de Compra Imobiliário</a>: Descubra o valor máximo da casa ou apartamento.</li>
+  <li><a href="/pt/loan/mortgage/">Calculadora de Financiamento Imobiliário</a>: Simule a tabela SAC e Price completa.</li>
+  <li><a href="/pt/loan/dti/">Calculadora de Comprometimento de Renda (DTI)</a>: Analise suas margens antes de solicitar crédito.</li>
+  <li><a href="/pt/loan/rent-vs-buy/">Calculadora Alugar vs. Comprar</a>: Veja qual decisão constrói mais riqueza no longo prazo.</li>
+</ul>
+`
+    }
   }
 };
 

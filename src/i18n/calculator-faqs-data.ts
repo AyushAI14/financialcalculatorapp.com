@@ -180,7 +180,7 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
   'home-affordability': [
     {
       question: "How much income should I spend on a mortgage?",
-      answer: "Most financial experts recommend spending no more than 25% to 28% of your gross monthly income on housing costs (the front-end DTI guideline)."
+      answer: "Most financial experts recommend spending no more than 25% to 28% of your gross monthly income on housing costs (the front-end DTI guideline). For a deep dive into bank underwriting formulas, salary matrices, and the 28/36 rule, read our complete guide: <a href=\"/blog/how-much-house-can-i-afford/\" class=\"text-primary underline font-medium\">How Much House Can I Afford?</a>."
     },
     {
       question: "How does down payment size impact affordability?",
