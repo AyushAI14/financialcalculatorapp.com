@@ -3060,6 +3060,486 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 </ul>
 `
     }
+  },
+  "what-is-a-reverse-mortgage-how-it-works": {
+    en: {
+      title: "What is a Reverse Mortgage? How It Works, Payment Calculations, and Key Rules",
+      description: "Learn what a reverse mortgage (HECM) is, how mortgage payments are calculated for both traditional and reverse loans, and the pros, cons, and risks for homeowners.",
+      content: `
+<p><em>"What is a reverse mortgage, and how does it actually work?"</em></p>
+<p>For millions of older homeowners sitting on substantial home equity but feeling squeezed by inflation and fixed retirement incomes, a reverse mortgage sounds tempting: <strong>convert your home equity into tax-free cash with zero monthly mortgage payments.</strong></p>
+<p>Commercials promote them as stress-free retirement supplements, while critics warn they can lead to losing the family home. To make an informed decision for yourself or an aging parent, you need to understand the real financial mechanics.</p>
+
+<h2>1. What is a Reverse Mortgage?</h2>
+<p>A <strong>reverse mortgage</strong> is a specialized loan for homeowners aged <strong>62 and older</strong> that allows them to borrow against their accumulated home equity without making monthly payments to a lender.</p>
+<p>Instead of you paying the bank each month—as you do with a traditional forward mortgage—<strong>the lender pays you</strong> (via monthly tenure checks, a lump sum, or a growing line of credit). You retain full title and legal ownership of your home.</p>
+<p>Over 90% of reverse mortgages are FHA-insured <strong>Home Equity Conversion Mortgages (HECMs)</strong>. They feature a mandatory <strong>non-recourse guarantee</strong>: neither you nor your heirs can ever owe more than the home's fair market value when the loan is settled.</p>
+
+<h2>2. Forward Mortgage vs. Reverse Mortgage</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Feature</th>
+      <th class="p-2.5 font-bold text-ink">Traditional (Forward) Mortgage</th>
+      <th class="p-2.5 font-bold text-ink">Reverse Mortgage (HECM)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Cash Flow Direction</td>
+      <td class="p-2.5">You pay the lender monthly</td>
+      <td class="p-2.5">The lender pays you / eliminates monthly debt</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Loan Balance</td>
+      <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-bold">Decreases monthly (amortization)</td>
+      <td class="p-2.5 text-rose-600 dark:text-rose-400 font-bold">Increases monthly (negative amortization)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Home Equity</td>
+      <td class="p-2.5 font-bold">Builds up over time</td>
+      <td class="p-2.5 font-bold">Decreases over time</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Minimum Age</td>
+      <td class="p-2.5">18+</td>
+      <td class="p-2.5 font-bold">62+ (HUD/FHA requirement)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Monthly Mortgage Payment</td>
+      <td class="p-2.5">Mandatory principal + interest</td>
+      <td class="p-2.5 text-emerald-600 font-bold">$0 required</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Tax &amp; Insurance Duty</td>
+      <td class="p-2.5">Borrower pays</td>
+      <td class="p-2.5 text-amber-600 font-bold">Borrower must still pay (property tax, insurance, upkeep)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. How to Calculate Mortgage Payments: Forward vs. Reverse</h2>
+
+<h3>A. Calculating Traditional Mortgage Payments</h3>
+<p>For standard fixed mortgages, the monthly Principal &amp; Interest payment (M) is determined by the annuity formula:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>M = P × [r(1 + r)^n] ÷ [(1 + r)^n − 1]</strong>
+</p>
+<p>Where <em>P</em> is loan principal, <em>r</em> is monthly interest rate, and <em>n</em> is total number of monthly payments. On a $320,000 loan at 6.5% for 30 years, monthly P&amp;I equals <strong>$2,022.62</strong>. Adding property taxes ($400/mo) and insurance ($125/mo) brings the true <strong>PITI payment to $2,547.62/month</strong>.</p>
+
+<h3>B. Calculating Reverse Mortgage Payouts and Balances</h3>
+<p>With a reverse mortgage, you cannot borrow 100% of your equity. HUD calculates your maximum borrowing limit using the <strong>Principal Limit Factor (PLF)</strong>:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Principal Limit = Home Value (up to FHA cap) × Principal Limit Factor (PLF)</strong>
+</p>
+<p>The PLF depends directly on the <strong>age of the youngest borrower</strong> and current market interest rates. On a $500,000 home at 6.5% expected rates:</p>
+<ul>
+  <li><strong>Age 62:</strong> ~36% PLF = ~$180,000 borrowing power</li>
+  <li><strong>Age 72:</strong> ~46% PLF = ~$230,000 borrowing power</li>
+  <li><strong>Age 82:</strong> ~59% PLF = ~$295,000 borrowing power</li>
+</ul>
+<p>Because you make no payments, interest and the 0.5% annual FHA mortgage insurance compound into the loan balance monthly, meaning your debt grows as your remaining equity shrinks.</p>
+
+<h2>4. Pros, Cons, and Key Rules</h2>
+<ul>
+  <li><strong>Pro - Zero Monthly Mortgage Bills:</strong> Frees up hundreds or thousands in monthly cash flow.</li>
+  <li><strong>Pro - Tax-Free Cash:</strong> Loan proceeds are not earned income and do not trigger higher income taxes or Social Security clawbacks.</li>
+  <li><strong>Pro - Non-Recourse Guarantee:</strong> If the loan balance exceeds the home's value at sale, FHA insurance absorbs the loss.</li>
+  <li><strong>Con - The Foreclosure Trap:</strong> You must continue paying property taxes, home insurance, and basic maintenance. Failure to pay property taxes can trigger lender foreclosure.</li>
+  <li><strong>Con - Reduced Inheritance:</strong> Compounding interest significantly erodes the equity passed to heirs.</li>
+</ul>
+
+<h2>Explore Our Free Calculators</h2>
+<p>Model your housing and retirement scenarios with our 100% private, browser-based tools:</p>
+<ul>
+  <li><a href="/loan/mortgage/">Mortgage Calculator with PMI</a>: Calculate monthly payments, amortization schedules, and interest costs.</li>
+  <li><a href="/loan/home-affordability/">Home Affordability Calculator</a>: Discover your maximum home purchase price based on income and debt.</li>
+  <li><a href="/loan/refinance/">Loan Refinance Calculator</a>: Evaluate when refinancing saves money.</li>
+  <li><a href="/retirement/planner/">Retirement Planner</a>: Model safe withdrawal rates and long-term nest egg longevity.</li>
+</ul>
+`
+    },
+    es: {
+      title: "¿Qué es una Hipoteca Inversa? Cómo Funciona, Cálculo de Pagos y Reglas Clave",
+      description: "Descubre qué es una hipoteca inversa (reverse mortgage/hipoteca revertida), cómo se calculan las cuotas de hipotecas tradicionales e inversas, y sus ventajas y riesgos.",
+      content: `
+<p><em>"¿Qué es una hipoteca inversa y cómo funciona en la práctica?"</em></p>
+<p>Para millones de propietarios mayores que tienen un valor significativo acumulado en su vivienda pero perciben ingresos de jubilación ajustados, la hipoteca inversa promete una solución atractiva: <strong>convertir el valor de la vivienda en dinero en efectivo libre de impuestos sin tener que pagar cuotas mensuales al banco.</strong></p>
+<p>Sin embargo, entender cómo funciona realmente la acumulación de intereses y cuáles son los deberes del propietario resulta indispensable para evitar sorpresas desagradables.</p>
+
+<h2>1. ¿Qué es una Hipoteca Inversa?</h2>
+<p>Una <strong>hipoteca inversa (o hipoteca revertida)</strong> es un préstamo dirigido a propietarios de <strong>62 años o más</strong> (en España y varios países a partir de 65 años) que les permite disponer de parte del valor de su vivienda habitual sin pagar cuotas mensuales de amortización.</p>
+<p>A diferencia de una hipoteca tradicional donde tú pagas al banco cada mes, en la hipoteca inversa <strong>la entidad financiera te abona el dinero a ti</strong> (en una renta mensual vitalicia, una disposición única o una línea de crédito). Mantienes la propiedad y el derecho de vivir en ella de por vida.</p>
+<p>La deuda no se amortiza hasta que se vende el inmueble, los prestatarios se trasladan de forma definitiva o fallecen. Además, cuentan con <strong>garantía de no recurso</strong>: ni los titulares ni sus herederos responderán con su patrimonio personal si la deuda llega a superar el valor de la casa.</p>
+
+<h2>2. Hipoteca Tradicional vs. Hipoteca Inversa</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Característica</th>
+      <th class="p-2.5 font-bold text-ink">Hipoteca Tradicional</th>
+      <th class="p-2.5 font-bold text-ink">Hipoteca Inversa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Flujo de Dinero</td>
+      <td class="p-2.5">El prestatario paga mensualmente al banco</td>
+      <td class="p-2.5">El banco paga al propietario / elimina cuotas</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Saldo de la Deuda</td>
+      <td class="p-2.5 text-emerald-600 font-bold">Disminuye con cada cuota (amortización)</td>
+      <td class="p-2.5 text-rose-600 font-bold">Aumenta mensualmente (amortización negativa)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Patrimonio Neto en la Casa</td>
+      <td class="p-2.5 font-bold">Aumenta con el tiempo</td>
+      <td class="p-2.5 font-bold">Disminuye con el tiempo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Edad Mínima</td>
+      <td class="p-2.5">18+ años</td>
+      <td class="p-2.5 font-bold">62 a 65+ años</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Pago de Impuestos y Seguros</td>
+      <td class="p-2.5">A cargo del propietario</td>
+      <td class="p-2.5 text-amber-600 font-bold">Sigue siendo 100% obligación del propietario (IBI, seguro y comunidad)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Cómo se Calculan las Cuotas</h2>
+<p>En una <strong>hipoteca tradicional</strong>, la cuota mensual se obtiene con la fórmula de amortización financiera (sistema francés):</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Cuota Mensual = Capital × [i(1 + i)^n] ÷ [(1 + i)^n − 1]</strong>
+</p>
+<p>En una <strong>hipoteca inversa</strong>, el importe máximo disponible no es el 100% de la vivienda, sino un porcentaje que oscila entre el 30% y el 60% dependiendo de la edad del titular y el tipo de interés. Al no pagarse cuotas, los intereses y comisiones se suman al capital prestado mes a mes (capitalización de intereses).</p>
+
+<h2>4. Ventajas, Riesgos y Herencias</h2>
+<ul>
+  <li><strong>Mayor Liquidez:</strong> Aporta una fuente de ingresos regular sin tener que abandonar el hogar.</li>
+  <li><strong>Tratamiento Fiscal Favorable:</strong> Al tratarse de disposiciones de crédito y no de rentas del trabajo, no tributan en el IRPF.</li>
+  <li><strong>Obligación de Mantenimiento e Impuestos:</strong> El titular debe seguir abonando el IBI, la póliza de hogar y los gastos de comunidad; de no hacerlo, la entidad podría instar la resolución del contrato.</li>
+  <li><strong>Impacto en la Herencia:</strong> Al fallecer el titular, los herederos pueden vender la vivienda y liquidar el crédito (quedándose con el sobrante), pagar la deuda con fondos propios o hipotecarios para conservar la casa, o entregarla en dación en pago.</li>
+</ul>
+
+<h2>Calculadoras Gratuitas y Privadas</h2>
+<p>Realiza tus simulaciones financieras sin registro en nuestras herramientas en línea:</p>
+<ul>
+  <li><a href="/es/loan/mortgage/">Calculadora de Hipotecas</a>: Simula cuotas mensuales y cuadros de amortización.</li>
+  <li><a href="/es/loan/home-affordability/">Calculadora de Asequibilidad de Vivienda</a>: Evalúa tu presupuesto máximo de compra.</li>
+  <li><a href="/es/loan/refinance/">Calculadora de Refinanciación</a>: Compara costes al cambiar de préstamo.</li>
+  <li><a href="/es/retirement/planner/">Planejador de Jubilación</a>: Calcula la duración de tu patrimonio en el retiro.</li>
+</ul>
+`
+    },
+    de: {
+      title: "Was ist eine Umkehrhypothek? Funktionsweise, Ratenberechnung und Regeln",
+      description: "Erfahre, wie eine Umkehrhypothek (Reverse Mortgage) funktioniert, wie klassische vs. umgekehrte Hypothekenraten berechnet werden, und welche Vor- und Nachteile bestehen.",
+      content: `
+<p><em>„Was ist eine Umkehrhypothek und wie funktioniert sie genau?“</em></p>
+<p>Für viele ältere Immobilieneigentümer, die mietfrei im eigenen Heim leben, aber unter steigenden Lebenshaltungskosten leiden, klingt das Prinzip verlockend: <strong>das in den eigenen vier Wänden gebundene Vermögen in steuerfreie Liquidität verwandeln – ganz ohne monatliche Kreditraten.</strong></p>
+<p>Doch hinter dem Begriff „Reverse Mortgage“ bzw. Umkehrhypothek (Immobilienrente) verbergen sich spezifische mathematische und rechtliche Spielregeln, die jeder Eigentümer kennen muss.</p>
+
+<h2>1. Was ist eine Umkehrhypothek?</h2>
+<p>Eine <strong>Umkehrhypothek</strong> ist ein spezielles Darlehen für Immobilieneigentümer (in der Regel ab 60 bis 62 Jahren), bei dem die eigene schuldenfreie Immobilie als Kreditsicherheit dient, ohne dass während der Vertragslaufzeit laufende Zins- oder Tilgungszahlungen an die Bank geleistet werden müssen.</p>
+<p>Im Gegensatz zu einem klassischen Baudarlehen, bei dem du monatlich an die Bank zahlst, <strong>fließt das Geld bei einer Umkehrhypothek von der Bank an dich</strong> – entweder als Einmalbetrag, monatliche Zusatzrente oder flexible Kreditlinie. Du bleibst weiterhin Eigentümer und behältst das lebenslange Wohnrecht.</p>
+<p>Die Rückzahlung des Darlehens samt Zinsen erfolgt erst, wenn der Eigentümer dauerhaft auszieht (z. B. ins Pflegeheim), die Immobilie verkauft oder verstirbt. Meist gilt ein <strong>Non-Recourse-Schutz</strong>: Die Erben haften niemals mit ihrem privaten Vermögen, falls die Kreditschuld den Verkaufswert übersteigen sollte.</p>
+
+<h2>2. Klassische Hypothek vs. Umkehrhypothek</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Kriterium</th>
+      <th class="p-2.5 font-bold text-ink">Klassische Baufinanzierung</th>
+      <th class="p-2.5 font-bold text-ink">Umkehrhypothek</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Zahlungsfluss</td>
+      <td class="p-2.5">Darlehensnehmer zahlt monatlich an die Bank</td>
+      <td class="p-2.5">Bank zahlt an den Darlehensnehmer</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Kreditschuld</td>
+      <td class="p-2.5 text-emerald-600 font-bold">Sinkt kontinuierlich (Tilgung)</td>
+      <td class="p-2.5 text-rose-600 font-bold">Steigt monatlich (negative Amortisation durch Zinseszins)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Eigenkapital im Haus</td>
+      <td class="p-2.5 font-bold">Wächst im Zeitverlauf</td>
+      <td class="p-2.5 font-bold">Schrumpft im Zeitverlauf</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Mindestalter</td>
+      <td class="p-2.5">Ab 18 Jahren</td>
+      <td class="p-2.5 font-bold">Ab 60 bis 62 Jahren</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Nebenkosten &amp; Instandhaltung</td>
+      <td class="p-2.5">Eigentümerpflicht</td>
+      <td class="p-2.5 text-amber-600 font-bold">Weiterhin 100 % Pflicht des Eigentümers (Grundsteuer, Versicherung, Reparaturen)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Berechnung von Hypothekenraten</h2>
+<p>Bei einem <strong>Standarddarlehen</strong> errechnet sich die Monatsrate (Annuität) nach der mathematischen Rentenbarwertformel:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Rate = Kreditsumme × [z(1 + z)^n] ÷ [(1 + z)^n − 1]</strong>
+</p>
+<p>Bei einer <strong>Umkehrhypothek</strong> berechnet sich die maximale Auszahlungssumme als Prozentsatz des Immobilienwertes (Beleihungsauslauf meist 30 % bis 60 %, abhängig von Alter und Lebenserwartung). Weil keine laufenden Raten gezahlt werden, fallen Zinseszinsen an, die den Kreditbetrag über die Jahre anschwellen lassen.</p>
+
+<h2>4. Vor- und Nachteile sowie Erbschaft</h2>
+<ul>
+  <li><strong>Vorteil:</strong> Zusätzliche monatliche Altersvorsorge ohne Auszug aus den vertrauten vier Wänden.</li>
+  <li><strong>Vorteil:</strong> Darlehensauszahlungen sind kein zu versteuerndes Einkommen.</li>
+  <li><strong>Nachteil:</strong> Hohe Zinseszinswirkung und anfängliche Abschlusskosten verringern den verbleibenden Erbschaftswert.</li>
+  <li><strong>Regelung für Erben:</strong> Erben können die Restschuld aus eigenem Vermögen begleichen und das Haus behalten oder die Immobilie verkaufen, um die Bank auszuzahlen.</li>
+</ul>
+
+<h2>Kostenlose Rechentools für deine Immobilienfinanzierung</h2>
+<p>Nutze unsere 100 % privaten Browser-Rechner:</p>
+<ul>
+  <li><a href="/de/loan/mortgage/">Baufinanzierungsrechner</a>: Annuität, Tilgungsplan und Restschuld berechnen.</li>
+  <li><a href="/de/loan/home-affordability/">Budgetrechner für Immobilienkauf</a>: Maximalen Kaufpreis ermitteln.</li>
+  <li><a href="/de/loan/refinance/">Umschuldungsrechner</a>: Zinsersparnis bei Anschlussfinanzierung prüfen.</li>
+  <li><a href="/de/retirement/planner/">Ruhestandsplaner</a>: Notwendiges Erspartes für den Ruhestand berechnen.</li>
+</ul>
+`
+    },
+    fr: {
+      title: "Qu'est-ce qu'un Prêt Viager Hypothécaire ? Fonctionnement, Calcul et Règles",
+      description: "Découvrez le fonctionnement du prêt viager hypothécaire (reverse mortgage), le calcul des mensualités traditionnelles vs inversées, et ses avantages et risques pour les seniors.",
+      content: `
+<p><em>« Qu'est-ce qu'un prêt viager hypothécaire et comment fonctionne-t-il réellement ? »</em></p>
+<p>Pour des millions de seniors propriétaires détenant un patrimoine immobilier important mais disposant d'une pension de retraite limitée, le prêt viager hypothécaire (ou hypothèque inversée / reverse mortgage) constitue une solution attractive : <strong>mobiliser la valeur de son logement sous forme de capital ou de rente sans verser aucune mensualité de remboursement.</strong></p>
+<p>Comprendre la mécanique financière et les conséquences successorales de cette formule est indispensable avant tout engagement.</p>
+
+<h2>1. Qu'est-ce qu'un Prêt Viager Hypothécaire ?</h2>
+<p>Le <strong>prêt viager hypothécaire (hypothèque inversée)</strong> est un crédit garanti par une hypothèque sur un bien immobilier à usage d'habitation, réservé aux personnes âgées (généralement dès 60 ou 62 ans), sans obligation de rembourser le capital ni les intérêts chaque mois.</p>
+<p>Contrairement à un prêt immobilier classique où vous remboursez la banque, c'est ici <strong>la banque qui vous verse les fonds</strong> (en une fois sous forme de capital, ou par versements périodiques sous forme de rente). Vous conservez la pleine propriété du bien et le droit d'y habiter toute votre vie.</p>
+<p>Le remboursement intégral (capital + intérêts capitalisés) n'intervient qu'au décès de l'emprunteur ou en cas de vente ou de déménagement définitif. La législation plafonne la dette à la valeur du bien au moment du dénouement : les héritiers ne peuvent jamais être tenus de payer plus que la valeur vénale de la maison.</p>
+
+<h2>2. Prêt Immobilier Classique vs. Prêt Viager Hypothécaire</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Critère</th>
+      <th class="p-2.5 font-bold text-ink">Prêt Immobilier Amortissable</th>
+      <th class="p-2.5 font-bold text-ink">Prêt Viager Hypothécaire</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Flux Financier</td>
+      <td class="p-2.5">L'emprunteur paie chaque mois la banque</td>
+      <td class="p-2.5">La banque verse de l'argent à l'emprunteur</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Évolution de la Dette</td>
+      <td class="p-2.5 text-emerald-600 font-bold">Diminue chaque mois (amortissement)</td>
+      <td class="p-2.5 text-rose-600 font-bold">Augmente chaque mois (intérêts composés)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Patrimoine Net Restant</td>
+      <td class="p-2.5 font-bold">Augmente avec le temps</td>
+      <td class="p-2.5 font-bold">Diminue avec le temps</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Mensualité Obligatoire</td>
+      <td class="p-2.5">Obligatoire (capital + intérêts)</td>
+      <td class="p-2.5 text-emerald-600 font-bold">0 € par mois exigé</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">Charges et Taxes</td>
+      <td class="p-2.5">À la charge du propriétaire</td>
+      <td class="p-2.5 text-amber-600 font-bold">Toujours 100 % à la charge du senior (taxe foncière, assurance, entretien)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Comment sont Calculées les Mensualités ?</h2>
+<p>Pour un <strong>crédit classique</strong>, la mensualité constante est déterminée par la formule d'amortissement :</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Mensualité = Capital × [t(1 + t)^n] ÷ [(1 + t)^n − 1]</strong>
+</p>
+<p>Pour un <strong>prêt viager hypothécaire</strong>, la quotité empruntable dépend de l'âge de l'emprunteur et de la valeur estimée du logement (en moyenne 25 % à 50 % de la valeur). Les intérêts sont capitalisés annuellement, ce qui fait croître la dette sans affecter la trésorerie mensuelle de l'emprunteur.</p>
+
+<h2>4. Droits des Héritiers et Précautions</h2>
+<p>Au décès de l'emprunteur, les héritiers disposent d'un choix clair :</p>
+<ul>
+  <li>Rembourser le montant de la dette pour conserver le logement dans la famille.</li>
+  <li>Faire vendre le bien : la banque récupère sa créance et le surplus net revient intégralement aux héritiers.</li>
+  <li>Renoncer à la succession : si la dette dépasse la valeur vénale du bien, la banque assume la perte sans recours contre le patrimoine des héritiers.</li>
+</ul>
+
+<h2>Calculez vos Projets avec nos Outils Gratuits</h2>
+<ul>
+  <li><a href="/fr/loan/mortgage/">Calculateur de Prêt Immobilier</a> : Mensualités, coût total et tableau d'amortissement.</li>
+  <li><a href="/fr/loan/home-affordability/">Calculateur de Capacité d'Emprunt</a> : Budget d'achat maximal selon vos revenus.</li>
+  <li><a href="/fr/loan/refinance/">Calculateur de Rachat de Crédit</a> : Évaluez l'opportunité d'une renégociation.</li>
+  <li><a href="/fr/retirement/planner/">Simulateur de Retraite</a> : Estimez vos besoins et la longévité de votre épargne.</li>
+</ul>
+`
+    },
+    ja: {
+      title: "リバースモーゲージとは？仕組み・返済額の計算方法とメリット・注意点",
+      description: "高齢者向け「リバースモーゲージ」の仕組み、通常住宅ローンとリバースモーゲージの返済計算の違い、借入限度額の決定要因、注意すべきリスクを徹底解説。",
+      content: `
+<p><em>「リバースモーゲージとは何か？通常の住宅ローンとどう違うのか？」</em></p>
+<p>自宅を所有しているものの、年金収入だけでは生活費や医療費に不安を抱えるシニア世代の間で、注目を集めているのが「リバースモーゲージ（逆住宅ローン）」です。<strong>自宅に住み続けながら、自宅の資産価値（含み益）を非課税の生活資金に変えられる仕組み</strong>として知られています。</p>
+<p>しかし、通常の住宅ローンとは正反対の資金移動や金利計算の仕組みを持つため、利用前に正しいリスクと計算ロジックを理解しておくことが欠かせません。</p>
+
+<h2>1. リバースモーゲージの基本の仕組み</h2>
+<p><strong>リバースモーゲージ</strong>とは、主に<strong>60歳〜62歳以上の高齢者</strong>を対象に、所有する自宅を担保に入れて金融機関から融資を受けられる制度です。</p>
+<p>通常の住宅ローンでは毎月「元金と利息」を返済しますが、リバースモーゲージでは<strong>生存中の毎月の元金返済が不要</strong>（または利息のみ支払い）であり、金融機関から年金形式・一括・または必要な都度の融資枠（極度額）として資金を受け取ります。</p>
+<p>借入金の元本は、利用者が亡くなった際や施設入居等で退去した際に、自宅を売却して一括清算します。多くの場合、<strong>ノンリコース型（非遡及型）</strong>が採用されており、自宅の売却額が借入総額を下回っても、相続人が不足分を自腹で弁済する必要はありません。</p>
+
+<h2>2. 通常の住宅ローン vs. リバースモーゲージ 徹底比較</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">項目</th>
+      <th class="p-2.5 font-bold text-ink">通常の住宅ローン</th>
+      <th class="p-2.5 font-bold text-ink">リバースモーゲージ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">お金の流れ</td>
+      <td class="p-2.5">契約者が金融機関に毎月返済する</td>
+      <td class="p-2.5">金融機関から契約者へ資金が支払われる</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">ローン残高</td>
+      <td class="p-2.5 text-emerald-600 font-bold">毎月減少していく（償還）</td>
+      <td class="p-2.5 text-rose-600 font-bold">毎月増加していく（負の償還・利息の元加）</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">住宅の純資産価値</td>
+      <td class="p-2.5 font-bold">年々増加する</td>
+      <td class="p-2.5 font-bold">年々減少する</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">対象年齢</td>
+      <td class="p-2.5">満18歳以上</td>
+      <td class="p-2.5 font-bold">満60歳〜62歳以上</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">固定資産税・管理費</td>
+      <td class="p-2.5">所有者が負担</td>
+      <td class="p-2.5 text-amber-600 font-bold">引き続き100%所有者の自己負担（滞納すると契約解除リスク）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. 返済額・受取可能額の計算ロジック</h2>
+
+<h3>通常住宅ローンの返済計算（元利均等返済）</h3>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>毎月返済額 = 借入元金 × [r(1 + r)^n] ÷ [(1 + r)^n − 1]</strong>
+</p>
+<p>毎回の支払いで元金が確実に減っていきます。</p>
+
+<h3>リバースモーゲージの借入可能枠と残高計算</h3>
+<p>リバースモーゲージでは担保評価額の50%〜60%程度（年齢や金利によって変動）が上限枠となります。毎月の元金返済を行わないプランでは、未払い利息が元金に組み入れられ（複利効果）、年数が経つほど残高が膨らむ点に留意が必要です。</p>
+
+<h2>4. メリット・デメリットと相続時の選択肢</h2>
+<ul>
+  <li><strong>メリット：</strong> 住み慣れた自宅を離れることなく、老後資金や医療介護費を補填できる。</li>
+  <li><strong>注意点（固定資産税の義務）：</strong> ローン返済がなくても、固定資産税や火災保険料、修繕費は継続して自己負担する必要があります。</li>
+  <li><strong>相続人の対応：</strong> 相続人は自宅を売却して一括清算する（余剰金は相続人が受取）、または自らの資金で残高を精算して自宅を相続するかを選択できます。</li>
+</ul>
+
+<h2>無料・高精度シミュレーターを活用する</h2>
+<p>ブラウザ上で瞬時に試算できる当サイトの計算ツールをご利用ください：</p>
+<ul>
+  <li><a href="/ja/loan/mortgage/">住宅ローン返済シミュレーター</a>：元利金返済額と詳細な償還予定表を算出。</li>
+  <li><a href="/ja/loan/home-affordability/">住宅購入可能額計算機</a>：年収と負債から適正借入可能額を試算。</li>
+  <li><a href="/ja/loan/refinance/">住宅ローン借り換え計算機</a>：金利差による総支払削減額を比較。</li>
+  <li><a href="/ja/retirement/planner/">退職金・老後資金プランナー</a>：老後資産の取り崩しシミュレーション。</li>
+</ul>
+`
+    },
+    pt: {
+      title: "O que é Hipoteca Reversa? Como Funciona, Cálculo de Parcelas e Regras",
+      description: "Entenda o que é a hipoteca reversa (reverse mortgage), como são calculadas as parcelas no financiamento tradicional vs. inverso, vantagens, riscos e sucessão.",
+      content: `
+<p><em>"O que é uma hipoteca reversa e como ela funciona na prática?"</em></p>
+<p>Para milhões de idosos proprietários que possuem um imóvel quitado mas enfrentam aposentadorias apertadas e custos médicos crescentes, a hipoteca reversa surge como uma proposta tentadora: <strong>transformar o patrimônio imobiliário em liquidez isenta de imposto de renda, sem pagar parcelas mensais ao banco.</strong></p>
+<p>Entretanto, por envolver amortização negativa e juros compostos, compreender o funcionamento dessa operação é fundamental para proteger a segurança familiar.</p>
+
+<h2>1. O que é Hipoteca Reversa?</h2>
+<p>A <strong>hipoteca reversa</strong> (ou hipoteca inversa) é uma modalidade de empréstimo voltada para proprietários com <strong>62 anos ou mais</strong>, permitindo que utilizem o patrimônio líquido acumulado no imóvel como garantia sem a necessidade de pagar prestações mensais de amortização.</p>
+<p>Diferente de um financiamento tradicional em que o comprador paga ao banco todos os meses, na hipoteca reversa <strong>é o banco que paga ao proprietário</strong> (em renda mensal vitalícia, montante único ou linha de crédito). Você continua com o título de propriedade e com o direito de morar no imóvel.</p>
+<p>A liquidação da dívida só ocorre quando o proprietário vende o imóvel, muda-se definitivamente ou falece. Pela regra de <strong>não recurso (non-recourse)</strong>, os herdeiros nunca respondem por débitos que excedam o valor de mercado da propriedade.</p>
+
+<h2>2. Financiamento Tradicional vs. Hipoteca Reversa</h2>
+<table class="w-full text-left border-collapse border border-hairline my-4 text-xs sm:text-sm">
+  <thead>
+    <tr class="bg-canvas-soft border-b border-hairline">
+      <th class="p-2.5 font-bold text-ink">Aspecto</th>
+      <th class="p-2.5 font-bold text-ink">Financiamento Tradicional (SAC/Price)</th>
+      <th class="p-2.5 font-bold text-ink">Hipoteca Reversa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Fluxo Financeiro</td>
+      <td class="p-2.5">O cliente paga mensalmente ao banco</td>
+      <td class="p-2.5">O banco paga ao cliente / quita dívidas existentes</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Saldo Devedor</td>
+      <td class="p-2.5 text-emerald-600 font-bold">Diminui a cada mês (amortização)</td>
+      <td class="p-2.5 text-rose-600 font-bold">Aumenta a cada mês (juros capitalizados)</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Patrimônio Líquido no Imóvel</td>
+      <td class="p-2.5 font-bold">Cresce ao longo do tempo</td>
+      <td class="p-2.5 font-bold">Reduz-se ao longo do tempo</td>
+    </tr>
+    <tr class="border-b border-hairline/60">
+      <td class="p-2.5 font-medium">Idade Mínima</td>
+      <td class="p-2.5">18 anos</td>
+      <td class="p-2.5 font-bold">62 anos ou mais</td>
+    </tr>
+    <tr class="bg-canvas-soft/50">
+      <td class="p-2.5 font-medium">IPTU, Seguro e Condomínio</td>
+      <td class="p-2.5">Dever do comprador</td>
+      <td class="p-2.5 text-amber-600 font-bold">Permanece 100% responsabilidade do proprietário (inadimplência gera risco de execução)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Como são Calculadas as Parcelas</h2>
+<p>Em um <strong>financiamento tradicional</strong> (Tabela Price), a parcela mensal fixa é calculada pela fórmula de anuidade:</p>
+<p class="font-mono bg-canvas-soft p-3 rounded border border-hairline text-center text-xs sm:text-sm my-2">
+  <strong>Parcela = Saldo Devedor × [i(1 + i)^n] ÷ [(1 + i)^n − 1]</strong>
+</p>
+<p>Na <strong>hipoteca reversa</strong>, o teto disponível para saque gira em torno de 35% a 60% do valor avaliado do imóvel, dependendo estritamente da idade do tomador e da taxa de juros praticada. Ao não pagar parcelas, os juros acumulam-se ao saldo principal mês após mês.</p>
+
+<h2>4. Vantagens, Riscos e Regras de Sucessão</h2>
+<ul>
+  <li><strong>Renda na Terceira Idade:</strong> Proporciona fluxo de caixa estável sem obrigar a pessoa idosa a vender o imóvel e se mudar.</li>
+  <li><strong>Armadilha do IPTU e Manutenção:</strong> O proprietário continua obrigado a manter o IPTU, seguro contra incêndio e taxa de condomínio em dia. O atraso continuado pode ensejar cobrança e execução do imóvel.</li>
+  <li><strong>Destino aos Herdeiros:</strong> Com o falecimento, os herdeiros têm a prerrogativa de vender o imóvel para pagar o saldo (ficando com o excedente financeiro) ou quitar o saldo com recursos próprios para manter a casa na família.</li>
+</ul>
+
+<h2>Simule nas Nossas Ferramentas Gratuitas</h2>
+<p>Faça suas projeções financeiras com privacidade absoluta no navegador:</p>
+<ul>
+  <li><a href="/pt/loan/mortgage/">Calculadora de Financiamento Imobiliário</a>: Simule parcelas mensais e cronogramas completos.</li>
+  <li><a href="/pt/loan/home-affordability/">Calculadora de Poder de Compra Imobiliário</a>: Calcule o preço máximo da moradia.</li>
+  <li><a href="/pt/loan/refinance/">Calculadora de Refinanciamento</a>: Verifique a economia em trocar de taxa de juros.</li>
+  <li><a href="/pt/retirement/planner/">Planejador de Aposentadoria</a>: Projete sua renda mensal e longevidade financeira.</li>
+</ul>
+`
+    }
   }
 };
 
