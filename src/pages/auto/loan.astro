@@ -22,8 +22,8 @@ const faqs = getCalculatorFaqs('auto-loan');
     <div class="lg:col-span-6 space-y-6">
       <form id="auto-loan-form" class="space-y-6">
         <!-- Vehicle Pricing -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Vehicle Pricing')}</h3>
+        <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Vehicle Pricing')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="price" label="Vehicle Purchase Price" type="number" prefix="$" value="35000" />
             <Input id="tax-rate" label="Sales Tax Rate" type="number" suffix="%" value="7.0" />
@@ -34,8 +34,8 @@ const faqs = getCalculatorFaqs('auto-loan');
         </div>
 
         <!-- Down Payment & Trade-In -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Upfront Offsets')}</h3>
+        <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Upfront Offsets')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="downpayment" label="Cash Down Payment" type="number" prefix="$" value="5000" />
             <Input id="trade-in" label="Net Trade-In Value" type="number" prefix="$" value="3000" />
@@ -43,7 +43,7 @@ const faqs = getCalculatorFaqs('auto-loan');
         </div>
 
         <!-- Financing terms -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Input id="rate" label="Interest Rate (APR)" type="number" suffix="%" value="5.9" />
           <Select id="term" label="Loan Term" options={[
             { value: '36', label: '36 months (3 years)' },
@@ -54,11 +54,11 @@ const faqs = getCalculatorFaqs('auto-loan');
           ]} value="60" />
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Auto Loan')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -82,12 +82,12 @@ const faqs = getCalculatorFaqs('auto-loan');
         </div>
       </div>
 
-      <div id="auto-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
+      <div id="auto-takeaway" class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm font-medium text-[11px] sm:text-xs leading-relaxed text-ink hidden">
       </div>
 
       <!-- Purchase Price Breakdown Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Total Cost of Purchase Breakdown')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Total Cost of Purchase Breakdown')}</h4>
         <div class="h-64 relative">
           <canvas id="cost-chart"></canvas>
         </div>

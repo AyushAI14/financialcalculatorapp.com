@@ -23,8 +23,8 @@ const faqs = getCalculatorFaqs('savings-goal');
     <!-- Form Inputs (Left Column) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="savings-goal-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Goal Settings', 'Savings Goal Details')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2">{t('Goal Settings', 'Savings Goal Details')}</h3>
           
           <!-- Target Goal -->
           <div class="space-y-2">
@@ -52,7 +52,7 @@ const faqs = getCalculatorFaqs('savings-goal');
         </div>
 
         <!-- Compounding Terms -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Select id="compounding" label="Compounding Freq" options={[
             { value: '1', label: 'Annually' },
             { value: '4', label: 'Quarterly' },
@@ -68,11 +68,11 @@ const faqs = getCalculatorFaqs('savings-goal');
           />
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Goal')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -103,12 +103,12 @@ const faqs = getCalculatorFaqs('savings-goal');
         </div>
       </div>
 
-      <div id="savings-takeaway" class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink hidden">
+      <div id="savings-takeaway" class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm font-medium text-[11px] sm:text-xs leading-relaxed text-ink hidden">
       </div>
 
       <!-- Growth Chart Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Savings Accumulation Progress')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Savings Accumulation Progress')}</h4>
         <div class="h-80 relative">
           <canvas id="savings-chart"></canvas>
         </div>
@@ -117,15 +117,15 @@ const faqs = getCalculatorFaqs('savings-goal');
   </div>
 
   <!-- Detailed Year-by-Year Schedule -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Savings Schedule')}</h3>
-        <p class="text-sm text-body mt-1">{t('Yearly accumulation breakdown of starting balance, additions, and compound growth.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('Savings Schedule')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Yearly accumulation breakdown of starting balance, additions, and compound growth.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
-        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+        class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer w-fit"
       >
         {t('Show Detailed Table')}
       </button>
@@ -133,15 +133,15 @@ const faqs = getCalculatorFaqs('savings-goal');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[450px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-[11px] sm:text-xs">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Year</th>
-              <th class="px-5 py-3 text-right">Starting Bal</th>
-              <th class="px-5 py-3 text-right">Annual Deposits</th>
-              <th class="px-5 py-3 text-right">Interest Earned</th>
-              <th class="px-5 py-3 text-right">Ending Bal</th>
-              <th class="px-5 py-3 text-right">Total Deposits</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3">Year</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Starting Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Annual Deposits</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Interest Earned</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">Ending Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-mute">Total Deposits</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -438,13 +438,13 @@ const faqs = getCalculatorFaqs('savings-goal');
     let html = '';
     yearlySchedule.forEach(e => {
       html += `
-        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-          <td class="px-5 py-3 font-semibold text-body">Year ${e.year}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.deposits)}</td>
-          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.interest)}</td>
-          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
-          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.totalDeposits)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Year ${e.year}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.deposits)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.interest)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-mute">${formatCurrency(e.totalDeposits)}</td>
         </tr>
       `;
     });

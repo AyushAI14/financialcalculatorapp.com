@@ -40,8 +40,8 @@ const faqs = [
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="ssa-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">{t('Your Earnings & Timeline')}</h3>
+        <div class="space-y-4 sm:space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2 font-semibold">{t('Your Earnings & Timeline')}</h3>
 
           <!-- Annual Income -->
           <div class="space-y-2">
@@ -75,11 +75,11 @@ const faqs = [
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Social Security Benefits')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -95,30 +95,30 @@ const faqs = [
       </div>
 
       <!-- 3-Way Age Comparison Grid -->
-      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Claim Age Comparison (Monthly Check)')}</h4>
+      <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Claim Age Comparison (Monthly Check)')}</h4>
         
-        <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
-          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">{t('Early Age 62')}</span>
-            <span id="comp-age62" class="font-bold text-ink text-sm">--</span>
-            <span class="text-[9px] text-rose-500 block font-sans">{lang === 'es' ? '-30% de penalización' : (lang === 'de' ? '-30 % Abschlag' : (lang === 'ja' ? '-30% 減額' : (lang === 'pt' ? '-30% de penalidade' : '-30% penalty')))}</span>
+        <div class="grid grid-cols-3 gap-1.5 sm:gap-2 text-center font-mono text-xs">
+          <div class="p-2 sm:p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[9px] sm:text-[10px] text-mute block leading-tight">{t('Early Age 62')}</span>
+            <span id="comp-age62" class="font-bold text-ink text-xs sm:text-sm">--</span>
+            <span class="text-[8px] sm:text-[9px] text-rose-500 block font-sans leading-tight">{lang === 'es' ? '-30% de penalización' : (lang === 'de' ? '-30 % Abschlag' : (lang === 'ja' ? '-30% 減額' : (lang === 'pt' ? '-30% de penalidade' : '-30% penalty')))}</span>
           </div>
 
-          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">{t('Full Age 67')}</span>
-            <span id="comp-age67" class="font-bold text-ink text-sm">--</span>
-            <span class="text-[9px] text-mute block font-sans">{lang === 'es' ? '100% íntegro' : (lang === 'de' ? '100 % regulär' : (lang === 'ja' ? '100% 基本額' : (lang === 'pt' ? '100% integral' : '100% full')))}</span>
+          <div class="p-2 sm:p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[9px] sm:text-[10px] text-mute block leading-tight">{t('Full Age 67')}</span>
+            <span id="comp-age67" class="font-bold text-ink text-xs sm:text-sm">--</span>
+            <span class="text-[8px] sm:text-[9px] text-mute block font-sans leading-tight">{lang === 'es' ? '100% íntegro' : (lang === 'de' ? '100 % regulär' : (lang === 'ja' ? '100% 基本額' : (lang === 'pt' ? '100% integral' : '100% full')))}</span>
           </div>
 
-          <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-1">
-            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block">{t('Delayed Age 70')}</span>
-            <span id="comp-age70" class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">--</span>
-            <span class="text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans">{lang === 'es' ? '+24% de bonificación' : (lang === 'de' ? '+24 % Zuschlag' : (lang === 'ja' ? '+24% 増額' : (lang === 'pt' ? '+24% de bônus' : '+24% bonus')))}</span>
+          <div class="p-2 sm:p-3 bg-emerald-500/10 border border-emerald-500/25 rounded space-y-1">
+            <span class="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 block leading-tight">{t('Delayed Age 70')}</span>
+            <span id="comp-age70" class="font-bold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm">--</span>
+            <span class="text-[8px] sm:text-[9px] text-emerald-600 dark:text-emerald-400 block font-sans leading-tight">{lang === 'es' ? '+24% de bonificación' : (lang === 'de' ? '+24 % Zuschlag' : (lang === 'ja' ? '+24% 増額' : (lang === 'pt' ? '+24% de bônus' : '+24% bonus')))}</span>
           </div>
         </div>
 
-        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+        <div class="p-2.5 sm:p-3 bg-canvas-soft rounded text-[11px] sm:text-xs text-body leading-relaxed border border-hairline mt-3">
           {lang === 'es' ? (
             <><span class="font-semibold text-ink">Punto de Equilibrio Vitalicio:</span> Si vives más allá de los <span id="breakeven-age" class="font-bold text-ink">--</span> años, solicitar la jubilación a los 70 genera más patrimonio acumulado que hacerlo anticipadamente a los 62.</>
           ) : lang === 'de' ? (

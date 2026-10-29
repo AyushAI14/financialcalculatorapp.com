@@ -53,10 +53,10 @@ const faqs = [
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="super-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-4 sm:space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex items-center justify-between border-b border-hairline pb-2">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Superannuation Profile')}</h3>
-            <span class="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold"><span data-currency-symbol>$</span> {t('Benchmark')}</span>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Superannuation Profile')}</h3>
+            <span class="text-[10px] sm:text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold"><span data-currency-symbol>$</span> {t('Benchmark')}</span>
           </div>
 
           <!-- Current Balance -->
@@ -90,11 +90,11 @@ const faqs = [
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Project My Super Balance')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -110,24 +110,24 @@ const faqs = [
       </div>
 
       <!-- ASFA Comfortable Benchmark Card -->
-      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('ASFA Retirement Standard Benchmark')}</h4>
+      <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('ASFA Retirement Standard Benchmark')}</h4>
         
-        <div class="grid grid-cols-2 gap-3 text-center font-mono text-xs">
-          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">{t('ASFA Single Comfortable')}</span>
-            <span class="font-bold text-ink text-sm font-mono" data-asfa-single>{formatCurrency(595000)}</span>
-            <span id="badge-single" class="text-[9px] text-mute block font-sans">--</span>
+        <div class="grid grid-cols-2 gap-2 sm:gap-3 text-center font-mono text-xs">
+          <div class="p-2.5 sm:p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[9px] sm:text-[10px] text-mute block leading-tight">{t('ASFA Single Comfortable')}</span>
+            <span class="font-bold text-ink text-xs sm:text-sm font-mono" data-asfa-single>{formatCurrency(595000)}</span>
+            <span id="badge-single" class="text-[8px] sm:text-[9px] text-mute block font-sans">--</span>
           </div>
 
-          <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-1">
-            <span class="text-[10px] text-mute block">{t('ASFA Couple Comfortable')}</span>
-            <span class="font-bold text-ink text-sm font-mono" data-asfa-couple>{formatCurrency(690000)}</span>
-            <span id="badge-couple" class="text-[9px] text-mute block font-sans">--</span>
+          <div class="p-2.5 sm:p-3 bg-canvas-soft border border-hairline rounded space-y-1">
+            <span class="text-[9px] sm:text-[10px] text-mute block leading-tight">{t('ASFA Couple Comfortable')}</span>
+            <span class="font-bold text-ink text-xs sm:text-sm font-mono" data-asfa-couple>{formatCurrency(690000)}</span>
+            <span id="badge-couple" class="text-[8px] sm:text-[9px] text-mute block font-sans">--</span>
           </div>
         </div>
 
-        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+        <div class="p-2.5 sm:p-3 bg-canvas-soft rounded text-[11px] sm:text-xs text-body leading-relaxed border border-hairline mt-3">
           {lang === 'es' ? (
             <><span class="font-semibold text-ink">Eficiencia Fiscal:</span> Las contribuciones reflejan el 15% reglamentario de impuestos en el fondo. Al realizar aportaciones voluntarias de <span data-asfa-sacrifice class="font-mono font-bold">{formatCurrency(250)}</span>/mes, reduces tu base imponible mientras incrementas tu saldo final en <span id="sacrifice-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> adicionales.</>
           ) : lang === 'de' ? (

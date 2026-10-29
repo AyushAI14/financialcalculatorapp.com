@@ -22,8 +22,8 @@ const faqs = getCalculatorFaqs('loan');
     <!-- Form Inputs (Left Column) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="loan-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Loan Parameters')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2">{t('Loan Parameters')}</h3>
 
           <!-- Loan Amount -->
           <div class="space-y-2">
@@ -45,7 +45,7 @@ const faqs = getCalculatorFaqs('loan');
         </div>
 
         <!-- Compounding and Pay Cadence -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Select id="frequency" label="Payment Cadence" options={[
             { value: '12', label: 'Monthly (12/year)' },
             { value: '26', label: 'Bi-Weekly (26/year)' },
@@ -55,10 +55,10 @@ const faqs = getCalculatorFaqs('loan');
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Loan')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -84,8 +84,8 @@ const faqs = getCalculatorFaqs('loan');
       </div>
 
       <!-- Amortization Drawdown Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Amortization Drawdown Chart')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Amortization Drawdown Chart')}</h4>
         <div class="h-80 relative">
           <canvas id="amortization-chart"></canvas>
         </div>
@@ -94,13 +94,13 @@ const faqs = getCalculatorFaqs('loan');
   </div>
 
   <!-- Amortization Schedule Table -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Amortization Schedule')}</h3>
-        <p class="text-sm text-body mt-1">{t('Detailed period-by-period progression showing starting balances, payment structures, and interest margins.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('Amortization Schedule')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Detailed period-by-period progression showing starting balances, payment structures, and interest margins.')}</p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex flex-wrap items-center gap-3">
         <Select id="schedule-view" label="" options={[
           { value: 'yearly', label: t('Yearly Summary') },
           { value: 'monthly', label: t('Monthly Table') }
@@ -108,7 +108,7 @@ const faqs = getCalculatorFaqs('loan');
         
         <button 
           id="toggle-schedule" 
-          class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer whitespace-nowrap"
+          class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer whitespace-nowrap"
         >
           {t('Show Amortization Table')}
         </button>
@@ -117,15 +117,15 @@ const faqs = getCalculatorFaqs('loan');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[500px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-xs sm:text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th id="period-col" class="px-5 py-3">Year</th>
-              <th class="px-5 py-3 text-right">Starting Bal</th>
-              <th class="px-5 py-3 text-right">Total Payments</th>
-              <th class="px-5 py-3 text-right">Principal Paid</th>
-              <th class="px-5 py-3 text-right">Interest Paid</th>
-              <th class="px-5 py-3 text-right">Ending Bal</th>
+              <th id="period-col" class="px-2.5 py-2 sm:px-5 sm:py-3">Year</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Starting Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Total Payments</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Principal Paid</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Interest Paid</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Ending Bal</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -321,13 +321,13 @@ const faqs = getCalculatorFaqs('loan');
       
       yearlySummary.forEach(e => {
         html += `
-          <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-            <td class="px-5 py-3 font-semibold text-body">Year ${e.year}</td>
-            <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
-            <td class="px-5 py-3 text-right">${formatCurrency(e.totalPayments)}</td>
-            <td class="px-5 py-3 text-right text-link">${formatCurrency(e.principal)}</td>
-            <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
-            <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+          <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Year ${e.year}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.totalPayments)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.principal)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
           </tr>
         `;
       });
@@ -339,21 +339,21 @@ const faqs = getCalculatorFaqs('loan');
       
       truncated.forEach(e => {
         html += `
-          <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-            <td class="px-5 py-3 font-semibold text-body">Period ${e.period}</td>
-            <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
-            <td class="px-5 py-3 text-right">${formatCurrency(e.payment)}</td>
-            <td class="px-5 py-3 text-right text-link">${formatCurrency(e.principal)}</td>
-            <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
-            <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+          <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Period ${e.period}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.payment)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.principal)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
+            <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
           </tr>
         `;
       });
 
       if (schedule.length > 360) {
         html += `
-          <tr class="bg-canvas-soft-2 font-mono text-xs text-mute">
-            <td colspan="6" class="px-5 py-3 text-center">
+          <tr class="bg-canvas-soft-2 font-mono text-[10px] sm:text-xs text-mute">
+            <td colspan="6" class="px-2.5 py-2 sm:px-5 sm:py-3 text-center">
               Showing first 360 months of ${schedule.length} months. Select "Yearly Summary" to view the entire schedule.
             </td>
           </tr>

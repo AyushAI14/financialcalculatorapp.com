@@ -21,9 +21,9 @@ const faqs = getCalculatorFaqs('salary-increase');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="salary-raise-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Current Compensation')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Current Compensation')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pay="75000" data-type="annual" data-raise="3" data-raisetype="pct">3% COLA</button>
@@ -35,15 +35,15 @@ const faqs = getCalculatorFaqs('salary-increase');
 
           <!-- Pay Frequency Basis -->
           <div>
-            <label class="block text-xs font-mono uppercase text-mute mb-2">Compensation Format</label>
-            <div class="grid grid-cols-2 gap-3">
-              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+            <label class="block text-[11px] sm:text-xs font-mono uppercase text-mute mb-2">Compensation Format</label>
+            <div class="grid grid-cols-2 gap-2 sm:gap-3">
+              <label class="flex items-center gap-2 p-2 sm:p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="pay-basis" value="annual" checked class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Annual Salary</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Annual Salary</span>
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+              <label class="flex items-center gap-2 p-2 sm:p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="pay-basis" value="hourly" class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Hourly Wage</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Hourly Wage</span>
               </label>
             </div>
           </div>
@@ -53,19 +53,19 @@ const faqs = getCalculatorFaqs('salary-increase');
             <Input id="hours-per-week" label="Hours Worked Per Week" type="number" suffix="hrs" value="40" min="1" max="100" />
           </div>
 
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider pt-4 border-t border-hairline pb-2 mb-2">{t('Salary Increase Details')}</h3>
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider pt-3 sm:pt-4 border-t border-hairline pb-2 mb-2">{t('Salary Increase Details')}</h3>
 
           <!-- Raise Mode -->
           <div>
-            <label class="block text-xs font-mono uppercase text-mute mb-2">Raise Calculation Mode</label>
-            <div class="grid grid-cols-2 gap-3">
-              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+            <label class="block text-[11px] sm:text-xs font-mono uppercase text-mute mb-2">Raise Calculation Mode</label>
+            <div class="grid grid-cols-2 gap-2 sm:gap-3">
+              <label class="flex items-center gap-2 p-2 sm:p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="raise-mode" value="percent" checked class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Percentage Raise (%)</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Percentage Raise (%)</span>
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
+              <label class="flex items-center gap-2 p-2 sm:p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="raise-mode" value="flat" class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Flat Dollar Increase ($)</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Flat Dollar Increase ($)</span>
               </label>
             </div>
           </div>
@@ -80,11 +80,11 @@ const faqs = getCalculatorFaqs('salary-increase');
           <RangeSlider id="raise-slider" label="Adjust Salary Increase" min={0.5} max={30} step={0.5} value={5.0} />
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Pay Raise')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Reset')}
           </button>
         </div>
@@ -138,18 +138,18 @@ const faqs = getCalculatorFaqs('salary-increase');
 
       <!-- Compensation Frequency Table -->
       <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
-          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Pay Frequency Breakdown</h4>
-          <span class="text-[10px] font-mono text-mute">Before vs. After Raise</span>
+        <div class="p-3.5 sm:p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute">Pay Frequency Breakdown</h4>
+          <span class="text-[9px] sm:text-[10px] font-mono text-mute">Before vs. After Raise</span>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="w-full text-left border-collapse text-[11px] sm:text-xs">
             <thead>
-              <tr class="border-b border-hairline font-mono text-[10px] text-mute uppercase bg-canvas-soft/50">
-                <th class="py-2.5 px-4">Pay Period</th>
-                <th class="py-2.5 px-4 text-right">Current Pay</th>
-                <th class="py-2.5 px-4 text-right">Gross Increase</th>
-                <th class="py-2.5 px-4 text-right font-bold text-ink">New Gross Pay</th>
+              <tr class="border-b border-hairline font-mono text-[9px] sm:text-[10px] text-mute uppercase bg-canvas-soft/50">
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4">Pay Period</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Current Pay</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Gross Increase</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right font-bold text-ink">New Gross Pay</th>
               </tr>
             </thead>
             <tbody id="breakdown-body" class="divide-y divide-hairline font-mono">
@@ -162,30 +162,30 @@ const faqs = getCalculatorFaqs('salary-increase');
   </div>
 
   <!-- Educational Guide -->
-  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+  <div class="mt-10 sm:mt-16 space-y-6 sm:space-y-8 border-t border-hairline pt-8 sm:pt-12 prose prose-neutral max-w-none">
     <div class="max-w-3xl space-y-4">
-      <h2 class="text-2xl font-bold tracking-tight text-ink">How to Calculate a Salary Increase</h2>
-      <p class="text-sm text-mute leading-relaxed">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-ink">How to Calculate a Salary Increase</h2>
+      <p class="text-xs sm:text-sm text-mute leading-relaxed">
         Calculating a pay raise involves determining the percentage increase relative to your baseline earnings, or converting a flat wage increase across all common payroll cycles (hourly, weekly, bi-weekly, semi-monthly, and annual).
       </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 not-prose">
-        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
-          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">1. Percentage Raise Formula</h3>
-          <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-4 sm:my-6 not-prose">
+        <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">1. Percentage Raise Formula</h3>
+          <p class="text-[10px] sm:text-xs text-mute font-mono bg-paper p-2.5 sm:p-3 rounded border border-hairline">
             New Salary = Old Salary × (1 + Raise% / 100)
           </p>
-          <p class="text-xs text-mute leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-mute leading-relaxed">
             For example, a 6% raise on a $75,000 base salary is: $75,000 × 1.06 = $79,500/year (an increase of $4,500).
           </p>
         </div>
 
-        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
-          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">2. Dollar Increase to Percentage</h3>
-          <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline">
+        <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">2. Dollar Increase to Percentage</h3>
+          <p class="text-[10px] sm:text-xs text-mute font-mono bg-paper p-2.5 sm:p-3 rounded border border-hairline">
             Raise % = ((New Salary - Old Salary) / Old Salary) × 100
           </p>
-          <p class="text-xs text-mute leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-mute leading-relaxed">
             If your salary increases from $80,000 to $88,000, your raise percentage is: (($88,000 - $80,000) / $80,000) × 100 = 10%.
           </p>
         </div>
@@ -311,11 +311,11 @@ const faqs = getCalculatorFaqs('salary-increase');
         const inc = annualIncrease * p.mult;
         const nxt = newAnnual * p.mult;
         return `
-          <tr class="hover:bg-canvas-soft transition-colors">
-            <td class="py-2 px-4 font-medium text-ink">${p.label}</td>
-            <td class="py-2 px-4 text-right text-mute">${formatCurrency(cur)}</td>
-            <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(inc)}</td>
-            <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(nxt)}</td>
+          <tr class="hover:bg-canvas-soft transition-colors text-[11px] sm:text-xs">
+            <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 font-medium text-ink">${p.label}</td>
+            <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-mute">${formatCurrency(cur)}</td>
+            <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(inc)}</td>
+            <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right font-bold text-ink">${formatCurrency(nxt)}</td>
           </tr>
         `;
       }).join('');

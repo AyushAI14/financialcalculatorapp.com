@@ -16,10 +16,10 @@ const { id, label, checked = false, value = 'on', description } = Astro.props;
 const localizedLabel = t(label, label);
 const localizedDescription = description ? t(description, description) : undefined;
 ---
-<div class="flex items-center justify-between p-4 bg-paper border border-ink/40 rounded-lg shadow-[var(--control-shadow)]">
+<div class="flex items-center justify-between p-3 sm:p-4 bg-paper border border-ink/40 rounded-lg shadow-[var(--control-shadow)]">
   <div class="flex flex-col gap-0.5">
-    <label for={id} class="text-xs font-mono font-bold uppercase tracking-wider text-ink cursor-pointer">{localizedLabel}</label>
-    {localizedDescription && <span class="text-xs text-muted font-sans">{localizedDescription}</span>}
+    <label for={id} class="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink cursor-pointer">{localizedLabel}</label>
+    {localizedDescription && <span class="text-[10px] sm:text-xs text-muted font-sans leading-relaxed">{localizedDescription}</span>}
   </div>
   <div class="relative flex items-center">
     <input

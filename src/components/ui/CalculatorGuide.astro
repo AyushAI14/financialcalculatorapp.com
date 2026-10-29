@@ -14,37 +14,37 @@ const guide = calculatorGuides[calcKey];
 ---
 
 {guide && (
-  <article class="mt-16 max-w-4xl text-ink leading-relaxed border-t-2 border-line pt-12 space-y-8 no-print font-sans">
+  <article class="mt-10 sm:mt-16 max-w-4xl text-ink leading-relaxed border-t-2 border-line pt-8 sm:pt-12 space-y-6 sm:space-y-8 no-print font-sans">
     <div>
-      <h2 class="font-display font-extrabold text-2xl tracking-tight text-ink mb-3">{t(guide.title, guide.title)}</h2>
-      <p class="text-sm text-muted leading-relaxed">{t(guide.intro, guide.intro)}</p>
+      <h2 class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-ink mb-2 sm:mb-3">{t(guide.title, guide.title)}</h2>
+      <p class="text-xs sm:text-sm text-muted leading-relaxed">{t(guide.intro, guide.intro)}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
       <!-- Left Column: Core Concepts & Formula Mechanics -->
       <div class="space-y-4">
-        <h3 class="font-display font-bold text-lg tracking-tight text-ink">{t(guide.section1Title, guide.section1Title)}</h3>
+        <h3 class="font-display font-bold text-base sm:text-lg tracking-tight text-ink">{t(guide.section1Title, guide.section1Title)}</h3>
         <p class="text-xs sm:text-sm text-muted leading-relaxed">{t(guide.section1Content, guide.section1Content)}</p>
 
         {guide.formula && (
           <div class="mt-4 pt-3 border-t border-line/20">
-            <h4 class="text-[11px] font-mono text-muted uppercase font-bold tracking-wider mb-2">{t(guide.formulaTitle, guide.formulaTitle)}</h4>
-            <div class="bg-soft border border-ink p-3 rounded-lg font-mono text-xs font-bold text-ink overflow-x-auto my-2 shadow-[var(--control-shadow)]">
+            <h4 class="text-[10px] sm:text-[11px] font-mono text-muted uppercase font-bold tracking-wider mb-2">{t(guide.formulaTitle, guide.formulaTitle)}</h4>
+            <div class="bg-soft border border-ink p-2.5 sm:p-3 rounded-lg font-mono text-[11px] sm:text-xs font-bold text-ink overflow-x-auto my-2 shadow-[var(--control-shadow)]">
               {guide.formula}
             </div>
-            <p class="text-xs text-muted leading-relaxed">{t(guide.formulaExplanation, guide.formulaExplanation)}</p>
+            <p class="text-[11px] sm:text-xs text-muted leading-relaxed">{t(guide.formulaExplanation, guide.formulaExplanation)}</p>
           </div>
         )}
       </div>
 
       <!-- Right Column: Actionable Strategies & Guidelines -->
       <div class="space-y-4">
-        <h3 class="font-display font-bold text-lg tracking-tight text-ink">{t(guide.section2Title, guide.section2Title)}</h3>
-        <ul class="space-y-3 text-sm list-none p-0 m-0">
+        <h3 class="font-display font-bold text-base sm:text-lg tracking-tight text-ink">{t(guide.section2Title, guide.section2Title)}</h3>
+        <ul class="space-y-2.5 sm:space-y-3 text-sm list-none p-0 m-0">
           {guide.tips.map(tip => (
-            <li class="bg-paper border border-ink/40 rounded-lg p-3.5 shadow-[var(--control-shadow)]">
-              <strong class="font-display font-bold text-ink block mb-0.5 text-sm">{t(tip.title, tip.title)}</strong>
-              <span class="text-xs text-muted leading-relaxed block font-sans">{t(tip.desc, tip.desc)}</span>
+            <li class="bg-paper border border-ink/40 rounded-lg p-3 sm:p-3.5 shadow-[var(--control-shadow)]">
+              <strong class="font-display font-bold text-ink block mb-0.5 text-xs sm:text-sm">{t(tip.title, tip.title)}</strong>
+              <span class="text-[11px] sm:text-xs text-muted leading-relaxed block font-sans">{t(tip.desc, tip.desc)}</span>
             </li>
           ))}
         </ul>

@@ -233,10 +233,10 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
     </aside>
 
     <!-- Main Calculator Content Section -->
-    <section class="flex-1 min-w-0 bg-paper border border-ink rounded-lg p-4 sm:p-6 lg:p-8 xl:p-10 shadow-[var(--control-shadow)] min-h-[600px] relative w-full">
+    <section class="flex-1 min-w-0 bg-paper border border-ink rounded-lg p-3.5 sm:p-6 lg:p-8 xl:p-10 shadow-[var(--control-shadow)] min-h-[600px] relative w-full">
 
       <!-- Breadcrumbs -->
-      <nav class="flex items-center gap-2 text-xs font-mono text-muted mb-4 flex-wrap" aria-label="Breadcrumb">
+      <nav class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono text-muted mb-3 sm:mb-4 flex-wrap" aria-label="Breadcrumb">
         <a href={translatePath('/')} class="hover:text-ink transition-colors">{t('nav.home', 'Home')}</a>
         <span>/</span>
         <a href={translatePath('/calculators')} class="hover:text-ink transition-colors font-bold">{t('nav.calculators', 'Calculators')}</a>
@@ -244,9 +244,9 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
         <span class="text-ink font-bold truncate max-w-xs">{localizedTitle}</span>
       </nav>
 
-      <div class="mb-8">
-        <h1 class="font-display font-black text-3xl sm:text-4xl tracking-tight text-ink mb-3">{localizedTitle}</h1>
-        {localizedDescription && <p class="text-sm sm:text-base text-muted max-w-3xl font-sans leading-relaxed">{localizedDescription}</p>}
+      <div class="mb-6 sm:mb-8">
+        <h1 class="font-display font-black text-2xl xs:text-3xl sm:text-4xl tracking-tight text-ink mb-2 sm:mb-3 leading-tight">{localizedTitle}</h1>
+        {localizedDescription && <p class="text-xs sm:text-sm text-muted max-w-3xl font-sans leading-relaxed">{localizedDescription}</p>}
       </div>
       <slot />
 
@@ -255,18 +255,18 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
 
       <!-- FAQ Section -->
       {localizedFaqs && localizedFaqs.length > 0 && (
-        <div class="border-t-2 border-line mt-12 pt-12 space-y-6 no-print">
-          <h2 class="font-display font-black text-2xl tracking-tight text-ink">{t('calc.faqs')}</h2>
+        <div class="border-t-2 border-line mt-10 sm:mt-12 pt-8 sm:pt-12 space-y-4 sm:space-y-6 no-print">
+          <h2 class="font-display font-black text-xl sm:text-2xl tracking-tight text-ink">{t('calc.faqs')}</h2>
           <div class="divide-y divide-line/20">
             {localizedFaqs.map(faq => (
-              <details class="group py-4">
-                <summary class="flex items-center justify-between text-base font-display font-bold text-ink cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-input-accent rounded">
+              <details class="group py-3 sm:py-4">
+                <summary class="flex items-center justify-between text-sm sm:text-base font-display font-bold text-ink cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-input-accent rounded">
                   <span>{faq.question}</span>
-                  <svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180 shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div class="mt-3 text-sm text-muted font-sans leading-relaxed space-y-2">
+                <div class="mt-2.5 sm:mt-3 text-xs sm:text-sm text-muted font-sans leading-relaxed space-y-2">
                   <p>{faq.answer}</p>
                 </div>
               </details>
@@ -276,7 +276,7 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
       )}
 
       <!-- Browser Privacy Note -->
-      <div class="mt-12 p-4 bg-note-surface border border-note-border rounded-lg text-xs text-ink/80 flex flex-col gap-2 no-print shadow-[var(--control-shadow)]">
+      <div class="mt-8 sm:mt-12 p-3 sm:p-4 bg-note-surface border border-note-border rounded-lg text-[11px] sm:text-xs text-ink/80 flex flex-col gap-2 no-print shadow-[var(--control-shadow)]">
         <div class="flex items-center gap-2">
           <span>🔒</span>
           <span><strong>{t('privacy.title', '100% Private:')}</strong> {t('privacy.desc', 'All calculations execute locally in your web browser. We do not store or transmit your financial details.')}</span>
@@ -336,11 +336,11 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
 
       <!-- Related Calculators Section -->
       {relatedLinks.length > 0 && (
-        <div class="mt-12 border-t-2 border-line pt-8 no-print">
-          <h3 class="text-xs font-mono text-muted uppercase font-bold tracking-wider mb-4">{t('calc.related')}</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="mt-8 sm:mt-12 border-t-2 border-line pt-6 sm:pt-8 no-print">
+          <h3 class="text-[10px] sm:text-xs font-mono text-muted uppercase font-bold tracking-wider mb-3 sm:mb-4">{t('calc.related')}</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {relatedLinks.map(link => (
-              <a href={translatePath(link.url)} class="p-4 bg-paper hover:bg-soft border border-ink/40 rounded-lg shadow-[var(--control-shadow)] hover:shadow-[var(--control-shadow-hover)] transition-all block text-sm font-display font-bold text-ink">
+              <a href={translatePath(link.url)} class="p-3 sm:p-4 bg-paper hover:bg-soft border border-ink/40 rounded-lg shadow-[var(--control-shadow)] hover:shadow-[var(--control-shadow-hover)] transition-all block text-xs sm:text-sm font-display font-bold text-ink">
                 {link.name} →
               </a>
             ))}

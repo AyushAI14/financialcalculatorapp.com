@@ -32,9 +32,9 @@ const initialTrajectoryData = generateStudentLoanTrajectory({
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="student-loan-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Loan & Income Details')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Loan & Income Details')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-bal="40000" data-rate="5.5" data-agi="55000" data-size="1" data-plan="SAVE" data-type="undergrad">{t('Undergrad Single')}</button>
@@ -65,14 +65,14 @@ const initialTrajectoryData = generateStudentLoanTrajectory({
               { value: 'mixed', label: 'Mixed Undergrad & Grad' }
             ]} value="undergrad" />
           </div>
-          <p class="text-[11px] text-mute leading-relaxed">Note: the SAVE plan has faced federal court blocks since 2024 and its future is uncertain. Estimates use published SAVE formulas for comparison only — verify current eligibility at studentaid.gov before making decisions.</p>
+          <p class="text-[10px] sm:text-[11px] text-mute leading-relaxed">Note: the SAVE plan has faced federal court blocks since 2024 and its future is uncertain. Estimates use published SAVE formulas for comparison only — verify current eligibility at studentaid.gov before making decisions.</p>
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Repayment')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -94,16 +94,16 @@ const initialTrajectoryData = generateStudentLoanTrajectory({
       </div>
 
       <!-- Plan Details Box -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Plan Guideline Estimates')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm space-y-3">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Plan Guideline Estimates')}</h4>
         <div class="grid grid-cols-2 gap-4 divide-x divide-hairline text-left">
           <div>
-            <span class="text-xs text-mute font-mono block">{t('Federal Poverty Line')}</span>
-            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-base">--</span>
+            <span class="text-[10px] sm:text-xs text-mute font-mono block">{t('Federal Poverty Line')}</span>
+            <span class="text-sm sm:text-base font-semibold text-ink font-mono" id="val-poverty-base">--</span>
           </div>
           <div class="pl-4">
-            <span class="text-xs text-mute font-mono block">{t('Income Shield Limit')}</span>
-            <span class="text-base font-semibold text-ink font-mono" id="val-poverty-shield">--</span>
+            <span class="text-[10px] sm:text-xs text-mute font-mono block">{t('Income Shield Limit')}</span>
+            <span class="text-sm sm:text-base font-semibold text-ink font-mono" id="val-poverty-shield">--</span>
           </div>
         </div>
       </div>
@@ -121,28 +121,28 @@ const initialTrajectoryData = generateStudentLoanTrajectory({
       />
 
       <!-- Formula steps -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm no-print">
         <details class="group">
-          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+          <summary class="flex items-center justify-between text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
             <span>{t('Formula Breakdown')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+          <div class="mt-4 text-[11px] sm:text-xs text-body space-y-4 pt-3 border-t border-hairline">
             <div>
               <p class="font-semibold text-ink mb-1">1. Federal Poverty Line Shield</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-shield">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-shield">
                 Threshold = PovertyBase × Multiplier (2.25 for SAVE, 1.50 for others)
               </code>
             </div>
             <div>
               <p class="font-semibold text-ink mb-1">2. Discretionary Income</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-disc">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-disc">
                 Discretionary = AGI - Threshold
               </code>
             </div>
             <div>
               <p class="font-semibold text-ink mb-1">3. Monthly Payment (IDR)</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-payment">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-payment">
                 Payment = (Discretionary × Rate) / 12 (Rate = 5% undergrad, 10% grad/others)
               </code>
             </div>
@@ -152,7 +152,7 @@ const initialTrajectoryData = generateStudentLoanTrajectory({
 
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
-        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+        <button id="download-csv-btn" class="w-full py-2 sm:py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
           <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>

@@ -23,7 +23,7 @@ const faqs = getCalculatorFaqs('tvm');
     <div class="lg:col-span-7 space-y-6">
       <form id="tvm-form" class="space-y-6">
         <!-- Scenario and Target Selectors -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Select 
             id="scenario" 
             label="Scenario Type" 
@@ -86,10 +86,10 @@ const faqs = getCalculatorFaqs('tvm');
         </div>
         
         <div class="pt-4 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -107,8 +107,8 @@ const faqs = getCalculatorFaqs('tvm');
         />
       </div>
 
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Progression')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Balance Progression')}</h4>
         <div class="h-64 relative">
           <canvas id="tvm-chart"></canvas>
         </div>
@@ -117,15 +117,15 @@ const faqs = getCalculatorFaqs('tvm');
   </div>
 
   <!-- Detailed Schedule Table Section -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Calculation Schedule')}</h3>
-        <p class="text-sm text-body mt-1">{t('Period-by-period progression breakdown of balance and interest.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('Calculation Schedule')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Period-by-period progression breakdown of balance and interest.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
-        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+        class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer w-fit"
       >
         {t('Show Detailed Table')}
       </button>
@@ -133,14 +133,14 @@ const faqs = getCalculatorFaqs('tvm');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[450px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-xs sm:text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Period</th>
-              <th class="px-5 py-3 text-right">Starting Bal</th>
-              <th class="px-5 py-3 text-right">Payment</th>
-              <th class="px-5 py-3 text-right">Interest</th>
-              <th class="px-5 py-3 text-right">Ending Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3">Period</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Starting Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Payment</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Interest</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Ending Bal</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -492,20 +492,20 @@ const faqs = getCalculatorFaqs('tvm');
     let html = '';
     truncated.forEach(e => {
       html += `
-        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-          <td class="px-5 py-3 font-semibold text-body">${e.period}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.beginningBalance))}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.payment))}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(Math.abs(e.interest))}</td>
-          <td class="px-5 py-3 text-right font-medium">${formatCurrency(Math.abs(e.endingBalance))}</td>
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">${e.period}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(Math.abs(e.beginningBalance))}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(Math.abs(e.payment))}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(Math.abs(e.interest))}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(Math.abs(e.endingBalance))}</td>
         </tr>
       `;
     });
 
     if (schedule.length > maxRender) {
       html += `
-        <tr class="bg-canvas-soft-2 font-mono text-xs">
-          <td colspan="5" class="px-5 py-3 text-center text-mute">
+        <tr class="bg-canvas-soft-2 font-mono text-[10px] sm:text-xs">
+          <td colspan="5" class="px-2.5 py-2 sm:px-5 sm:py-3 text-center text-mute">
             Showing first ${maxRender} of ${schedule.length} periods. Download API schedule for full datasets.
           </td>
         </tr>

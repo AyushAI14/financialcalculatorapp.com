@@ -20,8 +20,8 @@ const faqs = getCalculatorFaqs('home-affordability');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="affordability-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Financial Profile', 'Income & Savings')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2">{t('Financial Profile', 'Income & Savings')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="income" label="Annual Gross Income" type="number" prefix="$" value="120000" placeholder="0.00" />
@@ -42,11 +42,11 @@ const faqs = getCalculatorFaqs('home-affordability');
 
         <!-- Collapsible Underwriting Params -->
         <details class="group border border-hairline rounded-lg bg-canvas-soft">
-          <summary class="flex items-center justify-between p-4 text-sm font-medium text-ink cursor-pointer select-none">
+          <summary class="flex items-center justify-between p-3.5 sm:p-4 text-xs sm:text-sm font-medium text-ink cursor-pointer select-none">
             <span>{t('Taxes, Insurance & Lending Ratios (Optional)', 'Taxes, Fees & Insurance')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
-          <div class="p-5 border-t border-hairline bg-canvas space-y-5">
+          <div class="p-3.5 sm:p-5 border-t border-hairline bg-canvas space-y-4 sm:space-y-5">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Input id="tax-rate" label="Property Tax Rate" type="number" suffix="%" value="1.2" />
               <Input id="insurance" label="Annual Insurance" type="number" prefix="$" value="1200" />
@@ -57,7 +57,7 @@ const faqs = getCalculatorFaqs('home-affordability');
               <Input id="front-dti" label="Housing DTI Limit (Front-End)" type="number" suffix="%" value="28" />
               <Input id="back-dti" label="Total Debt DTI Limit (Back-End)" type="number" suffix="%" value="36" />
             </div>
-            <p class="text-[11px] text-mute leading-normal">
+            <p class="text-[10px] sm:text-[11px] text-mute leading-normal">
               {lang === 'es' ? (
                 <>
                   * <strong>Ratio Front-End</strong>: El porcentaje máximo de ingresos brutos destinados a gastos de vivienda (PITI). El estándar es del 28%.
@@ -94,10 +94,10 @@ const faqs = getCalculatorFaqs('home-affordability');
         </details>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Budget')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -119,8 +119,8 @@ const faqs = getCalculatorFaqs('home-affordability');
       </div>
 
       <!-- Payment Breakdown Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Housing Payment Breakdown (PITI)')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Housing Payment Breakdown (PITI)')}</h4>
         <div class="h-64 relative">
           <canvas id="payment-breakdown-chart"></canvas>
         </div>

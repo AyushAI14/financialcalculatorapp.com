@@ -16,19 +16,19 @@ const isPt = lang === 'pt';
   lang={lang}
 >
   <div class="w-full space-y-12">
-    <header class="border-b border-hairline pb-8 text-center sm:text-left space-y-2">
+    <header class="border-b border-hairline pb-6 sm:pb-8 text-center sm:text-left space-y-2">
       <span class="px-2 py-0.5 bg-canvas-soft border border-hairline text-mute font-mono text-[10px] rounded-full uppercase">{isEs ? "Guía Comparativa" : (isDe ? "Vergleichsleitfaden" : (isJa ? "比較ガイド" : (isPt ? "Guia Comparativo" : "Comparison Guide")))}</span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink leading-tight">{isEs ? "Bola de Nieve vs. Avalancha de Deudas" : (isDe ? "Schneeball- vs. Lawinen-Methode" : (isJa ? "スノーボール法 vs. アバランチ法" : (isPt ? "Bola de Neve vs. Avalancha de Dívidas" : "Debt Snowball vs. Debt Avalanche")))}</h1>
-      <p class="text-sm text-body max-w-2xl">{isEs ? "Una evaluación comparativa de las dos metodologías más populares para la eliminación estructurada de deudas personales." : (isDe ? "Ein direkter Vergleich der beiden beliebtesten Methoden zur strukturierten Schuldentilgung." : (isJa ? "計画的な個人債務・借金完済のための2大返済戦略（雪だるま方式 vs. 雪崩方式）を比較します。" : (isPt ? "Uma avaliação comparativa das duas metodologias mais consagradas para a eliminação estruturada de dívidas pessoais." : "A side-by-side evaluation of the two most popular methodologies for structured personal debt elimination.")))}</p>
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink leading-tight">{isEs ? "Bola de Nieve vs. Avalancha de Deudas" : (isDe ? "Schneeball- vs. Lawinen-Methode" : (isJa ? "スノーボール法 vs. アバランチ法" : (isPt ? "Bola de Neve vs. Avalancha de Dívidas" : "Debt Snowball vs. Debt Avalanche")))}</h1>
+      <p class="text-xs sm:text-sm text-body max-w-2xl">{isEs ? "Una evaluación comparativa de las dos metodologías más populares para la eliminación estructurada de deudas personales." : (isDe ? "Ein direkter Vergleich der beiden beliebtesten Methoden zur strukturierten Schuldentilgung." : (isJa ? "計画的な個人債務・借金完済のための2大返済戦略（雪だるま方式 vs. 雪崩方式）を比較します。" : (isPt ? "Uma avaliação comparativa das duas metodologias mais consagradas para a eliminação estruturada de dívidas pessoais." : "A side-by-side evaluation of the two most popular methodologies for structured personal debt elimination.")))}</p>
     </header>
 
     <!-- Comparison Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
       <!-- Snowball -->
-      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4">
+      <div class="border border-hairline bg-canvas p-4 sm:p-6 rounded-lg shadow-sm space-y-3 sm:space-y-4">
         <div class="flex items-center gap-2">
-          <span class="text-2xl">❄️</span>
-          <h2 class="text-xl font-bold text-ink">{isEs ? "La Bola de Nieve de Deudas" : (isDe ? "Die Schneeball-Methode" : (isJa ? "スノーボール法（雪だるま方式）" : (isPt ? "O Método Bola de Neve" : "The Debt Snowball")))}</h2>
+          <span class="text-xl sm:text-2xl">❄️</span>
+          <h2 class="text-lg sm:text-xl font-bold text-ink">{isEs ? "La Bola de Nieve de Deudas" : (isDe ? "Die Schneeball-Methode" : (isJa ? "スノーボール法（雪だるま方式）" : (isPt ? "O Método Bola de Neve" : "The Debt Snowball")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
           {isEs ? "Se enfoca en pagar primero los **saldos de deuda más pequeños**, independientemente de sus tasas de interés. Una vez liquidada la deuda menor, destinas su cuota a la siguiente deuda más pequeña, generando un impulso psicológico inmediato." : (isDe ? "Fokussiert sich darauf, zuerst die **kleinsten Restschulden** zu tilgen, unabhängig vom Zinssatz. Sobald die kleinste Schuld beglichen ist, fließt der Betrag in die nächste Schuld – das sorgt für schnelle Erfolgserlebnisse." : (isJa ? "金利の高低に関わらず、**最も残高が少ない借金**から優先して完済します。残高の小さい借金を次々に完済することで早期の達成感と心理的モチベーションを最大化します。" : (isPt ? "Foca na quitação prioritária dos **menores saldos de dívida primeiro**, independentemente das taxas de juros. Ao liquidar a menor dívida, transfere-se o valor da parcela para a dívida seguinte, gerando vitórias rápidas e forte impulso psicológico." : "Focuses on paying off the **smallest debt balances first**, regardless of their interest rates. Once the smallest debt is wiped out, you roll its payment into the next smallest debt, building psychological momentum.")))}
@@ -41,10 +41,10 @@ const isPt = lang === 'pt';
       </div>
 
       <!-- Avalanche -->
-      <div class="border border-hairline bg-canvas p-6 rounded-lg shadow-sm space-y-4 border-link/30">
+      <div class="border border-hairline bg-canvas p-4 sm:p-6 rounded-lg shadow-sm space-y-3 sm:space-y-4 border-link/30">
         <div class="flex items-center gap-2">
-          <span class="text-2xl text-link">⚡</span>
-          <h2 class="text-xl font-bold text-ink">{isEs ? "La Avalancha de Deudas" : (isDe ? "Die Lawinen-Methode" : (isJa ? "アバランチ法（雪崩方式）" : (isPt ? "O Método Avalancha" : "The Debt Avalanche")))}</h2>
+          <span class="text-xl sm:text-2xl text-link">⚡</span>
+          <h2 class="text-lg sm:text-xl font-bold text-ink">{isEs ? "La Avalancha de Deudas" : (isDe ? "Die Lawinen-Methode" : (isJa ? "アバランチ法（雪崩方式）" : (isPt ? "O Método Avalancha" : "The Debt Avalanche")))}</h2>
         </div>
         <p class="text-xs text-body leading-relaxed">
           {isEs ? "Se enfoca en pagar primero las **deudas con la tasa de interés (TAE) más alta**, independientemente del monto del saldo. Esto minimiza la acumulación de intereses compuestos, maximizando tu ahorro total de dinero." : (isDe ? "Fokussiert sich darauf, zuerst die **Schulden mit den höchsten Zinssätzen (Effektivzins)** zu tilgen, unabhängig von der Kredithöhe. Dies minimiert die anfallenden Zinskosten und spart mathematisch das meiste Geld." : (isJa ? "残高の大きさに関わらず、**最も金利（実質年率）が高い借金**から優先して完済します。高金利の複利負担を最速で断ち切るため、数学的に最も利息を節約できます。" : (isPt ? "Foca na quitação prioritária das **dívidas com maiores taxas de juros (CET / APR)**, independentemente do saldo devedor. Isso minimiza o acúmulo de juros compostos, economizando o montante máximo de dinheiro." : "Focuses on paying off the **highest interest rate (APR) debts first**, regardless of their balance sizes. This minimizes the accumulation of compounding interest fees, saving you the maximum amount of cash.")))}
@@ -59,53 +59,55 @@ const isPt = lang === 'pt';
 
     <!-- Comparative Table -->
     <div class="border border-hairline rounded-lg overflow-hidden bg-canvas shadow-sm w-full">
-      <table class="w-full border-collapse text-left text-xs">
-        <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
-          <tr>
-            <th class="px-5 py-3.5">{isEs ? "Característica" : (isDe ? "Merkmal" : (isJa ? "項目" : (isPt ? "Característica" : "Feature")))}</th>
-            <th class="px-5 py-3.5">{isEs ? "Bola de Nieve" : (isDe ? "Schneeball" : (isJa ? "スノーボール法" : (isPt ? "Bola de Neve" : "Debt Snowball")))}</th>
-            <th class="px-5 py-3.5">{isEs ? "Avalancha" : (isDe ? "Lawine" : (isJa ? "アバランチ法" : (isPt ? "Avalancha" : "Debt Avalanche")))}</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-hairline text-body text-ink">
-          <tr>
-            <td class="px-5 py-3 font-semibold">{isEs ? "Regla de Selección" : (isDe ? "Tilgungsregel" : (isJa ? "返済順序ルール" : (isPt ? "Critério de Seleção" : "Selection Rule")))}</td>
-            <td class="px-5 py-3">{isEs ? "Pagar saldo más pequeño primero" : (isDe ? "Kleinsten Restsaldo zuerst abzahlen" : (isJa ? "最も残高が少ない債務から完済" : (isPt ? "Pagar o menor saldo devedor primeiro" : "Pay smallest balance first")))}</td>
-            <td class="px-5 py-3">{isEs ? "Pagar mayor TAE primero" : (isDe ? "Höchsten Zinssatz zuerst abzahlen" : (isJa ? "最も金利が高い債務から完済" : (isPt ? "Pagar a maior taxa de juros primeiro" : "Pay highest APR first")))}</td>
-          </tr>
-          <tr>
-            <td class="px-5 py-3 font-semibold">{isEs ? "Coste Matemático" : (isDe ? "Mathematische Kosten" : (isJa ? "金利コスト（支払利息）" : (isPt ? "Custo Matemático" : "Mathematical Cost")))}</td>
-            <td class="px-5 py-3">{isEs ? "Mayor total de intereses pagados" : (isDe ? "Höhere Gesamtzinsen" : (isJa ? "支払利息総額が高くなる" : (isPt ? "Maior total de juros pagos" : "Higher total interest paid")))}</td>
-            <td class="px-5 py-3 font-semibold text-link">{isEs ? "Menor total de intereses pagados (optimizado)" : (isDe ? "Geringste Zinskosten (mathematisch optimal)" : (isJa ? "支払利息総額が最小（最適化）" : (isPt ? "Menor total de juros pagos (otimizado)" : "Lowest interest paid (optimized)")))}</td>
-          </tr>
-          <tr>
-            <td class="px-5 py-3 font-semibold">{isEs ? "Tiempo Libre de Deudas" : (isDe ? "Dauer bis Schuldenfreiheit" : (isJa ? "完済までの所要期間" : (isPt ? "Tempo até Quitação Total" : "Time to Debt-Free")))}</td>
-            <td class="px-5 py-3">{isEs ? "Potencialmente mayor" : (isDe ? "Potenziell länger" : (isJa ? "やや長くなる可能性あり" : (isPt ? "Potencialmente mais longo" : "Potentially longer")))}</td>
-            <td class="px-5 py-3 font-semibold text-link">{isEs ? "Plazo de tiempo más rápido posible" : (isDe ? "Schnellstmöglicher Zeitraum" : (isJa ? "最短期間で全債務を完済" : (isPt ? "Prazo mais rápido possível" : "Fastest possible timeframe")))}</td>
-          </tr>
-          <tr>
-            <td class="px-5 py-3 font-semibold">{isEs ? "Estrategia Psicológica" : (isDe ? "Psychologische Wirkung" : (isJa ? "行動経済学・心理的アプローチ" : (isPt ? "Abordagem Psicológica" : "Psychological Strategy")))}</td>
-            <td class="px-5 py-3 font-semibold text-violet-600">{isEs ? "Motivación conductual y victorias tempranas" : (isDe ? "Hohe Motivation durch frühe Erfolgserlebnisse" : (isJa ? "早期の成功体験による高い動機付け" : (isPt ? "Motivação comportamental e vitórias rápidas" : "Behavioral motivation & quick wins")))}</td>
-            <td class="px-5 py-3">{isEs ? "Disciplina y optimización lógica" : (isDe ? "Disziplin & logische Optimierung" : (isJa ? "合理的な規律と論理的最適化" : (isPt ? "Disciplina e otimização lógica" : "Discipline & logical optimization")))}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left text-[11px] sm:text-xs">
+          <thead class="bg-canvas-soft border-b border-hairline font-mono uppercase text-mute">
+            <tr>
+              <th class="px-3 sm:px-5 py-2.5 sm:py-3.5">{isEs ? "Característica" : (isDe ? "Merkmal" : (isJa ? "項目" : (isPt ? "Característica" : "Feature")))}</th>
+              <th class="px-3 sm:px-5 py-2.5 sm:py-3.5">{isEs ? "Bola de Nieve" : (isDe ? "Schneeball" : (isJa ? "スノーボール法" : (isPt ? "Bola de Neve" : "Debt Snowball")))}</th>
+              <th class="px-3 sm:px-5 py-2.5 sm:py-3.5">{isEs ? "Avalancha" : (isDe ? "Lawine" : (isJa ? "アバランチ法" : (isPt ? "Avalancha" : "Debt Avalanche")))}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-body text-ink">
+            <tr>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold">{isEs ? "Regla de Selección" : (isDe ? "Tilgungsregel" : (isJa ? "返済順序ルール" : (isPt ? "Critério de Seleção" : "Selection Rule")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3">{isEs ? "Pagar saldo más pequeño primero" : (isDe ? "Kleinsten Restsaldo zuerst abzahlen" : (isJa ? "最も残高が少ない債務から完済" : (isPt ? "Pagar o menor saldo devedor primeiro" : "Pay smallest balance first")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3">{isEs ? "Pagar mayor TAE primero" : (isDe ? "Höchsten Zinssatz zuerst abzahlen" : (isJa ? "最も金利が高い債務から完済" : (isPt ? "Pagar a maior taxa de juros primeiro" : "Pay highest APR first")))}</td>
+            </tr>
+            <tr>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold">{isEs ? "Coste Matemático" : (isDe ? "Mathematische Kosten" : (isJa ? "金利コスト（支払利息）" : (isPt ? "Custo Matemático" : "Mathematical Cost")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3">{isEs ? "Mayor total de intereses pagados" : (isDe ? "Höhere Gesamtzinsen" : (isJa ? "支払利息総額が高くなる" : (isPt ? "Maior total de juros pagos" : "Higher total interest paid")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold text-link">{isEs ? "Menor total de intereses pagados (optimizado)" : (isDe ? "Geringste Zinskosten (mathematisch optimal)" : (isJa ? "支払利息総額が最小（最適化）" : (isPt ? "Menor total de juros pagos (otimizado)" : "Lowest interest paid (optimized)")))}</td>
+            </tr>
+            <tr>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold">{isEs ? "Tiempo Libre de Deudas" : (isDe ? "Dauer bis Schuldenfreiheit" : (isJa ? "完済までの所要期間" : (isPt ? "Tempo até Quitação Total" : "Time to Debt-Free")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3">{isEs ? "Potencialmente mayor" : (isDe ? "Potenziell länger" : (isJa ? "やや長くなる可能性あり" : (isPt ? "Potencialmente mais longo" : "Potentially longer")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold text-link">{isEs ? "Plazo de tiempo más rápido posible" : (isDe ? "Schnellstmöglicher Zeitraum" : (isJa ? "最短期間で全債務を完済" : (isPt ? "Prazo mais rápido possível" : "Fastest possible timeframe")))}</td>
+            </tr>
+            <tr>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold">{isEs ? "Estrategia Psicológica" : (isDe ? "Psychologische Wirkung" : (isJa ? "行動経済学・心理的アプローチ" : (isPt ? "Abordagem Psicológica" : "Psychological Strategy")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3 font-semibold text-violet-600">{isEs ? "Motivación conductual y victorias tempranas" : (isDe ? "Hohe Motivation durch frühe Erfolgserlebnisse" : (isJa ? "早期の成功体験による高い動機付け" : (isPt ? "Motivação comportamental e vitórias rápidas" : "Behavioral motivation & quick wins")))}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-3">{isEs ? "Disciplina y optimización lógica" : (isDe ? "Disziplin & logische Optimierung" : (isJa ? "合理的な規律と論理的最適化" : (isPt ? "Disciplina e otimização lógica" : "Discipline & logical optimization")))}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Embedded Calculator Section -->
-    <section class="border-t border-hairline pt-12 space-y-6">
-      <div class="text-center max-w-xl mx-auto space-y-2">
-        <h2 class="text-2xl font-bold text-ink">{isEs ? "Simulador Interactivo de Estrategias" : (isDe ? "Interaktiver Strategie-Simulator" : (isJa ? "インタラクティブ返済戦略シミュレーター" : (isPt ? "Simulador Interativo de Estratégias" : "Interactive Strategy Simulator")))}</h2>
+    <section class="border-t border-hairline pt-8 sm:pt-12 space-y-4 sm:space-y-6">
+      <div class="text-center max-w-xl mx-auto space-y-1.5 sm:space-y-2">
+        <h2 class="text-xl sm:text-2xl font-bold text-ink">{isEs ? "Simulador Interactivo de Estrategias" : (isDe ? "Interaktiver Strategie-Simulator" : (isJa ? "インタラクティブ返済戦略シミュレーター" : (isPt ? "Simulador Interativo de Estratégias" : "Interactive Strategy Simulator")))}</h2>
         <p class="text-xs text-mute">{isEs ? "Ingresa tus saldos pendientes y tasas de interés a continuación para comparar ambas estrategias en tiempo real." : (isDe ? "Geben Sie Ihre aktuellen Schulden und Zinssätze ein, um beide Methoden im direkten Vergleich zu berechnen." : (isJa ? "借入残高と金利を入力し、スノーボール法とアバランチ法の完済期間と利息差をリアルタイムに比較します。" : (isPt ? "Insira seus saldos devedores e taxas de juros abaixo para comparar as duas estratégias lado a lado em tempo real." : "Input your active balances and interest rates below to compare both strategies side-by-side in real time.")))}</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full bg-canvas p-6 border border-hairline rounded-xl shadow-sm">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start w-full bg-canvas p-4 sm:p-6 border border-hairline rounded-xl shadow-sm">
         <!-- Inputs Column -->
         <div class="lg:col-span-6 space-y-6">
-          <form id="debt-form" class="space-y-6">
-            <div class="space-y-5">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-2">
-                <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{isEs ? "Tus Deudas" : (isDe ? "Ihre Kredite / Schulden" : (isJa ? "借入内容の入力" : (isPt ? "Suas Dívidas" : "Your Debts")))}</h3>
+          <form id="debt-form" class="space-y-5 sm:space-y-6">
+            <div class="space-y-4 sm:space-y-5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-hairline pb-2 mb-2">
+                <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{isEs ? "Tus Deudas" : (isDe ? "Ihre Kredite / Schulden" : (isJa ? "借入内容の入力" : (isPt ? "Suas Dívidas" : "Your Debts")))}</h3>
                 <div class="flex flex-wrap items-center gap-1.5 no-print">
                   <span class="text-[10px] text-mute font-mono">{isEs ? "Preajustes:" : (isDe ? "Vorlagen:" : (isJa ? "プリセット:" : (isPt ? "Predefinições:" : "Presets:")))}</span>
                   <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-b1="5000" data-r1="19.9" data-m1="150" data-b2="12000" data-r2="6.0" data-m2="280" data-b3="25000" data-r3="4.5" data-m3="260" data-budget="950">{isEs ? "Estándar" : (isDe ? "Standard" : (isJa ? "標準モデル" : (isPt ? "Padrão" : "Standard")))}</button>
@@ -172,27 +174,27 @@ const isPt = lang === 'pt';
         <div class="lg:col-span-6 space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Snowball Card -->
-            <div class="bg-canvas border border-hairline p-4 rounded-lg shadow-sm space-y-2">
+            <div class="bg-canvas border border-hairline p-3.5 sm:p-4 rounded-lg shadow-sm space-y-2">
               <h4 class="text-[10px] font-mono text-mute uppercase tracking-wider">{isEs ? "Estrategia Bola de Nieve" : (isDe ? "Schneeball-Strategie" : (isJa ? "スノーボール法（雪だるま方式）" : (isPt ? "Estratégia Bola de Neve" : "Snowball Strategy")))}</h4>
               <div class="space-y-1">
-                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">--</span>
+                <span class="text-xl sm:text-2xl font-semibold tracking-tight text-ink font-mono" id="snowball-time">--</span>
                 <span class="text-[9px] text-mute block">{isEs ? "Tiempo de Liquidación" : (isDe ? "Tilgungsdauer" : (isJa ? "完済までの期間" : (isPt ? "Tempo de Quitação" : "Payoff Timeline")))}</span>
               </div>
               <div class="space-y-0.5">
-                <span class="text-sm font-semibold text-body font-mono" id="snowball-interest">--</span>
+                <span class="text-xs sm:text-sm font-semibold text-body font-mono" id="snowball-interest">--</span>
                 <span class="text-[9px] text-mute block">{isEs ? "Total de Intereses Pagados" : (isDe ? "Gezahlte Gesamtzinsen" : (isJa ? "支払利息総額" : (isPt ? "Total de Juros Pagos" : "Total Interest Paid")))}</span>
               </div>
             </div>
 
             <!-- Avalanche Card -->
-            <div class="bg-canvas border border-hairline p-4 rounded-lg shadow-sm space-y-2 border-link/30">
+            <div class="bg-canvas border border-hairline p-3.5 sm:p-4 rounded-lg shadow-sm space-y-2 border-link/30">
               <h4 class="text-[10px] font-mono text-link uppercase tracking-wider">{isEs ? "Estrategia Avalancha" : (isDe ? "Lawinen-Strategie" : (isJa ? "アバランチ法（雪崩方式）" : (isPt ? "Estratégia Avalancha" : "Avalanche Strategy")))}</h4>
               <div class="space-y-1">
-                <span class="text-2xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">--</span>
+                <span class="text-xl sm:text-2xl font-semibold tracking-tight text-ink font-mono" id="avalanche-time">--</span>
                 <span class="text-[9px] text-mute block">{isEs ? "Tiempo de Liquidación" : (isDe ? "Tilgungsdauer" : "Payoff Timeline")}</span>
               </div>
               <div class="space-y-0.5">
-                <span class="text-sm font-semibold text-body font-mono" id="avalanche-interest">--</span>
+                <span class="text-xs sm:text-sm font-semibold text-body font-mono" id="avalanche-interest">--</span>
                 <span class="text-[9px] text-mute block">{isEs ? "Total de Intereses Pagados" : (isDe ? "Gezahlte Gesamtzinsen" : "Total Interest Paid")}</span>
               </div>
             </div>

@@ -21,9 +21,9 @@ const faqs = getCalculatorFaqs('emergency-fund');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="emergency-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Expenses & Target', 'Essential Monthly Living Expenses')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Expenses & Target', 'Essential Monthly Living Expenses')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-exp="3500" data-sav="5000" data-months="6" data-contrib="250">{t('6-Month Target')}</button>
@@ -47,11 +47,11 @@ const faqs = getCalculatorFaqs('emergency-fund');
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Goal')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -73,8 +73,8 @@ const faqs = getCalculatorFaqs('emergency-fund');
       </div>
 
       <!-- Savings Progress Bar Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm space-y-3">
-        <div class="flex justify-between text-xs font-mono text-mute uppercase tracking-wider">
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm space-y-3">
+        <div class="flex justify-between text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">
           <span>Goal Progress</span>
           <span id="progress-text">--%</span>
         </div>
@@ -85,7 +85,7 @@ const faqs = getCalculatorFaqs('emergency-fund');
 
       <!-- Export CSV -->
       <div class="flex gap-4 no-print">
-        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+        <button id="download-csv-btn" class="w-full py-2 sm:py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
           <span>📊</span> {t('Download Savings CSV')}
         </button>
       </div>

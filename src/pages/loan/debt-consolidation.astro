@@ -41,14 +41,14 @@ const faqs = [
       <form id="consolidation-form" class="space-y-6">
         
         <!-- Existing Debts Card -->
-        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Current Debts')}</h3>
-            <span class="text-[11px] font-mono text-mute">{t('Credit Cards, Auto, Personal Loans')}</span>
+        <div class="bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-hairline pb-3">
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('Your Current Debts')}</h3>
+            <span class="text-[10px] sm:text-[11px] font-mono text-mute">{t('Credit Cards, Auto, Personal Loans')}</span>
           </div>
 
           <!-- Debt 1 -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2.5 sm:p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
               <label for="d1-bal" class="text-[10px] text-mute block mb-1">{t('Debt 1 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d1-bal" type="number" value="6500" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
@@ -64,7 +64,7 @@ const faqs = [
           </div>
 
           <!-- Debt 2 -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2.5 sm:p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
               <label for="d2-bal" class="text-[10px] text-mute block mb-1">{t('Debt 2 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d2-bal" type="number" value="4800" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
@@ -80,7 +80,7 @@ const faqs = [
           </div>
 
           <!-- Debt 3 -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2.5 sm:p-3 bg-canvas-soft rounded border border-hairline text-xs font-mono">
             <div>
               <label for="d3-bal" class="text-[10px] text-mute block mb-1">{t('Debt 3 Balance')} (<span data-currency-symbol>$</span>)</label>
               <input id="d3-bal" type="number" value="3200" class="w-full h-8 bg-canvas text-ink rounded px-2 border border-hairline font-mono" />
@@ -97,10 +97,10 @@ const faqs = [
         </div>
 
         <!-- Proposed Consolidation Loan Card -->
-        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('New Consolidation Loan Offer')}</h3>
-            <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">{t('Target Fixed Rate')}</span>
+        <div class="bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-hairline pb-3">
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider font-semibold">{t('New Consolidation Loan Offer')}</h3>
+            <span class="text-[10px] sm:text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">{t('Target Fixed Rate')}</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -115,10 +115,10 @@ const faqs = [
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Consolidation Savings')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -133,10 +133,10 @@ const faqs = [
       </div>
 
       <!-- Side-by-Side Comparison Matrix -->
-      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Current Debts vs. New Consolidated Loan')}</h4>
+      <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-4">
+        <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Current Debts vs. New Consolidated Loan')}</h4>
 
-        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+        <div class="grid grid-cols-1 xs:grid-cols-2 gap-3 text-xs font-mono">
           <!-- Current Column -->
           <div class="p-3 bg-canvas-soft border border-hairline rounded space-y-2">
             <span class="text-[10px] text-mute block font-bold">{t('STATUS QUO (SEPARATE)')}</span>
@@ -172,7 +172,7 @@ const faqs = [
           </div>
         </div>
 
-        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline">
+        <div class="p-3 bg-canvas-soft rounded text-[11px] sm:text-xs text-body leading-relaxed border border-hairline">
           {lang === 'es' ? (
             <><span class="font-semibold text-ink">Conclusión:</span> Al sustituir tus altas tasas de interés combinadas por un préstamo de consolidación más bajo, eliminas costes por intereses y amortizas tu deuda mucho más rápido.</>
           ) : lang === 'de' ? (

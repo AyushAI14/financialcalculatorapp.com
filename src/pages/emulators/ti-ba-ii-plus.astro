@@ -174,21 +174,21 @@ const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : 
     </div>
 
     <!-- Dual Layout: Left (Interactive Hardware Device), Right (Dynamic TVM Worksheet) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
       <!-- Virtual TI Hardware Keypad -->
-      <div class="lg:col-span-6 bg-neutral-900 border-2 border-neutral-700/80 rounded-2xl p-6 shadow-2xl text-neutral-100 select-none">
+      <div class="lg:col-span-6 bg-neutral-900 border-2 border-neutral-700/80 rounded-xl sm:rounded-2xl p-3.5 sm:p-6 shadow-2xl text-neutral-100 select-none">
         
         <!-- LCD Display -->
-        <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-4 mb-5 shadow-inner">
-          <div class="flex justify-between items-center mb-1 text-[10px] font-mono">
+        <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-3 sm:p-4 mb-4 sm:mb-5 shadow-inner">
+          <div class="flex justify-between items-center mb-1 text-[9px] sm:text-[10px] font-mono">
             <span class="text-neutral-400 font-bold">TI BA II PLUS</span>
-            <div class="flex gap-2">
+            <div class="flex gap-1.5 sm:gap-2">
               <span id="ti-2nd-flag" class="hidden text-amber-400 font-bold">2ND</span>
               <span id="ti-cpt-flag" class="hidden text-sky-400 font-bold">CPT</span>
               <span id="ti-bgn-flag" class="hidden text-emerald-400 font-bold">BGN</span>
             </div>
           </div>
-          <div class="bg-[#9ba88d] text-[#1b2413] font-mono text-3xl px-3 py-2 rounded border-2 border-[#7e8c6e] text-right font-bold tracking-wider overflow-x-auto shadow-inner">
+          <div class="bg-[#9ba88d] text-[#1b2413] font-mono text-2xl xs:text-3xl px-3 py-2 rounded border-2 border-[#7e8c6e] text-right font-bold tracking-wider overflow-x-auto shadow-inner">
             <span id="ti-lcd">0.00</span>
           </div>
         </div>
@@ -257,10 +257,10 @@ const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : 
 
       <!-- Right Column: Form Worksheet Solver -->
       <div class="lg:col-span-6 space-y-6">
-        <div class="bg-canvas border border-hairline p-6 rounded-lg shadow-sm space-y-5">
-          <div class="flex items-center justify-between border-b border-hairline pb-3">
-            <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Hoja de Trabajo TVM Activa" : (isDe ? "Aktives TVM-Berechnungsblatt" : (isJa ? "アクティブTVMワークシート" : (isPt ? "Planilha TVM Ativa" : "Active TVM Worksheet")))}</h3>
-            <span class="text-[11px] font-mono text-mute">{isEs ? "Sincronizado con el Simulador" : (isDe ? "Synchronisiert mit Simulator" : (isJa ? "シミュレーターと自動同期" : (isPt ? "Sincronizado com o Simulador" : "Synced with Simulator")))}</span>
+        <div class="bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm space-y-4 sm:space-y-5">
+          <div class="flex items-center justify-between border-b border-hairline pb-2.5 sm:pb-3">
+            <h3 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Hoja de Trabajo TVM Activa" : (isDe ? "Aktives TVM-Berechnungsblatt" : (isJa ? "アクティブTVMワークシート" : (isPt ? "Planilha TVM Ativa" : "Active TVM Worksheet")))}</h3>
+            <span class="text-[10px] sm:text-[11px] font-mono text-mute">{isEs ? "Sincronizado con el Simulador" : (isDe ? "Synchronisiert mit Simulator" : (isJa ? "シミュレーターと自動同期" : (isPt ? "Sincronizado com o Simulador" : "Synced with Simulator")))}</span>
           </div>
 
           <div class="space-y-4">
@@ -333,25 +333,25 @@ const faqs = isEs ? faqsEs : (isDe ? faqsDe : (isJa ? faqsJa : (isPt ? faqsPt : 
     </div>
 
     <!-- Amortization Schedule Section -->
-    <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
+    <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-3 sm:space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Tabla de Amortización TVM" : (isDe ? "TVM-Tilgungsplan" : (isJa ? "TVM元利均等償還表" : (isPt ? "Tabela de Amortização TVM" : "TVM Amortization Schedule")))}</h3>
-          <p class="text-xs text-mute">{isEs ? "Desglose periodo a periodo sincronizado con el simulador" : (isDe ? "Periodenaufschlüsselung synchronisiert mit Simulator" : (isJa ? "シミュレーターと同期した各期の返済・残高推移明細" : (isPt ? "Detalhamento período a período sincronizado com o simulador" : "Period-by-period progression breakdown synced with simulator")))}</p>
+          <h3 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{isEs ? "Tabla de Amortización TVM" : (isDe ? "TVM-Tilgungsplan" : (isJa ? "TVM元利均等償還表" : (isPt ? "Tabela de Amortização TVM" : "TVM Amortization Schedule")))}</h3>
+          <p class="text-[11px] sm:text-xs text-mute">{isEs ? "Desglose periodo a periodo sincronizado con el simulador" : (isDe ? "Periodenaufschlüsselung synchronisiert mit Simulator" : (isJa ? "シミュレーターと同期した各期の返済・残高推移明細" : (isPt ? "Detalhamento período a período sincronizado com o simulador" : "Period-by-period progression breakdown synced with simulator")))}</p>
         </div>
-        <button id="toggle-ti-amort-btn" type="button" class="px-3 py-1.5 border border-hairline rounded text-xs font-mono bg-canvas-soft hover:bg-canvas text-ink transition-colors cursor-pointer w-fit">
+        <button id="toggle-ti-amort-btn" type="button" class="px-3 py-1.5 border border-hairline rounded text-[11px] sm:text-xs font-mono bg-canvas-soft hover:bg-canvas text-ink transition-colors cursor-pointer w-fit">
           {isEs ? "Ver Desglose de Pagos" : (isDe ? "Tilgungsplan anzeigen" : (isJa ? "返済スケジュールを表示" : (isPt ? "Ver Cronograma de Pagamentos" : "View Payment Schedule")))}
         </button>
       </div>
       <div id="ti-amort-wrapper" class="hidden overflow-x-auto max-h-80 border border-hairline rounded">
-        <table class="w-full text-left text-xs font-mono">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline text-mute uppercase text-[10px]">
+        <table class="w-full text-left text-[11px] sm:text-xs font-mono">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline text-mute uppercase text-[9px] sm:text-[10px]">
             <tr>
-              <th class="p-2.5">#</th>
-              <th class="p-2.5 text-right">{isEs ? "Saldo Inicial" : (isDe ? "Anfangsbestand" : (isJa ? "期首残高" : (isPt ? "Saldo Inicial" : "Starting Bal")))}</th>
-              <th class="p-2.5 text-right">{isEs ? "Pago" : (isDe ? "Rate" : (isJa ? "返済額" : (isPt ? "Parcela" : "Payment")))}</th>
-              <th class="p-2.5 text-right">{isEs ? "Interés" : (isDe ? "Zinsen" : (isJa ? "利息" : (isPt ? "Juros" : "Interest")))}</th>
-              <th class="p-2.5 text-right">{isEs ? "Saldo Final" : (isDe ? "Endbestand" : (isJa ? "期末残高" : (isPt ? "Saldo Final" : "Ending Bal")))}</th>
+              <th class="px-2 sm:px-2.5 py-2">#</th>
+              <th class="px-2 sm:px-2.5 py-2 text-right">{isEs ? "Saldo Inicial" : (isDe ? "Anfangsbestand" : (isJa ? "期首残高" : (isPt ? "Saldo Inicial" : "Starting Bal")))}</th>
+              <th class="px-2 sm:px-2.5 py-2 text-right">{isEs ? "Pago" : (isDe ? "Rate" : (isJa ? "返済額" : (isPt ? "Parcela" : "Payment")))}</th>
+              <th class="px-2 sm:px-2.5 py-2 text-right">{isEs ? "Interés" : (isDe ? "Zinsen" : (isJa ? "利息" : (isPt ? "Juros" : "Interest")))}</th>
+              <th class="px-2 sm:px-2.5 py-2 text-right">{isEs ? "Saldo Final" : (isDe ? "Endbestand" : (isJa ? "期末残高" : (isPt ? "Saldo Final" : "Ending Bal")))}</th>
             </tr>
           </thead>
           <tbody id="ti-amort-body" class="divide-y divide-hairline">

@@ -45,7 +45,7 @@ const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
 ---
 <div class="flex flex-col gap-1.5 w-full relative">
   <div class="flex items-center gap-1.5">
-    <label for={id} class="text-xs font-mono font-bold uppercase tracking-wider text-ink">{localizedLabel}</label>
+    <label for={id} class="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink">{localizedLabel}</label>
     {localizedTooltip && (
       <div class="group relative cursor-help select-none">
         <span
@@ -58,7 +58,7 @@ const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
         <div
           id={`${id}-tooltip`}
           role="tooltip"
-          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-paper text-ink border border-ink text-[11px] leading-normal rounded-md shadow-[var(--control-shadow-hover)] opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-sans font-normal"
+          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-paper text-ink border border-ink text-[10px] sm:text-[11px] leading-normal rounded-md shadow-[var(--control-shadow-hover)] opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity z-50 text-center font-sans font-normal"
         >
           {localizedTooltip}
           <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"></div>
@@ -69,7 +69,7 @@ const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
   <div class="relative flex items-center">
     {prefix && (
       <span 
-        class="absolute left-3 text-muted font-mono font-bold text-sm pointer-events-none" 
+        class="absolute left-3 text-muted font-mono font-bold text-xs sm:text-sm pointer-events-none" 
         data-currency-prefix={prefix === '$' ? "true" : undefined}
       >
         {displayPrefix}
@@ -85,15 +85,15 @@ const displayPrefix = prefix === '$' ? defaultCurrencySymbol : prefix;
       max={max}
       step={step}
       class:list={[
-        "w-full h-11 bg-canvas text-ink text-sm font-mono font-medium border border-ink/40 rounded-md transition-all focus:outline-none focus:border-input-accent focus:ring-2 focus:ring-input-accent/20 shadow-[var(--control-shadow)]",
-        prefix ? "pl-8" : "pl-3.5",
-        suffix ? (suffix.length > 4 ? "pr-20" : (suffix.length > 2 ? "pr-14" : "pr-8")) : "pr-3.5"
+        "w-full h-10 sm:h-11 bg-canvas text-ink text-xs sm:text-sm font-mono font-medium border border-ink/40 rounded-md transition-all focus:outline-none focus:border-input-accent focus:ring-2 focus:ring-input-accent/20 shadow-[var(--control-shadow)]",
+        prefix ? "pl-7 sm:pl-8" : "pl-3 sm:pl-3.5",
+        suffix ? (suffix.length > 4 ? "pr-16 sm:pr-20" : (suffix.length > 2 ? "pr-12 sm:pr-14" : "pr-7 sm:pr-8")) : "pr-3 sm:pr-3.5"
       ]}
     />
-    {suffix && <span class="absolute right-3 text-muted font-mono text-xs font-bold pointer-events-none">{suffix}</span>}
+    {suffix && <span class="absolute right-3 text-muted font-mono text-[11px] sm:text-xs font-bold pointer-events-none">{suffix}</span>}
   </div>
   <!-- Validation Error Container -->
-  <span id={`${id}-error`} class="text-[11px] text-error font-mono font-bold mt-0.5 leading-none hidden"></span>
+  <span id={`${id}-error`} class="text-[10px] sm:text-[11px] text-error font-mono font-bold mt-0.5 leading-none hidden"></span>
 </div>
 
 <script>

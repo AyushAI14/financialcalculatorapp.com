@@ -51,8 +51,8 @@ const faqs = [
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="fire-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">{t('Your Finances & Spending')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2 font-semibold">{t('Your Finances & Spending')}</h3>
 
           <!-- Annual Expenses -->
           <div class="space-y-2">
@@ -90,10 +90,10 @@ const faqs = [
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate My FIRE Number')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -109,10 +109,10 @@ const faqs = [
       </div>
 
       <!-- FIRE Milestones Grid -->
-      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Tiered FIRE Milestones')}</h4>
+      <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Tiered FIRE Milestones')}</h4>
         
-        <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
+        <div class="grid grid-cols-1 xs:grid-cols-3 gap-2 text-center font-mono text-xs">
           <div class="p-2.5 bg-canvas-soft border border-hairline rounded space-y-1">
             <span class="text-[10px] text-mute block">{t('Lean FIRE (80%)')}</span>
             <span id="tier-lean" class="font-bold text-ink text-xs">--</span>
@@ -132,7 +132,7 @@ const faqs = [
           </div>
         </div>
 
-        <div class="p-3 bg-canvas-soft rounded text-xs text-body leading-relaxed border border-hairline mt-3">
+        <div class="p-3 bg-canvas-soft rounded text-[11px] sm:text-xs text-body leading-relaxed border border-hairline mt-3">
           {lang === 'es' ? (
             <><span class="font-semibold text-ink">Métrica de Libertad:</span> Tu cartera financia actualmente el <span id="funded-pct" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> de tu meta global de independencia financiera vitalicia.</>
           ) : lang === 'de' ? (

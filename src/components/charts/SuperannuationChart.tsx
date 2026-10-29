@@ -139,7 +139,7 @@ export default function SuperannuationChart({
 
   if (!isMounted) {
     return (
-      <div className="bg-canvas border border-hairline rounded-lg p-5 shadow-sm w-full">
+      <div className="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm w-full">
         <div className="h-80 w-full animate-pulse bg-canvas-soft rounded flex items-center justify-center text-xs font-mono text-mute">
           Loading superannuation projection chart...
         </div>
@@ -156,38 +156,38 @@ export default function SuperannuationChart({
       className={
         isFullscreen
           ? 'fixed inset-0 z-50 bg-canvas/98 backdrop-blur-md p-4 sm:p-6 flex flex-col justify-between shadow-2xl overflow-y-auto'
-          : 'bg-canvas border border-hairline rounded-lg p-5 shadow-sm w-full space-y-4'
+          : 'bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm w-full space-y-3 sm:space-y-4'
       }
     >
       {/* Header & Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 border-b border-hairline pb-3">
         <div>
-          <h4 className="text-xs font-mono text-mute uppercase tracking-wider font-semibold">
+          <h4 className="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider font-semibold">
             {viewMode === 'breakdown'
               ? 'Super Balance Accumulation & Breakdown'
               : 'Salary Sacrifice Boost Comparison'}
           </h4>
-          <p className="text-[11px] text-body mt-0.5">
+          <p className="text-[10px] sm:text-[11px] text-body mt-0.5">
             {viewMode === 'breakdown'
               ? 'Starting principal, employer SG, voluntary salary sacrifice, and compound investment earnings'
               : 'Growth path with salary sacrifice vs. standard employer contributions only'}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 self-start sm:self-auto">
           {/* ASFA Badge */}
           {finalBalance >= asfaCouple ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               ASFA Couple Goal Met!
             </span>
           ) : finalBalance >= asfaSingle ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               ASFA Single Goal Met!
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
               Below ASFA Comfortable
             </span>
           )}
@@ -197,7 +197,7 @@ export default function SuperannuationChart({
             <button
               type="button"
               onClick={() => setViewMode('breakdown')}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono font-medium transition-colors cursor-pointer ${
+              className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded text-[10px] sm:text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 viewMode === 'breakdown'
                   ? 'bg-paper text-ink shadow-xs'
                   : 'text-mute hover:text-ink'
@@ -208,7 +208,7 @@ export default function SuperannuationChart({
             <button
               type="button"
               onClick={() => setViewMode('sacrifice')}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono font-medium transition-colors cursor-pointer ${
+              className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded text-[10px] sm:text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 viewMode === 'sacrifice'
                   ? 'bg-paper text-ink shadow-xs'
                   : 'text-mute hover:text-ink'
@@ -438,23 +438,23 @@ export default function SuperannuationChart({
       </div>
 
       {/* Footer Metrics */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono pt-2 border-t border-hairline text-mute">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-[10px] sm:text-xs font-mono pt-2 border-t border-hairline text-mute">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block" />
+            <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-sm bg-emerald-500 inline-block" />
             Compound Earnings
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-purple-500 inline-block" />
+            <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-sm bg-purple-500 inline-block" />
             Salary Sacrifice
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block" />
+            <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-sm bg-blue-500 inline-block" />
             Employer SG
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {viewMode === 'sacrifice' ? (
             <span>Base: <strong className="text-ink">{formatCurrency(baselineBalance)}</strong></span>
           ) : (

@@ -20,9 +20,9 @@ const faqs = getCalculatorFaqs('apr');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="apr-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Loan Details', 'Loan Parameters')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Loan Details', 'Loan Parameters')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-amount="30000" data-rate="7.5" data-term="5" data-fees="500">{t('Auto Loan')}</button>
@@ -41,7 +41,7 @@ const faqs = getCalculatorFaqs('apr');
           </div>
         </div>
 
-        <div class="p-5 bg-canvas-soft border border-hairline rounded-md text-xs text-body leading-relaxed space-y-2">
+        <div class="p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md text-[11px] sm:text-xs text-body leading-relaxed space-y-2">
           <p class="font-semibold text-ink">{t('What fees should be included in APR?')}</p>
           <p>
             Standard APR fees include: loan origination fees, points, underwriting charges, document prep fees, private mortgage insurance (PMI), and broker fees. 
@@ -52,10 +52,10 @@ const faqs = getCalculatorFaqs('apr');
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate APR')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -95,38 +95,38 @@ const faqs = getCalculatorFaqs('apr');
       </div>
 
       <!-- Comparison Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Rate vs. APR Comparison')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Rate vs. APR Comparison')}</h4>
         <div class="h-56 relative">
           <canvas id="apr-chart"></canvas>
         </div>
       </div>
 
       <!-- Formula Transparency & Step-by-Step Details -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm no-print">
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm no-print">
         <details class="group">
-          <summary class="flex items-center justify-between text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
+          <summary class="flex items-center justify-between text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider cursor-pointer select-none">
             <span>{t('Calculation Steps & Formulas')}</span>
             <svg class="w-4 h-4 text-mute transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-4 text-xs text-body space-y-4 pt-3 border-t border-hairline">
+          <div class="mt-4 text-[11px] sm:text-xs text-body space-y-4 pt-3 border-t border-hairline">
             <div>
               <p class="font-semibold text-ink mb-1">{t('1. Base Monthly Payment (P&I)')}</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-base-formula">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-base-formula">
                 PMT = Principal × [r(1 + r)^n] / [(1 + r)^n - 1]
               </code>
             </div>
             <div>
               <p class="font-semibold text-ink mb-1">{t('2. Adjusted Net Loan Balance')}</p>
               <p class="mb-1 leading-relaxed">{t('Fees are deducted from the principal to find the actual net money received by the borrower.')}</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-net-loan">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-net-loan">
                 Net Principal = Principal - Fees
               </code>
             </div>
             <div>
               <p class="font-semibold text-ink mb-1">{t('3. Solving for APR (r_apr)')}</p>
               <p class="mb-1 leading-relaxed">{t('The APR is the interest rate that equates the Net Principal with the base monthly payments (P&I) over the loan term.')}</p>
-              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[11px] font-mono leading-relaxed break-words" id="step-solve-apr">
+              <code class="block p-2 bg-canvas-soft border border-hairline rounded text-[10px] sm:text-[11px] font-mono leading-relaxed break-words" id="step-solve-apr">
                 Net Principal = PMT × [1 - (1 + r_apr)^-n] / r_apr
               </code>
             </div>
@@ -136,7 +136,7 @@ const faqs = getCalculatorFaqs('apr');
 
       <!-- CSV Export Trigger -->
       <div class="flex gap-4 no-print">
-        <button id="download-csv-btn" class="w-full py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
+        <button id="download-csv-btn" class="w-full py-2 sm:py-2.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-full text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors">
           <span>📊</span> {t('Download Results CSV')}
         </button>
       </div>

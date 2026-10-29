@@ -21,8 +21,8 @@ const faqs = getCalculatorFaqs('retirement-planner');
     <div class="lg:col-span-6 space-y-6">
       <form id="retirement-form" class="space-y-6">
         <!-- Age parameters -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Timeline Settings', 'Current Retirement Profile')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Timeline Settings', 'Current Retirement Profile')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input id="current-age" label="Current Age" type="number" value="30" />
             <Input id="retire-age" label="Retirement Age" type="number" value="65" />
@@ -31,8 +31,8 @@ const faqs = getCalculatorFaqs('retirement-planner');
         </div>
 
         <!-- Savings & Contributions -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Savings & Contributions', 'Retirement Goals & Living Expenses')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Savings & Contributions', 'Retirement Goals & Living Expenses')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="current-savings" label="Current Savings" type="number" prefix="$" value="50000" />
             <Input id="contribution" label="Monthly Deposit" type="number" prefix="$" value="500" />
@@ -44,16 +44,16 @@ const faqs = getCalculatorFaqs('retirement-planner');
         </div>
 
         <!-- Expected Returns -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Input id="return-pre" label="Pre-Retirement Return" type="number" suffix="%" value="7.5" />
           <Input id="return-post" label="Post-Retirement Return" type="number" suffix="%" value="5.0" />
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Run Forecast')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -76,8 +76,8 @@ const faqs = getCalculatorFaqs('retirement-planner');
       </div>
 
       <!-- Retirement Hill Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Projection (Retirement Hill)')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Balance Projection (Retirement Hill)')}</h4>
         <div class="h-80 relative">
           <canvas id="retirement-chart"></canvas>
         </div>
@@ -86,15 +86,15 @@ const faqs = getCalculatorFaqs('retirement-planner');
   </div>
 
   <!-- Detailed Year-by-Year Schedule -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Annual Ledger Projection')}</h3>
-        <p class="text-sm text-body mt-1">{t('Year-by-year logs tracking accumulation deposits, compounding interest, and retirement drawdowns.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('Annual Ledger Projection')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Year-by-year logs tracking accumulation deposits, compounding interest, and retirement drawdowns.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
-        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+        class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer w-fit"
       >
         {t('Show Annual Ledger')}
       </button>
@@ -102,15 +102,15 @@ const faqs = getCalculatorFaqs('retirement-planner');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[450px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-xs sm:text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Age</th>
-              <th class="px-5 py-3 text-right">Starting Bal</th>
-              <th class="px-5 py-3 text-right">Annual Deposits</th>
-              <th class="px-5 py-3 text-right">Annual Withdrawals</th>
-              <th class="px-5 py-3 text-right">Interest Earned</th>
-              <th class="px-5 py-3 text-right">Ending Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3">Age</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Starting Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Annual Deposits</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Annual Withdrawals</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Interest Earned</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Ending Bal</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -290,13 +290,13 @@ const faqs = getCalculatorFaqs('retirement-planner');
     schedule.forEach(e => {
       const rowStyle = e.withdrawals > 0 ? 'bg-canvas-soft-2/40' : '';
       html += `
-        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink ${rowStyle}">
-          <td class="px-5 py-3 font-semibold text-body">Age ${e.age}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
-          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.contributions)}</td>
-          <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.withdrawals)}</td>
-          <td class="px-5 py-3 text-right text-mute">${formatCurrency(e.interest)}</td>
-          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink ${rowStyle}">
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Age ${e.age}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.contributions)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-error-deep">${formatCurrency(e.withdrawals)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-mute">${formatCurrency(e.interest)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
         </tr>
       `;
     });

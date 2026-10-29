@@ -23,9 +23,9 @@ const faqs = getCalculatorFaqs('investment');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="investment-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Strategy')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Strategy')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Asset Benchmarks:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-init="25000" data-mo="500" data-rate="10" data-years="20">S&P 500 (10%)</button>
@@ -82,11 +82,11 @@ const faqs = getCalculatorFaqs('investment');
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Investment Growth')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Reset')}
           </button>
         </div>
@@ -140,19 +140,19 @@ const faqs = getCalculatorFaqs('investment');
 
       <!-- Growth Breakdown Table -->
       <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
-          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Annual Growth Trajectory</h4>
-          <span class="text-[10px] font-mono text-mute">Invested vs. Returns</span>
+        <div class="p-3.5 sm:p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute">Annual Growth Trajectory</h4>
+          <span class="text-[9px] sm:text-[10px] font-mono text-mute">Invested vs. Returns</span>
         </div>
         <div class="overflow-x-auto max-h-[380px]">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] text-mute uppercase z-10">
+          <table class="w-full text-left border-collapse text-[11px] sm:text-xs">
+            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[9px] sm:text-[10px] text-mute uppercase z-10">
               <tr>
-                <th class="py-2.5 px-4">Year</th>
-                <th class="py-2.5 px-4 text-right">Start Bal</th>
-                <th class="py-2.5 px-4 text-right">Deposits</th>
-                <th class="py-2.5 px-4 text-right">Returns</th>
-                <th class="py-2.5 px-4 text-right font-bold text-ink">Ending Portfolio</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4">Year</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Start Bal</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Deposits</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Returns</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right font-bold text-ink">Ending Portfolio</th>
               </tr>
             </thead>
             <tbody id="invest-schedule-body" class="divide-y divide-hairline font-mono">
@@ -165,24 +165,24 @@ const faqs = getCalculatorFaqs('investment');
   </div>
 
   <!-- Educational Guide -->
-  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+  <div class="mt-10 sm:mt-16 space-y-6 sm:space-y-8 border-t border-hairline pt-8 sm:pt-12 prose prose-neutral max-w-none">
     <div class="max-w-3xl space-y-4">
-      <h2 class="text-2xl font-bold tracking-tight text-ink">How an Investment Calculator Projects Wealth</h2>
-      <p class="text-sm text-mute leading-relaxed">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-ink">How an Investment Calculator Projects Wealth</h2>
+      <p class="text-xs sm:text-sm text-mute leading-relaxed">
         Building long-term wealth through investing relies on three primary variables: your <strong>initial capital</strong>, your <strong>regular recurring contributions</strong>, and the <strong>annual rate of return</strong> generated by your asset allocation. Compounding returns create exponential growth because the returns earned each year are reinvested to produce their own returns.
       </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 not-prose">
-        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
-          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">Historical Stock Returns (S&P 500)</h3>
-          <p class="text-xs text-mute leading-relaxed">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-4 sm:my-6 not-prose">
+        <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">Historical Stock Returns (S&P 500)</h3>
+          <p class="text-[11px] sm:text-xs text-mute leading-relaxed">
             Over the past 50+ years, the broad US stock index has averaged approximately 10% nominal annual return (or roughly 7% real return after inflation). Equities have consistently outperformed cash and fixed income over 15+ year holding periods.
           </p>
         </div>
 
-        <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
-          <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">The Power of Dollar-Cost Averaging</h3>
-          <p class="text-xs text-mute leading-relaxed">
+        <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-2">
+          <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">The Power of Dollar-Cost Averaging</h3>
+          <p class="text-[11px] sm:text-xs text-mute leading-relaxed">
             Investing fixed recurring amounts (e.g. $500/month) eliminates the risk of trying to time market tops and bottoms. When stock prices drop, your fixed monthly deposit automatically acquires more shares at a discount.
           </p>
         </div>
@@ -297,12 +297,12 @@ const faqs = getCalculatorFaqs('investment');
       const yrDisplay = adjustInflation && yrRealFactor > 0 ? endBal / yrRealFactor : endBal;
 
       rows.push(`
-        <tr class="hover:bg-canvas-soft transition-colors">
-          <td class="py-2 px-4 font-medium text-ink">Year ${yr}</td>
-          <td class="py-2 px-4 text-right text-mute">${formatCurrency(startBal)}</td>
-          <td class="py-2 px-4 text-right text-mute">+${formatCurrency(annualContrib)}</td>
-          <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yrEarnings)}</td>
-          <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(yrDisplay)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors text-[11px] sm:text-xs">
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 font-medium text-ink">Year ${yr}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-mute">${formatCurrency(startBal)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-mute">+${formatCurrency(annualContrib)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yrEarnings)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right font-bold text-ink">${formatCurrency(yrDisplay)}</td>
         </tr>
       `);
     }

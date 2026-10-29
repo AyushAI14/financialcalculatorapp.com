@@ -42,14 +42,14 @@ const faqs = [
       <form id="daily-compound-form" class="space-y-6">
         <!-- Preset Asset Pills -->
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="text-xs font-mono text-mute">{t('Quick Rate Presets:')}</span>
-          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="4.75">{lang === 'es' ? 'Cuenta HYSA (4.75%)' : (lang === 'de' ? 'Tagesgeld (4,75 %)' : (lang === 'ja' ? '高金利普通預金 (4.75%)' : (lang === 'pt' ? 'Conta Poupança / CDB (4.75%)' : 'HYSA (4.75%)')))}</button>
-          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="7.0">{lang === 'es' ? 'Bonos (7.0%)' : (lang === 'de' ? 'Anleihen (7,0 %)' : (lang === 'ja' ? '債券 (7.0%)' : (lang === 'pt' ? 'Títulos / Renda Fixa (7.0%)' : 'Bonds (7.0%)')))}</button>
-          <button type="button" class="rate-preset px-2.5 py-1 text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="10.0">S&P 500 (10.0%)</button>
+          <span class="text-[11px] sm:text-xs font-mono text-mute">{t('Quick Rate Presets:')}</span>
+          <button type="button" class="rate-preset px-2.5 py-1 text-[11px] sm:text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="4.75">{lang === 'es' ? 'Cuenta HYSA (4.75%)' : (lang === 'de' ? 'Tagesgeld (4,75 %)' : (lang === 'ja' ? '高金利普通預金 (4.75%)' : (lang === 'pt' ? 'Conta Poupança / CDB (4.75%)' : 'HYSA (4.75%)')))}</button>
+          <button type="button" class="rate-preset px-2.5 py-1 text-[11px] sm:text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="7.0">{lang === 'es' ? 'Bonos (7.0%)' : (lang === 'de' ? 'Anleihen (7,0 %)' : (lang === 'ja' ? '債券 (7.0%)' : (lang === 'pt' ? 'Títulos / Renda Fixa (7.0%)' : 'Bonds (7.0%)')))}</button>
+          <button type="button" class="rate-preset px-2.5 py-1 text-[11px] sm:text-xs bg-canvas border border-hairline rounded-full hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-rate="10.0">S&P 500 (10.0%)</button>
         </div>
 
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2 font-semibold">{t('Principal & Contribution')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2 font-semibold">{t('Principal & Contribution')}</h3>
 
           <!-- Principal -->
           <div class="space-y-2">
@@ -89,11 +89,11 @@ const faqs = [
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Daily Growth')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -109,31 +109,31 @@ const faqs = [
       </div>
 
       <!-- Growth Summary Breakdown Card -->
-      <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-3">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Compounding Frequency Advantage')}</h4>
+      <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm space-y-3">
+        <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute font-semibold">{t('Compounding Frequency Advantage')}</h4>
         {lang === 'es' ? (
-          <p class="text-xs text-body leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-body leading-relaxed">
             Al capitalizar de forma <span class="font-semibold text-ink">diaria</span> en lugar de anual, tu dinero genera un beneficio adicional de <span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> durante este periodo.
           </p>
         ) : lang === 'de' ? (
-          <p class="text-xs text-body leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-body leading-relaxed">
             Durch die <span class="font-semibold text-ink">tägliche</span> statt jährliche Zinsgutschrift erwirtschaftet Ihr Kapital einen zusätzlichen Zinseszins-Gewinn von <span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> über diesen Zeitraum.
           </p>
         ) : lang === 'ja' ? (
-          <p class="text-xs text-body leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-body leading-relaxed">
             年1回の複利計算ではなく<span class="font-semibold text-ink">日次（毎日）複利</span>で運用することにより、この期間中に利息がさらに<span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span>多く増える複利優位性があります。
           </p>
         ) : lang === 'pt' ? (
-          <p class="text-xs text-body leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-body leading-relaxed">
             Ao capitalizar com juros compostos de forma <span class="font-semibold text-ink">diária</span> em vez de anual, seu dinheiro rende um adicional de <span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> durante este período.
           </p>
         ) : (
-          <p class="text-xs text-body leading-relaxed">
+          <p class="text-[11px] sm:text-xs text-body leading-relaxed">
             By compounding <span class="font-semibold text-ink">daily</span> instead of annually, your money earns an additional <span id="compounding-bonus" class="font-bold text-emerald-600 dark:text-emerald-400">--</span> over this timeframe.
           </p>
         )}
         
-        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+        <div class="grid grid-cols-2 gap-3 pt-2 text-[11px] sm:text-xs font-mono">
           <div class="p-2.5 bg-canvas-soft border border-hairline rounded">
             <span class="text-[10px] text-mute block">{t('Daily Interest at Year 1')}</span>
             <span id="rate-day1" class="font-bold text-ink">--</span>

@@ -21,8 +21,8 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="payoff-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-4 border-b border-hairline pb-2">{t('Card Details', 'Credit Card Details')}</h3>
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4 border-b border-hairline pb-2">{t('Card Details', 'Credit Card Details')}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="balance" label="Credit Card Balance" type="number" prefix="$" value="5000" />
@@ -46,11 +46,11 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Payoff')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -74,8 +74,8 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
       </div>
 
       <!-- Drawdown Chart -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Balance Drawdown Timeline')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Balance Drawdown Timeline')}</h4>
         <div class="h-64 relative">
           <canvas id="payoff-chart"></canvas>
         </div>
@@ -84,15 +84,15 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
   </div>
 
   <!-- Detailed Schedule Table -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('Monthly Payment Schedule')}</h3>
-        <p class="text-sm text-body mt-1">{t('Month-by-month repayment progression listing interest fees and principal declines.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('Monthly Payment Schedule')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Month-by-month repayment progression listing interest fees and principal declines.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
-        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+        class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer w-fit"
       >
         {t('Show Monthly Schedule')}
       </button>
@@ -100,15 +100,15 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[450px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-[11px] sm:text-xs">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Month</th>
-              <th class="px-5 py-3 text-right">Starting Bal</th>
-              <th class="px-5 py-3 text-right">Payment</th>
-              <th class="px-5 py-3 text-right text-error-deep">Interest Charged</th>
-              <th class="px-5 py-3 text-right text-link">Principal Paid</th>
-              <th class="px-5 py-3 text-right font-medium">Ending Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3">Month</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Starting Bal</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Payment</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-error-deep">Interest Charged</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">Principal Paid</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">Ending Bal</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -243,13 +243,13 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
       let takeawayText = '';
       if (interestPct > 35) {
         takeawayText = `
-          <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink mt-3">
+          <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm font-medium text-[11px] sm:text-xs leading-relaxed text-ink mt-3">
             <span class="text-link">📢 Takeaway:</span> Over the payoff course, interest charges will account for <strong class="text-error-deep">${interestPct.toFixed(1)}%</strong> of your total payments (<strong class="text-error-deep">${formatCurrency(res.totalInterest)}</strong>). Consider paying more than the minimum to significantly reduce this waste.
           </div>
         `;
       } else {
         takeawayText = `
-          <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm font-medium text-xs leading-relaxed text-ink mt-3">
+          <div class="bg-canvas border border-hairline p-3.5 sm:p-5 rounded-lg shadow-sm font-medium text-[11px] sm:text-xs leading-relaxed text-ink mt-3">
             <span class="text-link">📢 Takeaway:</span> You will pay off your balance in ${res.monthsToPayoff} months. Total interest fees will be <strong class="text-link">${formatCurrency(res.totalInterest)}</strong>, which is ${(interestPct).toFixed(1)}% of your total payoff out-of-pocket.
           </div>
         `;
@@ -257,30 +257,30 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
 
       resultWrapper.innerHTML = `
         <div class="flex flex-col gap-3">
-          <div id="res-time" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+          <div id="res-time" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
             <div class="flex-1 min-w-0 text-left pr-2">
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
+              <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
               <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">Total duration required to pay down the balance.</p>
             </div>
-            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${res.monthsToPayoff} months">
+            <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${res.monthsToPayoff} months">
               ${res.monthsToPayoff} months
             </div>
           </div>
 
-          <div id="res-interest" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+          <div id="res-interest" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
             <div class="flex-1 min-w-0 text-left pr-2">
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
+              <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
             </div>
-            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(res.totalInterest)}">
+            <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(res.totalInterest)}">
               ${formatCurrency(res.totalInterest)}
             </div>
           </div>
 
-          <div id="res-total" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+          <div id="res-total" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
             <div class="flex-1 min-w-0 text-left pr-2">
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
+              <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
             </div>
-            <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(totalPayments)}">
+            <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0" title="${formatCurrency(totalPayments)}">
               ${formatCurrency(totalPayments)}
             </div>
           </div>
@@ -366,21 +366,21 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
     let html = '';
     truncated.forEach(e => {
       html += `
-        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-          <td class="px-5 py-3 font-semibold text-body">Month ${e.month}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.startingBalance)}</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.payment)}</td>
-          <td class="px-5 py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
-          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.principal)}</td>
-          <td class="px-5 py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Month ${e.month}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.startingBalance)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.payment)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-error-deep">${formatCurrency(e.interest)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.principal)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-medium">${formatCurrency(e.endingBalance)}</td>
         </tr>
       `;
     });
 
     if (schedule.length > 240) {
       html += `
-        <tr class="bg-canvas-soft-2 font-mono text-xs text-mute">
-          <td colspan="6" class="px-5 py-3 text-center">
+        <tr class="bg-canvas-soft-2 font-mono text-[11px] sm:text-xs text-mute">
+          <td colspan="6" class="px-2.5 py-2 sm:px-5 sm:py-3 text-center">
             Showing first 240 months of ${schedule.length} months.
           </td>
         </tr>
@@ -401,30 +401,30 @@ const faqs = getCalculatorFaqs('credit-card-payoff');
       if (resultWrapper) {
         resultWrapper.innerHTML = `
           <div class="flex flex-col gap-3">
-            <div id="res-time" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+            <div id="res-time" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas-soft border border-hairline-strong shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
               <div class="flex-1 min-w-0 text-left pr-2">
-                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
+                <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Time to Payoff</h4>
                 <p class="text-[10px] text-body/80 mt-0.5 leading-normal max-w-md hidden sm:block">Total duration required to pay down the balance.</p>
               </div>
-              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+              <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
                 --
               </div>
             </div>
 
-            <div id="res-interest" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+            <div id="res-interest" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
               <div class="flex-1 min-w-0 text-left pr-2">
-                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
+                <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Total Interest</h4>
               </div>
-              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+              <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
                 --
               </div>
             </div>
 
-            <div id="res-total" class="px-5 py-4 rounded-lg flex items-center justify-between gap-4 min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
+            <div id="res-total" class="px-3.5 sm:px-5 py-3 sm:py-4 rounded-lg flex items-center justify-between gap-3 sm:gap-4 min-h-[64px] sm:min-h-[72px] w-full bg-canvas border border-hairline shadow-sm">
               <div class="flex-1 min-w-0 text-left pr-2">
-                <h4 class="text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
+                <h4 class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-mute">Total Payments</h4>
               </div>
-              <div class="text-lg sm:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
+              <div class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-ink font-mono whitespace-nowrap text-right shrink-0">
                 --
               </div>
             </div>

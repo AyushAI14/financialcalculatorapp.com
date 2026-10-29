@@ -21,8 +21,8 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
     <div class="lg:col-span-6 space-y-6">
       <form id="rent-vs-buy-form" class="space-y-6">
         <!-- Renter Settings -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Renter Parameters', 'Rental Assumptions')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Renter Parameters', 'Rental Assumptions')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input id="rent" label="Monthly Rent" type="number" prefix="$" value="1800" />
             <Input id="rent-inflation" label="Rent Inflation" type="number" suffix="%" value="3.0" />
@@ -31,8 +31,8 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
         </div>
 
         <!-- Buyer Settings -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Buyer Parameters', 'Home Purchase Details')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Buyer Parameters', 'Home Purchase Details')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-2">
               <Input id="home-price" label="Home Purchase Price" type="number" prefix="$" value="380000" />
@@ -52,7 +52,7 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
         </div>
 
         <!-- General Parameters -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-canvas-soft border border-hairline rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-3.5 sm:p-5 bg-canvas-soft border border-hairline rounded-md">
           <Input id="duration" label="Comparison Horizon" type="number" suffix="years" value="15" />
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input id="buy-fees" label="Buying Cost" type="number" suffix="%" value="2.0" />
@@ -61,10 +61,10 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Run Comparison')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -87,8 +87,8 @@ const faqs = getCalculatorFaqs('rent-vs-buy');
       </div>
 
       <!-- Net Worth Chart Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
-        <h4 class="text-xs font-mono text-mute uppercase tracking-wider mb-4">{t('Net Worth Projection over Time')}</h4>
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
+        <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-3 sm:mb-4">{t('Net Worth Projection over Time')}</h4>
         <div class="h-80 relative">
           <canvas id="nw-chart"></canvas>
         </div>

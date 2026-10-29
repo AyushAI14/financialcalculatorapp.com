@@ -21,8 +21,8 @@ const faqs = getCalculatorFaqs('401k');
     <div class="lg:col-span-6 space-y-6">
       <form id="four-oh-one-k-form" class="space-y-6">
         <!-- Salary Details & Plan Type -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Salary & Deferral Settings', 'Salary & Deferral Settings')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Salary & Deferral Settings', 'Salary & Deferral Settings')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-2">
               <Input id="salary" label="Annual Salary" type="number" prefix="$" value="95000" />
@@ -37,36 +37,36 @@ const faqs = getCalculatorFaqs('401k');
 
           <!-- Plan Type Selection -->
           <div class="pt-2 border-t border-hairline/60">
-            <label class="block text-xs font-mono uppercase text-mute mb-2">401(k) Plan Type</label>
+            <label class="block text-[11px] sm:text-xs font-mono uppercase text-mute mb-2">401(k) Plan Type</label>
             <div class="grid grid-cols-2 gap-3">
               <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="plan-type" value="traditional" checked class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Traditional (Pre-tax)</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Traditional (Pre-tax)</span>
               </label>
               <label class="flex items-center gap-2 p-2.5 rounded border border-hairline bg-canvas-soft cursor-pointer hover:border-ink/40 transition-colors">
                 <input type="radio" name="plan-type" value="roth" class="text-primary focus:ring-primary h-4 w-4" />
-                <span class="text-xs font-medium text-ink">Roth (Post-tax)</span>
+                <span class="text-[11px] sm:text-xs font-medium text-ink">Roth (Post-tax)</span>
               </label>
             </div>
           </div>
         </div>
 
         <!-- Employer Matching Details -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Employer Matching Rules', 'Employer Matching Rules')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Employer Matching Rules', 'Employer Matching Rules')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Input id="match-pct" label="Employer Match Pct" type="number" suffix="%" value="50" placeholder="e.g. 50% match" />
             <Input id="max-match-pct" label="Matching Limit" type="number" suffix="%" value="6.0" placeholder="e.g. up to 6% of salary" />
           </div>
-          <p class="text-[11px] text-mute leading-normal">
+          <p class="text-[10px] sm:text-[11px] text-mute leading-normal">
             * <strong>Employer Match</strong>: The percentage of your contribution matched (e.g., 50% match adds $0.50 for every $1.00 you contribute).<br/>
             * <strong>Matching Limit</strong>: The maximum salary percentage matched (e.g., up to 6% of your salary).
           </p>
         </div>
 
         <!-- Age & Horizon Parameters -->
-        <div class="bg-canvas border border-hairline p-5 rounded-lg shadow-sm space-y-4">
-          <h3 class="text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Timeline & Age Parameters', 'Timeline & Age Parameters')}</h3>
+        <div class="bg-canvas border border-hairline p-4 sm:p-5 rounded-lg shadow-sm space-y-4">
+          <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider mb-2 border-b border-hairline pb-2">{t('Timeline & Age Parameters', 'Timeline & Age Parameters')}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input id="current-age" label="Current Age" type="number" value="30" />
             <Input id="retire-age" label="Retirement Age" type="number" value="65" />
@@ -79,10 +79,10 @@ const faqs = getCalculatorFaqs('401k');
         </div>
 
         <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Growth')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Clear')}
           </button>
         </div>
@@ -110,9 +110,9 @@ const faqs = getCalculatorFaqs('401k');
       </div>
 
       <!-- Growth Chart Card -->
-      <div class="bg-canvas border border-hairline rounded-lg p-5 shadow-sm">
+      <div class="bg-canvas border border-hairline rounded-lg p-3.5 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between mb-4">
-          <h4 class="text-xs font-mono text-mute uppercase tracking-wider">{t('401(k) Growth Composition by Age')}</h4>
+          <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('401(k) Growth Composition by Age')}</h4>
           <div class="flex items-center gap-1 bg-canvas-soft border border-hairline p-0.5 rounded-lg text-xs font-mono">
             <button 
               type="button" 
@@ -140,15 +140,15 @@ const faqs = getCalculatorFaqs('401k');
   </div>
 
   <!-- Detailed Year-by-Year Schedule -->
-  <div class="mt-12 border-t border-hairline pt-8">
-    <div class="flex items-center justify-between mb-6">
+  <div class="mt-8 sm:mt-12 border-t border-hairline pt-6 sm:pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
       <div>
-        <h3 class="text-xl font-semibold tracking-[-0.8px] text-ink">{t('401k Year-by-Year Schedule')}</h3>
-        <p class="text-sm text-body mt-1">{t('Compound growth trajectory listing annual salary, employee deposits, employer matching, investment returns, and tax savings.')}</p>
+        <h3 class="text-lg sm:text-xl font-semibold tracking-[-0.8px] text-ink">{t('401k Year-by-Year Schedule')}</h3>
+        <p class="text-xs sm:text-sm text-body mt-1">{t('Compound growth trajectory listing annual salary, employee deposits, employer matching, investment returns, and tax savings.')}</p>
       </div>
       <button 
         id="toggle-schedule" 
-        class="px-4 py-2 border border-hairline rounded-md text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer"
+        class="px-3 sm:px-4 py-1.5 sm:py-2 border border-hairline rounded-md text-[11px] sm:text-xs font-mono font-medium bg-canvas hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer w-fit"
       >
         {t('Show Annual Schedule')}
       </button>
@@ -156,16 +156,16 @@ const faqs = getCalculatorFaqs('401k');
 
     <div id="schedule-wrapper" class="hidden border border-hairline rounded-lg overflow-hidden shadow-sm">
       <div class="overflow-x-auto max-h-[450px]">
-        <table class="w-full border-collapse text-left text-sm">
-          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-xs uppercase text-mute z-10">
+        <table class="w-full border-collapse text-left text-xs sm:text-sm">
+          <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] sm:text-xs uppercase text-mute z-10">
             <tr>
-              <th class="px-5 py-3">Year / Age</th>
-              <th class="px-5 py-3 text-right">Salary</th>
-              <th class="px-5 py-3 text-right">Employee Deposits</th>
-              <th class="px-5 py-3 text-right">Employer Match</th>
-              <th class="px-5 py-3 text-right">Investment Growth</th>
-              <th class="px-5 py-3 text-right">Ending Balance</th>
-              <th class="px-5 py-3 text-right">Annual Tax Saved</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3">Year / Age</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Salary</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Employee Deposits</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Employer Match</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Investment Growth</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Ending Balance</th>
+              <th class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">Annual Tax Saved</th>
             </tr>
           </thead>
           <tbody id="schedule-body" class="divide-y divide-hairline">
@@ -179,30 +179,30 @@ const faqs = getCalculatorFaqs('401k');
   <!-- Educational & Deep-Dive Modules -->
   <div class="mt-14 space-y-12">
     <!-- Module 1: 401(k) Balance Milestones by Age -->
-    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm">
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-hairline pb-4 mb-6">
         <div>
-          <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Benchmark Guide</span>
-          <h2 class="text-xl font-bold text-ink mt-1">401(k) Balance by Age: How Much Should You Have Saved?</h2>
-          <p class="text-sm text-mute mt-1">
+          <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Benchmark Guide</span>
+          <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">401(k) Balance by Age: How Much Should You Have Saved?</h2>
+          <p class="text-xs sm:text-sm text-mute mt-1">
             Fidelity and certified financial planner savings targets calculated for your salary (<span id="milestone-salary-display" class="font-semibold text-ink">$95,000</span>):
           </p>
         </div>
-        <div id="milestone-status-box" class="px-4 py-2.5 rounded-lg border border-hairline bg-canvas-soft text-xs font-mono">
+        <div id="milestone-status-box" class="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-hairline bg-canvas-soft text-[11px] sm:text-xs font-mono">
           <span class="text-mute">Status at Age <span id="status-cur-age" class="text-ink font-semibold">30</span>:</span>
-          <div id="status-evaluation" class="text-ink font-bold text-sm mt-0.5">$25,000 / $95,000 (26%)</div>
+          <div id="status-evaluation" class="text-ink font-bold text-xs sm:text-sm mt-0.5">$25,000 / $95,000 (26%)</div>
         </div>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-xs sm:text-sm">
           <thead>
-            <tr class="border-b border-hairline font-mono text-xs text-mute uppercase">
-              <th class="py-2.5 px-3">Target Age</th>
-              <th class="py-2.5 px-3">Fidelity Multiple</th>
-              <th class="py-2.5 px-3 text-right">Recommended Target</th>
-              <th class="py-2.5 px-3 text-right">Monthly Payout (4% Rule)</th>
-              <th class="py-2.5 px-3 text-right">Benchmark Note</th>
+            <tr class="border-b border-hairline font-mono text-[10px] sm:text-xs text-mute uppercase">
+              <th class="py-2 px-2.5 sm:py-2.5 sm:px-3">Target Age</th>
+              <th class="py-2 px-2.5 sm:py-2.5 sm:px-3">Fidelity Multiple</th>
+              <th class="py-2 px-2.5 sm:py-2.5 sm:px-3 text-right">Recommended Target</th>
+              <th class="py-2 px-2.5 sm:py-2.5 sm:px-3 text-right">Monthly Payout (4% Rule)</th>
+              <th class="py-2 px-2.5 sm:py-2.5 sm:px-3 text-right">Benchmark Note</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-hairline text-xs font-mono">
@@ -268,11 +268,11 @@ const faqs = getCalculatorFaqs('401k');
     </section>
 
     <!-- Module 2: Roth vs. Traditional 401(k) -->
-    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-6">
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
       <div class="border-b border-hairline pb-4">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Tax Strategy</span>
-        <h2 class="text-xl font-bold text-ink mt-1">Roth 401(k) vs. Traditional 401(k): Which Should You Choose?</h2>
-        <p class="text-sm text-mute mt-1">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Tax Strategy</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Roth 401(k) vs. Traditional 401(k): Which Should You Choose?</h2>
+        <p class="text-xs sm:text-sm text-mute mt-1">
           Understanding whether to pay taxes today or during retirement is the most crucial decision in maximizing net take-home wealth.
         </p>
       </div>
@@ -342,11 +342,11 @@ const faqs = getCalculatorFaqs('401k');
     </section>
 
     <!-- Module 3: Withdrawals, 4% Rule & Early Withdrawal Penalties -->
-    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-8">
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-8">
       <div class="border-b border-hairline pb-4">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Distribution Strategy</span>
-        <h2 class="text-xl font-bold text-ink mt-1">401(k) Withdrawals, Monthly Payouts & Early Penalty Calculator</h2>
-        <p class="text-sm text-mute mt-1">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Distribution Strategy</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">401(k) Withdrawals, Monthly Payouts & Early Penalty Calculator</h2>
+        <p class="text-xs sm:text-sm text-mute mt-1">
           How much can you withdraw per month in retirement, and what happens if you access your 401(k) early?
         </p>
       </div>
@@ -437,11 +437,11 @@ const faqs = getCalculatorFaqs('401k');
     </section>
 
     <!-- Module 4: Solo 401(k) for Self-Employed -->
-    <section class="bg-canvas border border-hairline rounded-xl p-6 lg:p-8 shadow-sm space-y-6">
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
       <div class="border-b border-hairline pb-4">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Self-Employed & Small Business</span>
-        <h2 class="text-xl font-bold text-ink mt-1">Solo 401(k) Calculator & Contribution Limits</h2>
-        <p class="text-sm text-mute mt-1">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Self-Employed & Small Business</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Solo 401(k) Calculator & Contribution Limits</h2>
+        <p class="text-xs sm:text-sm text-mute mt-1">
           Self-employed freelancers, independent 1099 contractors, and single-member business owners can contribute both as employee AND employer up to the combined $69,000 limit.
         </p>
       </div>
@@ -1041,14 +1041,14 @@ const faqs = getCalculatorFaqs('401k');
     let html = '';
     schedule.forEach(e => {
       html += `
-        <tr class="hover:bg-canvas-soft transition-colors font-mono text-xs text-ink">
-          <td class="px-5 py-3 font-semibold text-body">Yr ${e.year} (Age ${currentAge + e.year})</td>
-          <td class="px-5 py-3 text-right">${formatCurrency(e.salary)}</td>
-          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.employeeContributions)}</td>
-          <td class="px-5 py-3 text-right text-purple-600 dark:text-purple-400 font-medium">${formatCurrency(e.employerMatch)}</td>
-          <td class="px-5 py-3 text-right text-emerald-600 dark:text-emerald-400">${formatCurrency(e.interest)}</td>
-          <td class="px-5 py-3 text-right font-bold text-ink">${formatCurrency(e.endingBalance)}</td>
-          <td class="px-5 py-3 text-right text-link">${formatCurrency(e.taxSavings)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 font-semibold text-body">Yr ${e.year} (Age ${currentAge + e.year})</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right">${formatCurrency(e.salary)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.employeeContributions)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-purple-600 dark:text-purple-400 font-medium">${formatCurrency(e.employerMatch)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-emerald-600 dark:text-emerald-400">${formatCurrency(e.interest)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right font-bold text-ink">${formatCurrency(e.endingBalance)}</td>
+          <td class="px-2.5 py-2 sm:px-5 sm:py-3 text-right text-link">${formatCurrency(e.taxSavings)}</td>
         </tr>
       `;
     });

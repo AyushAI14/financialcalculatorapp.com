@@ -23,9 +23,9 @@ const faqs = getCalculatorFaqs('future-value');
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
       <form id="fv-form" class="space-y-6">
-        <div class="space-y-6 bg-canvas border border-hairline p-6 rounded-lg shadow-sm">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-2 mb-4">
-            <h3 class="text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Parameters')}</h3>
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Investment Parameters')}</h3>
             <div class="flex flex-wrap items-center gap-1.5 no-print">
               <span class="text-[10px] text-mute font-mono">{t('Presets:')}</span>
               <button type="button" class="preset-btn px-2 py-0.5 bg-canvas-soft hover:bg-canvas-soft-2 text-[10px] border border-hairline rounded transition-colors cursor-pointer" data-pv="10000" data-pmt="500" data-rate="8" data-years="10">Index Fund (8%)</button>
@@ -79,11 +79,11 @@ const faqs = getCalculatorFaqs('future-value');
           </div>
         </div>
 
-        <div class="pt-2 border-t border-hairline flex gap-4">
-          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <div class="pt-2 border-t border-hairline flex gap-3 sm:gap-4">
+          <button type="submit" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer">
             {t('Calculate Future Value')}
           </button>
-          <button type="reset" id="reset-btn" class="px-6 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+          <button type="reset" id="reset-btn" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
             {t('Reset')}
           </button>
         </div>
@@ -137,19 +137,19 @@ const faqs = getCalculatorFaqs('future-value');
 
       <!-- Year-by-Year Growth Table -->
       <div class="bg-canvas border border-hairline rounded-lg shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
-          <h4 class="text-xs font-mono uppercase tracking-wider text-mute">Future Value Schedule</h4>
-          <span class="text-[10px] font-mono text-mute">Annual Growth Trajectory</span>
+        <div class="p-3.5 sm:p-4 border-b border-hairline bg-canvas-soft flex items-center justify-between">
+          <h4 class="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-mute">Future Value Schedule</h4>
+          <span class="text-[9px] sm:text-[10px] font-mono text-mute">Annual Growth Trajectory</span>
         </div>
         <div class="overflow-x-auto max-h-[380px]">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[10px] text-mute uppercase z-10">
+          <table class="w-full text-left border-collapse text-[11px] sm:text-xs">
+            <thead class="sticky top-0 bg-canvas-soft border-b border-hairline font-mono text-[9px] sm:text-[10px] text-mute uppercase z-10">
               <tr>
-                <th class="py-2.5 px-4">Year</th>
-                <th class="py-2.5 px-4 text-right">Start Bal</th>
-                <th class="py-2.5 px-4 text-right">Deposits</th>
-                <th class="py-2.5 px-4 text-right">Interest</th>
-                <th class="py-2.5 px-4 text-right font-bold text-ink">Ending FV</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4">Year</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Start Bal</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Deposits</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right">Interest</th>
+                <th class="py-2 px-2.5 sm:py-2.5 sm:px-4 text-right font-bold text-ink">Ending FV</th>
               </tr>
             </thead>
             <tbody id="fv-schedule-body" class="divide-y divide-hairline font-mono">
@@ -162,16 +162,16 @@ const faqs = getCalculatorFaqs('future-value');
   </div>
 
   <!-- Educational Guide -->
-  <div class="mt-16 space-y-8 border-t border-hairline pt-12 prose prose-neutral max-w-none">
+  <div class="mt-10 sm:mt-16 space-y-6 sm:space-y-8 border-t border-hairline pt-8 sm:pt-12 prose prose-neutral max-w-none">
     <div class="max-w-3xl space-y-4">
-      <h2 class="text-2xl font-bold tracking-tight text-ink">What is Future Value (FV)?</h2>
-      <p class="text-sm text-mute leading-relaxed">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-ink">What is Future Value (FV)?</h2>
+      <p class="text-xs sm:text-sm text-mute leading-relaxed">
         Future Value (FV) measures how much a current sum of money (Present Value, or PV) or a series of periodic cash inflows (Annuity, or PMT) will be worth at a specific date in the future, given an assumed compound interest rate. It forms the foundation of modern finance and personal investment planning.
       </p>
 
-      <div class="p-5 rounded-lg border border-hairline bg-canvas-soft space-y-3 not-prose my-6">
-        <h3 class="font-bold text-sm text-ink font-mono uppercase tracking-wider">The Mathematical Future Value Formula</h3>
-        <p class="text-xs text-mute font-mono bg-paper p-3 rounded border border-hairline overflow-x-auto">
+      <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-3 not-prose my-4 sm:my-6">
+        <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">The Mathematical Future Value Formula</h3>
+        <p class="text-[10px] sm:text-xs text-mute font-mono bg-paper p-2.5 sm:p-3 rounded border border-hairline overflow-x-auto">
           FV = PV × (1 + r/m)^(m×t) + PMT × [ ((1 + r/m)^(m×t) - 1) / (r/m) ] × (1 + r/m)^timing
         </p>
         <div class="text-xs text-mute space-y-1">
@@ -288,12 +288,12 @@ const faqs = getCalculatorFaqs('future-value');
       currentBalance = yearEnd;
 
       scheduleRows.push(`
-        <tr class="hover:bg-canvas-soft transition-colors">
-          <td class="py-2 px-4 font-medium text-ink">Year ${yr}</td>
-          <td class="py-2 px-4 text-right text-mute">${formatCurrency(yearStart)}</td>
-          <td class="py-2 px-4 text-right text-mute">+${formatCurrency(annualAdditions)}</td>
-          <td class="py-2 px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yearInterest)}</td>
-          <td class="py-2 px-4 text-right font-bold text-ink">${formatCurrency(yearEnd)}</td>
+        <tr class="hover:bg-canvas-soft transition-colors text-[11px] sm:text-xs">
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 font-medium text-ink">Year ${yr}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-mute">${formatCurrency(yearStart)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-mute">+${formatCurrency(annualAdditions)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right text-emerald-600 font-semibold">+${formatCurrency(yearInterest)}</td>
+          <td class="py-1.5 px-2.5 sm:py-2 sm:px-4 text-right font-bold text-ink">${formatCurrency(yearEnd)}</td>
         </tr>
       `);
     }
