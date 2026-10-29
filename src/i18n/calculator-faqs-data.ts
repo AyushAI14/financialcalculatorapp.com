@@ -584,7 +584,7 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
   'crypto-dca': [
     {
       question: "What is Dollar-Cost Averaging (DCA)?",
-      answer: "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price."
+      answer: "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money at regular intervals regardless of the asset's fluctuating market price. For a full breakdown of the math, comparisons with lump-sum investing, and crypto fee traps, read our complete guide: <a href=\"/blog/what-does-dca-mean-in-crypto/\" class=\"text-primary underline font-medium\">What Does DCA Mean in Crypto?</a>."
     },
     {
       question: "How does DCA apply to high-volatility assets like Crypto?",
