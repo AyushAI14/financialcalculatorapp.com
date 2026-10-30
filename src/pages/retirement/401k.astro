@@ -11,11 +11,36 @@ const faqs = getCalculatorFaqs('401k');
 ---
 
 <CalculatorLayout 
-  title="401k Calculator with Match: Retirement Growth & Employer Contribution" 
-  seoTitle="401k Calculator with Match – By Age, Growth & Payout Estimator"
-  description="Free 401(k) calculator with match. Calculate your 401k retirement growth with employer matching contributions, estimate balance by age, monthly payout, and tax savings."
+  title="401k Calculator with Match: Roth vs Traditional, Solo & Dave Ramsey 15% Rule" 
+  seoTitle="401k Calculator with Match – Roth vs Traditional, Solo, Simple & Dave Ramsey"
+  description="Free 401k calculator with employer match. Calculate Roth vs Traditional 401k growth, Solo 401k limits, Dave Ramsey 15% rule, and simple 401k retirement projections with monthly payouts."
   faqs={faqs}
 >
+  <!-- Quick Presets Bar for Target Strategies -->
+  <div class="bg-canvas border border-hairline p-3 sm:p-4 rounded-xl shadow-xs mb-6">
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-mute font-semibold">⚡ Quick 401(k) Presets & Strategy Calculators:</span>
+      <span class="text-[10px] text-mute font-mono hidden sm:inline">1-Click Auto-Fill</span>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" id="preset-simple" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Load simple 401k calculator standard match model">
+        Simple 401k (6% Match)
+      </button>
+      <button type="button" id="preset-dave" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Dave Ramsey 401k Calculator: 15% contribution, Roth, 10% growth">
+        Dave Ramsey (15% Rule)
+      </button>
+      <button type="button" id="preset-roth" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Roth 401k Calculator: Tax-free retirement compounding">
+        Roth 401k Calculator
+      </button>
+      <button type="button" id="preset-max" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Max out full annual IRS 401k limit ($23,500)">
+        Max Out ($23,500)
+      </button>
+      <a href="#solo-401k-section" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:border-primary text-primary transition-colors text-[11px] font-mono font-medium cursor-pointer flex items-center gap-1" title="Jump to self-employed Solo 401k calculator">
+        Solo 401k Calculator ↓
+      </a>
+    </div>
+  </div>
+
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Column (Inputs) -->
     <div class="lg:col-span-6 space-y-6">
@@ -271,9 +296,9 @@ const faqs = getCalculatorFaqs('401k');
     <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
       <div class="border-b border-hairline pb-4">
         <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Tax Strategy</span>
-        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Roth 401(k) vs. Traditional 401(k): Which Should You Choose?</h2>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Roth vs Traditional 401k Calculator: Tax-Deferred vs Tax-Free Compounding</h2>
         <p class="text-xs sm:text-sm text-mute mt-1">
-          Understanding whether to pay taxes today or during retirement is the most crucial decision in maximizing net take-home wealth.
+          Whether you use our roth 401k calculator mode or stick with traditional pre-tax deferrals, choosing whether to pay taxes today or in retirement is the single most impactful decision for maximizing your net retirement wealth.
         </p>
       </div>
 
@@ -433,16 +458,31 @@ const faqs = getCalculatorFaqs('401k');
             </ul>
           </div>
         </div>
+
+        <!-- Emergency Cash Out Callout Banner -->
+        <div class="lg:col-span-2 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1 text-xs text-ink">
+            <span class="font-bold flex items-center gap-1.5 text-amber-800 dark:text-amber-300 text-sm">
+              <span>⚠️</span> Can I Cancel My 401(k) and Cash Out While Still Employed?
+            </span>
+            <p class="text-[11px] text-mute leading-normal">
+              Need urgent cash? Learn how in-service distribution rules work, why early cash-outs face mandatory 20% tax withholding plus 10% penalties, and 3 smarter alternatives before sacrificing your nest egg.
+            </p>
+          </div>
+          <a href="/blog/can-i-cancel-401k-cash-out-while-employed/" class="px-4 py-2 bg-canvas border border-hairline hover:bg-canvas-soft rounded-lg text-xs font-mono font-semibold text-ink transition-colors whitespace-nowrap shadow-xs">
+            Read Full Guide →
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- Module 4: Solo 401(k) for Self-Employed -->
-    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
+    <section id="solo-401k-section" class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
       <div class="border-b border-hairline pb-4">
         <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Self-Employed & Small Business</span>
-        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Solo 401(k) Calculator & Contribution Limits</h2>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Solo 401k Calculator & Self-Employed Contribution Limits</h2>
         <p class="text-xs sm:text-sm text-mute mt-1">
-          Self-employed freelancers, independent 1099 contractors, and single-member business owners can contribute both as employee AND employer up to the combined $69,000 limit.
+          Our solo 401k calculator models the maximum retirement contributions for self-employed freelancers, 1099 contractors, and single-member business owners, allowing contributions both as employee AND employer up to the combined $69,000 limit.
         </p>
       </div>
 
@@ -504,6 +544,122 @@ const faqs = getCalculatorFaqs('401k');
             </p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Module 5: Dave Ramsey 401(k) Calculator & The 15% Rule -->
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
+      <div class="border-b border-hairline pb-4">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Retirement Blueprint</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Dave Ramsey 401k Calculator: Baby Step 4 & The 15% Rule Explained</h2>
+        <p class="text-xs sm:text-sm text-mute mt-1">
+          How the Dave Ramsey 401k calculator strategy works: allocating 15% of gross household income, maximizing the company match first, and prioritizing Roth accounts.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="border border-hairline rounded-lg p-4 bg-canvas-soft space-y-2.5">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs font-bold">
+            <span class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[11px]">1</span>
+            <span>Match First</span>
+          </div>
+          <h3 class="font-bold text-sm text-ink">Capture 100% of the 401(k) Match</h3>
+          <p class="text-xs text-body leading-relaxed">
+            Begin by contributing enough to your employer's 401(k) to grab every penny of the company match. Dave calls this a guaranteed 100% immediate return on your investment.
+          </p>
+        </div>
+
+        <div class="border border-hairline rounded-lg p-4 bg-canvas-soft space-y-2.5">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs font-bold">
+            <span class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[11px]">2</span>
+            <span>Roth IRA Second</span>
+          </div>
+          <h3 class="font-bold text-sm text-ink">Max Out a Personal Roth IRA</h3>
+          <p class="text-xs text-body leading-relaxed">
+            Above the match, direct dollars into a personal Roth IRA (up to $7,000 / $8,000 if 50+). Roth IRAs offer superior mutual fund selection and 100% tax-free withdrawals in retirement.
+          </p>
+        </div>
+
+        <div class="border border-hairline rounded-lg p-4 bg-canvas-soft space-y-2.5">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs font-bold">
+            <span class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[11px]">3</span>
+            <span>Complete the 15%</span>
+          </div>
+          <h3 class="font-bold text-sm text-ink">Return to Roth 401(k) or 401(k)</h3>
+          <p class="text-xs text-body leading-relaxed">
+            If you haven't reached 15% of gross household income yet, channel remaining savings back into your employer's Roth 401(k) (or Traditional 401k) until the full 15% target is met.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+        <div class="p-4 rounded-lg bg-canvas-soft border border-hairline space-y-2 text-xs">
+          <h4 class="font-bold text-ink text-sm">Why Does Dave Ramsey Recommend Exactly 15%?</h4>
+          <p class="text-body leading-relaxed">
+            Under Dave Ramsey's 7 Baby Steps, Step 4 is investing 15% of household income for retirement after paying off all non-mortgage debt and building a 3-to-6 month emergency fund. Dave specifies 15%—not 25% or 30%—because you need remaining monthly cash flow to tackle <strong>Baby Step 5 (College funding)</strong> and <strong>Baby Step 6 (Paying off your home mortgage early)</strong>.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-lg bg-canvas-soft border border-hairline space-y-2 text-xs">
+          <h4 class="font-bold text-ink text-sm">Dave's 10%–12% Return Expectation vs Realistic 7.5% Real Return</h4>
+          <p class="text-body leading-relaxed">
+            Dave Ramsey frequently models 10% to 12% average annual growth based on the historical return of the S&P 500 (since 1926). While 10% reflects nominal average growth, factoring in inflation (2.5%–3.0%) gives an inflation-adjusted "real return" of around <strong>7.0% to 7.5%</strong>. Our calculator lets you test both assumptions instantly.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 6: Simple 401(k) Calculator & Plan Comparison -->
+    <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm space-y-6">
+      <div class="border-b border-hairline pb-4">
+        <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">Small Business & Easy Estimator</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink mt-1">Simple 401k Calculator: Understanding SIMPLE 401(k) Plans</h2>
+        <p class="text-xs sm:text-sm text-mute mt-1">
+          Whether you need a simple 401k calculator for a clean 3-second estimate, or participate in a formal IRS SIMPLE 401(k) plan with a small business, here is how the rules and math work.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-hairline font-mono text-[10px] sm:text-xs text-mute uppercase">
+              <th class="py-2.5 px-3">Plan Feature</th>
+              <th class="py-2.5 px-3 text-primary font-semibold">SIMPLE 401(k) Plan</th>
+              <th class="py-2.5 px-3 text-ink">Traditional 401(k) Plan</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline font-sans text-xs">
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Target Employer Size</td>
+              <td class="py-3 px-3 text-primary font-medium">Small businesses with 100 or fewer employees</td>
+              <td class="py-3 px-3 text-body">Companies of any size (startups to Fortune 500)</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Vesting Schedule</td>
+              <td class="py-3 px-3 text-emerald-600 dark:text-emerald-400 font-bold">100% Immediate Vesting (Day 1 ownership)</td>
+              <td class="py-3 px-3 text-body">Up to 3-year cliff or 6-year graded vesting</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Mandatory Employer Match</td>
+              <td class="py-3 px-3 text-primary font-medium">Required: 100% match up to 3% OR 2% non-elective</td>
+              <td class="py-3 px-3 text-body">Optional (employers choose match percentage)</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">Employee Deferral Limit (2024)</td>
+              <td class="py-3 px-3 font-mono text-ink">$16,000 ($19,500 if age 50+)</td>
+              <td class="py-3 px-3 font-mono text-ink font-bold">$23,000 ($30,500 if age 50+)</td>
+            </tr>
+            <tr class="hover:bg-canvas-soft">
+              <td class="py-3 px-3 font-semibold text-ink">IRS Nondiscrimination Testing</td>
+              <td class="py-3 px-3 text-emerald-600 dark:text-emerald-400 font-medium">Exempt (No ADP/ACP annual testing)</td>
+              <td class="py-3 px-3 text-body">Strict annual compliance testing required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="p-4 rounded-lg bg-canvas-soft border border-hairline text-xs text-mute leading-relaxed">
+        <strong>Looking for a fast, simple 401(k) calculation?</strong> You don't have to navigate complex IRS jargon. Use our interactive calculator at the top of this page with the <em>"Simple 401k (6% Match)"</em> preset to test standard 3% to 6% salary deferrals in seconds.
       </div>
     </section>
   </div>
@@ -1147,6 +1303,50 @@ const faqs = getCalculatorFaqs('401k');
     inp?.addEventListener('input', () => {
       performCalculation();
     });
+  });
+
+  // Preset Buttons Logic
+  const presetSimpleBtn = document.getElementById('preset-simple');
+  const presetDaveBtn = document.getElementById('preset-dave');
+  const presetRothBtn = document.getElementById('preset-roth');
+  const presetMaxBtn = document.getElementById('preset-max');
+
+  presetSimpleBtn?.addEventListener('click', () => {
+    if (salaryInput) salaryInput.value = '95000';
+    if (salaryGrowthInput) salaryGrowthInput.value = '3.0';
+    if (contributionPctInput) contributionPctInput.value = '6.0';
+    if (matchPctInput) matchPctInput.value = '50';
+    if (maxMatchPctInput) maxMatchPctInput.value = '6.0';
+    if (returnRateInput) returnRateInput.value = '7.5';
+    const tradRadio = document.querySelector('input[name="plan-type"][value="traditional"]') as HTMLInputElement | null;
+    if (tradRadio) tradRadio.checked = true;
+    performCalculation();
+  });
+
+  presetDaveBtn?.addEventListener('click', () => {
+    if (salaryInput) salaryInput.value = '95000';
+    if (salaryGrowthInput) salaryGrowthInput.value = '3.0';
+    if (contributionPctInput) contributionPctInput.value = '15.0';
+    if (matchPctInput) matchPctInput.value = '50';
+    if (maxMatchPctInput) maxMatchPctInput.value = '6.0';
+    if (returnRateInput) returnRateInput.value = '10.0';
+    const rothRadio = document.querySelector('input[name="plan-type"][value="roth"]') as HTMLInputElement | null;
+    if (rothRadio) rothRadio.checked = true;
+    performCalculation();
+  });
+
+  presetRothBtn?.addEventListener('click', () => {
+    const rothRadio = document.querySelector('input[name="plan-type"][value="roth"]') as HTMLInputElement | null;
+    if (rothRadio) rothRadio.checked = true;
+    performCalculation();
+  });
+
+  presetMaxBtn?.addEventListener('click', () => {
+    const salary = Math.max(1, parseFloat(salaryInput?.value || '95000') || 95000);
+    const maxContribution = 23500;
+    const pct = Math.min(100, Math.round((maxContribution / salary) * 1000) / 10);
+    if (contributionPctInput) contributionPctInput.value = pct.toString();
+    performCalculation();
   });
 
   // Table toggle

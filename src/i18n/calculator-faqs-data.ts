@@ -289,6 +289,22 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
     {
       question: "Can I borrow against my 401(k) instead of taking an early withdrawal?",
       answer: "Yes, many employer plans permit a 401(k) loan for up to 50% of your vested balance or $50,000, whichever is less. A 401(k) loan avoids income tax and the 10% IRS penalty because you repay principal and interest back into your own account (usually over 5 years). However, if you leave your employer before repaying, the remaining balance usually becomes due by the federal tax filing deadline, or it converts into a taxable early distribution."
+    },
+    {
+      question: "How do I use this as a Roth vs Traditional 401(k) calculator?",
+      answer: "Our 401k calculator allows you to toggle between Traditional (pre-tax) and Roth (post-tax) with one click. A Traditional 401k calculator mode shows your immediate federal and state tax savings today, while retirement withdrawals are taxed as ordinary income. A Roth 401k calculator mode models post-tax contributions that generate 100% tax-free growth and 100% tax-free withdrawals in retirement."
+    },
+    {
+      question: "How does the Dave Ramsey 401(k) calculator 15% rule work?",
+      answer: "Under Dave Ramsey's Baby Step 4, you invest 15% of your gross household income into retirement once consumer debt is eliminated and a 3-to-6 month emergency fund is established. The Dave Ramsey 401k calculator strategy follows a 3-step order: (1) Invest in your company 401(k) up to the full employer match; (2) Max out a Roth IRA; (3) Put any remaining portion of the 15% into your Roth 401(k) or Traditional 401(k). Use our 'Dave Ramsey (15% Rule)' preset to model this exact path."
+    },
+    {
+      question: "What is a SIMPLE 401(k) calculator and who qualifies for a SIMPLE plan?",
+      answer: "A SIMPLE 401(k) (Savings Incentive Match Plan for Employees) is designed for small businesses with 100 or fewer employees. A simple 401k calculator models the required employer contributions: either a dollar-for-dollar match up to 3% of salary, or a flat 2% non-elective contribution for all eligible workers. SIMPLE 401(k) plans feature 100% immediate vesting, no complex nondiscrimination testing, and lower contribution limits ($16,000 in 2024, or $19,500 if age 50+)."
+    },
+    {
+      question: "Can I cancel my 401(k) and cash out while still employed?",
+      answer: "You can stop or cancel future payroll contributions at any time without penalty by setting your deferral to 0%. However, cashing out money already in your 401(k) while remaining employed is usually prohibited by IRS rules, unless your plan specifically permits an 'in-service distribution' (typically available only after age 59½) or an IRS-qualified Hardship Distribution. Even if permitted, an early cash-out triggers mandatory 20% federal withholding plus a 10% IRS penalty and state income taxes. Read our complete guide: <a href=\"/blog/can-i-cancel-401k-cash-out-while-employed/\" class=\"text-primary underline font-medium\">Can I Cancel My 401(k) and Cash Out While Still Employed?</a>."
     }
   ],
 

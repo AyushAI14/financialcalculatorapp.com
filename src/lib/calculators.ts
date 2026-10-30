@@ -325,7 +325,7 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         defaultDesc: 'Maximize employer match and calculate retirement wealth compounding with paycheck deferrals.',
         calcKey: '401k',
         badge: 'Employer Match',
-        keywords: ['401k calculator with match', '401k calculator', '401k match', 'employer matching 401k', '401k match calculator', 'retirement match']
+        keywords: ['401k calculator', '401k calculator with match', 'roth 401k calculator', 'roth vs traditional 401k calculator', 'simple 401k calculator', 'dave ramsey 401k calculator', 'solo 401k calculator', 'employer matching 401k', '401k match calculator', 'retirement match']
       },
       {
         url: '/retirement/social-security',
