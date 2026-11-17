@@ -55,15 +55,7 @@ const websiteSchema = {
   "name": "financialcalculatorapp.com",
   "alternateName": ["Financial Calculator App", "FinancialCalculatorApp"],
   "url": `${siteOrigin}/`,
-  "description": localizedPageDescription,
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": `${siteOrigin}/?search={search_term_string}`
-    },
-    "query-input": "required name=search_term_string"
-  }
+  "description": localizedPageDescription
 };
 
 const organizationSchema = {
@@ -490,6 +482,7 @@ const organizationSchema = {
           <h4 class="text-[11px] font-mono text-ink font-bold uppercase tracking-wider">{t('footer.comparisons')}</h4>
           <ul class="space-y-2 text-xs font-sans text-muted">
             <li><a href={translatePath('/compare/snowball-vs-avalanche')} class="hover:text-ink transition-colors">{t('compare.snowball.short', 'Snowball vs Avalanche')}</a></li>
+            <li><a href={translatePath('/compare/standard-vs-itemized')} class="hover:text-ink transition-colors">Standard vs Itemized</a></li>
             <li><a href={translatePath('/compare/roth-vs-traditional-ira')} class="hover:text-ink transition-colors">{t('compare.ira.short', 'Roth vs Traditional IRA')}</a></li>
             <li><a href={translatePath('/compare/apr-vs-nominal')} class="hover:text-ink transition-colors">{t('compare.apr.short', 'APR vs Nominal Interest')}</a></li>
             <li><a href={translatePath('/loan/rent-vs-buy')} class="hover:text-ink transition-colors">{t('calc.rentvsbuy.name', 'Rent vs Buy Decision')}</a></li>

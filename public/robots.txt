@@ -2,5 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /feedback
 Disallow: /api/
+Disallow: /*?*
+Disallow: /*?
 
 Sitemap: https://financialcalculatorapp.com/sitemap.xml
+

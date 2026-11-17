@@ -526,5 +526,159 @@ export const calculatorGuides: Record<string, CalculatorGuide> = {
       { title: "Verify Price Baselines", desc: "Check historical price trackers online to confirm that a '50% off' promotion isn't simply an inflated MSRP markdown." },
       { title: "Combine Promo Codes & Cash Back", desc: "Layer store promotional coupons with credit card cash-back rewards to maximize overall savings." }
     ]
+  },
+
+  // 31. HP 12C Financial Emulator
+  "hp-12c": {
+    title: "Mastering the HP 12C: RPN Logic, Keystrokes & Financial Math",
+    intro: "First introduced by Hewlett-Packard in 1981, the HP 12C is the iconic gold-standard financial calculator used by commercial real estate underwriters, fixed-income analysts, and CFA charterholders worldwide.",
+    section1Title: "Reverse Polish Notation (RPN) & Stack Mechanics",
+    section1Content: "Unlike traditional algebraic calculators, the HP 12C operates on Reverse Polish Notation (RPN). Numbers are placed onto a 4-level operational stack (registers X, Y, Z, and T) using the [ENTER] key, and mathematical operators execute immediately without parentheses. This eliminates order-of-operation ambiguity, drastically cuts keystroke count, and accelerates complex financial modeling.",
+    formulaTitle: "RPN Compound Interest & TVM Equation",
+    formula: "PV + PMT * [1 - (1 + i)^(-n)] / i + FV * (1 + i)^(-n) = 0",
+    formulaExplanation: "The fundamental five-variable TVM equation governing the HP 12C top row ([n], [i], [PV], [PMT], [FV]). Cash outflows (deposits or payments) must be entered as negative numbers via the [CHS] (Change Sign) key.",
+    section2Title: "When Should You Use an HP 12C?",
+    tips: [
+      { title: "Commercial Real Estate & Debt Amortization", desc: "The HP 12C features dedicated hardware routines for odd-period interest, loan amortization tables, and uneven cash-flow IRR/NPV calculations." },
+      { title: "CFA, CFP & FRM Exam Authorization", desc: "The HP 12C is one of the only calculators officially sanctioned by the CFA Institute, GARP, and the CFP Board for proctored examination rooms." },
+      { title: "Keystroke Efficiency Under Pressure", desc: "RPN logic reduces overall keystrokes by 20% to 35% compared to algebraic entry, saving crucial seconds during timed professional testing." }
+    ]
+  },
+
+  // 32. TI BA II Plus Simulator
+  "ti-ba-ii-plus": {
+    title: "TI BA II Plus Guide: TVM Solving, P/Y Settings & Exam Mastery",
+    intro: "The Texas Instruments BA II Plus is the most popular financial calculator for CFA, CFP, and finance students. Mastering its worksheet architecture and menu conventions prevents costly mistakes on exam day.",
+    section1Title: "The Critical P/Y and C/Y Setting",
+    section1Content: "By default, the TI BA II Plus is configured with P/Y (Payments per Year) set to 12. Most finance curricula and CFA exam questions assume annual periodicity (P/Y = 1). Many candidates adjust P/Y to 1 by pressing [2nd] [I/Y] 1 [ENTER] and manually dividing nominal rates by compounding periods to avoid unexpected compounding errors.",
+    formulaTitle: "Time Value of Money (TVM) System",
+    formula: "PV + PMT * [ (1 - (1 + r)^(-n)) / r ] * (1 + r * B) + FV * (1 + r)^(-n) = 0",
+    formulaExplanation: "Where B = 1 for BGN mode (annuities due, advance lease payments) and B = 0 for END mode (ordinary loans). Press [CPT] followed by any variable to solve for the unknown value.",
+    section2Title: "Exam Day Best Practices & Common Mistakes",
+    tips: [
+      { title: "Always Clear TVM Registers", desc: "Press [2nd] [CLR TVM] before beginning every new calculation. Residual values left from prior problems cause silent calculation errors." },
+      { title: "Verify BGN vs. END Mode", desc: "Ensure 'BGN' is not showing in the display banner unless specifically solving for payments due at the beginning of the period." },
+      { title: "Strict Cash Flow Sign Convention", desc: "Never enter both PV and FV as positive numbers when solving for interest rate or payment. Money going out is negative; money coming in is positive." }
+    ]
+  },
+
+  // 33. Future Value
+  "future-value": {
+    title: "Future Value (FV) Calculations & Compounding Horizon",
+    intro: "Future Value quantifies the purchasing power and accumulated growth of money invested today over a designated horizon at an expected compound interest rate.",
+    section1Title: "Lump Sum vs. Annuity Compounding",
+    section1Content: "Future Value can be calculated for a single lump-sum investment today, or for an ongoing series of regular periodic additions (an annuity). Compounding frequency (daily, monthly, quarterly, annually) determines how quickly interest begins earning interest on itself.",
+    formulaTitle: "Comprehensive Future Value Formula",
+    formula: "FV = PV * (1 + r/m)^(m*t) + PMT * [((1 + r/m)^(m*t) - 1) / (r/m)]",
+    formulaExplanation: "Where PV is the initial lump sum, PMT is the regular recurring payment, r is the annual nominal interest rate, m is the compounding frequency per year, and t is the investment horizon in years.",
+    section2Title: "Strategies to Maximize Future Value",
+    tips: [
+      { title: "Prioritize Early Contributions", desc: "Due to exponential compound interest, cash invested in your 20s produces multiples of the final wealth generated by identical amounts invested in your 40s." },
+      { title: "Compounding Frequency Advantage", desc: "Daily or monthly compounding generates higher nominal terminal value than annual compounding at identical nominal APY rates." },
+      { title: "Factor in Inflation", desc: "Always discount nominal Future Value by an estimated inflation rate (2.5% to 3.0%) to understand your true future purchasing power." }
+    ]
+  },
+
+  // 34. Investment Calculator
+  "investment": {
+    title: "Investment Portfolio Projections & Asset Accumulation",
+    intro: "Building long-term wealth through diversified investing requires understanding compound growth, recurring contributions, volatility drag, and management fee erosion.",
+    section1Title: "Nominal Growth vs. Real Purchasing Power",
+    section1Content: "While stock market indices like the S&P 500 have historically returned approximately 10% nominal annually before inflation, long-term financial planning must account for historical inflation (~3%) and asset management expense ratios (0.03% to 1.5%), yielding an expected real return of 6.5% to 7.0%.",
+    formulaTitle: "Compound Portfolio Growth Formula",
+    formula: "A = P * (1 + r/n)^(n*t) + PMT * [((1 + r/n)^(n*t) - 1) / (r/n)]",
+    formulaExplanation: "Calculates total portfolio accumulation with initial principal (P), periodic deposit installments (PMT), effective annual rate (r), compounding periods (n), and total years (t).",
+    section2Title: "Portfolio Optimization Guidelines",
+    tips: [
+      { title: "Automate Dollar-Cost Averaging", desc: "Scheduling automatic recurring deposits removes psychological hesitation and eliminates the risk of mistiming market cycles." },
+      { title: "Minimize Expense Ratios", desc: "A 1% annual advisory or fund expense ratio can siphon away over 25% of your final portfolio value across a 30-year investing career." },
+      { title: "Reinvest All Dividends", desc: "Reinvesting quarterly equity dividends accounts for nearly half of the total cumulative return of the broader stock market over multi-decade periods." }
+    ]
+  },
+
+  // 35. Salary Increase
+  "salary-increase": {
+    title: "Evaluating Pay Raises, Marginal Taxes & Take-Home Impact",
+    intro: "A salary increase is an exciting milestone, but progressive marginal tax brackets, FICA payroll withholdings, and pre-tax retirement deductions mean your net take-home boost differs from your gross percentage raise.",
+    section1Title: "Marginal Tax Brackets vs. Effective Tax Rates",
+    section1Content: "A common misconception is that entering a higher tax bracket reduces your total take-home pay. Progressive tax systems tax only the portion of income that exceeds the lower bracket threshold at the higher rate, meaning a pay raise always results in higher net take-home earnings.",
+    formulaTitle: "Pay Raise & Net Change Formula",
+    formula: "Gross Increase = New Salary - Old Salary; Net Hourly = (New Salary * (1 - Marginal Tax Rate)) / 2,080",
+    formulaExplanation: "Based on standard full-time employment of 2,080 annual work hours (40 hours per week for 52 weeks), accounting for marginal federal, state, and payroll tax deductions.",
+    section2Title: "Maximizing the Value of a Raise",
+    tips: [
+      { title: "Avoid Lifestyle Creep", desc: "Divert at least 50% of any net salary raise directly into automated retirement contributions (401k, Roth IRA) before your lifestyle expenses inflate." },
+      { title: "Evaluate Benefit Offsets", desc: "A higher salary may phase you out of certain tax deductions, child tax credits, or student loan income-driven repayment benefits." },
+      { title: "Negotiate Non-Salary Perks", desc: "If salary caps are rigid, negotiate extra paid time off, remote work flexibility, or additional employer retirement matching." }
+    ]
+  },
+
+  // 36. Debt Consolidation
+  "debt-consolidation": {
+    title: "Debt Consolidation Strategies & Interest Savings",
+    intro: "Debt consolidation rolls multiple high-interest debts—such as credit cards and store loans—into a single loan with a lower interest rate, simplifying your budget and accelerating your payoff date.",
+    section1Title: "How Consolidation Lowers Borrowing Costs",
+    section1Content: "By replacing variable credit card interest rates (often 20% to 28% APR) with a fixed-rate personal loan or balance transfer loan (often 8% to 14% APR), a much larger share of each monthly payment goes directly toward principal reduction.",
+    formulaTitle: "Weighted Average Interest Rate Formula",
+    formula: "Weighted APR = Sum(Balance_i * APR_i) / Total_Balance",
+    formulaExplanation: "Calculates your overall current effective borrowing rate compared to the new consolidation loan interest rate to determine net savings.",
+    section2Title: "Best Practices When Consolidating Debt",
+    tips: [
+      { title: "Avoid Running Up New Debt", desc: "Do not charge new purchases to cleared credit cards while paying off the consolidation loan, or you will double your total debt burden." },
+      { title: "Compare Origination Fees", desc: "Ensure loan origination fees (typically 1% to 6%) do not exceed the interest savings generated over the life of the loan." },
+      { title: "Maintain an Emergency Fund", desc: "Keep a basic buffer of $1,000 to $2,000 in cash so unexpected life events do not force you back into high-interest credit card debt." }
+    ]
+  },
+
+  // 37. Social Security
+  "social-security": {
+    title: "Maximizing Social Security Retirement Benefits",
+    intro: "Deciding when to claim Social Security retirement benefits is one of the most critical financial decisions for older adults. Claiming early permanently reduces monthly income, while delaying past Full Retirement Age provides substantial lifetime increases.",
+    section1Title: "Claiming Age vs. Benefit Amount (Age 62 to 70)",
+    section1Content: "Claiming as early as age 62 reduces your baseline monthly check by up to 30% for life. Waiting until Full Retirement Age (67 for those born in 1960 or later) gives you 100% of your Primary Insurance Amount (PIA). Delaying further up to age 70 yields delayed retirement credits of 8% per year (up to 124% to 132% of PIA).",
+    formulaTitle: "Social Security Benefit Adjustment Formula",
+    formula: "Adjusted Benefit = PIA * (1 - Early Reduction % + Delayed Credits %)",
+    formulaExplanation: "Adjusts your Primary Insurance Amount based on the number of months between your actual claiming date and Full Retirement Age.",
+    section2Title: "Strategic Claiming Considerations",
+    tips: [
+      { title: "Analyze Breakeven Life Expectancy", desc: "The cumulative breakeven age between claiming at 62 vs. 70 is typically between ages 78 and 82. If family longevity is strong, delaying pays off dramatically." },
+      { title: "Coordinate Spousal & Survivor Benefits", desc: "The higher-earning spouse should generally delay until age 70 to maximize the surviving spouse's lifetime benefit." },
+      { title: "Monitor the Earnings Test", desc: "Claiming before Full Retirement Age while continuing to work full-time temporarily withholds benefits if earnings exceed annual statutory limits." }
+    ]
+  },
+
+  // 38. FIRE Calculator
+  "fire-calculator": {
+    title: "Financial Independence, Retire Early (FIRE) Blueprint",
+    intro: "The FIRE movement is built on the mathematical principle that your annual investment returns can permanently cover all living expenses once your portfolio reaches a defined multiple of your lifestyle costs.",
+    section1Title: "The Rule of 25 and Safe Withdrawal Rates",
+    section1Content: "Based on historical market returns and the Trinity Study, a 4% initial safe withdrawal rate (adjusted annually for inflation) gives an investment portfolio a 95%+ probability of lasting 30 years. To determine your FIRE target number, multiply your annual living expenses by 25 (or by 33 for an ultra-safe 3% withdrawal rate).",
+    formulaTitle: "The Core FIRE Target Formula",
+    formula: "FIRE Number = Annual Living Expenses / Safe Withdrawal Rate (e.g. 0.04)",
+    formulaExplanation: "Calculates the total invested portfolio required before you can sustainably live off investment returns indefinitely.",
+    section2Title: "Key Accelerators to Reach Early Retirement",
+    tips: [
+      { title: "Maximize Your Savings Rate", desc: "Saving 50% to 70% of your take-home pay can compress a traditional 40-year working career into just 10 to 17 years." },
+      { title: "Control the Big Three Expenses", desc: "Housing, transportation, and groceries represent over 60% of most household budgets; optimizing these yields the fastest timeline gains." },
+      { title: "Diversify Asset Allocation", desc: "Hold low-cost total market index funds with adequate cash cushions to mitigate sequence-of-returns risk during market downturns." }
+    ]
+  },
+
+  // 39. Superannuation
+  "superannuation": {
+    title: "Superannuation & Retirement Compounding Guide",
+    intro: "Superannuation is a tax-advantaged compulsory retirement framework where employer contributions and voluntary salary sacrifices grow over decades to provide retirement security.",
+    section1Title: "The Super Guarantee & Concessional Contributions",
+    section1Content: "Employer Superannuation Guarantee (SG) contributions are taxed at a concessional rate of 15% inside the super fund, significantly lower than personal marginal tax rates, maximizing compounding efficiency.",
+    formulaTitle: "Superannuation Projection Formula",
+    formula: "FV = Balance * (1 + r)^t + Annual_Super * [((1 + r)^t - 1) / r]",
+    formulaExplanation: "Forecasts super balance accumulation factoring in employer contributions, voluntary salary sacrifice, investment returns, and fund fees.",
+    section2Title: "Ways to Boost Your Super Nest Egg",
+    tips: [
+      { title: "Consolidate Multiple Accounts", desc: "Merging fragmented super accounts eliminates duplicate administration fees and unnecessary insurance premiums." },
+      { title: "Salary Sacrifice Pre-Tax Cash", desc: "Directing pre-tax earnings into super reduces personal taxable income while growing your balance at concessional tax rates." },
+      { title: "Review Investment Options", desc: "Younger workers with multi-decade horizons typically benefit from high-growth or index-heavy investment allocations." }
+    ]
   }
+
 };

@@ -160,41 +160,6 @@ const faqs = getCalculatorFaqs('future-value');
       </div>
     </div>
   </div>
-
-  <!-- Educational Guide -->
-  <div class="mt-10 sm:mt-16 space-y-6 sm:space-y-8 border-t border-hairline pt-8 sm:pt-12 prose prose-neutral max-w-none">
-    <div class="max-w-3xl space-y-4">
-      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-ink">What is Future Value (FV)?</h2>
-      <p class="text-xs sm:text-sm text-mute leading-relaxed">
-        Future Value (FV) measures how much a current sum of money (Present Value, or PV) or a series of periodic cash inflows (Annuity, or PMT) will be worth at a specific date in the future, given an assumed compound interest rate. It forms the foundation of modern finance and personal investment planning.
-      </p>
-
-      <div class="p-3.5 sm:p-5 rounded-lg border border-hairline bg-canvas-soft space-y-3 not-prose my-4 sm:my-6">
-        <h3 class="font-bold text-xs sm:text-sm text-ink font-mono uppercase tracking-wider">The Mathematical Future Value Formula</h3>
-        <p class="text-[10px] sm:text-xs text-mute font-mono bg-paper p-2.5 sm:p-3 rounded border border-hairline overflow-x-auto">
-          FV = PV × (1 + r/m)^(m×t) + PMT × [ ((1 + r/m)^(m×t) - 1) / (r/m) ] × (1 + r/m)^timing
-        </p>
-        <div class="text-xs text-mute space-y-1">
-          <p><strong>PV:</strong> Present Value (initial starting balance)</p>
-          <p><strong>PMT:</strong> Periodic recurring contribution</p>
-          <p><strong>r:</strong> Annual nominal interest rate (decimal)</p>
-          <p><strong>m:</strong> Compounding frequency per year (12 for monthly, 365 for daily)</p>
-          <p><strong>t:</strong> Time in years</p>
-          <p><strong>timing:</strong> 1 if deposited at beginning of period (annuity due), 0 if at end (ordinary annuity)</p>
-        </div>
-      </div>
-
-      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Ordinary Annuity vs. Annuity Due</h3>
-      <p class="text-sm text-mute leading-relaxed">
-        When you deposit money into an account, timing matters. With an <em>ordinary annuity</em>, deposits occur at the end of each period (e.g. at the end of the month). With an <em>annuity due</em>, deposits occur at the beginning of each period. Because annuity due deposits spend an extra period compounding in the account, they generate a slightly higher total Future Value over long time horizons.
-      </p>
-
-      <h3 class="text-xl font-bold tracking-tight text-ink pt-4">Explore Companion Financial Tools</h3>
-      <p class="text-sm text-mute leading-relaxed">
-        Looking to solve for other variables like Present Value (PV), interest rate, or time periods? Explore our full <a href="/finance/tvm/" class="text-primary font-semibold underline">TVM Calculator</a>, forecast portfolio allocation with our <a href="/finance/investment/" class="text-primary font-semibold underline">Investment Calculator</a>, or examine daily yields on our <a href="/finance/daily-compound-interest/" class="text-primary font-semibold underline">Daily Compound Interest Calculator</a>.
-      </p>
-    </div>
-  </div>
 </CalculatorLayout>
 
 <script>

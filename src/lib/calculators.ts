@@ -384,6 +384,15 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
         badge: 'Comparison'
       },
       {
+        url: '/compare/standard-vs-itemized',
+        nameKey: 'compare.standard.name',
+        defaultName: 'Standard vs Itemized Deduction',
+        descKey: 'compare.standard.desc',
+        defaultDesc: 'Compare standard vs. itemized deductions (Schedule A) with SALT caps, mortgage interest, and charitable donations.',
+        badge: 'Tax Strategy',
+        keywords: ['standard vs itemized deduction', 'itemized deductions calculator', 'schedule a deductions', 'salt cap calculator', 'tax deductions comparison']
+      },
+      {
         url: '/compare/roth-vs-traditional-ira',
         nameKey: 'compare.ira.name',
         defaultName: 'Roth vs Traditional IRA Guide',

@@ -115,6 +115,12 @@ export const ui: Record<Lang, Record<string, string>> = {
     "calculators.pageDescription": "Explore our complete online financial calculator suite. 40+ free finance calculators for loan amortization, paycheck taxes, 401(k) match, TVM, and investments.",
   },
   es: {
+    "compare.standard.name": "Deducción Estándar vs. Detallada",
+
+    "calc.investment.name": "Calculadora de Inversión y Rentabilidad",
+    "calc.salaryincrease.name": "Calculadora de Aumento de Sueldo",
+    "calc.futurevalue.name": "Calculadora de Valor Futuro (VF)",
+
     "site.title": "Calculadoras Financieras Gratis: Hipotecas y Préstamos",
     "site.description": "Calculadoras financieras avanzadas: hipotecas, préstamos, interés compuesto y jubilación con fórmulas transparentes.",
     "nav.calculators": "Calculadoras",
@@ -331,6 +337,15 @@ export const ui: Record<Lang, Record<string, string>> = {
     "glossary.noResults": "No se encontraron términos coincidentes en el glosario.",
   },
   de: {
+    "calc.salaryincrease.name": "Gehaltserhöhungsrechner",
+    "calc.salaryincrease.desc": "Berechnen Sie Ihre Gehaltserhöhung, das neue Gehalt für alle Auszahlungsintervalle und das zusätzliche Nettoeinkommen.",
+    "calc.salaryincrease.seoTitle": "Gehaltserhöhungsrechner: Netto-Zuwachs & Neue Gehaltsstufen Berechnen",
+    "calc.futurevalue.name": "Endwertrechner (Future Value)",
+    "calc.futurevalue.desc": "Berechnen Sie den finanzmathematischen Endwert (FV) von Einmalanlagen und regelmäßigen Sparraten mit Zinseszins.",
+    "calc.futurevalue.seoTitle": "Endwertrechner Online: Future Value (FV) & Zinseszins Berechnen",
+    "calc.investment.name": "Depot- & Investmentrechner",
+    "calc.investment.desc": "Prognostizieren Sie langfristiges Portfoliowachstum, Vermögensaufbau und Kapitalerträge mit ETF-Sparplänen und Zinseszins.",
+    "calc.investment.seoTitle": "Investmentrechner & Depot-Sparplan: Vermögensaufbau Prognostizieren",
     "site.title": "Kostenlose Finanzrechner: Kredite, Zinsen & Vorsorge",
     "site.description": "Professionelle Finanzrechner für Baufinanzierung, Zinseszins, Kredite, Altersvorsorge und Vermögensaufbau.",
     "nav.calculators": "Rechner",
@@ -553,6 +568,20 @@ export const ui: Record<Lang, Record<string, string>> = {
     "feedback.thankYou": "Vielen Dank für Ihr Feedback!",
   },
   ja: {
+    "compare.standard.name": "標準控除 vs. 項目別控除",
+
+    "calc.salaryincrease.name": "昇給計算機",
+    "calc.salaryincrease.desc": "昇給による手取り額の変化、時給・月給・年収の推移、税金や社会保険料の影響を詳細にシミュレーションします。",
+    "calc.salaryincrease.seoTitle": "昇給計算機 – 昇給率・手取り増加額・年収シミュレーション",
+
+    "calc.futurevalue.name": "将来価値（FV）計算機",
+    "calc.futurevalue.desc": "一括投資や定期的な積立金の将来価値（FV）を複利計算。目標資産到達までの複利運用効果をシミュレーションします。",
+    "calc.futurevalue.seoTitle": "将来価値（FV）計算機 – 複利運用と積立投資シミュレーター",
+
+    "calc.investment.name": "投資・資産運用計算機",
+    "calc.investment.desc": "株式・投資信託・ETFの積立投資による資産推移、複利リターン、および将来のポートフォリオ成長を予測します。",
+    "calc.investment.seoTitle": "投資計算機 – 積立投資・複利リターン・資産形成シミュレーション",
+
     "site.title": "無料の金融計算機: 住宅ローン・複利・年金シミュレーター",
     "site.description": "住宅ローン、複利運用、カードローン、年金・老後資金を素早く正確にシミュレーションできる金融計算ツール。",
     "nav.calculators": "計算機一覧",
@@ -775,6 +804,20 @@ export const ui: Record<Lang, Record<string, string>> = {
     "feedback.thankYou": "フィードバックをお送りいただきありがとうございました！",
   },
   fr: {
+    "compare.standard.name": "Déduction forfaitaire vs Déductions réelles",
+
+    "calc.salaryincrease.name": "Calculateur d'augmentation de salaire",
+    "calc.salaryincrease.desc": "Calculez l'impact réel d'une augmentation de salaire sur votre rémunération brute et nette, votre taux horaire et vos cotisations.",
+    "calc.salaryincrease.seoTitle": "Calculateur d'augmentation de salaire – Gain net et impact fiscal",
+
+    "calc.futurevalue.name": "Calculateur de valeur future (FV)",
+    "calc.futurevalue.desc": "Calculez la valeur future (FV) d'un investissement, d'un placement unique ou d'une rente périodique avec intérêts composés.",
+    "calc.futurevalue.seoTitle": "Calculateur de valeur future (FV) – Croissance et capitalisation",
+
+    "calc.investment.name": "Calculateur d'investissement",
+    "calc.investment.desc": "Projetez la valorisation de vos investissements, la croissance de votre portefeuille et les gains composés avec versements programmés.",
+    "calc.investment.seoTitle": "Calculateur d'investissement – Rendement composé et projection de portefeuille",
+
     "site.title": "Calculateurs Financiers Gratuits: Prêt, Épargne & Crédit",
     "site.description": "Calculateurs financiers haut de gamme : prêt immobilier, intérêts composés, amortissement d'emprunt et retraite.",
     "nav.calculators": "Calculateurs",
@@ -997,6 +1040,20 @@ export const ui: Record<Lang, Record<string, string>> = {
     "tools.count": "38 outils"
   },
   pt: {
+    "compare.standard.name": "Dedução Padrão vs. Despesas Detalhadas",
+
+    "calc.salaryincrease.name": "Calculadora de Aumento Salarial",
+    "calc.salaryincrease.desc": "Calcule o impacto real de um aumento de salário sobre sua remuneração bruta e líquida, alíquotas do imposto de renda e ganho real.",
+    "calc.salaryincrease.seoTitle": "Calculadora de Aumento Salarial – Salário Líquido e Ganho Real",
+
+    "calc.futurevalue.name": "Calculadora de Valor Futuro (FV)",
+    "calc.futurevalue.desc": "Calcule o valor futuro (FV) de um investimento, montante único ou anuidade periódica com capitalização de juros compostos.",
+    "calc.futurevalue.seoTitle": "Calculadora de Valor Futuro (FV) – Juros Compostos e Acumulação",
+
+    "calc.investment.name": "Calculadora de Investimentos",
+    "calc.investment.desc": "Projete a evolução dos seus investimentos, crescimento da carteira e rendimentos compostos com depósitos mensais.",
+    "calc.investment.seoTitle": "Calculadora de Investimentos – Rentabilidade Composta e Projeção de Carteira",
+
     "site.title": "Calculadoras Financeiras Grátis: Financiamento e Juros",
     "site.description": "Calculadoras financeiras gratuitas: financiamento imobiliário, juros compostos, empréstimos, aposentadoria e salário líquido.",
     "nav.calculators": "Calculadoras",

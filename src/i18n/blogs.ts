@@ -506,23 +506,34 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
 
   "understanding-mortgage-pmi": {
     en: {
-      title: "What is PMI? How to Avoid and Cancel Private Mortgage Insurance",
-      description: "Learn what Private Mortgage Insurance (PMI) is, how much it costs, and the exact steps you can take to cancel or avoid it entirely.",
+      title: "How to Calculate PMI: Complete Formula, Rates & Top 5 Mistakes to Avoid",
+      description: "Learn how to calculate Private Mortgage Insurance (PMI), actual monthly costs by credit score, cancellation rules under the Homeowners Protection Act, and top 5 mistakes buyers make.",
       content: `
-<p>When buying a home, you might notice an extra fee on your monthly payment estimate labeled <strong>PMI</strong>, or <strong>Private Mortgage Insurance</strong>.</p>
-<p>Understanding what PMI is and how it works is the first step to saving thousands of dollars over the life of your home loan.</p>
-<h2>1. What is PMI?</h2>
-<p>PMI is insurance that conventional lenders require if your down payment is <strong>less than 20%</strong> of the home's purchase price.</p>
-<p>Here is the most important thing to know: <strong>PMI does not protect you.</strong> It protects the <em>lender</em> in case you default on your mortgage payments.</p>
-<h2>2. How much does PMI cost?</h2>
-<p>PMI typically costs between <strong>0.5% and 1.5%</strong> of your total loan amount annually. For example, on a $400,000 loan, a 1% annual fee equals $4,000 per year—an extra <strong>$333 per month</strong>!</p>
-<h2>3. How do I get rid of PMI?</h2>
-<ul>
-  <li><strong>Automatic Cancellation (78% LTV):</strong> By law, lenders must cancel PMI once your loan balance reaches 78% of the original home value through standard payments.</li>
-  <li><strong>Borrower Request (80% LTV):</strong> You can request PMI cancellation once your balance drops to 80% equity.</li>
-  <li><strong>Re-appraisal:</strong> If your home's market value has surged, a new appraisal can prove your equity exceeds 20%.</li>
-</ul>
-<p>Calculate your exact mortgage breakdown and PMI drop-off schedule using our interactive <a href="/loan/mortgage/">Mortgage Calculator</a>!</p>
+<p>When purchasing a home with less than 20% down, the line item that shocks most first-time buyers is <strong>PMI</strong>, or <strong>Private Mortgage Insurance</strong>. On a typical $450,000 home purchase, PMI can easily add between $150 and $450 every single month to your housing payment—an expense that provides zero equity and zero homeowner protection.</p>
+<p>Understanding how lenders calculate PMI, what legal rights you have to eliminate it early, and the most common calculation mistakes will save you thousands of dollars over the life of your mortgage.</p>
+
+<h2>1. What Exactly is Private Mortgage Insurance (PMI)?</h2>
+<p>PMI is an insurance policy demanded by conventional mortgage lenders whenever a borrower's down payment is <strong>less than 20%</strong> of the home's purchase price (or an appraisal indicates a Loan-to-Value ratio exceeding 80%).</p>
+<p>Here is the essential reality every homebuyer must understand: <strong>PMI does not insure you.</strong> If you default on your mortgage payments, PMI reimburses the <em>lender</em> for their losses in foreclosure. Because lower equity investments represent elevated default risk, lenders require borrowers to fund this protection.</p>
+
+<h2>2. How is PMI Calculated? (The Math & Formula)</h2>
+<p>Unlike property taxes or hazard insurance, PMI is calculated as a direct percentage of the <strong>outstanding principal loan balance</strong>, divided into 12 equal monthly installments:</p>
+<div style="background:var(--color-canvas-soft, #f4f4f5); padding:1rem; border-radius:0.5rem; font-family:monospace; margin:1rem 0; border:1px solid rgba(0,0,0,0.1);">
+<strong>Monthly PMI Payment = (Loan Principal Balance × Annual PMI Rate) ÷ 12</strong>
+</div>
+<p><strong>Worked Example:</strong> On a $450,000 home with 10% down ($45,000), your loan amount is $405,000. At an annual PMI rate of 0.75%, your monthly PMI is ($405,000 × 0.0075) ÷ 12 = <strong>$253.13 per month</strong>. Over 5 years before reaching 20% equity, that totals $15,187.80 in non-recoverable premiums.</p>
+
+<h2>3. Top 5 Costly Mistakes People Make When Calculating PMI</h2>
+<ol>
+  <li><strong>Confusing FHA Mortgage Insurance (MIP) with Conventional PMI:</strong> Conventional PMI cancels once you reach 20% equity. FHA MIP requires an upfront 1.75% fee, and if you put down under 10%, the annual MIP never cancels—it lasts for all 30 years!</li>
+  <li><strong>Waiting for Automatic Cancellation at 78% LTV:</strong> By federal law (Homeowners Protection Act), servicers must cancel PMI at 78% LTV. But you have the legal right to request cancellation in writing the exact month you reach 80% LTV, saving 14 to 22 months of extra payments ($2,400 to $4,500).</li>
+  <li><strong>Ignoring Home Value Appreciation:</strong> If your local housing market has appreciated, you do not have to wait to pay down principal. Ordering a lender appraisal after 2 years can eliminate PMI if current LTV is below 75%–80%.</li>
+  <li><strong>Falling for Lender-Paid PMI (LPMI):</strong> Some lenders market "No PMI Loans" by raising your interest rate by 0.25% to 0.50%. Unlike regular PMI which drops off, LPMI's higher interest rate stays for the full 30-year term.</li>
+  <li><strong>Overlooking the "Piggyback" (80-10-10) Strategy:</strong> Putting 10% down, borrowing 80% on a first mortgage, and taking a 10% second mortgage (HELOC) avoids PMI completely.</li>
+</ol>
+
+<h2>Run Your Numbers with Our Mortgage Tools</h2>
+<p>To see your exact monthly PITI breakdown and calculate the month your PMI drops off, use our interactive <a href="/loan/mortgage/">Mortgage Calculator</a> and check your borrowing power with the <a href="/loan/home-affordability/">Home Affordability Calculator</a>.</p>
 `
     },
     es: {

@@ -19,25 +19,22 @@ const faqs = getCalculatorFaqs('401k');
   <!-- Quick Presets Bar for Target Strategies -->
   <div class="bg-canvas border border-hairline p-3 sm:p-4 rounded-xl shadow-xs mb-6">
     <div class="flex items-center justify-between gap-2 mb-2">
-      <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-mute font-semibold">⚡ Quick 401(k) Presets & Strategy Calculators:</span>
-      <span class="text-[10px] text-mute font-mono hidden sm:inline">1-Click Auto-Fill</span>
+      <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-mute font-semibold">⚡ {lang === 'es' ? "Ajustes Rápidos y Estrategias 401(k):" : (lang === 'de' ? "Schnellvorlagen & 401(k)-Strategien:" : (lang === 'fr' ? "Modèles Rapides & Stratégies Retraite :" : (lang === 'pt' ? "Ajustes Rápidos e Estratégias de Previdência :" : (lang === 'ja' ? "401(k)運用戦略・クイック設定プリセット:" : "Quick 401(k) Presets & Strategy Calculators:"))))}</span>
+      <span class="text-[10px] text-mute font-mono hidden sm:inline">{lang === 'es' ? "1-Clic Auto-Completar" : (lang === 'de' ? "1-Klick-Autovervollständigung" : (lang === 'fr' ? "Auto-Remplissage 1-Clic" : (lang === 'pt' ? "Preenchimento Automático em 1 Clique" : (lang === 'ja' ? "ワンクリック自動入力" : "1-Click Auto-Fill"))))}</span>
     </div>
     <div class="flex flex-wrap gap-2">
-      <button type="button" id="preset-simple" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Load simple 401k calculator standard match model">
-        Simple 401k (6% Match)
+      <button type="button" id="preset-simple" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title={lang === 'es' ? "Modelo estándar con 6% de aportación de la empresa" : (lang === 'de' ? "Standardplan mit 6% Arbeitgeberzuschuss laden" : (lang === 'fr' ? "Plan standard avec 6% d'abondement employeur" : (lang === 'pt' ? "Plano padrão com 6% de contrapartida da empresa" : (lang === 'ja' ? "標準マッチング拠出（会社上乗せ6%）プランを適用" : "Load simple 401k calculator standard match model"))))}>
+        {lang === 'es' ? "Plan Estándar (Match 6%)" : (lang === 'de' ? "Standardplan (6% Match)" : (lang === 'fr' ? "Plan Standard (Abondement 6%)" : (lang === 'pt' ? "Plano Padrão (6% Contrapartida)" : (lang === 'ja' ? "標準プラン（会社マッチング6%）" : "Simple 401k (6% Match)"))))}
       </button>
-      <button type="button" id="preset-dave" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Dave Ramsey 401k Calculator: 15% contribution, Roth, 10% growth">
-        Dave Ramsey (15% Rule)
+      <button type="button" id="preset-dave" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title={lang === 'es' ? "Estrategia de Dave Ramsey: 15% de ahorro en planes de jubilación" : (lang === 'de' ? "Dave Ramsey 401k: 15% Sparquote, Roth, 10% Rendite" : (lang === 'fr' ? "Règle des 15% (Dave Ramsey) : épargne retraite programmée" : (lang === 'pt' ? "Regra dos 15% de Dave Ramsey: poupança programada para aposentadoria" : (lang === 'ja' ? "デイブ・ラムジー戦略：積立率15%、Roth口座、期待利回り10%" : "Dave Ramsey 401k Calculator: 15% contribution, Roth, 10% growth"))))}>
+        {lang === 'es' ? "Regla del 15% (Dave Ramsey)" : (lang === 'de' ? "15%-Regel (Dave Ramsey)" : (lang === 'fr' ? "Règle des 15% (Dave Ramsey)" : (lang === 'pt' ? "Regra dos 15% (Dave Ramsey)" : (lang === 'ja' ? "15%ルール（デイブ・ラムジー）" : "Dave Ramsey (15% Rule)"))))}
       </button>
-      <button type="button" id="preset-roth" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Roth 401k Calculator: Tax-free retirement compounding">
-        Roth 401k Calculator
+      <button type="button" id="preset-roth" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title={lang === 'es' ? "Cálculo de crecimiento exento de impuestos" : (lang === 'de' ? "Roth 401(k): Steuerfreier Vermögensaufbau für den Ruhestand" : (lang === 'fr' ? "Épargne retraite non fiscalisée à la sortie" : (lang === 'pt' ? "Previdência pós-tributada com resgates isentos de imposto" : (lang === 'ja' ? "Roth型年金：受取時完全非課税の複利運用" : "Roth 401k Calculator: Tax-free retirement compounding"))))}>
+        {lang === 'es' ? "Aportación Roth (Libre de Impuestos)" : (lang === 'de' ? "Roth-Vorsorge (Steuerfrei)" : (lang === 'fr' ? "Épargne après impôt (Exonérée)" : (lang === 'pt' ? "Aporte Pós-Tributado (Isento)" : (lang === 'ja' ? "Roth型（非課税受取）" : "Roth 401k Calculator"))))}
       </button>
-      <button type="button" id="preset-max" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title="Max out full annual IRS 401k limit ($23,500)">
-        Max Out ($23,500)
+      <button type="button" id="preset-max" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:bg-ink hover:text-canvas transition-colors text-[11px] font-mono font-medium cursor-pointer" title={lang === 'es' ? "Aporte máximo anual permitido por el IRS" : (lang === 'de' ? "Gesetzlichen Höchstbeitrag ausschöpfen ($23.500)" : (lang === 'fr' ? "Maximiser le plafond légal de versement ($23 500)" : (lang === 'pt' ? "Maximizar o teto legal de contribuição ($23.500)" : (lang === 'ja' ? "年間法定拠出限度額を満額拠出（$23,500）" : "Max out full annual IRS 401k limit ($23,500)"))))}>
+        {lang === 'es' ? "Aporte Máximo Legal ($23.500)" : (lang === 'de' ? "Höchstbeitrag ($23.500)" : (lang === 'fr' ? "Plafond Maximum ($23 500)" : (lang === 'pt' ? "Teto Máximo Anual ($23.500)" : (lang === 'ja' ? "満額拠出（$23,500）" : "Max Out ($23,500)"))))}
       </button>
-      <a href="#solo-401k-section" class="px-2.5 py-1.5 rounded-lg border border-hairline bg-canvas-soft hover:border-primary text-primary transition-colors text-[11px] font-mono font-medium cursor-pointer flex items-center gap-1" title="Jump to self-employed Solo 401k calculator">
-        Solo 401k Calculator ↓
-      </a>
     </div>
   </div>
 
@@ -201,7 +198,8 @@ const faqs = getCalculatorFaqs('401k');
     </div>
   </div>
 
-  <!-- Educational & Deep-Dive Modules -->
+  <!-- Educational & Deep-Dive Modules (English Only) -->
+  {lang === 'en' && (
   <div class="mt-14 space-y-12">
     <!-- Module 1: 401(k) Balance Milestones by Age -->
     <section class="bg-canvas border border-hairline rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm">
@@ -663,6 +661,7 @@ const faqs = getCalculatorFaqs('401k');
       </div>
     </section>
   </div>
+  )}
 </CalculatorLayout>
 
 <script>

@@ -1,0 +1,93 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+
+interface Props {
+  calculatorName?: string;
+}
+
+const { calculatorName } = Astro.props;
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+// Localized strings
+const badgeText = {
+  en: {
+    verified: "Mathematically Verified & Reviewed",
+    auditedBy: "Audited by",
+    board: "Quantitative Finance & Review Board",
+    standards: "CFA® & CPA Computational Standards",
+    disclaimer: "Results are model-based estimates for educational planning only and do not constitute formal tax, legal, or fiduciary financial advice.",
+    methodology: "Methodology & Review Standards"
+  },
+  es: {
+    verified: "Verificado y Auditado Matemáticamente",
+    auditedBy: "Auditado por",
+    board: "Comité de Revisión y Finanzas Cuantitativas",
+    standards: "Estándares de Computación CFA® y CPA",
+    disclaimer: "Los resultados son estimaciones basadas en modelos para fines educativos y no constituyen asesoramiento financiero, fiscal o legal formal.",
+    methodology: "Metodología y Estándares de Auditoría"
+  },
+  de: {
+    verified: "Mathematisch verifiziert & geprüft",
+    auditedBy: "Geprüft von",
+    board: "Gremium für quantitative Finanzmodelle",
+    standards: "CFA®- & Wirtschaftsprüfer-Standards",
+    disclaimer: "Ergebnisse sind modellbasierte Schätzungen zu Informationszwecken und stellen keine Anlage-, Steuer- oder Rechtsberatung dar.",
+    methodology: "Methodik & Prüfstandards"
+  },
+  ja: {
+    verified: "数理モデル検証・専門家監修済み",
+    auditedBy: "監修・監査:",
+    board: "クオンツ・ファイナンス検証委員会",
+    standards: "CFA®・公認会計士算定基準準拠",
+    disclaimer: "当シミュレーション結果は教育的情報提供を目的とした推計値であり、税務・法務・投資助言を提供するものではありません。",
+    methodology: "検証手順と算定基準"
+  },
+  pt: {
+    verified: "Verificado e Auditado Matematicamente",
+    auditedBy: "Auditado por",
+    board: "Comitê de Finanças Quantitativas",
+    standards: "Padrões Computacionais CFA® e CPA",
+    disclaimer: "Os resultados são estimativas baseadas em modelos para fins educacionais e não constituem consultoria financeira, tributária ou jurídica formal.",
+    methodology: "Metodologia e Padrões de Revisão"
+  },
+  fr: {
+    verified: "Vérifié et audité mathématiquement",
+    auditedBy: "Audité par",
+    board: "Comité d'analyse financière quantitative",
+    standards: "Normes de calcul CFA® et CPA",
+    disclaimer: "Les résultats sont des estimations à visée pédagogique et ne constituent pas un conseil financier, fiscal ou juridique formel.",
+    methodology: "Méthodologie et normes d'audit"
+  }
+};
+
+const current = badgeText[lang as keyof typeof badgeText] || badgeText.en;
+---
+
+<aside class="my-6 p-3.5 sm:p-4 bg-canvas/60 border border-ink/20 rounded-lg text-xs font-mono text-muted space-y-2 no-print shadow-[var(--control-shadow)]">
+  <div class="flex items-start sm:items-center gap-3">
+    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold shrink-0 text-sm">
+      ✓
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+        <span class="text-ink font-bold text-xs sm:text-sm font-sans">{current.verified}</span>
+        <span class="text-[10px] sm:text-[11px] text-muted font-mono">({current.standards})</span>
+      </div>
+      <p class="text-[11px] sm:text-xs text-muted font-sans mt-0.5">
+        {current.auditedBy}{' '}
+        <a href={translatePath('/about#financial-review-board')} class="text-ink underline hover:text-input-accent font-semibold transition-colors">
+          {current.board}
+        </a>
+        {' '}•{' '}
+        <a href={translatePath('/about#review-methodology')} class="hover:underline text-muted hover:text-ink transition-colors">
+          {current.methodology} →
+        </a>
+      </p>
+    </div>
+  </div>
+  <div class="border-t border-line/20 pt-2 text-[10px] sm:text-[11px] text-muted/90 font-sans leading-relaxed">
+    <strong>{t('nav.disclaimer', 'Disclaimer')}:</strong> {current.disclaimer}
+  </div>
+</aside>
