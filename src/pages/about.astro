@@ -4,9 +4,27 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(lang);
+
+const aboutSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About financialcalculatorapp.com",
+    "description": "About financialcalculatorapp.com, quantitative standards, and lead developer Ayush Vishwakarma.",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Ayush Vishwakarma",
+      "jobTitle": "Lead Developer & Quantitative Systems Architect",
+      "url": "https://github.com/AyushAI14",
+      "sameAs": [
+        "https://github.com/AyushAI14"
+      ]
+    }
+  }
+];
 ---
 
-<Layout title={t('about.title', 'About Us')} description={t('about.intro')} lang={lang}>
+<Layout title={t('about.title', 'About Us')} description={t('about.intro')} lang={lang} schemas={aboutSchemas}>
   <article class="max-w-3xl mx-auto prose prose-sm text-body leading-relaxed space-y-6">
     <h1 class="text-4xl font-semibold tracking-[-1.6px] text-ink mb-8">{t('about.heading', 'About Us.')}</h1>
 
@@ -40,6 +58,11 @@ const t = useTranslations(lang);
     <h2 id="review-methodology" class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Review Methodology & Open Math</h2>
     <p>
       Unlike traditional financial portals that obfuscate interest calculations behind closed server APIs, financialcalculatorapp.com believes in open, verifiable mathematics. Every calculator features an on-page breakdown of its governing equation (such as standard annuity formulas, compounding frequencies, and debt rollover mechanics) so users can replicate and verify outputs independently.
+    </p>
+
+    <h2 id="engineering-and-development" class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">Engineering & Development</h2>
+    <p>
+      financialcalculatorapp.com was conceptualized, engineered, and maintained by <strong>Ayush Vishwakarma</strong> (<a href="https://github.com/AyushAI14" target="_blank" rel="noopener noreferrer" class="text-input-accent underline hover:opacity-85 font-mono">GitHub: @AyushAI14</a>). The platform emphasizes zero-latency local computation, client-side data privacy, and transparent quantitative modeling.
     </p>
 
     <h2 class="text-xl font-semibold tracking-[-0.6px] text-ink mt-8">{t('about.disclaimer.heading', 'Disclaimer')}</h2>

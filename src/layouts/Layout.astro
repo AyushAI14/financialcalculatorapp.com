@@ -49,13 +49,25 @@ const hreflangList = getHreflangList(Astro.url, siteOrigin);
 // og:locale requires BCP47 with underscore (e.g. en_US)
 const ogLocale = (lang as string).replace('-', '_');
 
+const developerPerson = {
+  "@type": "Person",
+  "name": "Ayush Vishwakarma",
+  "url": "https://github.com/AyushAI14",
+  "sameAs": [
+    "https://github.com/AyushAI14"
+  ],
+  "jobTitle": "Lead Developer & Quantitative Systems Architect"
+};
+
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "financialcalculatorapp.com",
   "alternateName": ["Financial Calculator App", "FinancialCalculatorApp"],
   "url": `${siteOrigin}/`,
-  "description": localizedPageDescription
+  "description": localizedPageDescription,
+  "author": developerPerson,
+  "creator": developerPerson
 };
 
 const organizationSchema = {
@@ -64,16 +76,27 @@ const organizationSchema = {
   "name": "financialcalculatorapp.com",
   "url": `${siteOrigin}/`,
   "logo": `${siteOrigin}/logo.png`,
-  "description": "Fast, private, browser-based financial calculators for loans, mortgages, retirement, and investments."
+  "description": "Fast, private, browser-based financial calculators for loans, mortgages, retirement, and investments.",
+  "founder": developerPerson
 };
 ---
 
+<!--
+  financialcalculatorapp.com
+  Engineered & Developed by Ayush Vishwakarma (https://github.com/AyushAI14)
+-->
 <!doctype html>
 <html lang={lang} dir={rtl ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={localizedPageDescription} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Creator & Developer Attribution -->
+    <meta name="author" content="Ayush Vishwakarma" />
+    <meta name="developer" content="Ayush Vishwakarma" />
+    <meta name="creator" content="Ayush Vishwakarma" />
+    <link rel="author" href="https://github.com/AyushAI14" />
+    <link rel="author" href="/humans.txt" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />

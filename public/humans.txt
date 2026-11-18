@@ -1,0 +1,12 @@
+/* TEAM */
+Developer & Creator: Ayush Vishwakarma
+GitHub: https://github.com/AyushAI14
+Role: Full-Stack Engineering, Mathematical Modeling & Architecture
+Website: https://financialcalculatorapp.com
+
+/* SITE */
+Last update: 2026/11/18
+Language: Multilingual (EN, ES, DE, JA, FR, PT)
+Standards: HTML5, CSS3, SVG, JSON-LD, Schema.org
+Components: Astro, TypeScript, Tailwind CSS
+Software: Client-side local computation, zero tracking, privacy-first
