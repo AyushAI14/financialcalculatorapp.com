@@ -1,3 +1,1 @@
-# Google AdSense ads.txt for financialcalculatorapp.com
-# Uncomment and replace with your approved Google AdSense publisher ID when issued:
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-5221203152085002, DIRECT, f08c47fec0942fa0
