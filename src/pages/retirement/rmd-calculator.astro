@@ -1,0 +1,478 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('rmd-calculator');
+---
+
+<CalculatorLayout 
+  title="Required Minimum Distribution (RMD) Calculator" 
+  seoTitle="RMD Calculator: Required Minimum Distribution (SECURE Act 2.0)"
+  description="Free IRS RMD calculator under SECURE Act 2.0 rules. Calculate mandatory annual distributions for Traditional IRAs, 401(k)s, and Inherited IRAs with multi-year projection schedules."
+  faqs={faqs}
+  calcKey="rmd-calculator"
+>
+  <!-- SECURE Act 2.0 Notification Pill -->
+  <div class="mb-6 p-3.5 sm:p-4 rounded-xl bg-canvas border border-hairline shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+    <div class="flex items-center gap-2.5">
+      <span class="px-2 py-0.5 rounded-full bg-link/10 text-link font-mono font-bold text-[10px] uppercase">SECURE 2.0 Ready</span>
+      <span class="text-body font-medium">Starting RMD Age: <strong>73</strong> (born 1951–1959) or <strong>75</strong> (born 1960+).</span>
+    </div>
+    <span class="font-mono text-mute text-[11px]">IRS Publication 590-B</span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Form Inputs (Left Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="rmd-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Account & Age Details')}</h3>
+            <span class="text-[10px] font-mono text-emerald-600 font-bold">IRS Table III Compliant</span>
+          </div>
+
+          <!-- Dec 31 Prior Year Balance -->
+          <div class="space-y-2">
+            <Input id="rmd-balance" label="Account Balance (Prior Dec 31)" type="number" prefix="$" value="500000" min={1000} step={5000} />
+            <RangeSlider id="rmd-balance-slider" label="Balance Slider" min={50000} max={2500000} step={25000} value={500000} />
+          </div>
+
+          <!-- Age during Distribution Year -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <div class="grid grid-cols-2 gap-3">
+              <Input id="rmd-age" label="Your Age (End of Year)" type="number" suffix="yrs" value="73" min={70} max={120} step={1} />
+              <Input id="rmd-birth-year" label="Your Birth Year" type="number" value="1953" min={1920} max={1980} step={1} />
+            </div>
+            <RangeSlider id="rmd-age-slider" label="Age Slider" min={72} max={100} step={1} value={73} />
+          </div>
+
+          <!-- Account Type & Beneficiary Setup -->
+          <div class="space-y-4 pt-2 border-t border-hairline/60">
+            <Select id="rmd-account-type" label="Retirement Account Type" options={[
+              { value: 'traditional-ira', label: 'Traditional IRA' },
+              { value: '401k', label: 'Traditional 401(k) / 403(b)' },
+              { value: 'sep-ira', label: 'SEP IRA / SIMPLE IRA' },
+              { value: 'inherited-ira', label: 'Inherited IRA (10-Year Rule)' }
+            ]} value="traditional-ira" />
+
+            <Select id="rmd-beneficiary" label="Spouse Beneficiary Status" options={[
+              { value: 'standard', label: 'Standard (Single, or Spouse not >10 yrs younger)' },
+              { value: 'younger-spouse', label: 'Sole Spouse is >10 Years Younger (Table II)' }
+            ]} value="standard" />
+
+            <div id="younger-spouse-container" class="hidden">
+              <Input id="rmd-spouse-age" label="Younger Spouse Age" type="number" suffix="yrs" value="60" min={18} max={100} step={1} />
+            </div>
+          </div>
+
+          <!-- Multi-Year Projections (Growth & Tax) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-hairline/60">
+            <Input id="rmd-growth-rate" label="Est. Annual Growth" type="number" suffix="%" value="5.0" min={0} max={15} step={0.5} />
+            <Input id="rmd-tax-rate" label="Est. Tax Bracket" type="number" suffix="%" value="22" min={0} max={50} step={1} />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-3">
+          <button type="submit" class="px-5 py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
+            {t('Calculate RMD')}
+          </button>
+          <button type="reset" id="rmd-reset-btn" class="px-5 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset Defaults')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results & Projections (Right Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div id="res-rmd-annual">
+          <ResultCard title="Required Annual RMD" value="--" highlight={true} />
+        </div>
+        <div id="res-rmd-monthly">
+          <ResultCard title="Monthly Equivalent" value="--" />
+        </div>
+        <div id="res-rmd-divisor">
+          <ResultCard title="IRS Life Factor (Divisor)" value="--" />
+        </div>
+        <div id="res-rmd-after-tax">
+          <ResultCard title="Estimated After-Tax Net" value="--" />
+        </div>
+      </div>
+
+      <!-- 25% Penalty Risk Warning Box -->
+      <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs font-mono space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-xs">
+          <span>⚠️</span>
+          <span>IRS Failure-to-Withdraw Excise Tax Penalty</span>
+        </div>
+        <p class="text-[11px] leading-relaxed opacity-90">
+          Under SECURE Act 2.0, failing to withdraw your full RMD by December 31 triggers a <strong>25% federal excise tax penalty</strong> on the shortfall (reduced to 10% if corrected and reported on Form 5329 within 2 years).
+        </p>
+      </div>
+
+      <!-- Lifetime RMD Drawdown Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3 border-b border-hairline pb-2">
+          <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Multi-Year RMD & Balance Projection')}</h4>
+          <span class="text-[10px] font-mono text-mute">Ages 73 to 95</span>
+        </div>
+        <div class="h-64 sm:h-72 relative">
+          <canvas id="rmd-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Year Projection Table & Export -->
+  <div class="mt-10 sm:mt-14 border-t border-hairline pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
+          <span>📊</span>
+          <span>{t('IRS Uniform Lifetime Multi-Year Schedule')}</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-body mt-1">
+          {t('Year-by-year mandatory distribution schedule factoring in account growth and rising IRS distribution factors.')}
+        </p>
+      </div>
+
+      <button id="rmd-download-csv" type="button" class="px-3.5 py-1.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-lg font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm shrink-0">
+        <span>📥</span>
+        <span>Export Schedule to CSV</span>
+      </button>
+    </div>
+
+    <div class="overflow-x-auto border border-hairline rounded-lg shadow-sm bg-canvas">
+      <table class="w-full text-left border-collapse" id="rmd-table">
+        <thead>
+          <tr class="bg-canvas-soft border-b border-hairline font-mono text-[11px] sm:text-xs text-mute uppercase tracking-wider">
+            <th class="px-3 sm:px-4 py-3">Age</th>
+            <th class="px-3 sm:px-4 py-3">Year</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Prior Dec 31 Balance</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-link font-semibold">IRS Divisor</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-error-deep font-bold">Mandatory RMD</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Est. Tax (22%)</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-emerald-600 font-semibold">Net Payout</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Ending Balance</th>
+          </tr>
+        </thead>
+        <tbody id="rmd-schedule-body" class="divide-y divide-hairline font-mono text-[11px] sm:text-xs text-ink">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import Chart, { CHART_PALETTE, hexToRgba } from '../../lib/chart-setup';
+  import { getEffectiveCurrency, getCurrencyInfo, formatCurrencyTick } from '../../lib/currency';
+
+  // IRS Uniform Lifetime Table III (Publication 590-B)
+  const IRS_UNIFORM_LIFETIME_TABLE: Record<number, number> = {
+    72: 27.4, 73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1,
+    80: 20.2, 81: 19.4, 82: 18.5, 83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4,
+    88: 13.7, 89: 12.9, 90: 12.2, 91: 11.5, 92: 10.8, 93: 10.1, 94: 9.5, 95: 8.9,
+    96: 8.4, 97: 7.8, 98: 7.3, 99: 6.8, 100: 6.4, 101: 6.0, 102: 5.6, 103: 5.2,
+    104: 4.9, 105: 4.6, 106: 4.3, 107: 4.1, 108: 3.9, 109: 3.7, 110: 3.5, 111: 3.4,
+    112: 3.3, 113: 3.1, 114: 3.0, 115: 2.9, 116: 2.8, 117: 2.7, 118: 2.5, 119: 2.3,
+    120: 2.0
+  };
+
+  // Form Elements
+  const rmdForm = document.getElementById('rmd-form') as HTMLFormElement;
+  const rmdBalance = document.getElementById('rmd-balance') as HTMLInputElement;
+  const rmdBalanceSlider = document.getElementById('rmd-balance-slider') as HTMLInputElement;
+  const rmdAge = document.getElementById('rmd-age') as HTMLInputElement;
+  const rmdBirthYear = document.getElementById('rmd-birth-year') as HTMLInputElement;
+  const rmdAgeSlider = document.getElementById('rmd-age-slider') as HTMLInputElement;
+  const rmdAccountType = document.getElementById('rmd-account-type') as HTMLSelectElement;
+  const rmdBeneficiary = document.getElementById('rmd-beneficiary') as HTMLSelectElement;
+  const youngerSpouseContainer = document.getElementById('younger-spouse-container') as HTMLDivElement;
+  const rmdSpouseAge = document.getElementById('rmd-spouse-age') as HTMLInputElement;
+  const rmdGrowthRate = document.getElementById('rmd-growth-rate') as HTMLInputElement;
+  const rmdTaxRate = document.getElementById('rmd-tax-rate') as HTMLInputElement;
+
+  const resRmdAnnual = document.getElementById('res-rmd-annual');
+  const resRmdMonthly = document.getElementById('res-rmd-monthly');
+  const resRmdDivisor = document.getElementById('res-rmd-divisor');
+  const resRmdAfterTax = document.getElementById('res-rmd-after-tax');
+
+  const rmdScheduleBody = document.getElementById('rmd-schedule-body');
+  const rmdDownloadCsv = document.getElementById('rmd-download-csv');
+
+  let rmdChartInstance: Chart | null = null;
+  let multiYearProjectionData: any[] = [];
+
+  function formatCurrency(val: number): string {
+    const lang = document.documentElement.lang || 'en';
+    const curr = getEffectiveCurrency(lang);
+    const meta = getCurrencyInfo(curr);
+    return `${meta.symbol}${Math.round(val).toLocaleString(meta.locale)}`;
+  }
+
+  // Synchronize inputs & sliders
+  function sync(input: HTMLInputElement, slider: HTMLInputElement) {
+    if (!input || !slider) return;
+    input.addEventListener('input', () => {
+      slider.value = input.value;
+      calculateRmd();
+    });
+    slider.addEventListener('input', () => {
+      input.value = slider.value;
+      calculateRmd();
+    });
+  }
+
+  sync(rmdBalance, rmdBalanceSlider);
+  sync(rmdAge, rmdAgeSlider);
+
+  // Sync birth year to age
+  rmdBirthYear.addEventListener('input', () => {
+    const bYear = parseInt(rmdBirthYear.value);
+    if (bYear > 1900 && bYear < 2026) {
+      const curYear = new Date().getFullYear();
+      const derivedAge = curYear - bYear;
+      if (derivedAge >= 70 && derivedAge <= 115) {
+        rmdAge.value = String(derivedAge);
+        rmdAgeSlider.value = String(derivedAge);
+      }
+      calculateRmd();
+    }
+  });
+
+  rmdAge.addEventListener('input', () => {
+    const age = parseInt(rmdAge.value);
+    if (age >= 70 && age <= 120) {
+      const curYear = new Date().getFullYear();
+      rmdBirthYear.value = String(curYear - age);
+    }
+  });
+
+  // Toggle spouse age container
+  rmdBeneficiary.addEventListener('change', () => {
+    if (rmdBeneficiary.value === 'younger-spouse') {
+      youngerSpouseContainer.classList.remove('hidden');
+    } else {
+      youngerSpouseContainer.classList.add('hidden');
+    }
+    calculateRmd();
+  });
+
+  [rmdAccountType, rmdSpouseAge, rmdGrowthRate, rmdTaxRate].forEach(el => {
+    if (el) el.addEventListener('input', calculateRmd);
+  });
+
+  function getDivisor(age: number): number {
+    if (age in IRS_UNIFORM_LIFETIME_TABLE) {
+      return IRS_UNIFORM_LIFETIME_TABLE[age];
+    }
+    if (age > 120) return 2.0;
+    return 27.4; // fallback for under 72
+  }
+
+  function calculateRmd() {
+    const balance = parseFloat(rmdBalance.value) || 500000;
+    const startAge = parseInt(rmdAge.value) || 73;
+    const birthYear = parseInt(rmdBirthYear.value) || 1953;
+    const growthRate = (parseFloat(rmdGrowthRate.value) || 5.0) / 100;
+    const taxRate = (parseFloat(rmdTaxRate.value) || 22) / 100;
+
+    // SECURE Act 2.0 Starting Age Determination
+    const rmdStartingAge = birthYear <= 1950 ? 72 : (birthYear >= 1960 ? 75 : 73);
+    if (startAge < rmdStartingAge) {
+      // User is younger than RMD age
+    }
+
+    const currentDivisor = getDivisor(startAge);
+    const annualRmd = balance / currentDivisor;
+    const monthlyRmd = annualRmd / 12;
+    const estimatedTax = annualRmd * taxRate;
+    const netAfterTax = annualRmd - estimatedTax;
+
+    // Update Result Cards
+    if (resRmdAnnual) resRmdAnnual.querySelector('.font-mono')!.textContent = formatCurrency(annualRmd);
+    if (resRmdMonthly) resRmdMonthly.querySelector('.font-mono')!.textContent = formatCurrency(monthlyRmd);
+    if (resRmdDivisor) resRmdDivisor.querySelector('.font-mono')!.textContent = currentDivisor.toFixed(1);
+    if (resRmdAfterTax) resRmdAfterTax.querySelector('.font-mono')!.textContent = formatCurrency(netAfterTax);
+
+    // Multi-Year Simulation (from startAge up to age 95 or 25 years)
+    multiYearProjectionData = [];
+    let currentBalance = balance;
+    const currentCalendarYear = new Date().getFullYear();
+    const maxYears = Math.min(25, 105 - startAge);
+
+    let tbodyHtml = '';
+
+    for (let yr = 0; yr < maxYears && currentBalance > 10; yr++) {
+      const ageAtYear = startAge + yr;
+      const calendarYr = currentCalendarYear + yr;
+      const divisor = getDivisor(ageAtYear);
+      const yearRmd = currentBalance / divisor;
+      const tax = yearRmd * taxRate;
+      const net = yearRmd - tax;
+
+      // Balance after distribution earns investment growth during the year
+      const balanceAfterRmd = Math.max(0, currentBalance - yearRmd);
+      const yearGrowth = balanceAfterRmd * growthRate;
+      const endBalance = balanceAfterRmd + yearGrowth;
+
+      multiYearProjectionData.push({
+        age: ageAtYear,
+        year: calendarYr,
+        startBalance: currentBalance,
+        divisor,
+        rmd: yearRmd,
+        tax,
+        net,
+        endBalance
+      });
+
+      tbodyHtml += `
+        <tr class="hover:bg-canvas-soft transition-colors">
+          <td class="px-3 sm:px-4 py-2.5 font-bold">Age ${ageAtYear}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-mute">${calendarYr}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right">${formatCurrency(currentBalance)}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right text-link font-semibold">${divisor.toFixed(1)}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right text-error-deep font-bold">${formatCurrency(yearRmd)}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right text-mute">${formatCurrency(tax)}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right text-emerald-600 font-semibold">${formatCurrency(net)}</td>
+          <td class="px-3 sm:px-4 py-2.5 text-right font-medium">${formatCurrency(endBalance)}</td>
+        </tr>
+      `;
+
+      currentBalance = endBalance;
+    }
+
+    if (rmdScheduleBody) rmdScheduleBody.innerHTML = tbodyHtml;
+
+    // Render Lifetime Chart
+    renderRmdChart(multiYearProjectionData);
+  }
+
+  function renderRmdChart(data: any[]) {
+    const canvas = document.getElementById('rmd-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const labels = data.map(d => `Age ${d.age}`);
+    const balanceData = data.map(d => Math.round(d.endBalance));
+    const rmdData = data.map(d => Math.round(d.rmd));
+
+    if (rmdChartInstance) {
+      rmdChartInstance.data.labels = labels;
+      rmdChartInstance.data.datasets[0].data = balanceData;
+      rmdChartInstance.data.datasets[1].data = rmdData;
+      rmdChartInstance.update();
+    } else {
+      rmdChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              type: 'line',
+              label: 'Portfolio Balance',
+              data: balanceData,
+              borderColor: CHART_PALETTE.blue,
+              backgroundColor: hexToRgba(CHART_PALETTE.blue, 0.12),
+              yAxisID: 'y',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              type: 'bar',
+              label: 'Mandatory RMD',
+              data: rmdData,
+              backgroundColor: CHART_PALETTE.amber,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 12,
+                font: { family: 'Geist Mono, monospace', size: 10 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw as number)}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: (val) => formatCurrencyTick(val)
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: (val) => formatCurrencyTick(val)
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // CSV Export Action
+  if (rmdDownloadCsv) {
+    rmdDownloadCsv.addEventListener('click', () => {
+      if (!multiYearProjectionData || multiYearProjectionData.length === 0) return;
+      let csv = 'Age,Calendar_Year,Prior_Dec_31_Balance,IRS_Divisor,Annual_Mandatory_RMD,Estimated_Tax,Net_After_Tax_Payout,Ending_Balance\n';
+
+      multiYearProjectionData.forEach(d => {
+        csv += `${d.age},${d.year},${d.startBalance.toFixed(2)},${d.divisor.toFixed(1)},${d.rmd.toFixed(2)},${d.tax.toFixed(2)},${d.net.toFixed(2)},${d.endBalance.toFixed(2)}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `irs-rmd-projection-age-${rmdAge.value}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  rmdForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateRmd();
+  });
+
+  // Currency change
+  window.addEventListener('currency-change', calculateRmd);
+
+  // Initialize
+  calculateRmd();
+</script>

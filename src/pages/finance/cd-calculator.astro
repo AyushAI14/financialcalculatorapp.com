@@ -1,0 +1,540 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('cd-calculator');
+---
+
+<CalculatorLayout 
+  title="Certificate of Deposit (CD) Calculator & Ladder Builder" 
+  seoTitle="CD Calculator: Certificate of Deposit Yield & Ladder Simulator"
+  description="Free Certificate of Deposit (CD) calculator. Calculate compound interest, APY returns, early withdrawal penalties, and model multi-tranche rolling CD ladders."
+  faqs={faqs}
+  calcKey="cd-calculator"
+>
+  <!-- Mode Switcher Tabs -->
+  <div class="flex items-center justify-center mb-8">
+    <div class="inline-flex rounded-xl p-1 bg-canvas-soft border border-hairline shadow-sm">
+      <button id="tab-single-cd" type="button" class="px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold transition-all bg-ink text-canvas shadow-sm cursor-pointer">
+        Single CD Calculator
+      </button>
+      <button id="tab-ladder-cd" type="button" class="px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-medium text-mute hover:text-ink transition-all cursor-pointer">
+        CD Ladder Simulator (5-Tranche)
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEW 1: SINGLE CD CALCULATOR -->
+  <div id="view-single-cd" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column: Form Controls -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="cd-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Deposit Parameters')}</h3>
+            <span class="text-[10px] font-mono text-link font-semibold">FDIC / NCUA Insured Rules</span>
+          </div>
+
+          <!-- Initial Deposit -->
+          <div class="space-y-2">
+            <Input id="cd-deposit" label="Initial Deposit" type="number" prefix="$" value="25000" min={500} max={2000000} step={500} />
+            <RangeSlider id="cd-deposit-slider" label="Deposit Slider" min={1000} max={100000} step={1000} value={25000} />
+          </div>
+
+          <!-- Interest Rate / APY -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="cd-rate" label="Annual Percentage Yield (APY) / Rate" type="number" suffix="%" value="4.75" min={0.1} max={15} step={0.05} />
+            <RangeSlider id="cd-rate-slider" label="Interest Rate Slider" min={0.5} max={8} step={0.1} value={4.75} />
+          </div>
+
+          <!-- Term Length -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <div class="grid grid-cols-2 gap-3">
+              <Input id="cd-term-length" label="Term Length" type="number" value="12" min={1} max={120} step={1} />
+              <Select id="cd-term-unit" label="Term Unit" options={[
+                { value: 'months', label: 'Months' },
+                { value: 'years', label: 'Years' }
+              ]} value="months" />
+            </div>
+
+            <!-- Quick Term Presets -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-1">
+              <span class="text-[10px] font-mono text-mute uppercase tracking-wider mr-1">Presets:</span>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="6">6 Mo</button>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="12">1 Yr</button>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="18">18 Mo</button>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="24">2 Yr</button>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="36">3 Yr</button>
+              <button type="button" class="term-preset px-2.5 py-1 text-[11px] font-mono rounded bg-canvas-soft border border-hairline hover:bg-hairline cursor-pointer" data-months="60">5 Yr</button>
+            </div>
+          </div>
+
+          <!-- Compounding Cadence -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Select id="cd-compounding" label="Compounding Frequency" options={[
+              { value: '365', label: 'Daily (365 days / standard)' },
+              { value: '360', label: 'Daily (360 days / commercial bank)' },
+              { value: '12', label: 'Monthly (12 times / year)' },
+              { value: '4', label: 'Quarterly (4 times / year)' },
+              { value: '2', label: 'Semiannually (2 times / year)' },
+              { value: '1', label: 'Annually (1 time / year)' },
+              { value: '0', label: 'At Maturity (Simple interest)' }
+            ]} value="365" />
+          </div>
+        </div>
+
+        <!-- Early Withdrawal Penalty (Optional) -->
+        <div class="bg-canvas-soft border border-hairline p-4 sm:p-5 rounded-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-mono font-bold text-ink uppercase tracking-wider flex items-center gap-1.5">
+              <span>⚠️</span>
+              <span>Early Withdrawal Penalty Simulator</span>
+            </h4>
+            <span class="text-[10px] font-mono text-mute">Bank Liquidity Risk</span>
+          </div>
+          <Select id="cd-penalty" label="Penalty Fee Policy" options={[
+            { value: '0', label: 'No Penalty / Fee-Free CD' },
+            { value: '30', label: '30 Days of Interest (Short CD)' },
+            { value: '60', label: '60 Days of Interest (Under 1 Year)' },
+            { value: '90', label: '90 Days of Interest (Standard 1 Year)' },
+            { value: '180', label: '180 Days of Interest (2–3 Years)' },
+            { value: '365', label: '365 Days of Interest (5 Years)' }
+          ]} value="90" />
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex gap-3">
+          <button type="submit" class="px-5 py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
+            {t('Calculate Yield')}
+          </button>
+          <button type="reset" id="cd-reset-btn" class="px-5 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column: Results & Charts -->
+    <div class="lg:col-span-6 space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div id="res-cd-ending">
+          <ResultCard title="Maturity Ending Balance" value="--" highlight={true} />
+        </div>
+        <div id="res-cd-interest">
+          <ResultCard title="Total Interest Earned" value="--" />
+        </div>
+        <div id="res-cd-apy">
+          <ResultCard title="Effective APY" value="--" />
+        </div>
+        <div id="res-cd-early-value">
+          <ResultCard title="Early Exit Value (Net)" value="--" />
+        </div>
+      </div>
+
+      <!-- Growth Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3 border-b border-hairline pb-2">
+          <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('CD Compound Growth Trajectory')}</h4>
+          <span class="text-[10px] font-mono text-emerald-600 font-bold">Guaranteed Return</span>
+        </div>
+        <div class="h-64 sm:h-72 relative">
+          <canvas id="cd-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Comparison Callout: CD vs HYSA -->
+      <div class="p-4 rounded-lg bg-canvas border border-hairline text-xs font-sans space-y-2">
+        <div class="font-bold text-ink flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider">
+          <span>⚖️</span>
+          <span>CD vs. High-Yield Savings Account (HYSA)</span>
+        </div>
+        <div class="text-body leading-relaxed text-[11px] sm:text-xs">
+          While a High-Yield Savings Account offers total liquidity, its yield is variable and cuts immediately when the Federal Reserve lowers rates. A CD locks in your guaranteed APY for the full term, immunizing your capital against rate cuts.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: CD LADDER SIMULATOR (HIDDEN INITIALLY) -->
+  <div id="view-ladder-cd" class="hidden space-y-8">
+    <div class="p-5 sm:p-6 bg-canvas border border-hairline rounded-xl shadow-sm space-y-6">
+      <div class="border-b border-hairline pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="text-xl font-bold font-display text-ink flex items-center gap-2">
+            <span>🪜</span>
+            <span>5-Tranche Rolling CD Ladder Model</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-body mt-1">
+            Split your principal across staggered maturities (1 to 5 years). Each year, one CD matures and is reinvested at the top 5-year rate, giving you rolling annual liquidity plus maximum yield.
+          </p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-mono text-mute uppercase">Blended Ladder APY</span>
+          <div id="ladder-blended-apy" class="text-2xl font-mono font-extrabold text-link">--</div>
+        </div>
+      </div>
+
+      <!-- Ladder Input Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+        <div class="md:col-span-2">
+          <Input id="ladder-total-capital" label="Total Capital to Invest" type="number" prefix="$" value="50000" min={5000} step={2500} />
+        </div>
+        <div class="md:col-span-4 grid grid-cols-5 gap-2 text-center font-mono text-xs">
+          <div class="p-2.5 rounded bg-canvas-soft border border-hairline">
+            <span class="text-[10px] text-mute block">Tranche 1 (1 Yr)</span>
+            <input id="rate-tranche-1" type="number" value="4.80" step="0.05" class="w-full text-center bg-canvas border border-hairline rounded py-1 text-xs font-bold text-ink mt-1" />
+            <span class="text-[9px] text-mute">APY %</span>
+          </div>
+          <div class="p-2.5 rounded bg-canvas-soft border border-hairline">
+            <span class="text-[10px] text-mute block">Tranche 2 (2 Yr)</span>
+            <input id="rate-tranche-2" type="number" value="4.50" step="0.05" class="w-full text-center bg-canvas border border-hairline rounded py-1 text-xs font-bold text-ink mt-1" />
+            <span class="text-[9px] text-mute">APY %</span>
+          </div>
+          <div class="p-2.5 rounded bg-canvas-soft border border-hairline">
+            <span class="text-[10px] text-mute block">Tranche 3 (3 Yr)</span>
+            <input id="rate-tranche-3" type="number" value="4.25" step="0.05" class="w-full text-center bg-canvas border border-hairline rounded py-1 text-xs font-bold text-ink mt-1" />
+            <span class="text-[9px] text-mute">APY %</span>
+          </div>
+          <div class="p-2.5 rounded bg-canvas-soft border border-hairline">
+            <span class="text-[10px] text-mute block">Tranche 4 (4 Yr)</span>
+            <input id="rate-tranche-4" type="number" value="4.10" step="0.05" class="w-full text-center bg-canvas border border-hairline rounded py-1 text-xs font-bold text-ink mt-1" />
+            <span class="text-[9px] text-mute">APY %</span>
+          </div>
+          <div class="p-2.5 rounded bg-canvas-soft border border-hairline">
+            <span class="text-[10px] text-mute block">Tranche 5 (5 Yr)</span>
+            <input id="rate-tranche-5" type="number" value="4.00" step="0.05" class="w-full text-center bg-canvas border border-hairline rounded py-1 text-xs font-bold text-ink mt-1" />
+            <span class="text-[9px] text-mute">APY %</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ladder Breakdown Table -->
+      <div class="overflow-x-auto border border-hairline rounded-lg">
+        <table class="w-full text-left border-collapse" id="ladder-table">
+          <thead>
+            <tr class="bg-canvas-soft border-b border-hairline font-mono text-[11px] sm:text-xs text-mute uppercase">
+              <th class="px-4 py-3">Tranche</th>
+              <th class="px-4 py-3">Allocated Principal</th>
+              <th class="px-4 py-3">Term</th>
+              <th class="px-4 py-3 text-right">APY</th>
+              <th class="px-4 py-3 text-right text-emerald-600 font-semibold">Total Interest</th>
+              <th class="px-4 py-3 text-right font-bold">Maturity Payout</th>
+            </tr>
+          </thead>
+          <tbody id="ladder-tbody" class="divide-y divide-hairline font-mono text-xs text-ink">
+            <!-- Populated via script -->
+          </tbody>
+          <tfoot id="ladder-tfoot" class="bg-canvas-soft font-mono text-xs font-bold border-t-2 border-hairline">
+            <!-- Populated via script -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import Chart, { CHART_PALETTE, hexToRgba } from '../../lib/chart-setup';
+  import { getEffectiveCurrency, getCurrencyInfo, formatCurrencyTick } from '../../lib/currency';
+
+  // Tabs
+  const tabSingleCd = document.getElementById('tab-single-cd') as HTMLButtonElement;
+  const tabLadderCd = document.getElementById('tab-ladder-cd') as HTMLButtonElement;
+  const viewSingleCd = document.getElementById('view-single-cd') as HTMLDivElement;
+  const viewLadderCd = document.getElementById('view-ladder-cd') as HTMLDivElement;
+
+  // Single CD Elements
+  const cdForm = document.getElementById('cd-form') as HTMLFormElement;
+  const cdDeposit = document.getElementById('cd-deposit') as HTMLInputElement;
+  const cdDepositSlider = document.getElementById('cd-deposit-slider') as HTMLInputElement;
+  const cdRate = document.getElementById('cd-rate') as HTMLInputElement;
+  const cdRateSlider = document.getElementById('cd-rate-slider') as HTMLInputElement;
+  const cdTermLength = document.getElementById('cd-term-length') as HTMLInputElement;
+  const cdTermUnit = document.getElementById('cd-term-unit') as HTMLSelectElement;
+  const cdCompounding = document.getElementById('cd-compounding') as HTMLSelectElement;
+  const cdPenalty = document.getElementById('cd-penalty') as HTMLSelectElement;
+
+  const resCdEnding = document.getElementById('res-cd-ending');
+  const resCdInterest = document.getElementById('res-cd-interest');
+  const resCdApy = document.getElementById('res-cd-apy');
+  const resCdEarlyValue = document.getElementById('res-cd-early-value');
+
+  // Ladder Elements
+  const ladderTotalCapital = document.getElementById('ladder-total-capital') as HTMLInputElement;
+  const rateTranche1 = document.getElementById('rate-tranche-1') as HTMLInputElement;
+  const rateTranche2 = document.getElementById('rate-tranche-2') as HTMLInputElement;
+  const rateTranche3 = document.getElementById('rate-tranche-3') as HTMLInputElement;
+  const rateTranche4 = document.getElementById('rate-tranche-4') as HTMLInputElement;
+  const rateTranche5 = document.getElementById('rate-tranche-5') as HTMLInputElement;
+  const ladderBlendedApy = document.getElementById('ladder-blended-apy');
+  const ladderTbody = document.getElementById('ladder-tbody');
+  const ladderTfoot = document.getElementById('ladder-tfoot');
+
+  let cdChartInstance: Chart | null = null;
+
+  function formatCurrency(val: number): string {
+    const lang = document.documentElement.lang || 'en';
+    const curr = getEffectiveCurrency(lang);
+    const meta = getCurrencyInfo(curr);
+    return `${meta.symbol}${Math.round(val).toLocaleString(meta.locale)}`;
+  }
+
+  // Sync inputs & sliders
+  function sync(input: HTMLInputElement, slider: HTMLInputElement) {
+    if (!input || !slider) return;
+    input.addEventListener('input', () => {
+      slider.value = input.value;
+      calculateSingleCd();
+    });
+    slider.addEventListener('input', () => {
+      input.value = slider.value;
+      calculateSingleCd();
+    });
+  }
+
+  sync(cdDeposit, cdDepositSlider);
+  sync(cdRate, cdRateSlider);
+
+  [cdTermLength, cdTermUnit, cdCompounding, cdPenalty].forEach(el => {
+    if (el) el.addEventListener('input', calculateSingleCd);
+  });
+
+  // Presets
+  document.querySelectorAll('.term-preset').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      const months = target.dataset.months;
+      if (months) {
+        cdTermLength.value = months;
+        cdTermUnit.value = 'months';
+        calculateSingleCd();
+      }
+    });
+  });
+
+  // Single CD Math
+  function calculateSingleCd() {
+    const principal = parseFloat(cdDeposit.value) || 25000;
+    const nominalRate = (parseFloat(cdRate.value) || 4.75) / 100;
+    const termNum = parseFloat(cdTermLength.value) || 12;
+    const isYears = cdTermUnit.value === 'years';
+    const termInYears = isYears ? termNum : termNum / 12;
+    const termInMonths = isYears ? termNum * 12 : termNum;
+
+    const compFreq = parseInt(cdCompounding.value); // 365, 360, 12, 4, 2, 1, 0 (simple)
+    const penaltyDays = parseInt(cdPenalty.value) || 0;
+
+    let endingBalance = principal;
+    let effectiveApy = 0;
+
+    if (compFreq === 0) {
+      // Simple Interest At Maturity
+      endingBalance = principal * (1 + nominalRate * termInYears);
+      effectiveApy = nominalRate;
+    } else {
+      // Compound Interest Formula: A = P * (1 + r/n)^(n*t)
+      const n = compFreq;
+      endingBalance = principal * Math.pow(1 + nominalRate / n, n * termInYears);
+      effectiveApy = Math.pow(1 + nominalRate / n, n) - 1;
+    }
+
+    const totalInterest = Math.max(0, endingBalance - principal);
+
+    // Calculate early withdrawal penalty: Forfeiture of X days worth of interest
+    // Daily interest rate approximation:
+    const dailyInterest = (principal * nominalRate) / 365;
+    const penaltyAmount = penaltyDays * dailyInterest;
+    const netEarlyExit = Math.max(principal, endingBalance - penaltyAmount);
+
+    // Update Result Cards
+    if (resCdEnding) resCdEnding.querySelector('.font-mono')!.textContent = formatCurrency(endingBalance);
+    if (resCdInterest) resCdInterest.querySelector('.font-mono')!.textContent = formatCurrency(totalInterest);
+    if (resCdApy) resCdApy.querySelector('.font-mono')!.textContent = `${(effectiveApy * 100).toFixed(2)}%`;
+    if (resCdEarlyValue) {
+      if (penaltyDays > 0) {
+        resCdEarlyValue.querySelector('.font-mono')!.textContent = formatCurrency(netEarlyExit);
+      } else {
+        resCdEarlyValue.querySelector('.font-mono')!.textContent = 'No Penalty';
+      }
+    }
+
+    // Render Trajectory Chart
+    renderCdChart(principal, nominalRate, compFreq, termInMonths);
+  }
+
+  function renderCdChart(principal: number, rate: number, compFreq: number, totalMonths: number) {
+    const canvas = document.getElementById('cd-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const labels: string[] = [];
+    const balancePoints: number[] = [];
+    const stepMonths = totalMonths <= 12 ? 1 : Math.ceil(totalMonths / 12);
+
+    for (let m = 0; m <= totalMonths; m += stepMonths) {
+      const t = m / 12;
+      let bal = principal;
+      if (compFreq === 0) {
+        bal = principal * (1 + rate * t);
+      } else {
+        bal = principal * Math.pow(1 + rate / compFreq, compFreq * t);
+      }
+      labels.push(`Mo ${m}`);
+      balancePoints.push(Math.round(bal));
+    }
+
+    // Ensure final month is included
+    if (totalMonths % stepMonths !== 0) {
+      labels.push(`Mo ${totalMonths}`);
+      const t = totalMonths / 12;
+      const finalBal = compFreq === 0 ? principal * (1 + rate * t) : principal * Math.pow(1 + rate / compFreq, compFreq * t);
+      balancePoints.push(Math.round(finalBal));
+    }
+
+    if (cdChartInstance) {
+      cdChartInstance.data.labels = labels;
+      cdChartInstance.data.datasets[0].data = balancePoints;
+      cdChartInstance.update();
+    } else {
+      cdChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'CD Guaranteed Value',
+              data: balancePoints,
+              borderColor: CHART_PALETTE.emerald,
+              backgroundColor: hexToRgba(CHART_PALETTE.emerald, 0.18),
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Value: ${formatCurrency(ctx.raw as number)}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: (val) => formatCurrencyTick(val)
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Ladder Simulation Math
+  function calculateLadder() {
+    const totalCap = parseFloat(ladderTotalCapital.value) || 50000;
+    const trancheCap = totalCap / 5;
+
+    const rates = [
+      parseFloat(rateTranche1.value) || 4.80,
+      parseFloat(rateTranche2.value) || 4.50,
+      parseFloat(rateTranche3.value) || 4.25,
+      parseFloat(rateTranche4.value) || 4.10,
+      parseFloat(rateTranche5.value) || 4.00,
+    ];
+
+    let totalInterestSum = 0;
+    let totalMaturitySum = 0;
+    let weightedRateSum = 0;
+    let tbodyHtml = '';
+
+    rates.forEach((rate, i) => {
+      const year = i + 1;
+      const nominal = rate / 100;
+      // Compounded monthly
+      const maturity = trancheCap * Math.pow(1 + nominal / 12, 12 * year);
+      const interest = maturity - trancheCap;
+      totalInterestSum += interest;
+      totalMaturitySum += maturity;
+      weightedRateSum += rate;
+
+      tbodyHtml += `
+        <tr class="hover:bg-canvas-soft transition-colors">
+          <td class="px-4 py-2.5 font-bold">Tranche ${year}</td>
+          <td class="px-4 py-2.5">${formatCurrency(trancheCap)}</td>
+          <td class="px-4 py-2.5 text-mute">${year} Year${year > 1 ? 's' : ''}</td>
+          <td class="px-4 py-2.5 text-right font-semibold text-link">${rate.toFixed(2)}%</td>
+          <td class="px-4 py-2.5 text-right text-emerald-600 font-bold">+${formatCurrency(interest)}</td>
+          <td class="px-4 py-2.5 text-right font-bold">${formatCurrency(maturity)}</td>
+        </tr>
+      `;
+    });
+
+    const blendedApy = weightedRateSum / 5;
+    if (ladderBlendedApy) ladderBlendedApy.textContent = `${blendedApy.toFixed(2)}%`;
+    if (ladderTbody) ladderTbody.innerHTML = tbodyHtml;
+    if (ladderTfoot) {
+      ladderTfoot.innerHTML = `
+        <tr>
+          <td class="px-4 py-3">Total Ladder</td>
+          <td class="px-4 py-3">${formatCurrency(totalCap)}</td>
+          <td class="px-4 py-3 text-mute">1–5 Yrs Staggered</td>
+          <td class="px-4 py-3 text-right text-link">${blendedApy.toFixed(2)}% Avg</td>
+          <td class="px-4 py-3 text-right text-emerald-600 font-bold">+${formatCurrency(totalInterestSum)}</td>
+          <td class="px-4 py-3 text-right font-bold text-ink">${formatCurrency(totalMaturitySum)}</td>
+        </tr>
+      `;
+    }
+  }
+
+  // Tab switching
+  if (tabSingleCd && tabLadderCd && viewSingleCd && viewLadderCd) {
+    tabSingleCd.addEventListener('click', () => {
+      tabSingleCd.className = 'px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold transition-all bg-ink text-canvas shadow-sm cursor-pointer';
+      tabLadderCd.className = 'px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-medium text-mute hover:text-ink transition-all cursor-pointer';
+      viewSingleCd.classList.remove('hidden');
+      viewLadderCd.classList.add('hidden');
+    });
+
+    tabLadderCd.addEventListener('click', () => {
+      tabLadderCd.className = 'px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold transition-all bg-ink text-canvas shadow-sm cursor-pointer';
+      tabSingleCd.className = 'px-5 py-2 rounded-lg text-xs sm:text-sm font-mono font-medium text-mute hover:text-ink transition-all cursor-pointer';
+      viewLadderCd.classList.remove('hidden');
+      viewSingleCd.classList.add('hidden');
+      calculateLadder();
+    });
+  }
+
+  [ladderTotalCapital, rateTranche1, rateTranche2, rateTranche3, rateTranche4, rateTranche5].forEach(el => {
+    if (el) el.addEventListener('input', calculateLadder);
+  });
+
+  cdForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateSingleCd();
+  });
+
+  // Currency change
+  window.addEventListener('currency-change', () => {
+    calculateSingleCd();
+    calculateLadder();
+  });
+
+  // Initialize
+  calculateSingleCd();
+  calculateLadder();
+</script>

@@ -22,6 +22,9 @@
 | 2026-11-17 | `calculator-guides-data.ts` | Added comprehensive RPN keystroke guides and TVM formulas for HP 12C, TI BA II Plus, Future Value, Investment, and Salary Increase | Complete formula coverage for highest-volume emulator assets |
 | 2026-11-17 | `/blog/understanding-mortgage-pmi/` | Expanded into 1,400+ word authority guide with monthly PMI formulas, credit tier rate tables, Top 5 Costly Mistakes, and Homeowners Protection Act cancellation rules | Targets ~22,200 monthly volume for "how to calculate pmi" queries |
 | 2026-11-17 | Core Calculators | Updated Title tags for Loan, Mortgage, and Compound Interest to high-converting outcome-focused hooks | Increases organic SERP CTR on high-impression queries |
+| 2026-11-24 | `/loan/amortization-schedule/` | Created full interactive Amortization Schedule Calculator with extra principal modeling (monthly, annual, one-time lump sum), balance & cumulative interest chart, and RFC 4180 CSV export | Targets #1 highest-volume loan calculation query on the web (246,000 searches/mo, Comp: 5/100) |
+| 2026-11-24 | `/finance/cd-calculator/` | Created Certificate of Deposit (CD) Calculator & 5-Tranche CD Ladder Builder with APY vs nominal yield compounding, early withdrawal penalty simulator, and maturity table | Targets 165,000 monthly volume for "certificate of deposit calculator" and captures fixed-income banking search intent |
+| 2026-11-24 | `/retirement/rmd-calculator/` | Created SECURE Act 2.0 compliant Required Minimum Distribution (RMD) Calculator with IRS Uniform Lifetime Table III, Inherited IRA 10-year rule, 25% penalty warning, and multi-year projection schedule | Targets 110,000 monthly volume for "rmd calculator" (+32% 3-mo trend) with complete SECURE 2.0 statutory rules |
 
 
 

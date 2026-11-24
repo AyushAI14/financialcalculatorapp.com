@@ -1,0 +1,629 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import Input from '../../components/ui/Input.astro';
+import Select from '../../components/ui/Select.astro';
+import ResultCard from '../../components/ui/ResultCard.astro';
+import RangeSlider from '../../components/ui/RangeSlider.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getCalculatorFaqs } from '../../i18n/calculator-faqs-data';
+
+const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(lang);
+const faqs = getCalculatorFaqs('amortization-schedule');
+---
+
+<CalculatorLayout 
+  title="Amortization Schedule Calculator with Extra Payments" 
+  seoTitle="Amortization Schedule Calculator: Interactive Table & CSV Export"
+  description="Free loan & mortgage amortization schedule calculator. Calculate monthly principal vs interest breakdowns, model extra payments, view charts, and export schedules to CSV."
+  faqs={faqs}
+  calcKey="amortization-schedule"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Form Inputs (Left Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <form id="amort-form" class="space-y-6">
+        <div class="space-y-6 bg-canvas border border-hairline p-4 sm:p-6 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <h3 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Loan Parameters')}</h3>
+            <span class="text-[10px] font-mono text-link font-semibold">100% Private & Local</span>
+          </div>
+
+          <!-- Loan Amount -->
+          <div class="space-y-2">
+            <Input id="loan-amount" label="Loan Amount" type="number" prefix="$" value="300000" min={1000} max={5000000} step={1000} />
+            <RangeSlider id="loan-amount-slider" label="Loan Amount Slider" min={10000} max={1500000} step={5000} value={300000} />
+          </div>
+
+          <!-- Interest Rate -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <Input id="interest-rate" label="Annual Interest Rate" type="number" suffix="%" value="6.5" min={0.1} max={25} step={0.05} />
+            <RangeSlider id="interest-rate-slider" label="Interest Rate Slider" min={1} max={15} step={0.1} value={6.5} />
+          </div>
+
+          <!-- Loan Term -->
+          <div class="space-y-2 pt-2 border-t border-hairline/60">
+            <div class="grid grid-cols-2 gap-3">
+              <Input id="loan-term-years" label="Term (Years)" type="number" suffix="yrs" value="30" min={1} max={50} step={1} />
+              <Select id="start-month" label="Start Month" options={[
+                { value: '0', label: 'January' },
+                { value: '1', label: 'February' },
+                { value: '2', label: 'March' },
+                { value: '3', label: 'April' },
+                { value: '4', label: 'May' },
+                { value: '5', label: 'June' },
+                { value: '6', label: 'July' },
+                { value: '7', label: 'August' },
+                { value: '8', label: 'September' },
+                { value: '9', label: 'October' },
+                { value: '10', label: 'November' },
+                { value: '11', label: 'December' }
+              ]} value={String(new Date().getMonth())} />
+            </div>
+            <RangeSlider id="loan-term-slider" label="Loan Term Slider" min={1} max={40} step={1} value={30} />
+          </div>
+        </div>
+
+        <!-- Extra Payments Optimization Card -->
+        <div class="space-y-4 bg-canvas-soft border border-hairline p-4 sm:p-6 rounded-lg">
+          <div class="flex items-center justify-between border-b border-hairline/80 pb-2">
+            <h4 class="text-xs font-mono font-bold text-ink uppercase tracking-wider flex items-center gap-1.5">
+              <span>🚀</span>
+              <span>{t('Extra Principal Payoff Options')}</span>
+            </h4>
+            <span class="text-[10px] font-mono text-mute">Optional</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input id="extra-monthly" label="Extra Monthly Payment" type="number" prefix="$" value="0" min={0} step={25} />
+            <Input id="extra-annual" label="Extra Annual Payment" type="number" prefix="$" value="0" min={0} step={100} />
+          </div>
+
+          <div class="pt-2 border-t border-hairline/40 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input id="extra-onetime" label="One-Time Lump Sum" type="number" prefix="$" value="0" min={0} step={500} />
+            <Input id="extra-onetime-month" label="Apply In (Month #)" type="number" suffix="mo" value="12" min={1} max={480} step={1} />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-hairline flex flex-wrap gap-3">
+          <button type="submit" class="px-5 py-2.5 bg-primary text-on-primary rounded-full font-medium text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-sm">
+            {t('Calculate Schedule')}
+          </button>
+          <button type="reset" id="reset-btn" class="px-5 py-2.5 bg-canvas text-ink border border-hairline rounded-full font-medium text-xs sm:text-sm hover:bg-canvas-soft transition-colors shadow-sm cursor-pointer">
+            {t('Reset Defaults')}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results & Charts (Right Column) -->
+    <div class="lg:col-span-6 space-y-6">
+      <!-- 4-up Result Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div id="res-payment">
+          <ResultCard title="Monthly Payment (P&I)" value="--" highlight={true} />
+        </div>
+        <div id="res-total-interest">
+          <ResultCard title="Total Interest Paid" value="--" />
+        </div>
+        <div id="res-total-cost">
+          <ResultCard title="Total Principal & Interest" value="--" />
+        </div>
+        <div id="res-payoff-date">
+          <ResultCard title="Estimated Payoff Date" value="--" />
+        </div>
+      </div>
+
+      <!-- Extra Payment Savings Alert Box -->
+      <div id="savings-banner" class="hidden p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-emerald-900 dark:text-emerald-200 text-xs font-mono space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-sm">
+          <span>✨</span>
+          <span id="savings-title">Extra Payments Active</span>
+        </div>
+        <div id="savings-details" class="text-xs leading-relaxed opacity-90"></div>
+      </div>
+
+      <!-- Amortization Drawdown Chart -->
+      <div class="bg-canvas border border-hairline rounded-lg p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3 border-b border-hairline pb-2">
+          <h4 class="text-[11px] sm:text-xs font-mono text-mute uppercase tracking-wider">{t('Balance Drawdown & Cumulative Interest')}</h4>
+          <span class="text-[10px] font-mono text-mute">Interactive Scrubber</span>
+        </div>
+        <div class="h-72 sm:h-80 relative">
+          <canvas id="amortization-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amortization Schedule Table & Export Suite -->
+  <div class="mt-10 sm:mt-14 border-t border-hairline pt-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div>
+        <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
+          <span>📅</span>
+          <span>{t('Complete Amortization Schedule')}</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-body mt-1">
+          {t('Month-by-month and annual principal vs. interest breakdown with ending balances.')}
+        </p>
+      </div>
+
+      <!-- Table View Controls & Export Actions -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center rounded-lg border border-hairline bg-canvas p-0.5 shadow-sm">
+          <button id="view-yearly" type="button" class="px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-colors bg-ink text-canvas cursor-pointer">
+            Yearly Summary
+          </button>
+          <button id="view-monthly" type="button" class="px-3 py-1.5 rounded-md text-xs font-mono font-medium text-mute hover:text-ink transition-colors cursor-pointer">
+            Monthly Schedule
+          </button>
+        </div>
+
+        <button id="download-csv-btn" type="button" class="px-3.5 py-1.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-lg font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm">
+          <span>📥</span>
+          <span>Download CSV</span>
+        </button>
+
+        <button id="print-schedule-btn" type="button" class="px-3.5 py-1.5 bg-canvas hover:bg-canvas-soft border border-hairline text-ink rounded-lg font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm">
+          <span>🖨️</span>
+          <span>Print / PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="overflow-x-auto border border-hairline rounded-lg shadow-sm bg-canvas">
+      <table class="w-full text-left border-collapse" id="amortization-table">
+        <thead>
+          <tr class="bg-canvas-soft border-b border-hairline font-mono text-[11px] sm:text-xs text-mute uppercase tracking-wider">
+            <th class="px-3 sm:px-4 py-3" id="th-period">Period</th>
+            <th class="px-3 sm:px-4 py-3">Date</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Starting Balance</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Payment</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-link">Principal</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-error-deep">Interest</th>
+            <th class="px-3 sm:px-4 py-3 text-right text-emerald-600">Extra Paid</th>
+            <th class="px-3 sm:px-4 py-3 text-right">Ending Balance</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body" class="divide-y divide-hairline">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</CalculatorLayout>
+
+<script>
+  import Chart, { CHART_PALETTE, hexToRgba } from '../../lib/chart-setup';
+  import { getEffectiveCurrency, getCurrencyInfo, formatCurrencyTick } from '../../lib/currency';
+
+  // Elements
+  const form = document.getElementById('amort-form') as HTMLFormElement;
+  const loanAmountInput = document.getElementById('loan-amount') as HTMLInputElement;
+  const loanAmountSlider = document.getElementById('loan-amount-slider') as HTMLInputElement;
+  const interestRateInput = document.getElementById('interest-rate') as HTMLInputElement;
+  const interestRateSlider = document.getElementById('interest-rate-slider') as HTMLInputElement;
+  const loanTermYearsInput = document.getElementById('loan-term-years') as HTMLInputElement;
+  const loanTermSlider = document.getElementById('loan-term-slider') as HTMLInputElement;
+  const startMonthSelect = document.getElementById('start-month') as HTMLSelectElement;
+
+  const extraMonthlyInput = document.getElementById('extra-monthly') as HTMLInputElement;
+  const extraAnnualInput = document.getElementById('extra-annual') as HTMLInputElement;
+  const extraOnetimeInput = document.getElementById('extra-onetime') as HTMLInputElement;
+  const extraOnetimeMonthInput = document.getElementById('extra-onetime-month') as HTMLInputElement;
+
+  const resPayment = document.getElementById('res-payment');
+  const resTotalInterest = document.getElementById('res-total-interest');
+  const resTotalCost = document.getElementById('res-total-cost');
+  const resPayoffDate = document.getElementById('res-payoff-date');
+  const savingsBanner = document.getElementById('savings-banner');
+  const savingsTitle = document.getElementById('savings-title');
+  const savingsDetails = document.getElementById('savings-details');
+
+  const scheduleBody = document.getElementById('schedule-body');
+  const viewYearlyBtn = document.getElementById('view-yearly');
+  const viewMonthlyBtn = document.getElementById('view-monthly');
+  const downloadCsvBtn = document.getElementById('download-csv-btn');
+  const printScheduleBtn = document.getElementById('print-schedule-btn');
+  const thPeriod = document.getElementById('th-period');
+
+  let currentViewMode: 'yearly' | 'monthly' = 'yearly';
+  let chartInstance: Chart | null = null;
+  let calculatedSchedule: any[] = [];
+  let calculatedBaselineSchedule: any[] = [];
+
+  function formatCurrency(val: number): string {
+    const lang = document.documentElement.lang || 'en';
+    const curr = getEffectiveCurrency(lang);
+    const meta = getCurrencyInfo(curr);
+    return `${meta.symbol}${Math.round(val).toLocaleString(meta.locale)}`;
+  }
+
+  function syncInputs(input: HTMLInputElement, slider: HTMLInputElement) {
+    if (!input || !slider) return;
+    input.addEventListener('input', () => {
+      slider.value = input.value;
+      calculateAmortization();
+    });
+    slider.addEventListener('input', () => {
+      input.value = slider.value;
+      calculateAmortization();
+    });
+  }
+
+  syncInputs(loanAmountInput, loanAmountSlider);
+  syncInputs(interestRateInput, interestRateSlider);
+  syncInputs(loanTermYearsInput, loanTermSlider);
+
+  [extraMonthlyInput, extraAnnualInput, extraOnetimeInput, extraOnetimeMonthInput, startMonthSelect].forEach(el => {
+    if (el) el.addEventListener('input', calculateAmortization);
+  });
+
+  interface AmortPayment {
+    period: number;
+    year: number;
+    monthInYear: number;
+    dateStr: string;
+    startBalance: number;
+    payment: number;
+    principal: number;
+    interest: number;
+    extraPayment: number;
+    endBalance: number;
+    cumInterest: number;
+  }
+
+  function generateSchedule(
+    principal: number,
+    annualRate: number,
+    totalMonths: number,
+    startMonthIdx: number,
+    extraMonthly: number,
+    extraAnnual: number,
+    extraOnetime: number,
+    extraOnetimeMonth: number
+  ): { schedule: AmortPayment[]; baseMonthlyPayment: number; totalInterest: number } {
+    const monthlyRate = annualRate / 100 / 12;
+    const baseMonthlyPayment = (monthlyRate > 0)
+      ? (principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths))) / (Math.pow(1 + monthlyRate, totalMonths) - 1)
+      : (principal / totalMonths);
+
+    let balance = principal;
+    let cumInterest = 0;
+    const schedule: AmortPayment[] = [];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentYear = new Date().getFullYear();
+
+    for (let period = 1; period <= totalMonths && balance > 0.001; period++) {
+      const startBalance = balance;
+      const interest = monthlyRate * balance;
+      let regularPrincipal = baseMonthlyPayment - interest;
+
+      // Handle extra payment logic
+      let extra = extraMonthly;
+      const monthInTerm = period;
+      if (extraAnnual > 0 && monthInTerm % 12 === 0) {
+        extra += extraAnnual;
+      }
+      if (extraOnetime > 0 && monthInTerm === extraOnetimeMonth) {
+        extra += extraOnetime;
+      }
+
+      let totalPrincipal = regularPrincipal + extra;
+      if (totalPrincipal > balance) {
+        totalPrincipal = balance;
+        extra = Math.max(0, balance - regularPrincipal);
+      }
+
+      balance -= totalPrincipal;
+      cumInterest += interest;
+
+      const dateYear = currentYear + Math.floor((startMonthIdx + period - 1) / 12);
+      const dateMonth = (startMonthIdx + period - 1) % 12;
+      const dateStr = `${monthNames[dateMonth]} ${dateYear}`;
+
+      schedule.push({
+        period,
+        year: Math.ceil(period / 12),
+        monthInYear: ((period - 1) % 12) + 1,
+        dateStr,
+        startBalance,
+        payment: totalPrincipal + interest,
+        principal: totalPrincipal - extra,
+        interest,
+        extraPayment: extra,
+        endBalance: Math.max(0, balance),
+        cumInterest
+      });
+    }
+
+    return { schedule, baseMonthlyPayment, totalInterest: cumInterest };
+  }
+
+  function calculateAmortization() {
+    const principal = parseFloat(loanAmountInput.value) || 300000;
+    const annualRate = parseFloat(interestRateInput.value) || 6.5;
+    const termYears = parseFloat(loanTermYearsInput.value) || 30;
+    const totalMonths = Math.round(termYears * 12);
+    const startMonth = parseInt(startMonthSelect.value) || 0;
+
+    const extraMonthly = parseFloat(extraMonthlyInput.value) || 0;
+    const extraAnnual = parseFloat(extraAnnualInput.value) || 0;
+    const extraOnetime = parseFloat(extraOnetimeInput.value) || 0;
+    const extraOnetimeMonth = parseInt(extraOnetimeMonthInput.value) || 12;
+
+    // 1. Calculate Baseline Schedule (without extra payments)
+    const baseResult = generateSchedule(principal, annualRate, totalMonths, startMonth, 0, 0, 0, 0);
+    calculatedBaselineSchedule = baseResult.schedule;
+
+    // 2. Calculate Active Schedule (with extra payments)
+    const activeResult = generateSchedule(principal, annualRate, totalMonths, startMonth, extraMonthly, extraAnnual, extraOnetime, extraOnetimeMonth);
+    calculatedSchedule = activeResult.schedule;
+
+    // 3. Update Result Cards
+    if (resPayment) {
+      resPayment.querySelector('.font-mono')!.textContent = formatCurrency(activeResult.baseMonthlyPayment);
+    }
+    if (resTotalInterest) {
+      resTotalInterest.querySelector('.font-mono')!.textContent = formatCurrency(activeResult.totalInterest);
+    }
+    if (resTotalCost) {
+      resTotalCost.querySelector('.font-mono')!.textContent = formatCurrency(principal + activeResult.totalInterest);
+    }
+    if (resPayoffDate && calculatedSchedule.length > 0) {
+      const lastPayment = calculatedSchedule[calculatedSchedule.length - 1];
+      resPayoffDate.querySelector('.font-mono')!.textContent = lastPayment.dateStr;
+    }
+
+    // 4. Update Savings Banner if Extra Payments applied
+    const hasExtras = extraMonthly > 0 || extraAnnual > 0 || extraOnetime > 0;
+    if (savingsBanner && savingsTitle && savingsDetails) {
+      if (hasExtras && calculatedSchedule.length < calculatedBaselineSchedule.length) {
+        savingsBanner.classList.remove('hidden');
+        const interestSaved = Math.max(0, baseResult.totalInterest - activeResult.totalInterest);
+        const monthsSaved = baseResult.schedule.length - calculatedSchedule.length;
+        const yearsSaved = Math.floor(monthsSaved / 12);
+        const remMonths = monthsSaved % 12;
+        let timeStr = '';
+        if (yearsSaved > 0) timeStr += `${yearsSaved} yr${yearsSaved > 1 ? 's' : ''} `;
+        if (remMonths > 0) timeStr += `${remMonths} mo${remMonths > 1 ? 's' : ''}`;
+
+        savingsTitle.textContent = `Extra Payments Save ${formatCurrency(interestSaved)} & Shorten Loan by ${timeStr.trim()}!`;
+        savingsDetails.textContent = `By contributing extra principal, your loan is paid off in ${calculatedSchedule.length} payments instead of ${baseResult.schedule.length}. Total interest drops from ${formatCurrency(baseResult.totalInterest)} to ${formatCurrency(activeResult.totalInterest)}.`;
+      } else {
+        savingsBanner.classList.add('hidden');
+      }
+    }
+
+    // 5. Render Table & Chart
+    renderTable();
+    renderChart();
+  }
+
+  function renderTable() {
+    if (!scheduleBody) return;
+    let html = '';
+
+    if (currentViewMode === 'yearly') {
+      if (thPeriod) thPeriod.textContent = 'Year';
+      // Group by year
+      const yearsMap = new Map<number, {
+        year: number;
+        startDateStr: string;
+        endDateStr: string;
+        startBalance: number;
+        totalPayment: number;
+        principal: number;
+        interest: number;
+        extra: number;
+        endBalance: number;
+      }>();
+
+      calculatedSchedule.forEach(p => {
+        if (!yearsMap.has(p.year)) {
+          yearsMap.set(p.year, {
+            year: p.year,
+            startDateStr: p.dateStr,
+            endDateStr: p.dateStr,
+            startBalance: p.startBalance,
+            totalPayment: 0,
+            principal: 0,
+            interest: 0,
+            extra: 0,
+            endBalance: p.endBalance
+          });
+        }
+        const yr = yearsMap.get(p.year)!;
+        yr.endDateStr = p.dateStr;
+        yr.totalPayment += p.payment;
+        yr.principal += p.principal;
+        yr.interest += p.interest;
+        yr.extra += p.extraPayment;
+        yr.endBalance = p.endBalance;
+      });
+
+      yearsMap.forEach(yr => {
+        html += `
+          <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+            <td class="px-3 sm:px-4 py-2.5 font-bold text-body">Year ${yr.year}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-mute">${yr.startDateStr} – ${yr.endDateStr}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right">${formatCurrency(yr.startBalance)}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right font-medium">${formatCurrency(yr.totalPayment)}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right text-link font-semibold">${formatCurrency(yr.principal)}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right text-error-deep">${formatCurrency(yr.interest)}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right text-emerald-600 font-semibold">${yr.extra > 0 ? formatCurrency(yr.extra) : '—'}</td>
+            <td class="px-3 sm:px-4 py-2.5 text-right font-bold">${formatCurrency(yr.endBalance)}</td>
+          </tr>
+        `;
+      });
+    } else {
+      if (thPeriod) thPeriod.textContent = 'Month #';
+      // Monthly view (limit initial rendering to 360 rows with smooth virtual display)
+      calculatedSchedule.forEach(p => {
+        html += `
+          <tr class="hover:bg-canvas-soft transition-colors font-mono text-[11px] sm:text-xs text-ink">
+            <td class="px-3 sm:px-4 py-2 font-bold text-body">#${p.period}</td>
+            <td class="px-3 sm:px-4 py-2 text-mute">${p.dateStr}</td>
+            <td class="px-3 sm:px-4 py-2 text-right">${formatCurrency(p.startBalance)}</td>
+            <td class="px-3 sm:px-4 py-2 text-right">${formatCurrency(p.payment)}</td>
+            <td class="px-3 sm:px-4 py-2 text-right text-link">${formatCurrency(p.principal)}</td>
+            <td class="px-3 sm:px-4 py-2 text-right text-error-deep">${formatCurrency(p.interest)}</td>
+            <td class="px-3 sm:px-4 py-2 text-right text-emerald-600 font-semibold">${p.extraPayment > 0 ? formatCurrency(p.extraPayment) : '—'}</td>
+            <td class="px-3 sm:px-4 py-2 text-right font-medium">${formatCurrency(p.endBalance)}</td>
+          </tr>
+        `;
+      });
+    }
+
+    scheduleBody.innerHTML = html;
+  }
+
+  function renderChart() {
+    const canvas = document.getElementById('amortization-chart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    // Downsample datapoints for buttery smooth chart rendering (every 12 months)
+    const yearlyPoints = calculatedSchedule.filter((_, i) => (i + 1) % 12 === 0 || i === calculatedSchedule.length - 1);
+    const labels = yearlyPoints.map(p => `Yr ${p.year}`);
+    const balanceData = yearlyPoints.map(p => Math.round(p.endBalance));
+    const interestData = yearlyPoints.map(p => Math.round(p.cumInterest));
+
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = balanceData;
+      chartInstance.data.datasets[1].data = interestData;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Remaining Balance',
+              data: balanceData,
+              borderColor: CHART_PALETTE.blue,
+              backgroundColor: hexToRgba(CHART_PALETTE.blue, 0.15),
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Cumulative Interest Paid',
+              data: interestData,
+              borderColor: CHART_PALETTE.amber,
+              backgroundColor: hexToRgba(CHART_PALETTE.amber, 0.1),
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 12,
+                font: { family: 'Geist Mono, monospace', size: 10 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.dataset.label}: ${formatCurrency(context.raw as number)}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Geist Mono, monospace', size: 9 } }
+            },
+            y: {
+              ticks: {
+                font: { family: 'Geist Mono, monospace', size: 9 },
+                callback: (val) => formatCurrencyTick(val)
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // View switchers
+  if (viewYearlyBtn && viewMonthlyBtn) {
+    viewYearlyBtn.addEventListener('click', () => {
+      currentViewMode = 'yearly';
+      viewYearlyBtn.className = 'px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-colors bg-ink text-canvas cursor-pointer';
+      viewMonthlyBtn.className = 'px-3 py-1.5 rounded-md text-xs font-mono font-medium text-mute hover:text-ink transition-colors cursor-pointer';
+      renderTable();
+    });
+
+    viewMonthlyBtn.addEventListener('click', () => {
+      currentViewMode = 'monthly';
+      viewMonthlyBtn.className = 'px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-colors bg-ink text-canvas cursor-pointer';
+      viewYearlyBtn.className = 'px-3 py-1.5 rounded-md text-xs font-mono font-medium text-mute hover:text-ink transition-colors cursor-pointer';
+      renderTable();
+    });
+  }
+
+  // CSV Export Action
+  if (downloadCsvBtn) {
+    downloadCsvBtn.addEventListener('click', () => {
+      if (!calculatedSchedule || calculatedSchedule.length === 0) return;
+      let csvContent = 'Payment_Number,Date,Starting_Balance,Total_Payment,Principal_Paid,Interest_Paid,Extra_Principal_Paid,Ending_Balance,Cumulative_Interest\n';
+
+      calculatedSchedule.forEach(p => {
+        csvContent += `${p.period},"${p.dateStr}",${p.startBalance.toFixed(2)},${p.payment.toFixed(2)},${p.principal.toFixed(2)},${p.interest.toFixed(2)},${p.extraPayment.toFixed(2)},${p.endBalance.toFixed(2)},${p.cumInterest.toFixed(2)}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `amortization-schedule-${loanAmountInput.value}-${loanTermYearsInput.value}yr.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // Print Action
+  if (printScheduleBtn) {
+    printScheduleBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+
+  // Form submit & reset
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateAmortization();
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      loanAmountInput.value = '300000';
+      loanAmountSlider.value = '300000';
+      interestRateInput.value = '6.5';
+      interestRateSlider.value = '6.5';
+      loanTermYearsInput.value = '30';
+      loanTermSlider.value = '30';
+      extraMonthlyInput.value = '0';
+      extraAnnualInput.value = '0';
+      extraOnetimeInput.value = '0';
+      extraOnetimeMonthInput.value = '12';
+      calculateAmortization();
+    }, 0);
+  });
+
+  // Currency change listener
+  window.addEventListener('currency-change', calculateAmortization);
+
+  // Initialize
+  calculateAmortization();
+</script>

@@ -710,6 +710,78 @@ export const calculatorFaqsData: Record<string, FAQItem[]> = {
       question: "How does compound interest multiply investment portfolios over time?",
       answer: "Compound growth creates exponential portfolio expansion. In the early years, personal contributions make up the majority of your balance; however, after 10 to 20 years, investment returns and compounded earnings account for over 60% to 80% of total portfolio value."
     }
+  ],
+
+  // 34. Amortization Schedule Calculator
+  'amortization-schedule': [
+    {
+      question: "What is an amortization schedule and how does it work?",
+      answer: "An amortization schedule is an itemized table listing every periodic loan payment across the entire loan term. Each row details how your fixed monthly payment is partitioned between interest (the lender's fee) and principal reduction, alongside your remaining unpaid loan balance."
+    },
+    {
+      question: "Why is the vast majority of my early loan payment interest instead of principal?",
+      answer: "Because interest is calculated as a direct percentage of your remaining outstanding balance. Early in a loan term, your principal balance is at its highest point, generating large monthly interest charges. As you pay down principal month after month, the interest charge shrinks, allowing an accelerating share of each fixed payment to pay down the principal."
+    },
+    {
+      question: "How much interest do extra principal payments actually save on a 30-year loan?",
+      answer: "Extra principal payments bypass future compounding interest entirely. On a typical $300,000 mortgage at 6.5%, adding just $150 per month to your principal payment cuts over 4.5 years off your repayment timeline and saves more than $60,000 in total out-of-pocket interest charges."
+    },
+    {
+      question: "Can I export or print my full loan amortization schedule?",
+      answer: "Yes. Our tool runs 100% locally in your browser and includes a one-click 'Download CSV' button to save the entire itemized schedule to Excel, Google Sheets, or your local spreadsheet application, as well as a formatted print-to-PDF button."
+    },
+    {
+      question: "What happens if I make a one-time lump sum principal paydown?",
+      answer: "A one-time lump-sum principal payment immediately knocks down your outstanding balance. Under standard loan terms, your required monthly payment remains the same, but the overall term of your loan is shortened and future interest is substantially reduced. If you want to keep the original payoff date and lower your monthly payment instead, ask your lender for a mortgage recast."
+    }
+  ],
+
+  // 35. Certificate of Deposit (CD) Calculator
+  'cd-calculator': [
+    {
+      question: "What is a Certificate of Deposit (CD) and how does it earn interest?",
+      answer: "A Certificate of Deposit (CD) is a federally insured time deposit account offered by banks and credit unions. In exchange for agreeing to leave your principal untouched for a fixed term (such as 6 months, 1 year, or 5 years), the financial institution guarantees a fixed interest rate and Annual Percentage Yield (APY) that cannot fluctuate."
+    },
+    {
+      question: "What is a CD Ladder and why should I build one?",
+      answer: "A CD Ladder is an investment strategy where you divide your total cash across multiple CDs with staggered maturity dates (e.g., 1-year, 2-year, 3-year, 4-year, and 5-year CDs). Each year, one CD matures, providing you with guaranteed liquidity without paying early withdrawal penalties, which you can either spend or reinvest into a new 5-year CD at peak rates."
+    },
+    {
+      question: "How is an early withdrawal penalty calculated on a CD?",
+      answer: "If you break a CD before its maturity date, banks assess an early withdrawal penalty typically equal to a specified number of days' worth of simple interest (e.g., 90 days of interest for terms under 12 months, or 180 to 365 days of interest for multi-year terms). If you haven't earned enough interest to cover the penalty, the fee may reduce your original principal deposit."
+    },
+    {
+      question: "What is the difference between nominal CD interest rate and APY?",
+      answer: "The interest rate is the base annualized percentage your bank pays. The Annual Percentage Yield (APY) reflects the true total return you receive over a full year, incorporating the compounding frequency (daily or monthly). Because interest earns interest, the APY is always slightly higher than the nominal rate."
+    },
+    {
+      question: "Are Certificates of Deposit FDIC or NCUA insured?",
+      answer: "Yes. CDs opened at FDIC-insured banks or NCUA-insured credit unions are backed by the full faith and credit of the United States Government up to $250,000 per depositor, per insured institution, for each account ownership category."
+    }
+  ],
+
+  // 36. Required Minimum Distribution (RMD) Calculator
+  'rmd-calculator': [
+    {
+      question: "What is a Required Minimum Distribution (RMD) under SECURE Act 2.0?",
+      answer: "An RMD is the mandatory minimum amount that owners of tax-deferred retirement accounts (Traditional IRAs, 401(k)s, 403(b)s, and SEP/SIMPLE IRAs) must withdraw annually once they reach statutory age. Under SECURE Act 2.0, the starting RMD age is 73 for individuals born between 1951 and 1959, and rises to age 75 for individuals born in 1960 or later."
+    },
+    {
+      question: "What is the penalty for missing an RMD deadline by December 31?",
+      answer: "Failing to withdraw your full RMD by the annual December 31 deadline triggers an IRS excise tax penalty equal to 25% of the amount not distributed. Under SECURE Act 2.0, this penalty is reduced to 10% if the taxpayer corrects the distribution and files IRS Form 5329 within the two-year correction window."
+    },
+    {
+      question: "How does the IRS calculate my annual Required Minimum Distribution?",
+      answer: "Your annual RMD is calculated by taking your retirement account balance as of December 31 of the previous year and dividing it by an IRS life expectancy factor taken from the IRS Uniform Lifetime Table III (Publication 590-B). As you age, your divisor factor decreases, causing your required percentage withdrawal to rise."
+    },
+    {
+      question: "Do Roth IRAs have Required Minimum Distributions?",
+      answer: "Original account owners of Roth IRAs are never subject to Required Minimum Distributions during their lifetime. Furthermore, starting in 2024 under SECURE Act 2.0, designated Roth accounts inside employer-sponsored 401(k) and 403(b) plans are also exempt from pre-death RMDs."
+    },
+    {
+      question: "How does the 10-Year Rule apply to Inherited IRAs?",
+      answer: "Under the SECURE Act, most non-spouse beneficiaries (Non-Eligible Designated Beneficiaries) who inherit an IRA from an account owner who passed away after December 31, 2019, must fully liquidate the entire account balance by December 31 of the 10th calendar year following the owner's death."
+    }
   ]
 };
 

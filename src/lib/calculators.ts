@@ -53,6 +53,16 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
     icon: '📈',
     calculators: [
       {
+        url: '/finance/cd-calculator',
+        nameKey: 'calc.cd.name',
+        defaultName: 'CD Calculator & Ladder Simulator',
+        descKey: 'calc.cd.desc',
+        defaultDesc: 'Calculate Certificate of Deposit interest, APY returns, early withdrawal penalties, and 5-tranche CD ladders.',
+        calcKey: 'cd-calculator',
+        badge: 'CD Ladder',
+        keywords: ['certificate of deposit calculator', 'cd calculator', 'cd interest calculator', 'cd rate calculator', 'cd ladder calculator']
+      },
+      {
         url: '/finance/compound-interest',
         nameKey: 'calc.compound.name',
         defaultName: 'Compound Interest Calculator',
@@ -206,6 +216,16 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
     icon: '🏠',
     calculators: [
       {
+        url: '/loan/amortization-schedule',
+        nameKey: 'calc.amortizationschedule.name',
+        defaultName: 'Amortization Schedule Calculator',
+        descKey: 'calc.amortizationschedule.desc',
+        defaultDesc: 'Interactive loan & mortgage amortization schedule with extra payments and CSV export.',
+        calcKey: 'amortization-schedule',
+        badge: 'High Volume',
+        keywords: ['amortization schedule calculator', 'amortization calculator', 'loan amortization schedule', 'mortgage amortization schedule', 'loan payoff schedule']
+      },
+      {
         url: '/loan/calculator',
         nameKey: 'calc.loan.name',
         defaultName: 'Loan Calculator',
@@ -317,6 +337,16 @@ export const CATEGORIES_DATA: CategoryDefinition[] = [
     defaultName: 'Retirement & Wealth',
     icon: '⏳',
     calculators: [
+      {
+        url: '/retirement/rmd-calculator',
+        nameKey: 'calc.rmd.name',
+        defaultName: 'RMD Calculator (SECURE Act 2.0)',
+        descKey: 'calc.rmd.desc',
+        defaultDesc: 'Calculate mandatory IRS Required Minimum Distributions for Traditional IRAs, 401(k)s, and Inherited IRAs.',
+        calcKey: 'rmd-calculator',
+        badge: 'SECURE 2.0',
+        keywords: ['rmd calculator', 'required minimum distribution calculator', 'inherited ira rmd calculator', 'secure act 2.0 rmd calculator']
+      },
       {
         url: '/retirement/401k',
         nameKey: 'calc.401k.name',

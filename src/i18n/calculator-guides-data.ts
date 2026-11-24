@@ -679,6 +679,57 @@ export const calculatorGuides: Record<string, CalculatorGuide> = {
       { title: "Salary Sacrifice Pre-Tax Cash", desc: "Directing pre-tax earnings into super reduces personal taxable income while growing your balance at concessional tax rates." },
       { title: "Review Investment Options", desc: "Younger workers with multi-decade horizons typically benefit from high-growth or index-heavy investment allocations." }
     ]
+  },
+
+  // 40. Amortization Schedule Calculator
+  "amortization-schedule": {
+    title: "The Mathematical Mechanics of Loan Amortization",
+    intro: "Amortization is the systematic reduction of debt through regular periodic installments. Understanding the mathematical split between principal and interest is the cornerstone of effective debt management and wealth acceleration.",
+    section1Title: "Why Interest Dominates Early Loan Payments",
+    section1Content: "Because interest is accrued directly against your remaining unpaid balance, early payments are heavily weighted toward interest charges. As monthly payments gradually reduce the outstanding principal balance, the interest charge diminishes, creating a convex curve where principal reduction rapidly accelerates in the final third of the loan term.",
+    formulaTitle: "Standard Amortization & Accelerated Payoff Equation",
+    formula: "M = P * [r(1 + r)^n] / [(1 + r)^n - 1]",
+    formulaExplanation: "Where M is periodic payment, P is principal balance, r is periodic rate (annual rate / 12), and n is total payment periods. When extra principal ΔP is added, the remaining periods n_new decreases logarithmically: n_new = -ln(1 - r*P / (M + ΔP)) / ln(1 + r).",
+    section2Title: "Pro Strategies to Accelerate Payoff & Slash Interest",
+    tips: [
+      { title: "Designate Extra Cash Directly to Principal", desc: "Ensure your lender applies surplus funds to principal rather than advancing future scheduled payments." },
+      { title: "Target the Critical First 7 Years", desc: "Extra payments made in the first 84 months generate the highest lifetime ROI because they permanently eliminate decades of compounding interest." },
+      { title: "Export and Track Your Progress", desc: "Download our CSV schedule to import into your budget spreadsheet and cross-verify with your monthly lender statement." }
+    ]
+  },
+
+  // 41. Certificate of Deposit (CD) Calculator
+  "cd-calculator": {
+    title: "Certificate of Deposit Yields, Compounding & Laddering",
+    intro: "Certificates of Deposit (CDs) offer guaranteed, risk-free returns backed by federal insurance. Mastering CD math allows you to capture top-tier interest rates without sacrificing rolling financial liquidity.",
+    section1Title: "Nominal Rate vs. Annual Percentage Yield (APY)",
+    section1Content: "Banks advertise both the interest rate and the APY. While the nominal rate determines periodic interest accrual, APY factors in the compounding frequency (daily or monthly). High-frequency compounding (365 days) yields slightly faster growth than annual compounding.",
+    formulaTitle: "Compound Interest APY Formula",
+    formula: "APY = (1 + r / n)^n - 1",
+    formulaExplanation: "Where r is the nominal annual interest rate and n is the compounding frequency per year (e.g., 365 for daily compounding or 12 for monthly compounding). Ending balance is calculated as A = P * (1 + r/n)^(n*t).",
+    section2Title: "Advanced CD Laddering & Liquidity Tactics",
+    tips: [
+      { title: "Build a 5-Tranche Rolling Ladder", desc: "Stagger your capital across 1, 2, 3, 4, and 5-year CDs so that 20% of your portfolio matures every single year with zero penalty." },
+      { title: "Compare Early Withdrawal Penalties", desc: "Review bank penalty clauses (e.g., 90 vs 180 days of interest) before locking away emergency cash." },
+      { title: "Monitor the Yield Curve", desc: "In inverted yield curve environments, short-term 6-month to 12-month CDs often pay higher APYs than 5-year notes." }
+    ]
+  },
+
+  // 42. Required Minimum Distribution (RMD) Calculator
+  "rmd-calculator": {
+    title: "IRS Required Minimum Distributions & SECURE Act 2.0 Rules",
+    intro: "The IRS grants decades of tax deferral on traditional retirement accounts, but eventually mandates annual taxable withdrawals once you reach statutory age. Calculating exact distributions avoids severe federal tax penalties.",
+    section1Title: "SECURE Act 2.0 Age Thresholds & IRS Uniform Tables",
+    section1Content: "Under SECURE Act 2.0 legislation, the mandatory beginning age for RMDs increased to age 73 for those born between 1951 and 1959, and will rise to age 75 for individuals born in 1960 or later. Annual distributions are calculated using your December 31 prior-year balance divided by your IRS Uniform Lifetime Table III life expectancy factor.",
+    formulaTitle: "Official IRS RMD Equation",
+    formula: "RMD = Account_Balance_(Prior_Dec_31) / Distribution_Period_(IRS_Table_III)",
+    formulaExplanation: "Where Distribution Period is the IRS life expectancy divisor corresponding to your age on December 31 of the distribution year (e.g., 26.5 for age 73, 24.6 for age 75).",
+    section2Title: "Tax Optimization & Inherited IRA Rules",
+    tips: [
+      { title: "Watch the Strict December 31 Deadline", desc: "Failing to withdraw your full RMD results in a 25% federal excise tax penalty on the shortfall (reduced to 10% if corrected in 2 years)." },
+      { title: "Utilize Qualified Charitable Distributions (QCDs)", desc: "Individuals age 70½ and older can donate up to $105,000 directly from an IRA to a qualified charity to satisfy RMDs with zero taxable income." },
+      { title: "Navigate the Inherited IRA 10-Year Rule", desc: "Non-eligible beneficiaries must fully deplete inherited traditional IRA accounts by the 10th anniversary of the original owner's death." }
+    ]
   }
 
 };
