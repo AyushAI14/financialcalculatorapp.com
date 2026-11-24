@@ -4517,18 +4517,18 @@ export function getLocalizedBlogPost(slug: string, lang: Lang): { title: string;
   const post = blogTranslations[slug];
   if (!post) {
     return {
-      title: "Article Not Found",
-      description: "The requested article is not available.",
-      content: "<p>Article content not available.</p>"
+      title: "",
+      description: "",
+      content: ""
     };
   }
 
   const localized = post[lang] || post.en;
   return (
     localized || {
-      title: "Article Not Found",
-      description: "The requested article is not available.",
-      content: "<p>Article content not available.</p>"
+      title: "",
+      description: "",
+      content: ""
     }
   );
 }

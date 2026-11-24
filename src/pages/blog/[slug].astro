@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
 import { getLocalizedBlogPost } from '../../i18n/blogs';
 
@@ -21,6 +21,7 @@ const localizedData = getLocalizedBlogPost(post.id, lang);
 const pageTitle = `${localizedData.title || post.data.title}`;
 const pageDesc = localizedData.description || post.data.description;
 const contentHtml = localizedData.content;
+const { Content } = await render(post);
 
 const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
 const postUrl = `${siteOrigin}${translatePath(`/blog/${post.id}`)}`;
@@ -73,7 +74,9 @@ const articleSchema = {
       </div>
     </header>
 
-    <div class="blog-content prose prose-sm sm:prose-base dark:prose-invert max-w-none text-body leading-relaxed space-y-6" set:html={contentHtml} />
+    <div class="blog-content prose prose-sm sm:prose-base dark:prose-invert max-w-none text-body leading-relaxed space-y-6">
+      {contentHtml ? <Fragment set:html={contentHtml} /> : <Content />}
+    </div>
 
     <footer class="mt-12 pt-8 border-t border-hairline no-print">
       <a href={translatePath('/blog')} class="text-xs font-mono font-medium text-mute hover:text-ink transition-colors flex items-center gap-1">
