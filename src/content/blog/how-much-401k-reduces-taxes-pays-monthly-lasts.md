@@ -107,3 +107,4 @@ Don't rely on guesswork. Model your exact salary, employer match, tax rate, and 
 * Test custom withdrawal rates and portfolio survival on our [Retirement Planner](/retirement/planner/)
 * Compare tax-free growth vs upfront deductions with our [Roth vs. Traditional IRA Comparison](/retirement/ira-comparison/)
 * Estimate your guaranteed government pension on our [Social Security Calculator](/retirement/social-security/)
+* Check if your existing 401(k) balance can already coast to full retirement in our [Coast FIRE Calculator & Inflation Formula Guide](/blog/coast-fire-calculator-formula-and-inflation-math/)

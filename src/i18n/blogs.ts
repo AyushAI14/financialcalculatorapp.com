@@ -2259,6 +2259,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li>Forecast your portfolio longevity and withdrawal rate with the <a href="/retirement/planner/">Retirement Planner</a>.</li>
   <li>Compare upfront tax deductions vs. tax-free growth with our <a href="/retirement/ira-comparison/">Roth vs. Traditional IRA Comparison</a>.</li>
   <li>Estimate your guaranteed monthly government benefits on our <a href="/retirement/social-security/">Social Security Calculator</a>.</li>
+  <li>Check if your existing 401(k) balance can already coast to full retirement in our <a href="/blog/coast-fire-calculator-formula-and-inflation-math/">Coast FIRE Calculator &amp; Inflation Formula Guide</a>.</li>
 </ul>
 `
     },
@@ -4504,6 +4505,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong><a href="/finance/investment/">Investment Calculator</a>:</strong> Forecast total return, inflation-adjusted wealth, and capital gains over decades.</li>
   <li><strong><a href="/finance/tvm/">Time Value of Money (TVM) Calculator</a>:</strong> Solve for required interest rates, future values, or monthly savings targets.</li>
   <li><strong><a href="/retirement/401k/">401(k) Calculator with Match</a>:</strong> Calculate how employer matching amplifies your compound retirement nest egg.</li>
+  <li><strong><a href="/blog/coast-fire-calculator-formula-and-inflation-math/">Coast FIRE Calculator &amp; Fisher Inflation Guide</a>:</strong> See how inflation-adjusted real compounding determines when you can stop saving for retirement.</li>
 </ul>
 `
     }
