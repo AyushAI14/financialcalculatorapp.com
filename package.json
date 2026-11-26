@@ -12,7 +12,10 @@
     "astro": "astro",
     "check": "astro check",
     "qa": "npm run check && npm run build",
-    "deploy": "astro build && wrangler pages deploy dist/client --project-name financialcalculatorapp"
+    "deploy": "astro build && wrangler pages deploy dist/client --project-name financialcalculatorapp",
+    "indexnow:dry-run": "node scripts/indexnow.mjs --dry-run",
+    "indexnow:submit": "node scripts/indexnow.mjs --submit",
+    "test:aeo": "node scripts/test-scenarios.mjs && node scripts/test-alternatives.mjs && node scripts/verify-scenario-pages.mjs && node scripts/verify-internal-links.mjs && node scripts/verify-sitemap.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.1",

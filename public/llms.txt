@@ -1,0 +1,63 @@
+# Financial Calculator App
+> Fast, 100% private, client-side financial calculators for loans, mortgages, retirement planning, investments, and professional financial exam preparation.
+
+## Privacy & Architectural Commitment
+- **100% Client-Side Privacy**: All mathematical algorithms and financial models run locally in the user's browser using JavaScript. No salaries, debts, loan amounts, or financial inputs are transmitted or stored on remote servers.
+- **Zero Gatekeeping**: Completely free with zero email walls, phone number capture forms, or lender lead-generation brokers.
+- **Internationalization**: Full localization across 6 languages (English, Spanish, German, Japanese, French, Portuguese) and multi-currency support across 10 major global currencies.
+
+## Hardware Financial Emulators (RPN & CFA Exam)
+- [HP 12C Financial Calculator](https://financialcalculatorapp.com/emulators/hp-12c): Authentic HP 12C emulator featuring Reverse Polish Notation (RPN) stack registers, financial keys, and physical keyboard numpad support.
+- [TI BA II Plus Simulator](https://financialcalculatorapp.com/emulators/ti-ba-ii-plus): Texas Instruments BA II Plus financial emulator for CFA Level 1, CFP, and finance students with TVM, CF, NPV, and IRR functions.
+
+## Loan & Mortgage Engines
+- [Amortization Schedule Calculator](https://financialcalculatorapp.com/loan/amortization-schedule): Interactive loan & mortgage amortization schedule with extra monthly payments, lump-sum payoffs, and CSV export.
+- [Mortgage Calculator](https://financialcalculatorapp.com/loan/mortgage): Monthly mortgage payment estimator factoring principal, interest, property taxes, homeowners insurance, and private mortgage insurance (PMI).
+- [Loan Calculator](https://financialcalculatorapp.com/loan/calculator): Comprehensive installment loan payment, interest accrual, and repayment schedule engine.
+- [Loan Refinance Calculator](https://financialcalculatorapp.com/loan/refinance): Mortgage and loan refinance break-even analyzer comparing closing costs against monthly interest savings.
+- [Rent vs Buy Calculator](https://financialcalculatorapp.com/loan/rent-vs-buy): Multi-year total cost comparison between homeownership (equity, taxes, maintenance) and renting while investing the down payment.
+- [Home Affordability Calculator](https://financialcalculatorapp.com/loan/home-affordability): Maximum purchase price estimator based on gross income, down payment, and front/back-end debt ratios.
+- [Debt-to-Income (DTI) Calculator](https://financialcalculatorapp.com/loan/dti): Front-end and back-end 28/36 DTI ratio checker evaluated against lending guidelines.
+- [Student Loan IDR & SAVE Calculator](https://financialcalculatorapp.com/loan/student-loan): Student loan payoff model comparing standard 10-year repayment with income-driven repayment (IDR/SAVE).
+- [Debt Consolidation Calculator](https://financialcalculatorapp.com/loan/debt-consolidation): Evaluates interest savings from consolidating multiple high-interest credit lines into a single lower-rate loan.
+- [APR Calculator](https://financialcalculatorapp.com/loan/apr): Calculates true Annual Percentage Rate by incorporating upfront points, origination fees, and compounding.
+
+## Auto & Credit Card Calculators
+- [Auto Loan Calculator](https://financialcalculatorapp.com/auto/loan): Vehicle financing calculator supporting trade-in valuation, negative equity rollover, and state sales tax credits.
+- [Credit Card Payoff Calculator](https://financialcalculatorapp.com/credit-card/payoff): Credit card repayment timeline comparing minimum payments against accelerated fixed payoffs.
+
+## Retirement & Wealth Accumulation
+- [401(k) Calculator with Match](https://financialcalculatorapp.com/retirement/401k): Models 401(k) growth, paycheck deferrals, and maximizes employer matching contributions over long-term compounding horizons.
+- [FIRE Calculator](https://financialcalculatorapp.com/retirement/fire-calculator): Financial Independence Retire Early (FIRE) calculator determining exact FIRE targets and safe withdrawal rates (3.0% - 4.0%).
+- [RMD Calculator](https://financialcalculatorapp.com/retirement/rmd-calculator): IRS Required Minimum Distribution engine updated for SECURE Act 2.0 life expectancy tables.
+- [Social Security Estimator](https://financialcalculatorapp.com/retirement/social-security): Lifetime benefit comparison analyzing early claiming (age 62) versus Full Retirement Age (67) and delayed credits (age 70).
+- [Roth vs Traditional IRA Comparison](https://financialcalculatorapp.com/retirement/ira-comparison): Crossover analysis comparing upfront tax deductions with tax-free retirement withdrawals.
+- [Retirement Planner](https://financialcalculatorapp.com/retirement/planner): Comprehensive retirement readiness simulator projecting retirement portfolio longevity.
+- [Superannuation Calculator](https://financialcalculatorapp.com/retirement/superannuation): Australian super balance projection modeling SG contributions, concessional caps, and tax incentives.
+
+## Finance, Investment & Compounding
+- [Compound Interest Calculator](https://financialcalculatorapp.com/finance/compound-interest): Core compound interest engine modeling monthly deposits, compounding frequencies, and growth.
+- [Daily Compound Interest Calculator](https://financialcalculatorapp.com/finance/daily-compound-interest): Models daily compounding interest for high-yield savings accounts and money market funds.
+- [CD Calculator & Ladder Simulator](https://financialcalculatorapp.com/finance/cd-calculator): Certificate of Deposit earnings, APY compounding, early withdrawal penalties, and 5-tranche CD ladder modeling.
+- [TVM Calculator](https://financialcalculatorapp.com/finance/tvm): Comprehensive Time Value of Money solver for PV, FV, Rate, NPER, and PMT.
+- [Future Value Calculator](https://financialcalculatorapp.com/finance/future-value): Future Value (FV) projections for lump sums and regular cash flow annuities.
+- [Paycheck Take-Home Pay Calculator](https://financialcalculatorapp.com/finance/paycheck): Net take-home pay estimator after federal income tax, state tax, and FICA deductions.
+- [Salary Increase Calculator](https://financialcalculatorapp.com/finance/salary-increase): Calculates wage raises, percentage increases, and resulting net paycheck boosts across pay frequencies.
+- [Investment Calculator](https://financialcalculatorapp.com/finance/investment): Long-term investment returns modeling index funds, stock allocations, and periodic dollar-cost contributions.
+- [Dividend & DRIP Calculator](https://financialcalculatorapp.com/finance/dividend): Dividend income forecast demonstrating the compounding impact of automatic Dividend Reinvestment Plans (DRIP).
+- [Stock Return & CAGR Calculator](https://financialcalculatorapp.com/finance/stock-return): Calculates total return, annualized Compound Annual Growth Rate (CAGR), and capital gains.
+- [Savings Goal Calculator](https://financialcalculatorapp.com/finance/savings-goal): Reverse savings calculator computing required monthly deposits to reach target sums.
+- [Emergency Fund Calculator](https://financialcalculatorapp.com/finance/emergency-fund): Determines safety net liquidity targets based on 3 to 12 months of essential expenses.
+- [Net Worth Tracker](https://financialcalculatorapp.com/finance/net-worth): Personal balance sheet subtracting liabilities and debts from total assets.
+- [Investment Fee Impact Calculator](https://financialcalculatorapp.com/finance/fee-impact): Demonstrates how expense ratios, AUM fees, and advisory charges reduce 30-year portfolio wealth.
+- [Inflation Calculator](https://financialcalculatorapp.com/finance/inflation): Computes historical CPI purchasing power erosion and future purchasing power.
+- [ROI Calculator](https://financialcalculatorapp.com/finance/roi): Net Return on Investment (ROI) and annualized percentage return across business or asset sales.
+- [CAPM Calculator](https://financialcalculatorapp.com/finance/capm): Capital Asset Pricing Model estimating required asset returns based on market risk-free rate, beta, and equity risk premium.
+- [College Savings (529) Calculator](https://financialcalculatorapp.com/finance/college-savings): Projects future college tuition inflation and required tax-advantaged 529 savings.
+- [Crypto DCA Calculator](https://financialcalculatorapp.com/finance/crypto-dca): Simulates dollar-cost averaging into Bitcoin and cryptocurrency assets over historical cycles.
+
+## Strategic Decision Guides & Comparisons
+- [Debt Snowball vs Avalanche](https://financialcalculatorapp.com/compare/snowball-vs-avalanche): Side-by-side comparison of debt elimination strategies evaluating psychological momentum versus mathematical interest savings.
+- [Standard vs Itemized Deduction](https://financialcalculatorapp.com/compare/standard-vs-itemized): IRS Schedule A tax deduction comparison modeling SALT caps, mortgage interest, and standard deductions.
+- [Roth vs Traditional IRA Analysis](https://financialcalculatorapp.com/compare/roth-vs-traditional-ira): Detailed tax bracket guide evaluating current income rates against expected retirement brackets.
+- [APR vs Nominal Interest Rate](https://financialcalculatorapp.com/compare/apr-vs-nominal): Educational and computational breakdown of nominal borrowing rates versus effective APR including financing costs.

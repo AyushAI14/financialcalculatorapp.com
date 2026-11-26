@@ -1,0 +1,250 @@
+# Financial Calculator App — Comprehensive System & Calculation Engine Reference
+> Fast, 100% private client-side financial calculations. Every mathematical engine executes purely inside the user's browser via JavaScript. Zero personal data, salaries, debts, or financial numbers are transmitted to or stored on servers.
+
+---
+
+## 1. Privacy, Architecture & Security Principles
+
+- **100% Client-Side Execution**: All mathematical logic (amortization, compound interest, RPN stack, TVM solvers, tax estimations) is evaluated locally in JavaScript within the browser runtime.
+- **Zero Data Collection**: No user tracking, no session persistence of financial inputs, and no remote database storage.
+- **Zero Gatekeeping**: Unrestricted, free access. Does not require email addresses, phone numbers, account registration, or lead-generation forms.
+- **Internationalization (i18n)**: Fully localized across English (`/`), Spanish (`/es/`), German (`/de/`), Japanese (`/ja/`), French (`/fr/`), and Portuguese (`/pt/`).
+- **Multi-Currency Support**: Supports USD, EUR, GBP, JPY, CAD, AUD, CHF, BRL, INR, and MXN with live FX scaling and 1:1 nominal evaluation.
+
+---
+
+## 2. Hardware Financial Calculator Emulators
+
+### HP 12C Financial Calculator Emulator
+- **URL**: https://financialcalculatorapp.com/emulators/hp-12c
+- **Capabilities**: Authentic emulation of the classic HP 12C financial calculator. Features real 4-level Reverse Polish Notation (RPN) stack registers (X, Y, Z, T), financial keys (`n`, `i`, `PV`, `PMT`, `FV`), amortization schedules (`AMORT`), and physical laptop/desktop numpad keyboard bindings.
+- **Key Use Cases**: Commercial real estate analysis, bond pricing, CFA exam preparation, banking arithmetic.
+- **Core Keyboard Mappings**: Enter (`Enter` or `Space`), arithmetic operators (`+`, `-`, `*`, `/`), gold prefix (`f`), blue prefix (`g`), register exchange (`x<>y`), roll down (`R↓`).
+
+### Texas Instruments TI BA II Plus Financial Simulator
+- **URL**: https://financialcalculatorapp.com/emulators/ti-ba-ii-plus
+- **Capabilities**: Complete browser simulation of the Texas Instruments BA II Plus financial calculator for CFA Level 1, CFA Level 2, and CFP candidates.
+- **Functions Supported**: Time Value of Money (TVM) register block (`N`, `I/Y`, `PV`, `PMT`, `FV`), Cash Flow worksheet (`CF`, `C01`, `F01`), Net Present Value (`NPV`), and Internal Rate of Return (`IRR`).
+- **Key Use Cases**: CFA Institute exam problem sets, bond valuation, uneven project cash flows, corporate capital budgeting.
+
+---
+
+## 3. Loan & Mortgage Calculation Engines
+
+### Amortization Schedule Calculator
+- **URL**: https://financialcalculatorapp.com/loan/amortization-schedule
+- **Formulas**: Standard fixed-rate amortization: $PMT = P \times \frac{r(1+r)^n}{(1+r)^n - 1}$. Extra payments reduce remaining principal balance directly, accelerating payoff dates.
+- **Inputs**: Loan principal, annual interest rate, loan term (years/months), extra monthly payment, one-time lump-sum payment, start date.
+- **Outputs**: Monthly payment, total interest paid, total payment, loan payoff date, interest saved, month-by-month and annual amortization table, CSV export.
+
+### Mortgage Calculator
+- **URL**: https://financialcalculatorapp.com/loan/mortgage
+- **Inputs**: Home purchase price, down payment (amount or %), loan duration, interest rate, annual property taxes, annual home insurance, HOA dues, monthly Private Mortgage Insurance (PMI).
+- **Outputs**: PITI (Principal, Interest, Taxes, Insurance) total monthly obligation, loan-to-value (LTV) ratio, full amortization schedule, PMI termination date (at 80% LTV).
+
+### Loan Calculator
+- **URL**: https://financialcalculatorapp.com/loan/calculator
+- **Inputs**: Loan amount, term (years/months), nominal interest rate, compounding frequency.
+- **Outputs**: Monthly installment, total financing charges, total repayment sum.
+
+### Loan Refinance Break-Even Calculator
+- **URL**: https://financialcalculatorapp.com/loan/refinance
+- **Methodology**: Calculates monthly payment difference between existing loan and prospective new loan, dividing total closing costs by monthly savings to determine the break-even month: $BreakEven = \frac{\text{Closing Costs}}{\text{Current Payment} - \text{New Payment}}$.
+- **Outputs**: Break-even point in months, lifetime interest difference, total savings over remaining loan horizon.
+
+### Rent vs. Buy Calculator
+- **URL**: https://financialcalculatorapp.com/loan/rent-vs-buy
+- **Methodology**: Comprehensive multi-year financial simulation comparing buying (home appreciation, mortgage interest, property taxes, maintenance, selling costs, equity build) versus renting (initial rent, annual rent inflation, investing the down payment and monthly cash flow differences into a diversified index fund).
+- **Outputs**: Crossover net worth year, cumulative costs of buying vs. renting.
+
+### Home Affordability Calculator
+- **URL**: https://financialcalculatorapp.com/loan/home-affordability
+- **Rules**: Evaluates gross annual household income against standard conservative lending benchmarks (28% front-end debt ratio, 36% back-end debt ratio) while incorporating down payment and loan terms.
+- **Outputs**: Recommended conservative purchase budget, maximum financing limit, required down payment, projected monthly payment.
+
+### Debt-to-Income (DTI) Ratio Calculator
+- **URL**: https://financialcalculatorapp.com/loan/dti
+- **Formulas**: Front-end DTI = $\frac{\text{Housing Costs}}{\text{Gross Monthly Income}} \times 100$; Back-end DTI = $\frac{\text{Total Monthly Debt Obligations}}{\text{Gross Monthly Income}} \times 100$.
+- **Outputs**: Front-end and back-end percentages, qualification status against Conventional (28/36), FHA (31/43), and VA guidelines.
+
+### Student Loan IDR & SAVE Calculator
+- **URL**: https://financialcalculatorapp.com/loan/student-loan
+- **Methodology**: Evaluates federal standard 10-year repayment against Income-Driven Repayment (IDR) plans like the SAVE plan (discretionary income calculated at 225% of federal poverty guideline).
+- **Outputs**: Monthly payment under standard vs IDR, projected forgiveness horizon, total interest paid.
+
+### Debt Consolidation Calculator
+- **URL**: https://financialcalculatorapp.com/loan/debt-consolidation
+- **Inputs**: Balances and APRs of up to 5 credit cards or unsecured loans, consolidated loan interest rate, and term.
+- **Outputs**: Weighted average interest rate vs. consolidation rate, monthly payment change, total interest saved.
+
+### APR Calculator
+- **URL**: https://financialcalculatorapp.com/loan/apr
+- **Formulas**: Solves for internal rate of return equating net disbursed loan proceeds (principal minus prepaid finance charges, points, and origination fees) to future scheduled monthly payments.
+- **Outputs**: True Annual Percentage Rate (APR) vs. stated nominal interest rate.
+
+---
+
+## 4. Credit Card & Auto Finance Engines
+
+### Auto Loan Calculator
+- **URL**: https://financialcalculatorapp.com/auto/loan
+- **Inputs**: Vehicle purchase price, down payment, trade-in allowance, remaining trade-in loan balance, state/local sales tax rate, interest rate, loan term (24–84 months).
+- **Features**: Deducts trade-in value from vehicle taxable basis in eligible states; rolls negative trade-in equity into principal.
+- **Outputs**: Monthly auto payment, total sales tax, total financing charges, total vehicle cost.
+
+### Credit Card Payoff Calculator
+- **URL**: https://financialcalculatorapp.com/credit-card/payoff
+- **Inputs**: Credit card balance, APR, minimum monthly payment policy (% of balance or fixed floor), optional fixed monthly contribution.
+- **Outputs**: Payoff timeline (years/months), total interest under minimum payments vs. fixed payments, interest saved.
+
+---
+
+## 5. Retirement & Wealth Accumulation Engines
+
+### 401(k) Calculator with Match
+- **URL**: https://financialcalculatorapp.com/retirement/401k
+- **Formulas**: Projects tax-deferred compounding of employee contributions plus tiered employer matching formulas (e.g., 100% match on first 3%, 50% on next 2%) up to statutory IRS limits.
+- **Outputs**: Portfolio balance at retirement, cumulative employer match contributions, total employee contributions, growth charts.
+
+### FIRE Calculator (Financial Independence, Retire Early)
+- **URL**: https://financialcalculatorapp.com/retirement/fire-calculator
+- **Formulas**: Computes FIRE Target based on annual retirement living expenses divided by Safe Withdrawal Rate ($SWR$ between 3.0% and 4.0%): $FIRE\ Target = \frac{\text{Annual Expenses}}{SWR}$.
+- **Outputs**: FIRE number, years remaining until financial independence, LeanFIRE, Standard FIRE, and FatFIRE milestones.
+
+### RMD Calculator (SECURE Act 2.0)
+- **URL**: https://financialcalculatorapp.com/retirement/rmd-calculator
+- **IRS Tables**: Incorporates IRS Uniform Lifetime Table III and Single Life Table updated for SECURE Act 2.0 age thresholds (age 73 for births 1951-1959, age 75 for births 1960+).
+- **Outputs**: Annual required minimum distribution amount, remaining balance projection.
+
+### Social Security Estimator
+- **URL**: https://financialcalculatorapp.com/retirement/social-security
+- **Methodology**: Evaluates benefit scaling based on Primary Insurance Amount (PIA) from early claiming at age 62 (up to 30% reduction) to Full Retirement Age (67) and delayed retirement credits at age 70 (+8% per year).
+- **Outputs**: Monthly benefit estimates at ages 62, 67, and 70; breakeven age analysis.
+
+### Roth vs. Traditional IRA Comparison
+- **URL**: https://financialcalculatorapp.com/retirement/ira-comparison
+- **Methodology**: Compares upfront tax deductions (Traditional IRA) compounding with taxable distributions against post-tax contributions (Roth IRA) compounding 100% tax-free.
+- **Outputs**: Estimated wealth at retirement based on current tax bracket vs. projected retirement tax bracket.
+
+### Retirement Planner
+- **URL**: https://financialcalculatorapp.com/retirement/planner
+- **Inputs**: Current age, retirement target age, current portfolio, monthly contributions, expected investment return, post-retirement spending.
+- **Outputs**: Probability of retirement capital preservation, projected ending portfolio balance at age 90+.
+
+### Superannuation Calculator
+- **URL**: https://financialcalculatorapp.com/retirement/superannuation
+- **Methodology**: Dedicated Australian superannuation model incorporating Superannuation Guarantee (SG) percentage escalations, voluntary salary sacrifices, 15% concessional contributions tax, and tax-free retirement drawdown.
+
+---
+
+## 6. Finance, Investment & Valuation Engines
+
+### Compound Interest Calculator
+- **URL**: https://financialcalculatorapp.com/finance/compound-interest
+- **Formula**: $A = P(1 + \frac{r}{n})^{nt} + PMT \times \frac{(1 + \frac{r}{n})^{nt} - 1}{\frac{r}{n}}$
+- **Inputs**: Initial principal, recurring monthly/annual deposits, annual interest rate, compounding frequency (daily, monthly, quarterly, semi-annually, annually), investment time horizon.
+- **Outputs**: Future value, total principal deposited, total compound interest earned.
+
+### Daily Compound Interest Calculator
+- **URL**: https://financialcalculatorapp.com/finance/daily-compound-interest
+- **Methodology**: Precision $n=365$ compounding model designed for High-Yield Savings Accounts (HYSA), Treasury Bills, and money market funds.
+
+### CD Calculator & Ladder Simulator
+- **URL**: https://financialcalculatorapp.com/finance/cd-calculator
+- **Capabilities**: Fixed-term Certificate of Deposit interest calculations, APY conversions, early withdrawal penalty modeling, and 5-tranche CD ladder structuring (rolling maturities to preserve liquidity while capturing higher yields).
+
+### TVM (Time Value of Money) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/tvm
+- **Solver**: Five-variable financial engine solving for any single variable given the other four: Present Value ($PV$), Future Value ($FV$), Periodic Payment ($PMT$), Annual Rate ($I/Y$), and Number of Periods ($N$).
+
+### Future Value (FV) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/future-value
+- **Inputs**: Present value, periodic payment, interest rate, duration.
+- **Outputs**: Nominal and real (inflation-adjusted) future accumulated value.
+
+### Paycheck Take-Home Pay Calculator
+- **URL**: https://financialcalculatorapp.com/finance/paycheck
+- **Deductions**: Calculates Federal income tax brackets, FICA Social Security (6.2% up to wage base cap), FICA Medicare (1.45% + 0.9% additional surtax), and State income taxes across all 50 US states.
+- **Outputs**: Gross paycheck, statutory deductions, net take-home pay per pay period (weekly, biweekly, semi-monthly, monthly).
+
+### Salary Increase Calculator
+- **URL**: https://financialcalculatorapp.com/finance/salary-increase
+- **Inputs**: Current wage/salary, raise percentage or flat dollar increase, pay frequency.
+- **Outputs**: New gross pay across hourly, weekly, biweekly, monthly, and annual terms; net take-home differential.
+
+### Investment Calculator
+- **URL**: https://financialcalculatorapp.com/finance/investment
+- **Inputs**: Starting portfolio, recurring deposits, expected annual return, investment duration.
+- **Outputs**: Cumulative contribution vs. compound interest split, portfolio projection graph.
+
+### Dividend & DRIP Calculator
+- **URL**: https://financialcalculatorapp.com/finance/dividend
+- **Methodology**: Simulates dividend cash flows and models Dividend Reinvestment Plans (DRIP), where cash dividends purchase additional shares that yield further dividends in subsequent quarters.
+- **Outputs**: Annual dividend income, share count growth, total portfolio value with and without DRIP.
+
+### Stock Return & CAGR Calculator
+- **URL**: https://financialcalculatorapp.com/finance/stock-return
+- **Formulas**: $CAGR = (\frac{\text{Ending Value}}{\text{Beginning Value}})^{\frac{1}{t}} - 1$; Total Return = $\frac{\text{Ending Value} - \text{Beginning Value} + \text{Dividends}}{\text{Beginning Value}} \times 100$.
+
+### Savings Goal Calculator
+- **URL**: https://financialcalculatorapp.com/finance/savings-goal
+- **Methodology**: Reverse annuity formula computing the required monthly deposit ($PMT$) to accumulate a target future sum given an interest rate and timeline.
+
+### Emergency Fund Calculator
+- **URL**: https://financialcalculatorapp.com/finance/emergency-fund
+- **Methodology**: Analyzes essential recurring expenses (housing, utilities, groceries, debt service, healthcare) to recommend tiered safety cushions (3 months, 6 months, 9 months, 12 months).
+
+### Net Worth Tracker
+- **URL**: https://financialcalculatorapp.com/finance/net-worth
+- **Structure**: Personal balance sheet calculating Net Worth = Total Assets (cash, investments, real estate, personal property) - Total Liabilities (mortgages, auto loans, student loans, credit cards).
+
+### Investment Fee Impact Calculator
+- **URL**: https://financialcalculatorapp.com/finance/fee-impact
+- **Methodology**: Compares two investment trajectories with identical gross returns but different expense ratios (e.g., 0.03% low-cost index fund vs. 1.00% actively managed fund / advisor fee).
+- **Outputs**: Total dollar drag lost to fees and lost compound earnings over 10 to 40 years.
+
+### Inflation Calculator
+- **URL**: https://financialcalculatorapp.com/finance/inflation
+- **Formulas**: Uses historical Consumer Price Index (CPI) datasets to compute historical dollar deflation and projects future purchasing power decay under user-specified inflation rates.
+
+### ROI (Return on Investment) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/roi
+- **Formulas**: Simple ROI = $\frac{\text{Net Profit}}{\text{Cost of Investment}} \times 100$; Annualized ROI taking into account investment duration.
+
+### CAPM (Capital Asset Pricing Model) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/capm
+- **Formula**: $E(R_i) = R_f + \beta_i [E(R_m) - R_f]$
+- **Inputs**: Risk-free rate ($R_f$), stock beta ($\beta$), expected market return ($E(R_m)$).
+- **Outputs**: Required rate of return and equity risk premium.
+
+### College Savings (529) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/college-savings
+- **Inputs**: Child's current age, college entry age, projected 4-year tuition, college tuition inflation rate, current 529 savings, monthly deposits.
+- **Outputs**: Projected tuition shortfall or surplus, required monthly contribution.
+
+### Crypto DCA (Dollar-Cost Averaging) Calculator
+- **URL**: https://financialcalculatorapp.com/finance/crypto-dca
+- **Methodology**: Models historical or simulated recurring purchases of digital assets (Bitcoin, Ethereum) smoothing volatility across market cycles.
+
+---
+
+## 7. Comparative Decision Engines
+
+### Debt Snowball vs. Debt Avalanche Calculator
+- **URL**: https://financialcalculatorapp.com/compare/snowball-vs-avalanche
+- **Methodology**: Evaluates multiple debt accounts under both payoff methodologies:
+  - **Snowball**: Debts ordered from smallest balance to largest balance to deliver quick psychological wins.
+  - **Avalanche**: Debts ordered from highest APR to lowest APR to minimize total interest paid.
+- **Outputs**: Side-by-side payoff timeline, interest difference between both strategies.
+
+### Standard vs. Itemized Deduction Calculator
+- **URL**: https://financialcalculatorapp.com/compare/standard-vs-itemized
+- **Methodology**: Compares the statutory IRS Standard Deduction (by filing status) against Schedule A Itemized Deductions including state and local tax ($10,000 SALT cap), mortgage interest, and charitable donations.
+
+### Roth vs. Traditional IRA Decision Guide
+- **URL**: https://financialcalculatorapp.com/compare/roth-vs-traditional-ira
+- **Methodology**: Decision matrix analyzing marginal tax bracket differentials between working years and distribution years, factoring modified adjusted gross income (MAGI) phaseout limits.
+
+### APR vs. Nominal Interest Rate Analysis
+- **URL**: https://financialcalculatorapp.com/compare/apr-vs-nominal
+- **Methodology**: Demonstrates why Annual Percentage Rate (APR) exceeds the nominal interest rate on loans with upfront points, application fees, and monthly compounding.

@@ -1,5 +1,7 @@
 import { getCollection } from 'astro:content';
 import { languages, hreflangMap, defaultLang, showDefaultLang, type Lang } from '../i18n/ui';
+import { getAllScenarios } from '../lib/scenarios';
+import { getAllAlternatives } from '../lib/alternatives';
 
 export async function GET(context: any) {
   const siteUrl = (context.site ? context.site.toString() : 'https://financialcalculatorapp.com').replace(/\/+$/, '');
@@ -35,6 +37,26 @@ export async function GET(context: any) {
     }
   } catch (e) {
     console.error('Error fetching blog collection:', e);
+  }
+
+  // Add programmatic scenarios
+  try {
+    const scenarios = getAllScenarios();
+    for (const sc of scenarios) {
+      basePaths.push(`scenarios/${sc.slug}`);
+    }
+  } catch (e) {
+    console.error('Error fetching scenarios for sitemap:', e);
+  }
+
+  // Add competitor alternatives
+  try {
+    const alternatives = getAllAlternatives();
+    for (const alt of alternatives) {
+      basePaths.push(`alternatives/${alt.slug}`);
+    }
+  } catch (e) {
+    console.error('Error fetching alternatives for sitemap:', e);
   }
   
   // Deduplicate base paths

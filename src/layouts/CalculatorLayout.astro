@@ -2,6 +2,7 @@
 import Layout from './Layout.astro';
 import CalculatorGuide from '../components/ui/CalculatorGuide.astro';
 import ExpertReviewBadge from '../components/ui/ExpertReviewBadge.astro';
+import CommonScenarios from '../components/CommonScenarios.astro';
 import { getLangFromUrl, useTranslations, useTranslatedPath, getPathWithoutLocale } from '../i18n/utils';
 import { getLanguageDefaultCurrency, getCurrencyInfo } from '../lib/currency';
 import { getLocalizedCategories, PATH_TO_CALC_KEY } from '../lib/calculators';
@@ -301,6 +302,9 @@ const pageSchemas = [webAppSchema, ...(faqSchema ? [faqSchema] : []), breadcrumb
           </div>
         </div>
       )}
+
+      <!-- Common Scenarios & Worked Examples Section -->
+      <CommonScenarios calculatorUrl={normCleanPath} />
 
       <!-- Browser Privacy Note -->
       <div class="mt-8 sm:mt-12 p-3 sm:p-4 bg-note-surface border border-note-border rounded-lg text-[11px] sm:text-xs text-ink/80 flex flex-col gap-2 no-print shadow-[var(--control-shadow)]">

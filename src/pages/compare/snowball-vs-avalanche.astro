@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Input from '../../components/ui/Input.astro';
+import CommonScenarios from '../../components/CommonScenarios.astro';
 import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url, Astro.currentLocale);
@@ -217,6 +218,9 @@ const isPt = lang === 'pt';
         </div>
       </div>
     </section>
+
+    <!-- Common Scenarios & Worked Examples Section -->
+    <CommonScenarios calculatorUrl="/compare/snowball-vs-avalanche" />
   </div>
 </Layout>
 
