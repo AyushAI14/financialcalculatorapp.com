@@ -157,3 +157,4 @@ Don't let interest rate fluctuations dictate your financial future by accident. 
 * **[Time Value of Money (TVM) Calculator](/finance/tvm/):** Solve for required interest rates, future values, or monthly savings targets.
 * **[401(k) Calculator with Match](/retirement/401k/):** Calculate how employer matching amplifies your compound retirement nest egg.
 * **[Coast FIRE Calculator & Fisher Inflation Guide](/blog/coast-fire-calculator-formula-and-inflation-math/):** See how inflation-adjusted real compounding determines when you can stop saving for retirement.
+* **[CD Monthly Interest Calculator & APY Math Guide](/blog/cd-monthly-interest-calculator-apy-vs-rate-math/):** Back out Regulation DD nominal rates from headline APY, compare 365 vs. 360 day-count drift, and model 5-year CD ladders in our [CD Calculator](/finance/cd-calculator/).

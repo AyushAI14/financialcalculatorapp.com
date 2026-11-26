@@ -1017,6 +1017,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li>Run instant multi-variable scenarios on our <a href="/finance/tvm/">TVM Calculator</a>.</li>
   <li>Compare loan options on our <a href="/loan/calculator/">Loan Payment Calculator</a> with complete amortization breakdowns.</li>
   <li>If you prefer RPN keystrokes, try our free <a href="/emulators/hp-12c/">HP 12C Calculator Emulator</a>.</li>
+  <li>Auditing Certificate of Deposit yields? Read our <a href="/blog/cd-monthly-interest-calculator-apy-vs-rate-math/">CD Monthly Interest Calculator &amp; APY Math Guide</a> to see how <code>C/Y = 365</code> vs. <code>12</code> changes APY-to-nominal conversions.</li>
 </ul>
 `
     },
@@ -4506,6 +4507,7 @@ export const blogTranslations: Record<string, Partial<Record<Lang, { title: stri
   <li><strong><a href="/finance/tvm/">Time Value of Money (TVM) Calculator</a>:</strong> Solve for required interest rates, future values, or monthly savings targets.</li>
   <li><strong><a href="/retirement/401k/">401(k) Calculator with Match</a>:</strong> Calculate how employer matching amplifies your compound retirement nest egg.</li>
   <li><strong><a href="/blog/coast-fire-calculator-formula-and-inflation-math/">Coast FIRE Calculator &amp; Fisher Inflation Guide</a>:</strong> See how inflation-adjusted real compounding determines when you can stop saving for retirement.</li>
+  <li><strong><a href="/blog/cd-monthly-interest-calculator-apy-vs-rate-math/">CD Monthly Interest Calculator &amp; APY Math Guide</a>:</strong> Convert headline APY back to nominal rates under Regulation DD, audit 365 vs. 360 day-count drift, and model rolling ladders in our <a href="/finance/cd-calculator/">CD Calculator</a>.</li>
 </ul>
 `
     }

@@ -138,3 +138,4 @@ Want to practice changing P/Y and testing TVM keystrokes without risking exam er
 * Run instant multi-variable scenarios on our [TVM Calculator](/finance/tvm/).
 * Compare loan options on our [Loan Payment Calculator](/loan/calculator/) with complete amortization breakdowns.
 * If you prefer RPN keystrokes, try our free [HP 12C Calculator Emulator](/emulators/hp-12c/).
+* Auditing Certificate of Deposit yields? Read our [CD Monthly Interest Calculator & APY Math Guide](/blog/cd-monthly-interest-calculator-apy-vs-rate-math/) to see how `C/Y = 365` vs. `12` changes APY-to-nominal conversions.
