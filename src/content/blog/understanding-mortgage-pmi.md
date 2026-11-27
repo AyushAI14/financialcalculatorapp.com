@@ -93,7 +93,7 @@ Because the primary loan stays at or below 80% LTV, no PMI is ever assessed. You
 
 To ensure your loan servicer approves your PMI removal request without delays:
 
-1. **Check Your Current Loan Balance:** Verify that your balance is below 80% of your home's original purchase price (or order an official appraisal through your servicer).
+1. **Check Your Current Loan Balance:** Verify that your balance is below 80% of your home's original purchase price (or order an official appraisal through your servicer). If you are using a large lump sum to cross below 80% LTV, check our [Mortgage Recast Calculator & Re-Amortization Guide](/blog/mortgage-recast-calculator-formula-and-refinance-math/) to see how you can lower your monthly P&I payment alongside removing PMI—without refinancing.
 2. **Ensure Perfect Payment History:** Servicers require that you have no 30-day late payments in the past 12 months, and no 60-day late payments in the past 24 months.
 3. **Submit a Written Request:** Send a formal cancellation letter via certified mail or your lender's secure messaging portal citing the Homeowners Protection Act of 1998.
 4. **Verify Subordinate Liens:** Ensure you do not have a second mortgage or home equity line of credit (HELOC) that pushes your total combined LTV over 80%.
