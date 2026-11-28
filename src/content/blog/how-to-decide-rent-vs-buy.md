@@ -138,5 +138,6 @@ No two housing markets or personal financial situations are identical. Run your 
 
 * Compare long-term wealth curves on our [Rent vs. Buy Calculator](/loan/rent-vs-buy/)
 * Model monthly principal, interest, taxes, and PMI on our [Mortgage Calculator](/loan/mortgage/)
+* Audit ultra-long loan amortization and the 10-year equity trap in our [50-Year Mortgage Calculator & Equity Math Guide](/blog/50-year-mortgage-calculator-formula-and-equity-math/)
 * Find your conservative borrowing limit with our [Home Affordability Calculator](/loan/home-affordability/)
 * See how your down payment compounds in index funds using our [Compound Interest Calculator](/finance/compound-interest/)

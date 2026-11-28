@@ -145,6 +145,7 @@ All our financial calculators run 100% privately in your browser with zero track
 
 * **[Home Affordability Calculator](/loan/home-affordability/):** Calculate your maximum home budget, loan size, and complete PITI breakdown based on your salary and debt.
 * **[Mortgage Calculator with PMI](/loan/mortgage/):** Calculate detailed 30-year amortization schedules, extra payments, and payoff dates.
+* **[50-Year Mortgage Calculator & Equity Math](/blog/50-year-mortgage-calculator-formula-and-equity-math/):** See why stretching a mortgage to 40 or 50 years barely expands buying power (+5% after Non-QM rate spreads) while doubling lifetime interest.
 * **[Mortgage Recast Calculator & Re-Amortization Guide](/blog/mortgage-recast-calculator-formula-and-refinance-math/):** Model how applying a lump sum (such as proceeds from selling a previous home) lowers your mandatory monthly P&I payment without refinancing.
 * **[Debt-to-Income (DTI) Ratio Calculator](/loan/dti/):** Check your exact Front-End and Back-End debt ratios before applying with lenders.
 * **[Rent vs. Buy Calculator](/loan/rent-vs-buy/):** Compare the long-term wealth accumulation of renting vs buying over 5 to 30 years.
